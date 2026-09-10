@@ -342,8 +342,9 @@ func _paint_dirt_spurs(ground: TileMapLayer) -> void:
 	# Door yards: dirt atlas when available; else mowed grass so spurs never leave holes.
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 11
-	var has_dirt := ResourceLoader.exists(DIRT_ATLAS)
-	var dirt_tex: Texture2D = load(DIRT_ATLAS) as Texture2D if has_dirt else null
+	var dirt_tex: Texture2D = null
+	if ResourceLoader.exists(DIRT_ATLAS):
+		dirt_tex = load(DIRT_ATLAS) as Texture2D
 	if dirt_tex != null:
 		ground.tile_set = _grass_with_dirt_tileset(ground.tile_set, dirt_tex)
 	var mowed := TileSetFactory.grass_coords("mowed")
@@ -698,15 +699,17 @@ func _animate_patrol(node: Node2D, waypoints: Array[Vector2]) -> void:
 	if waypoints.size() < 2:
 		return
 	var tw := node.create_tween().set_loops()
+	var prev: Vector2 = waypoints[0]
 	for i in range(1, waypoints.size()):
 		var target: Vector2 = waypoints[i]
 		var t := _world_to_tile(target)
 		if not _is_walk_surface(t.x, t.y):
 			continue
-		var dist: float = node.position.distance_to(target)
+		var dist: float = prev.distance_to(target)
 		var dur: float = clampf(dist / 40.0, 1.2, 4.0)
 		tw.tween_property(node, "position", target, dur).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		tw.tween_interval(0.35)
+		prev = target
 
 
 func _spawn_water_overlay(ysort: Node2D) -> void:
