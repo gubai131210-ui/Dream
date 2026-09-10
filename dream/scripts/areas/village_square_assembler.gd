@@ -138,98 +138,51 @@ func _spawn_trees(ysort: Node2D) -> void:
 
 
 func _spawn_actors(ysort: Node2D) -> void:
+	# Use distinct static NPC sprites. Do NOT cycle idle_frame_* — those crops
+	# are not a coherent idle strip and cause morphing glitches.
 	var actors := [
-		{"pos": Vector2(600, 520), "title": "村民", "desc": "在喷泉边休息的村民。"},
-		{"pos": Vector2(720, 500), "title": "摊主", "desc": "照料摊位的村民。"},
-		{"pos": Vector2(540, 540), "title": "访客", "desc": "路过广场的访客。"},
+		{"path": "res://assets/sprites/npc/npc_00.png", "pos": Vector2(600, 520), "title": "村民", "desc": "在喷泉边休息的村民。"},
+		{"path": "res://assets/sprites/npc/npc_01.png", "pos": Vector2(720, 500), "title": "摊主", "desc": "照料摊位的村民。"},
+		{"path": "res://assets/sprites/npc/npc_02.png", "pos": Vector2(540, 540), "title": "访客", "desc": "路过广场的访客。"},
 	]
-	var idle_frames: Array[Texture2D] = []
-	for i in 4:
-		var fp := "res://assets/sprites/npc/idle_frame_%d.png" % i
-		if ResourceLoader.exists(fp):
-			idle_frames.append(load(fp) as Texture2D)
-	for i in actors.size():
-		var a: Dictionary = actors[i]
+	for a in actors:
+		if not ResourceLoader.exists(a["path"]):
+			continue
 		var hs := _make_hotspot(ysort, a["title"], a["desc"], a["pos"], Vector2(40, 56))
 		var visual: Node2D = hs.get_node("Visual")
-		if idle_frames.size() >= 2:
-			var sf := SpriteFrames.new()
-			sf.add_animation("idle")
-			sf.set_animation_speed("idle", 4.0)
-			sf.set_animation_loop("idle", true)
-			for tex in idle_frames:
-				sf.add_frame("idle", tex)
-			var anim := AnimatedSprite2D.new()
-			anim.sprite_frames = sf
-			anim.animation = "idle"
-			anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			visual.add_child(anim)
-			anim.play("idle")
-		else:
-			var path := "res://assets/sprites/npc/npc_%02d.png" % i
-			if ResourceLoader.exists(path):
-				_spawn_sprite(visual, path, Vector2.ZERO)
+		var spr := _spawn_sprite(visual, a["path"], Vector2.ZERO)
+		# Subtle bob only — no frame swapping.
+		var tw := spr.create_tween().set_loops()
+		tw.tween_property(spr, "position:y", -1.5, 1.1).as_relative().set_trans(Tween.TRANS_SINE)
+		tw.tween_property(spr, "position:y", 1.5, 1.1).as_relative().set_trans(Tween.TRANS_SINE)
 
 
 func _spawn_water_fx(ysort: Node2D) -> void:
-	var frames: Array[Texture2D] = []
-	for i in 6:
-		var p := "res://assets/sprites/fx/water_frame_%d.png" % i
-		if ResourceLoader.exists(p):
-			frames.append(load(p) as Texture2D)
-	if frames.is_empty():
+	# Fake water_frame_* sheets are mismatched tiles (grass/noise), not a flow strip.
+	# Keep river as TileMap only; soft pulse on a single static water tile if present.
+	var sample := "res://assets/tilesets/water_atlas.png"
+	if not ResourceLoader.exists(sample):
 		return
-	var sf := SpriteFrames.new()
-	sf.add_animation("flow")
-	sf.set_animation_speed("flow", 6.0)
-	sf.set_animation_loop("flow", true)
-	for tex in frames:
-		sf.add_frame("flow", tex)
-	# place animated water patches along river
-	for y in [150, 280, 420, 560, 700]:
-		var anim := AnimatedSprite2D.new()
-		anim.sprite_frames = sf
-		anim.animation = "flow"
-		anim.position = Vector2(80, y)
-		anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		anim.scale = Vector2(2, 2)
-		ysort.add_child(anim)
-		anim.play("flow")
-	# fountain splash
-	var splash := AnimatedSprite2D.new()
-	splash.sprite_frames = sf
-	splash.animation = "flow"
-	splash.position = Vector2(640, 470)
-	splash.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	ysort.add_child(splash)
-	splash.play("flow")
-
-
-func _spawn_fx(ysort: Node2D) -> void:
-	_spawn_fx_loop(ysort, "smoke", Vector2(300, 200), 5.0)
-	_spawn_fx_loop(ysort, "leaf", Vector2(980, 260), 4.0)
-	_spawn_fx_loop(ysort, "sparkle", Vector2(640, 450), 7.0)
-	_spawn_fx_loop(ysort, "leaf", Vector2(180, 620), 3.5)
-
-
-func _spawn_fx_loop(ysort: Node2D, prefix: String, pos: Vector2, fps: float) -> void:
-	var frames: Array[Texture2D] = []
-	for i in 6:
-		var p := "res://assets/sprites/fx/%s_%02d.png" % [prefix, i]
-		if ResourceLoader.exists(p):
-			frames.append(load(p) as Texture2D)
-	if frames.is_empty():
+	var atlas := load(sample) as Texture2D
+	if atlas == null:
 		return
-	var sf := SpriteFrames.new()
-	sf.add_animation("loop")
-	sf.set_animation_speed("loop", fps)
-	sf.set_animation_loop("loop", true)
-	for tex in frames:
-		sf.add_frame("loop", tex)
-	var anim := AnimatedSprite2D.new()
-	anim.sprite_frames = sf
-	anim.animation = "loop"
-	anim.position = pos
-	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	ysort.add_child(anim)
-	anim.play("loop")
+	var region := AtlasTexture.new()
+	region.atlas = atlas
+	region.region = Rect2(0, 0, Scale.BASE_TILE, Scale.BASE_TILE)
+	for y in [200, 400, 600]:
+		var spr := Sprite2D.new()
+		spr.texture = region
+		spr.position = Vector2(96, y)
+		spr.scale = Vector2(3, 3)
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		spr.modulate = Color(1, 1, 1, 0.85)
+		ysort.add_child(spr)
+		var tw := spr.create_tween().set_loops()
+		tw.tween_property(spr, "modulate:a", 0.55, 1.4).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(spr, "modulate:a", 0.9, 1.4).set_trans(Tween.TRANS_SINE)
+
+
+func _spawn_fx(_ysort: Node2D) -> void:
+	# Intentionally empty: extracted smoke/leaf/sparkle frames are not coherent
+	# animation strips. Re-enable only after real 4/6/8-frame FX sheets exist.
+	pass
