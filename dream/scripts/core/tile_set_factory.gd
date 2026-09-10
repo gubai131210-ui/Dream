@@ -7,9 +7,13 @@ const BASE := Scale.BASE_TILE
 static func from_atlas(texture: Texture2D, columns: int = 8) -> TileSet:
 	var ts := TileSet.new()
 	ts.tile_size = Vector2i(BASE, BASE)
+	# Helps avoid UV bleed at tile edges when any filtering occurs.
+	ts.uv_clipping = true
 	var source := TileSetAtlasSource.new()
 	source.texture = texture
 	source.texture_region_size = Vector2i(BASE, BASE)
+	# Godot extrudes 1px padding internally to prevent seams between atlas cells.
+	source.use_texture_padding = true
 	var src_id := ts.add_source(source)
 	var tex_size := texture.get_size()
 	@warning_ignore("integer_division")
@@ -37,3 +41,27 @@ static func paint_checker(layer: TileMapLayer, source_id: int, a: Vector2i, b: V
 		for x in range(rect.position.x, rect.position.x + rect.size.x):
 			var coords := a if ((x + y) % 2 == 0) else b
 			layer.set_cell(Vector2i(x, y), source_id, coords)
+
+
+## Paint a rectangle using random seamless variants (atlas coords list).
+static func paint_random(layer: TileMapLayer, source_id: int, variants: Array[Vector2i], rect: Rect2i, rng_seed: int = 1) -> void:
+	if variants.is_empty():
+		return
+	var rng := RandomNumberGenerator.new()
+	rng.seed = rng_seed
+	for y in range(rect.position.y, rect.position.y + rect.size.y):
+		for x in range(rect.position.x, rect.position.x + rect.size.x):
+			var idx := rng.randi_range(0, variants.size() - 1)
+			layer.set_cell(Vector2i(x, y), source_id, variants[idx])
+
+
+static func atlas_variants(columns: int, count: int) -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	for i in count:
+		@warning_ignore("integer_division")
+		out.append(Vector2i(i % columns, i / columns))
+	return out
+
+
+static func configure_layer(layer: TileMapLayer) -> void:
+	layer.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST

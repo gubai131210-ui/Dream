@@ -19,7 +19,10 @@ func _ready() -> void:
 		_wire_hotspots(child)
 	camera.bounds = Rect2(-80, -80, 1400, 1100)
 	camera.position = Vector2(640, 480)
+	# Integer zoom avoids sub-pixel hairline seams between tiles.
 	camera.zoom = Vector2(1.0, 1.0)
+	camera.min_zoom = 1.0
+	camera.max_zoom = 3.0
 	if grid_overlay:
 		grid_overlay.visible = false
 

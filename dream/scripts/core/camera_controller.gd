@@ -50,7 +50,8 @@ func _process(delta: float) -> void:
 
 
 func _apply_zoom(amount: float) -> void:
-	var z := clampf(zoom.x + amount, min_zoom, max_zoom)
+	# Keep zoom on whole numbers to prevent TileMap hairline seams.
+	var z := clampf(round(zoom.x + amount), min_zoom, max_zoom)
 	zoom = Vector2(z, z)
 	_clamp_to_bounds()
 

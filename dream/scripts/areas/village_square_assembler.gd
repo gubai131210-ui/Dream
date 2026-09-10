@@ -3,10 +3,12 @@ extends Node
 
 ## Builds layered village square content from normalized atlases/sprites.
 
-const GRASS_ATLAS := "res://assets/tilesets/grass_atlas.png"
-const STONE_ATLAS := "res://assets/tilesets/stone_atlas.png"
-const DIRT_ATLAS := "res://assets/tilesets/dirt_atlas.png"
+const GRASS_ATLAS := "res://assets/tilesets/grass_seamless_atlas.png"
+const STONE_ATLAS := "res://assets/tilesets/stone_seamless_atlas.png"
+const DIRT_ATLAS := "res://assets/tilesets/dirt_seamless_atlas.png"
 const WATER_ATLAS := "res://assets/tilesets/water_atlas.png"
+## Optional sparse accents from original (bordered) atlas — deco only, not base fill.
+const GRASS_DECO_ATLAS := "res://assets/tilesets/grass_atlas.png"
 
 
 func assemble(root: Node2D) -> void:
@@ -23,28 +25,61 @@ func assemble(root: Node2D) -> void:
 	ground.tile_set = TileSetFactory.from_atlas(grass_tex)
 	path.tile_set = TileSetFactory.from_atlas(stone_tex)
 	water.tile_set = TileSetFactory.from_atlas(water_tex if water_tex else grass_tex)
+	TileSetFactory.configure_layer(ground)
+	TileSetFactory.configure_layer(path)
+	TileSetFactory.configure_layer(water)
 
-	# Base grass field ~40x30 tiles matching A09 plaza scale
-	TileSetFactory.paint_checker(ground, 0, Vector2i(0, 0), Vector2i(1, 0), Rect2i(0, 0, 40, 30))
+	# Seamless base grass — mostly ONE wrap-matched tile so the field reads continuous.
+	# Sparse second variant only (very low rate) to break obvious large-scale repeat.
+	TileSetFactory.paint_random(ground, 0, [Vector2i(0, 0), Vector2i(0, 0), Vector2i(0, 0), Vector2i(1, 0)], Rect2i(0, 0, 40, 30), 42)
 
-	# Central stone plaza
-	TileSetFactory.paint_checker(path, 0, Vector2i(0, 0), Vector2i(1, 0), Rect2i(14, 10, 12, 10))
-	# Approach roads (N/S/E/W)
-	TileSetFactory.paint_rect(path, 0, Vector2i(2, 0), Rect2i(18, 0, 4, 10))
-	TileSetFactory.paint_rect(path, 0, Vector2i(2, 0), Rect2i(18, 20, 4, 10))
-	TileSetFactory.paint_rect(path, 0, Vector2i(3, 0), Rect2i(0, 13, 14, 4))
-	TileSetFactory.paint_rect(path, 0, Vector2i(3, 0), Rect2i(26, 13, 14, 4))
+	# Seamless stone — prefer few close variants
+	TileSetFactory.paint_random(path, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(14, 10, 12, 10), 7)
+	TileSetFactory.paint_random(path, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(18, 0, 4, 10), 8)
+	TileSetFactory.paint_random(path, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(18, 20, 4, 10), 9)
+	TileSetFactory.paint_random(path, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(0, 13, 14, 4), 10)
+	TileSetFactory.paint_random(path, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(26, 13, 14, 4), 11)
 
 	# River on west
 	TileSetFactory.paint_rect(water, 0, Vector2i(0, 0), Rect2i(1, 2, 4, 26))
 	TileSetFactory.paint_rect(water, 0, Vector2i(1, 0), Rect2i(2, 4, 3, 8))
 
+	_spawn_grass_deco(ysort)
 	_spawn_buildings(ysort)
 	_spawn_props(ysort)
 	_spawn_trees(ysort)
 	_spawn_actors(ysort)
 	_spawn_water_fx(ysort)
 	_spawn_fx(ysort)
+
+
+func _spawn_grass_deco(ysort: Node2D) -> void:
+	# Sparse flower/clump accents from original atlas — placed as sprites so they
+	# never create ground seams. Skip if atlas missing.
+	if not ResourceLoader.exists(GRASS_DECO_ATLAS):
+		return
+	var atlas := load(GRASS_DECO_ATLAS) as Texture2D
+	if atlas == null:
+		return
+	# Pick a few flower-looking cells from lower rows of the old atlas.
+	var spots := [
+		Vector2(160, 200), Vector2(320, 640), Vector2(900, 180), Vector2(1040, 560),
+		Vector2(240, 480), Vector2(720, 220), Vector2(480, 700), Vector2(860, 640),
+	]
+	for i in spots.size():
+		var region := AtlasTexture.new()
+		region.atlas = atlas
+		# old atlas is 8 cols; use mid/lower tiles that often have flowers
+		var cx := 2 + (i % 4)
+		var cy := 1 + (i % 3)
+		region.region = Rect2(cx * Scale.BASE_TILE, cy * Scale.BASE_TILE, Scale.BASE_TILE, Scale.BASE_TILE)
+		var spr := Sprite2D.new()
+		spr.texture = region
+		spr.position = spots[i]
+		spr.centered = true
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		spr.z_index = 1
+		ysort.add_child(spr)
 
 
 func _spawn_sprite(parent: Node2D, path: String, pos: Vector2, z: int = 0) -> Sprite2D:
