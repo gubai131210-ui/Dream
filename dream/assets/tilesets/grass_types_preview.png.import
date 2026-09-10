@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cclbyg6858weg"
-path="res://.godot/imported/grass_seamless_atlas.png-dafb865d06586d6fd8547da4246d1e37.ctex"
+uid="uid://chodxk5qb1q0e"
+path="res://.godot/imported/grass_types_preview.png-e6ec16df93181554bb5da8ae5eca9ef6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tilesets/grass_seamless_atlas.png"
-dest_files=["res://.godot/imported/grass_seamless_atlas.png-dafb865d06586d6fd8547da4246d1e37.ctex"]
+source_file="res://assets/tilesets/grass_types_preview.png"
+dest_files=["res://.godot/imported/grass_types_preview.png-e6ec16df93181554bb5da8ae5eca9ef6.ctex"]
 
 [params]
 
