@@ -1,7 +1,8 @@
 # Dream Phase 3 — Farmland + Market ring
 
 **Status:** DONE (pending user local Godot visual QA)  
-**Depends on:** Phase 2 (A08 / A02 / Hub + `AreaCraft`), `SCALE.md`, `LAYOUT.md`, `BUILDING_PLACEMENT.md`, skill `realistic-scene-craft`
+**Depends on:** Phase 2 (A08 / A02 / Hub + `AreaCraft`), `SCALE.md`, `LAYOUT.md`, `BUILDING_PLACEMENT.md`, skill `realistic-scene-craft`  
+**Next:** [`PHASE4.md`](PHASE4.md) — A04 forest entrance + A11 station
 
 Phase 2 is **DONE** for scope A08/A02/Hub wiring (building AABB lock documented). This phase expands the village ring with gameplay farmland and a commercial street.
 
