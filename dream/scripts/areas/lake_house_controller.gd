@@ -1,4 +1,4 @@
-class_name ForestEntranceController
+class_name LakeHouseController
 extends Node2D
 
 @onready var camera: CameraController = $CameraController
@@ -6,29 +6,23 @@ extends Node2D
 @onready var ysort_root: Node2D = $YSortRoot
 @onready var btn_hub: Button = $UI/TopBar/BackHub
 @onready var btn_conn: Button = $UI/TopBar/BackConnections
-@onready var btn_residential: Button = $UI/TopBar/ToResidential
-@onready var btn_square: Button = $UI/TopBar/ToSquare
-@onready var btn_deep: Button = $UI/TopBar/ToDeepForest
+@onready var btn_lake: Button = $UI/TopBar/ToLake
 @onready var grid_overlay: Node2D = $DebugGrid
 
 
 func _ready() -> void:
-	var assembler := get_node_or_null("Assembler") as ForestEntranceAssembler
+	var assembler := get_node_or_null("Assembler") as LakeHouseAssembler
 	if assembler:
 		assembler.assemble(self)
 	btn_hub.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.HUB_PATH))
 	btn_conn.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.CONNECTION_PATH))
-	if btn_residential:
-		btn_residential.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.RESIDENTIAL_PATH))
-	if btn_square:
-		btn_square.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.SQUARE_PATH))
-	if btn_deep:
-		btn_deep.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.FOREST_DEEP_PATH))
+	if btn_lake:
+		btn_lake.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.LAKE_PATH))
 	for child in ysort_root.get_children():
 		_wire_hotspots(child)
 		_wire_portals(child)
 	camera.bounds = Rect2(-80, -80, 1400, 1100)
-	camera.position = Vector2(640, 480)
+	camera.position = Vector2(720, 420)
 	camera.zoom = Vector2(1.0, 1.0)
 	camera.min_zoom = 1.0
 	camera.max_zoom = 3.0

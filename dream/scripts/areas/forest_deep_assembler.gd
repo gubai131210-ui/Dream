@@ -1,0 +1,233 @@
+class_name ForestDeepAssembler
+extends Node
+
+## Deep forest (A05) — dense canopy, low light, winding dirt only.
+## Silhouette: continuous tree mass + serpentine trail (NO large clearing / NO stone plaza).
+
+const MAP_W := 40
+const MAP_H := 30
+
+var craft: AreaCraft = AreaCraft.new()
+
+
+func assemble(root: Node2D) -> void:
+	var ground: TileMapLayer = root.get_node("Ground")
+	var path: TileMapLayer = root.get_node("Path")
+	var water: TileMapLayer = root.get_node("Water")
+	var ysort: Node2D = root.get_node("YSortRoot")
+
+	craft.setup(MAP_W, MAP_H)
+	_rebuild_masks()
+	craft.prepare_layers(ground, path, water)
+
+	craft.paint_ecological_grass(ground)
+	craft.paint_dirt_spurs(ground)
+	craft.paint_water(water, ground)
+	# Dirt-only walkways — leave Path layer empty (no stone plaza).
+	craft.paint_paths(path)
+
+	_apply_canopy_tint(root)
+	_spawn_props(ysort)
+	_spawn_trees(ysort)
+	_spawn_actors(ysort)
+	craft.spawn_water_overlay(ysort)
+	_spawn_portals(ysort)
+
+
+func _apply_canopy_tint(root: Node2D) -> void:
+	var mod := CanvasModulate.new()
+	mod.name = "CanopyTint"
+	# Cooler, dimmer under dense canopy (vs brighter forest entrance clearing).
+	mod.color = Color(0.62, 0.70, 0.68, 1.0)
+	root.add_child(mod)
+
+
+func _rebuild_masks() -> void:
+	craft.clear_masks()
+	for y in range(MAP_H):
+		for x in range(MAP_W):
+			craft.water_mask[y][x] = _compute_stream_tile(x, y)
+	_paint_winding_dirt()
+	for y in range(MAP_H):
+		for x in range(MAP_W):
+			if craft.is_dirt(x, y):
+				craft.water_mask[y][x] = false
+	craft.rebuild_banks()
+
+
+func _stream_cx(ty: float) -> float:
+	# East meander — opposite of A04 west brook.
+	return 31.5 + sin(ty * 0.42 + 0.8) * 1.6 + cos(ty * 0.19) * 0.7
+
+
+func _stream_hw(ty: float) -> float:
+	return 0.85 + 0.25 * sin(ty * 0.55 + 1.1)
+
+
+func _compute_stream_tile(tx: int, ty: int) -> bool:
+	# Tiny east stream — optional meander, not a wide river.
+	if ty < 6 or ty > 24:
+		return false
+	if tx < 26 or tx > 36:
+		return false
+	var cx := _stream_cx(float(ty))
+	var hw := _stream_hw(float(ty))
+	var dx := absf(float(tx) - cx)
+	if dx <= hw:
+		return true
+	if dx <= hw + 0.55 and sin(float(ty) * 0.9 + float(tx) * 0.4) > 0.55:
+		return true
+	return false
+
+
+func _set_dirt(tx: int, ty: int, force: bool = false) -> void:
+	if tx < 0 or ty < 0 or tx >= MAP_W or ty >= MAP_H:
+		return
+	if not force and craft.is_water(tx, ty):
+		return
+	craft.water_mask[ty][tx] = false
+	craft.dirt_mask[ty][tx] = true
+	craft.path_mask[ty][tx] = false
+
+
+func _trail_cx(ty: float) -> float:
+	# Serpentine N–S spine that weaves (not a straight clearing corridor).
+	return 17.0 + sin(ty * 0.33) * 5.2 + cos(ty * 0.17 + 0.4) * 2.4
+
+
+func _paint_winding_dirt() -> void:
+	# Main winding dirt trail — 1–2 tiles wide, no rectangular clearing apron.
+	for ty in range(2, MAP_H - 1):
+		var cx := _trail_cx(float(ty))
+		var hw := 0.85 + 0.2 * sin(float(ty) * 0.6)
+		for tx in range(MAP_W):
+			if absf(float(tx) - cx) <= hw:
+				_set_dirt(tx, ty)
+	# Soft pockets at bends only (tiny, not a plaza).
+	_set_dirt(12, 10)
+	_set_dirt(13, 10)
+	_set_dirt(22, 18)
+	_set_dirt(23, 18)
+	_set_dirt(15, 22)
+	# East spur toward river portal (crosses stream on a short dirt bridge).
+	var spur_y := 14
+	var spur_cx := int(round(_trail_cx(float(spur_y))))
+	for tx in range(spur_cx, MAP_W - 1):
+		_set_dirt(tx, spur_y, true)
+		_set_dirt(tx, spur_y + 1, true)
+	# North fork toward waterfall portal.
+	var north_cx := int(round(_trail_cx(4.0)))
+	for ty in range(1, 7):
+		_set_dirt(north_cx, ty)
+		_set_dirt(north_cx + 1, ty)
+	# South mouth toward forest entrance.
+	var south_cx := int(round(_trail_cx(27.0)))
+	for ty in range(25, MAP_H):
+		_set_dirt(south_cx - 1, ty)
+		_set_dirt(south_cx, ty)
+		_set_dirt(south_cx + 1, ty)
+
+
+func _spawn_props(ysort: Node2D) -> void:
+	# Sparse forest litter only — no cabin / no plaza furniture cluster.
+	var samples := [
+		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(420, 340), "title": "苔藓行囊", "desc": "被遗弃在树根旁的行囊。", "scale": 0.6},
+		{"path": "res://assets/sprites/props/crate_1.png", "pos": Vector2(720, 580), "title": "朽木箱", "desc": "深林小径旁潮湿木箱。", "scale": 0.5},
+		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(560, 700), "title": "林灯", "desc": "土径急弯处的微弱路灯。"},
+	]
+	for s in samples:
+		if not ResourceLoader.exists(s["path"]):
+			continue
+		var pos: Vector2 = s["pos"]
+		var cleared := craft.find_clear_near(pos, 1, 1, 7, true)
+		if cleared == Vector2.ZERO:
+			var t := craft.world_to_tile(pos)
+			if craft.is_water(t.x, t.y):
+				continue
+		else:
+			pos = cleared
+		craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
+		var spr := craft.spawn_sprite(ysort, s["path"], pos)
+		spr.modulate = Color(0.78, 0.82, 0.76)
+		if s.has("scale"):
+			spr.scale = Vector2(float(s["scale"]), float(s["scale"]))
+		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
+		spr.reparent(hs.get_node("Visual"))
+		spr.position = Vector2.ZERO
+
+
+func _spawn_trees(ysort: Node2D) -> void:
+	# Dense canopy fill — almost full coverage except dirt corridor / stream.
+	var ideals: Array[Vector2] = []
+	for gy in range(0, MAP_H, 2):
+		for gx in range(0, MAP_W, 2):
+			var jx := (gy * 17 + gx * 13) % 5 - 2
+			var jy := (gx * 11 + gy * 7) % 5 - 2
+			ideals.append(craft.tile_center(clampi(gx + jx, 0, MAP_W - 1), clampi(gy + jy, 0, MAP_H - 1)))
+	# Extra edge mass for silhouette.
+	ideals.append_array([
+		Vector2(40, 40), Vector2(80, 200), Vector2(60, 500), Vector2(100, 800),
+		Vector2(1200, 60), Vector2(1180, 300), Vector2(1220, 560), Vector2(1160, 860),
+		Vector2(300, 40), Vector2(600, 30), Vector2(900, 50),
+		Vector2(200, 900), Vector2(640, 920), Vector2(1000, 880),
+	])
+	var placed := 0
+	for i in ideals.size():
+		var pos := craft.find_clear_near(ideals[i], 1, 1, 3, false)
+		if pos == Vector2.ZERO:
+			continue
+		var t := craft.world_to_tile(pos)
+		if craft.is_water(t.x, t.y) or craft.is_dirt(t.x, t.y):
+			continue
+		# Keep a narrow visual gap along the trail (still dense vs A04 clearing).
+		var trail := _trail_cx(float(t.y))
+		if absf(float(t.x) - trail) < 2.2 and t.y >= 2 and t.y <= 27:
+			continue
+		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
+		if not ResourceLoader.exists(path):
+			continue
+		craft.add_contact_shadow(ysort, pos, Vector2(22, 9))
+		var spr := craft.spawn_sprite(ysort, path, pos)
+		spr.offset = Vector2(0, -spr.texture.get_height() * 0.42)
+		spr.flip_h = (i % 2 == 0)
+		# Darker understory tint.
+		spr.modulate = Color(0.68, 0.74, 0.66)
+		placed += 1
+	if placed < 40:
+		push_warning("ForestDeep: sparse tree spawn (%d) — check tree assets" % placed)
+
+
+func _spawn_actors(ysort: Node2D) -> void:
+	# Sparse — one patrol on the winding dirt (not A04 dual-NPC clearing walk).
+	var mid_a := craft.tile_center(int(round(_trail_cx(20.0))), 20)
+	var mid_b := craft.tile_center(int(round(_trail_cx(14.0))), 14)
+	var mid_c := craft.tile_center(int(round(_trail_cx(10.0))), 10)
+	var mid_d := craft.tile_center(int(round(_trail_cx(18.0))) + 3, 18)
+	craft.spawn_patrol_actor(
+		ysort,
+		"farmer",
+		"拾薪人",
+		"沿蜿蜒土径在深林中缓慢走动。",
+		[mid_a, mid_b, mid_c, mid_d, mid_a],
+	)
+
+
+func _spawn_portals(ysort: Node2D) -> void:
+	var south_cx := int(round(_trail_cx(28.0)))
+	var north_cx := int(round(_trail_cx(3.0)))
+	craft.make_portal(
+		ysort, "→森林入口", SceneRouter.FOREST_ENTRANCE_PATH,
+		craft.tile_center(south_cx, 28), Vector2(96, 56)
+	)
+	craft.make_portal(
+		ysort, "→河流", SceneRouter.RIVER_PATH,
+		Vector2(1200, 464), Vector2(96, 56)
+	)
+	craft.make_portal(
+		ysort, "→瀑布", SceneRouter.WATERFALL_PATH,
+		craft.tile_center(north_cx, 2), Vector2(96, 56)
+	)
+	craft.make_portal(
+		ysort, "→总览", SceneRouter.HUB_PATH,
+		Vector2(640, 40), Vector2(96, 48)
+	)

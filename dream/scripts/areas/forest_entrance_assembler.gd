@@ -101,12 +101,11 @@ func _paint_dirt_trail() -> void:
 	_fill_dirt(CLEAR_TX1 - 2, CLEAR_TY0, CLEAR_TX1, CLEAR_TY1)
 	# Door apron south of cabin foot (~ty 10).
 	_fill_dirt(18, 11, 22, 12)
-	# Bridge-ish dirt over brook at ty 14–15.
+	# Short dirt bridge over brook at mid trail.
 	for ty in [14, 15]:
 		for tx in range(4, 10):
-			if craft.is_water(tx, ty) or tx <= 9:
-				craft.dirt_mask[ty][tx] = true
-				craft.water_mask[ty][tx] = false if tx >= 5 and tx <= 8 else craft.water_mask[ty][tx]
+			craft.dirt_mask[ty][tx] = true
+			craft.water_mask[ty][tx] = false
 
 
 func _spawn_cabin(ysort: Node2D) -> void:
@@ -224,4 +223,5 @@ func _spawn_actors(ysort: Node2D) -> void:
 func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(ysort, "→住宅区", SceneRouter.RESIDENTIAL_PATH, Vector2(1200, 480), Vector2(96, 56))
 	craft.make_portal(ysort, "→广场", SceneRouter.SQUARE_PATH, Vector2(80, 480), Vector2(96, 56))
+	craft.make_portal(ysort, "→深林", SceneRouter.FOREST_DEEP_PATH, Vector2(640, 120), Vector2(96, 56))
 	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))

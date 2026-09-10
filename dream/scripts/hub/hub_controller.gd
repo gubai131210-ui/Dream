@@ -2,11 +2,8 @@ class_name HubController
 extends Node2D
 
 ## Hub / connection overview navigation.
-## TopBar buttons + map Area2D hotspots enter scenes via SceneRouter paths.
-## Area scenes should expose a return control that calls SceneRouter.go_hub()
-## (or go_connections()) so Hub ↔ area is never a dead end.
-## Portal pattern between areas: edge hotspots → SceneRouter.change_to /
-## go_village_square / go_village_residential / go_farm_residential.
+## TopBar village buttons + NatureRow (Phase 4B outdoor shell) + map hotspots.
+## Missing scenes use _change_if_exists (warn, no crash).
 
 @export var hub_mode: String = "world"
 
@@ -40,6 +37,7 @@ func _ready() -> void:
 	btn_forest.pressed.connect(_enter_forest)
 	btn_station.pressed.connect(_enter_station)
 	btn_other.pressed.connect(_switch_overview)
+	_wire_nature_row()
 	_wire_hotspot(hotspot_square, "村庄广场（可进入）", _enter_square)
 	_wire_hotspot(hotspot_residential, "村庄住宅区（可进入）", _enter_residential)
 	_wire_hotspot(hotspot_farm, "农场住宅区（可进入）", _enter_farm)
@@ -47,8 +45,40 @@ func _ready() -> void:
 	_wire_hotspot(hotspot_market, "商业街（可进入）", _enter_market)
 	_wire_hotspot(hotspot_forest, "森林入口（可进入）", _enter_forest)
 	_wire_hotspot(hotspot_station, "车站（可进入）", _enter_station)
+	_wire_nature_hotspots()
 	status_label.text = _default_status()
 	_fit_camera_to_map()
+
+
+func _wire_nature_row() -> void:
+	var row := get_node_or_null("UI/NatureRow") as HBoxContainer
+	if row == null:
+		return
+	_bind_btn(row.get_node_or_null("EnterForestDeep"), _enter_forest_deep)
+	_bind_btn(row.get_node_or_null("EnterRiver"), _enter_river)
+	_bind_btn(row.get_node_or_null("EnterWaterfall"), _enter_waterfall)
+	_bind_btn(row.get_node_or_null("EnterHillFarm"), _enter_hill_farm)
+	_bind_btn(row.get_node_or_null("EnterLake"), _enter_lake)
+	_bind_btn(row.get_node_or_null("EnterLighthouse"), _enter_lighthouse)
+	_bind_btn(row.get_node_or_null("EnterLakeHouse"), _enter_lake_house)
+
+
+func _bind_btn(btn: Button, cb: Callable) -> void:
+	if btn:
+		btn.pressed.connect(cb)
+
+
+func _wire_nature_hotspots() -> void:
+	var hs := get_node_or_null("Hotspots") as Node2D
+	if hs == null:
+		return
+	_wire_hotspot(hs.get_node_or_null("ForestDeep") as Area2D, "深林（可进入）", _enter_forest_deep)
+	_wire_hotspot(hs.get_node_or_null("River") as Area2D, "河流（可进入）", _enter_river)
+	_wire_hotspot(hs.get_node_or_null("Waterfall") as Area2D, "瀑布（可进入）", _enter_waterfall)
+	_wire_hotspot(hs.get_node_or_null("HillFarm") as Area2D, "山坡农田（可进入）", _enter_hill_farm)
+	_wire_hotspot(hs.get_node_or_null("Lake") as Area2D, "湖泊（可进入）", _enter_lake)
+	_wire_hotspot(hs.get_node_or_null("Lighthouse") as Area2D, "灯塔（可进入）", _enter_lighthouse)
+	_wire_hotspot(hs.get_node_or_null("LakeHouse") as Area2D, "湖畔小屋（可进入）", _enter_lake_house)
 
 
 func _wire_hotspot(hotspot: Area2D, hint: String, enter_cb: Callable) -> void:
@@ -104,6 +134,34 @@ func _enter_forest() -> void:
 
 func _enter_station() -> void:
 	_change_if_exists(SceneRouter.STATION_PATH, "车站")
+
+
+func _enter_forest_deep() -> void:
+	_change_if_exists(SceneRouter.FOREST_DEEP_PATH, "深林")
+
+
+func _enter_river() -> void:
+	_change_if_exists(SceneRouter.RIVER_PATH, "河流")
+
+
+func _enter_waterfall() -> void:
+	_change_if_exists(SceneRouter.WATERFALL_PATH, "瀑布")
+
+
+func _enter_hill_farm() -> void:
+	_change_if_exists(SceneRouter.HILL_FARM_PATH, "山坡农田")
+
+
+func _enter_lake() -> void:
+	_change_if_exists(SceneRouter.LAKE_PATH, "湖泊")
+
+
+func _enter_lighthouse() -> void:
+	_change_if_exists(SceneRouter.LIGHTHOUSE_PATH, "灯塔")
+
+
+func _enter_lake_house() -> void:
+	_change_if_exists(SceneRouter.LAKE_HOUSE_PATH, "湖畔小屋")
 
 
 func _change_if_exists(path: String, label: String) -> void:

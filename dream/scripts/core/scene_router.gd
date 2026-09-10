@@ -12,6 +12,13 @@ const FARMLAND_PATH := "res://scenes/areas/farmland/farmland.tscn"
 const MARKET_PATH := "res://scenes/areas/market_street/market_street.tscn"
 const FOREST_ENTRANCE_PATH := "res://scenes/areas/forest_entrance/forest_entrance.tscn"
 const STATION_PATH := "res://scenes/areas/station/station.tscn"
+const FOREST_DEEP_PATH := "res://scenes/areas/forest_deep/forest_deep.tscn"
+const RIVER_PATH := "res://scenes/areas/river/river.tscn"
+const WATERFALL_PATH := "res://scenes/areas/waterfall/waterfall.tscn"
+const HILL_FARM_PATH := "res://scenes/areas/hill_farm/hill_farm.tscn"
+const LAKE_PATH := "res://scenes/areas/lake/lake.tscn"
+const LIGHTHOUSE_PATH := "res://scenes/areas/lighthouse/lighthouse.tscn"
+const LAKE_HOUSE_PATH := "res://scenes/areas/lake_house/lake_house.tscn"
 
 
 func go_hub() -> void:
@@ -48,6 +55,34 @@ func go_forest_entrance() -> void:
 
 func go_station() -> void:
 	get_tree().change_scene_to_file(STATION_PATH)
+
+
+func go_forest_deep() -> void:
+	get_tree().change_scene_to_file(FOREST_DEEP_PATH)
+
+
+func go_river() -> void:
+	get_tree().change_scene_to_file(RIVER_PATH)
+
+
+func go_waterfall() -> void:
+	get_tree().change_scene_to_file(WATERFALL_PATH)
+
+
+func go_hill_farm() -> void:
+	get_tree().change_scene_to_file(HILL_FARM_PATH)
+
+
+func go_lake() -> void:
+	get_tree().change_scene_to_file(LAKE_PATH)
+
+
+func go_lighthouse() -> void:
+	get_tree().change_scene_to_file(LIGHTHOUSE_PATH)
+
+
+func go_lake_house() -> void:
+	get_tree().change_scene_to_file(LAKE_HOUSE_PATH)
 
 
 static func change_to(tree: SceneTree, path: String) -> void:

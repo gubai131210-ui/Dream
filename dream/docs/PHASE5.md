@@ -1,7 +1,7 @@
 # Dream Phase 5 — Interior & special areas (draft)
 
 **Status:** DRAFT — **do not start implementation** until outdoor map shell is DONE  
-**Depends on:** Outdoor A-class scenes shell (remaining A05–A07, A12–A15 as scoped), Phase 4 exit, [`INTERIOR_LIBRARY.md`](INTERIOR_LIBRARY.md), [`ASSET_TAXONOMY.md`](ASSET_TAXONOMY.md), `BUILDING_PLACEMENT.md`, `NPC_ANIM.md`
+**Depends on:** Outdoor A-class scenes shell ([`PHASE4B.md`](PHASE4B.md) A05–A07, A12–A15 DONE), Phase 4 exit, [`INTERIOR_LIBRARY.md`](INTERIOR_LIBRARY.md), [`ASSET_TAXONOMY.md`](ASSET_TAXONOMY.md), `BUILDING_PLACEMENT.md`, `NPC_ANIM.md`
 
 Phase 5 打开世界 **第二/三层**：可进入室内、地下入口、钓鱼最小闭环、昼夜天气壳。  
 **不**一次实现 C01–C62 全表。

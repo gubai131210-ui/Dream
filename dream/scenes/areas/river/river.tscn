@@ -1,12 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://dream_forest_entrance"]
+[gd_scene load_steps=6 format=3 uid="uid://dream_river"]
 
-[ext_resource type="Script" path="res://scripts/areas/forest_entrance_controller.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/areas/river_controller.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/core/camera_controller.gd" id="2"]
 [ext_resource type="Script" path="res://scripts/core/debug_grid.gd" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/ui/info_panel.tscn" id="4"]
-[ext_resource type="Script" path="res://scripts/areas/forest_entrance_assembler.gd" id="5"]
+[ext_resource type="Script" path="res://scripts/areas/river_assembler.gd" id="5"]
 
-[node name="ForestEntrance" type="Node2D"]
+[node name="River" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1")
 
@@ -54,7 +54,7 @@ theme_override_constants/separation = 10
 [node name="Hint" type="Label" parent="UI/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "森林入口 — WASD/中键拖拽，滚轮缩放，点击热点/传送门，G 开关网格"
+text = "河流 — WASD/中键拖拽，滚轮缩放，点击热点/传送门，G 开关网格"
 
 [node name="BackHub" type="Button" parent="UI/TopBar"]
 layout_mode = 2
@@ -64,14 +64,12 @@ text = "世界总览"
 layout_mode = 2
 text = "连接总览"
 
-[node name="ToResidential" type="Button" parent="UI/TopBar"]
-layout_mode = 2
-text = "→住宅区"
-
-[node name="ToSquare" type="Button" parent="UI/TopBar"]
-layout_mode = 2
-text = "→广场"
-
-[node name="ToDeepForest" type="Button" parent="UI/TopBar"]
+[node name="ToDeep" type="Button" parent="UI/TopBar"]
 layout_mode = 2
 text = "→深林"
+[node name="ToFall" type="Button" parent="UI/TopBar"]
+layout_mode = 2
+text = "→瀑布"
+[node name="ToLake" type="Button" parent="UI/TopBar"]
+layout_mode = 2
+text = "→湖泊"

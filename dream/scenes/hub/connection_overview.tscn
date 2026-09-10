@@ -158,3 +158,42 @@ text = "进入车站"
 [node name="SwitchOverview" type="Button" parent="UI/TopBar/Buttons" unique_id=362553113]
 layout_mode = 2
 text = "返回世界总览"
+
+[node name="NatureRow" type="HBoxContainer" parent="UI"]
+offset_left = 12.0
+offset_top = 60.0
+offset_right = 1400.0
+offset_bottom = 100.0
+theme_override_constants/separation = 8
+
+[node name="NatureHint" type="Label" parent="UI/NatureRow"]
+layout_mode = 2
+text = "自然区:"
+
+[node name="EnterForestDeep" type="Button" parent="UI/NatureRow"]
+layout_mode = 2
+text = "深林"
+
+[node name="EnterRiver" type="Button" parent="UI/NatureRow"]
+layout_mode = 2
+text = "河流"
+
+[node name="EnterWaterfall" type="Button" parent="UI/NatureRow"]
+layout_mode = 2
+text = "瀑布"
+
+[node name="EnterHillFarm" type="Button" parent="UI/NatureRow"]
+layout_mode = 2
+text = "山坡农田"
+
+[node name="EnterLake" type="Button" parent="UI/NatureRow"]
+layout_mode = 2
+text = "湖泊"
+
+[node name="EnterLighthouse" type="Button" parent="UI/NatureRow"]
+layout_mode = 2
+text = "灯塔"
+
+[node name="EnterLakeHouse" type="Button" parent="UI/NatureRow"]
+layout_mode = 2
+text = "湖畔小屋"
