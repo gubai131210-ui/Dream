@@ -307,63 +307,68 @@ func _spawn_platform_benches_and_props(ysort: Node2D) -> void:
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
 
-	# Simple south shelter hint (ColorRect roof) — not a second full building.
-	var shelter_pos := Vector2(960, 560)
-	var shs := craft.make_hotspot(
-		ysort,
-		"南口候车棚",
-		"轨道南侧简易候车棚（代理），面向站台。",
-		shelter_pos,
-		Vector2(96, 56)
-	)
-	var roof := ColorRect.new()
-	roof.size = Vector2(72, 18)
-	roof.position = Vector2(-36, -28)
-	roof.color = Color(0.45, 0.42, 0.38, 0.85)
-	shs.get_node("Visual").add_child(roof)
-	var post_l := ColorRect.new()
-	post_l.size = Vector2(4, 28)
-	post_l.position = Vector2(-30, -12)
-	post_l.color = Color(0.35, 0.22, 0.12, 0.9)
-	shs.get_node("Visual").add_child(post_l)
-	var post_r := ColorRect.new()
-	post_r.size = Vector2(4, 28)
-	post_r.position = Vector2(26, -12)
-	post_r.color = Color(0.35, 0.22, 0.12, 0.9)
-	shs.get_node("Visual").add_child(post_r)
+	# South approach props (real sprites) — no ColorRect fake shelter building.
+	var south_props := [
+		{"path": "res://assets/sprites/props/bench_1.png", "pos": Vector2(960, 560), "title": "南口长椅", "desc": "轨道南侧歇脚长椅。"},
+		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(1000, 580), "title": "南口货箱", "desc": "南土路旁货箱。", "scale": 0.55},
+	]
+	for s in south_props:
+		if not ResourceLoader.exists(s["path"]):
+			continue
+		var pos: Vector2 = s["pos"]
+		var cleared := craft.find_clear_near(pos, 1, 1, 5, true)
+		if cleared != Vector2.ZERO:
+			pos = cleared
+		var t := craft.world_to_tile(pos)
+		if craft.is_water(t.x, t.y):
+			continue
+		craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
+		var spr := craft.spawn_sprite(ysort, s["path"], pos)
+		if s.has("scale"):
+			var sc := float(s["scale"])
+			spr.scale = Vector2(sc, sc)
+		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 40))
+		spr.reparent(hs.get_node("Visual"))
+		spr.position = Vector2.ZERO
 
 
 func _spawn_trees(ysort: Node2D) -> void:
-	# Dense north/edge forest — frame the spine; keep platform/track clear.
+	# Edge forest frames the transit spine — full crown AABB via spawn_tree.
+	var zone := craft.map_play_rect(2.0)
 	var ideals := [
-		# North cliff / forest belt behind station
-		Vector2(200, 80), Vector2(360, 64), Vector2(520, 72), Vector2(760, 64),
-		Vector2(920, 80), Vector2(1080, 72), Vector2(1200, 96),
+		# North belt behind station (inset south enough for crowns)
+		Vector2(200, 200), Vector2(360, 180), Vector2(520, 190), Vector2(760, 180),
+		Vector2(920, 200), Vector2(1080, 190), Vector2(1140, 220),
 		# West stream / approach
-		Vector2(120, 280), Vector2(160, 480), Vector2(140, 700),
+		Vector2(140, 300), Vector2(160, 480), Vector2(150, 700),
 		# South framing (not on dirt approach)
-		Vector2(320, 820), Vector2(560, 860), Vector2(800, 840), Vector2(1100, 780),
+		Vector2(320, 800), Vector2(560, 820), Vector2(800, 810), Vector2(1100, 760),
 		# East edge
-		Vector2(1200, 320), Vector2(1220, 560), Vector2(1180, 700),
+		Vector2(1160, 340), Vector2(1180, 560), Vector2(1140, 700),
 	]
+	var placed := 0
 	for i in ideals.size():
-		var pos := craft.find_clear_near(ideals[i], 1, 1, 8, false)
-		if pos == Vector2.ZERO:
+		var ideal: Vector2 = ideals[i]
+		var t0 := craft.world_to_tile(ideal)
+		if craft.is_water(t0.x, t0.y) or craft.is_path(t0.x, t0.y):
 			continue
-		var t := craft.world_to_tile(pos)
-		if craft.is_water(t.x, t.y) or craft.is_path(t.x, t.y):
-			continue
-		# Keep track band clear of trees.
-		if t.y >= TRACK_TY0 - 1 and t.y <= TRACK_TY1 + 1 and t.x >= TRACK_TX0 and t.x <= TRACK_TX1:
+		# Keep platform / track band clear of trees.
+		if t0.y >= PLATFORM_TY0 - 1 and t0.y <= TRACK_TY1 + 1 and t0.x >= TRACK_TX0 and t0.x <= TRACK_TX1:
 			continue
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		if not ResourceLoader.exists(path):
+		var spr := craft.spawn_tree(ysort, path, ideal, zone, 1, 1, 6, false, 0, false)
+		if spr == null:
 			continue
-		craft.add_contact_shadow(ysort, pos, Vector2(22, 8))
-		var spr := craft.spawn_sprite(ysort, path, pos)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.4)
+		var t := craft.world_to_tile(spr.position)
+		if craft.is_path(t.x, t.y) or (t.y >= TRACK_TY0 - 1 and t.y <= TRACK_TY1 + 1 and t.x >= TRACK_TX0 and t.x <= TRACK_TX1):
+			spr.queue_free()
+			continue
+		craft.add_contact_shadow(ysort, spr.position, Vector2(22, 8))
 		if craft.is_bank(t.x, t.y) or craft.touches_water(t.x, t.y):
 			spr.flip_h = (i % 2 == 0)
+		placed += 1
+	if placed < 10:
+		push_warning("Station: sparse tree spawn (%d) — check tree assets / AABB zone" % placed)
 
 
 func _spawn_actors(ysort: Node2D) -> void:
@@ -399,7 +404,7 @@ func _spawn_actors(ysort: Node2D) -> void:
 		{
 			"id": "farmer",
 			"title": "赶车农夫",
-			"desc": "在东站台与南口候车棚之间走动。",
+			"desc": "在东站台与南口长椅之间走动。",
 			"waypoints": [
 				Vector2(960, 368),
 				Vector2(1040, 448),

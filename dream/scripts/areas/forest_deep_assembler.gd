@@ -156,21 +156,22 @@ func _spawn_props(ysort: Node2D) -> void:
 
 
 func _spawn_trees(ysort: Node2D) -> void:
-	# Moderately dense canopy — full AABB via spawn_tree (no north-edge crown clip).
-	var zone := craft.map_play_rect(2.0)
+	# Dense canopy — full AABB via spawn_tree; zone inset so crowns never clip map edge.
+	var zone := craft.map_play_rect(2.5)
 	var ideals: Array[Vector2] = []
-	# Step 4 grid + inset from map edges so crowns fit zone.
-	for gy in range(4, MAP_H - 3, 4):
-		for gx in range(3, MAP_W - 3, 4):
+	# Tighter step-3 grid, feet start far enough south for tall crowns (AABB ⊆ zone).
+	for gy in range(5, MAP_H - 4, 3):
+		for gx in range(3, MAP_W - 3, 3):
 			var jx := (gy * 17 + gx * 13) % 5 - 2
 			var jy := (gx * 11 + gy * 7) % 5 - 2
-			ideals.append(craft.tile_center(clampi(gx + jx, 3, MAP_W - 4), clampi(gy + jy, 4, MAP_H - 4)))
-	# Soft side mass (still inset — no foot on map north rim).
+			ideals.append(craft.tile_center(clampi(gx + jx, 3, MAP_W - 4), clampi(gy + jy, 5, MAP_H - 5)))
+	# Soft side mass — south of ~ty 7 so half-trees cannot remain on the north rim.
 	ideals.append_array([
-		Vector2(120, 220), Vector2(100, 480), Vector2(140, 720),
-		Vector2(1120, 240), Vector2(1160, 520), Vector2(1100, 760),
-		Vector2(320, 180), Vector2(640, 200), Vector2(900, 190),
-		Vector2(280, 820), Vector2(640, 840), Vector2(960, 800),
+		Vector2(140, 260), Vector2(120, 480), Vector2(150, 700),
+		Vector2(1120, 280), Vector2(1140, 520), Vector2(1100, 740),
+		Vector2(320, 240), Vector2(640, 260), Vector2(900, 250),
+		Vector2(280, 800), Vector2(640, 820), Vector2(960, 780),
+		Vector2(200, 600), Vector2(1080, 620),
 	])
 	var placed := 0
 	for i in ideals.size():
@@ -178,18 +179,25 @@ func _spawn_trees(ysort: Node2D) -> void:
 		var t0 := craft.world_to_tile(ideal)
 		if craft.is_water(t0.x, t0.y) or craft.is_dirt(t0.x, t0.y):
 			continue
-		# Keep a narrow visual gap along the trail.
+		# Keep a narrow visual gap along the trail (no plaza clearing).
 		var trail := _trail_cx(float(t0.y))
-		if absf(float(t0.x) - trail) < 2.2 and t0.y >= 2 and t0.y <= 27:
+		if absf(float(t0.x) - trail) < 2.4 and t0.y >= 2 and t0.y <= 27:
 			continue
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		var spr := craft.spawn_tree(ysort, path, ideal, zone, 1, 1, 5, false)
+		var spr := craft.spawn_tree(ysort, path, ideal, zone, 1, 1, 4, false, 0, false)
 		if spr == null:
 			continue
+		# Reject if search drifted onto trail corridor (keeps serpentine silhouette).
+		var tf := craft.world_to_tile(spr.position)
+		var trail_f := _trail_cx(float(tf.y))
+		if absf(float(tf.x) - trail_f) < 2.0 and tf.y >= 2 and tf.y <= 27:
+			spr.queue_free()
+			continue
+		craft.add_contact_shadow(ysort, spr.position, Vector2(22, 8))
 		spr.flip_h = (i % 2 == 0)
 		spr.modulate = Color(0.68, 0.74, 0.66)
 		placed += 1
-	if placed < 18:
+	if placed < 22:
 		push_warning("ForestDeep: sparse tree spawn (%d) — check tree assets / AABB zone" % placed)
 
 

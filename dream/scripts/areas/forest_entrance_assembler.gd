@@ -156,37 +156,40 @@ func _spawn_props(ysort: Node2D) -> void:
 
 
 func _spawn_trees(ysort: Node2D) -> void:
-	# Dense forest belt OUTSIDE / around clearing — silhouette mass.
+	# Dense forest belt OUTSIDE / around clearing — full crown AABB via spawn_tree.
+	var zone := craft.map_play_rect(2.0)
 	var ideals: Array[Vector2] = []
 	for i in range(28):
 		var ang := float(i) * 0.45
 		var r := 380.0 + float(i % 5) * 40.0
 		ideals.append(Vector2(640, 480) + Vector2(cos(ang), sin(ang)) * r)
-	# Extra edge fills.
+	# Edge fills inset enough that crowns fit play zone (no north-rim half-trees).
 	ideals.append_array([
-		Vector2(80, 80), Vector2(200, 120), Vector2(100, 400), Vector2(120, 700),
-		Vector2(1160, 100), Vector2(1200, 400), Vector2(1180, 720),
-		Vector2(400, 60), Vector2(800, 60), Vector2(640, 40),
-		Vector2(300, 880), Vector2(700, 900), Vector2(1000, 860),
+		Vector2(140, 200), Vector2(200, 160), Vector2(120, 400), Vector2(140, 700),
+		Vector2(1120, 180), Vector2(1160, 400), Vector2(1140, 700),
+		Vector2(400, 160), Vector2(800, 160), Vector2(640, 180),
+		Vector2(300, 800), Vector2(700, 820), Vector2(1000, 800),
+		Vector2(100, 560), Vector2(1180, 560),
 	])
+	var placed := 0
 	for i in ideals.size():
-		var pos := craft.find_clear_near(ideals[i], 1, 1, 5, false)
-		if pos == Vector2.ZERO:
+		var ideal: Vector2 = ideals[i]
+		var t0 := craft.world_to_tile(ideal)
+		if craft.is_water(t0.x, t0.y) or craft.is_dirt(t0.x, t0.y):
 			continue
-		var t := craft.world_to_tile(pos)
-		if craft.is_water(t.x, t.y):
+		# Keep trail + clearing visually open.
+		if t0.x >= CLEAR_TX0 and t0.x <= CLEAR_TX1 and t0.y >= CLEAR_TY0 and t0.y <= CLEAR_TY1:
 			continue
-		# Keep trail corridor clearer.
-		if t.x >= 18 and t.x <= 22 and t.y >= 6 and t.y <= 24:
-			if t.y >= CLEAR_TY0 and t.y <= CLEAR_TY1 and t.x >= CLEAR_TX0 and t.x <= CLEAR_TX1:
-				continue
+		if t0.x >= 18 and t0.x <= 22 and t0.y >= 6 and t0.y <= 24:
+			continue
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		if not ResourceLoader.exists(path):
+		var spr := craft.spawn_tree(ysort, path, ideal, zone, 1, 1, 6, false)
+		if spr == null:
 			continue
-		craft.add_contact_shadow(ysort, pos, Vector2(20, 8))
-		var spr := craft.spawn_sprite(ysort, path, pos)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.4)
 		spr.flip_h = (i % 2 == 0)
+		placed += 1
+	if placed < 16:
+		push_warning("ForestEntrance: sparse tree spawn (%d) — check tree assets / AABB zone" % placed)
 
 
 func _spawn_actors(ysort: Node2D) -> void:
