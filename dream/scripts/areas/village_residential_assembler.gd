@@ -112,8 +112,8 @@ func _compute_stone_path(tx: int, ty: int) -> bool:
 	# West approach to square — stone on main lane head.
 	if ty >= MAIN_LANE_TY0 and ty <= MAIN_LANE_TY1 and tx >= 0 and tx <= 5:
 		return true
-	# Small NE pocket plaza (A08 fountain / statue mood).
-	if tx >= 34 and tx <= 37 and ty >= 9 and ty <= 12:
+	# Small NE pocket plaza (A08 fountain / statue mood) — keep clear of house lots.
+	if tx >= 36 and tx <= 38 and ty >= 2 and ty <= 4:
 		return true
 	# North-west connector strip toward square portal.
 	if tx >= 0 and tx <= 2 and ty >= 4 and ty <= MAIN_LANE_TY1:
@@ -128,7 +128,7 @@ func _paint_door_spur_masks() -> void:
 		Vector2i(8, 14), Vector2i(9, 14),
 		Vector2i(16, 14), Vector2i(17, 14),
 		Vector2i(24, 14), Vector2i(25, 14),
-		Vector2i(32, 14), Vector2i(33, 14),
+		Vector2i(29, 14), Vector2i(30, 14),
 		# North-lane row aprons.
 		Vector2i(11, 5), Vector2i(12, 5),
 		Vector2i(19, 5), Vector2i(20, 5),
@@ -177,22 +177,22 @@ func _house_slots() -> Array:
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_00.png",
-			"pos": Vector2(400, 100),
-			"hw": 2, "hh": 2,
+			"pos": Vector2(400, 80),
+			"hw": 2, "hh": 1,
 			"title": "北排西宅",
 			"desc": "北巷北侧住宅：门朝南对北巷。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
-			"pos": Vector2(656, 100),
-			"hw": 2, "hh": 2,
+			"pos": Vector2(656, 80),
+			"hw": 2, "hh": 1,
 			"title": "北排中宅",
 			"desc": "北巷中段宅院。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_03.png",
-			"pos": Vector2(912, 100),
-			"hw": 2, "hh": 2,
+			"pos": Vector2(912, 80),
+			"hw": 2, "hh": 1,
 			"title": "北排东宅",
 			"desc": "北巷东端住宅。",
 		},
@@ -218,7 +218,7 @@ func _spawn_props(ysort: Node2D) -> void:
 	# NE stone pocket well / fountain (civic on path ok).
 	var well_path := "res://assets/sprites/props/well_0.png"
 	if ResourceLoader.exists(well_path):
-		var well_pos := Vector2(1140, 340)
+		var well_pos := Vector2(1184, 112)
 		if not craft.is_water(craft.world_to_tile(well_pos).x, craft.world_to_tile(well_pos).y):
 			craft.add_contact_shadow(ysort, well_pos, Vector2(20, 8))
 			var wspr := craft.spawn_sprite(ysort, well_path, well_pos)
