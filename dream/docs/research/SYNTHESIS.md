@@ -53,7 +53,7 @@
 | Artists (tiles) | `practitioners/artists-tile-pipeline.md` | Silhouette→value→color→detail; filler wrap first |
 | Artists (sprites) | `practitioners/sprite-painting-specs.md` | Size matrix; walk 4/6/8; facing lock; inpaint hole recipe; 1× master |
 | Agent tooling | `practitioners/agent-art-tooling.md` | rembg **must** `-m birefnet-general`; IOPaint/LaMa inpaint; Real-ESRGAN; no bare rembg (bria default) |
-| District grammar | `practitioners/district-spatial-grammar.md` | Parameter table → `AREA_FRAMEWORK.md` |
+| District grammar | `practitioners/district-spatial-grammar.md` | GDC Bulavina street/square/backyard；Space Syntax 整合度；参数表 → `AREA_FRAMEWORK.md` |
 
 ### Engineer ∩ artist ∩ games
 
