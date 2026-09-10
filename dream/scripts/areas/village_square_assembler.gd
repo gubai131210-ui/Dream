@@ -94,8 +94,10 @@ func _spawn_buildings(ysort: Node2D) -> void:
 
 
 func _spawn_props(ysort: Node2D) -> void:
-	# Fountain center
-	var fountain_path := "res://assets/sprites/props/fountain.png"
+	# Prefer dedicated plaza fountain from ArtPipeline (B11-05).
+	var fountain_path := "res://assets/sprites/props/plaza_fountain.png"
+	if not ResourceLoader.exists(fountain_path):
+		fountain_path = "res://assets/sprites/props/fountain.png"
 	if ResourceLoader.exists(fountain_path):
 		var f := _spawn_sprite(ysort, fountain_path, Vector2(640, 480))
 		var hs := _make_hotspot(ysort, "中央喷泉", "广场核心喷泉，流水使用序列帧表现动态。", Vector2(640, 500), Vector2(96, 64))
@@ -204,11 +206,30 @@ func _spawn_water_fx(ysort: Node2D) -> void:
 
 
 func _spawn_fx(ysort: Node2D) -> void:
-	for i in 4:
-		var p := "res://assets/sprites/fx/fx_%02d.png" % i
-		if not ResourceLoader.exists(p):
-			continue
-		var spr := _spawn_sprite(ysort, p, Vector2(400 + i * 80, 300 + (i % 2) * 40))
-		var tw := spr.create_tween().set_loops()
-		tw.tween_property(spr, "modulate:a", 0.4, 1.0)
-		tw.tween_property(spr, "modulate:a", 1.0, 1.0)
+	_spawn_fx_loop(ysort, "smoke", Vector2(300, 200), 5.0)
+	_spawn_fx_loop(ysort, "leaf", Vector2(980, 260), 4.0)
+	_spawn_fx_loop(ysort, "sparkle", Vector2(640, 450), 7.0)
+	_spawn_fx_loop(ysort, "leaf", Vector2(180, 620), 3.5)
+
+
+func _spawn_fx_loop(ysort: Node2D, prefix: String, pos: Vector2, fps: float) -> void:
+	var frames: Array[Texture2D] = []
+	for i in 6:
+		var p := "res://assets/sprites/fx/%s_%02d.png" % [prefix, i]
+		if ResourceLoader.exists(p):
+			frames.append(load(p) as Texture2D)
+	if frames.is_empty():
+		return
+	var sf := SpriteFrames.new()
+	sf.add_animation("loop")
+	sf.set_animation_speed("loop", fps)
+	sf.set_animation_loop("loop", true)
+	for tex in frames:
+		sf.add_frame("loop", tex)
+	var anim := AnimatedSprite2D.new()
+	anim.sprite_frames = sf
+	anim.animation = "loop"
+	anim.position = pos
+	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	ysort.add_child(anim)
+	anim.play("loop")
