@@ -32,10 +32,10 @@ Native B11/AI props are often ~150–230 px tall. Unscaled they read as half-hou
 - **No tree crown/trunk AABB overlap** with rock AABB — nudge rock or tree ideals first.
 - Prefer smaller `rock_0x` variants for yard scatter; reserve large native rocks for scaled landmarks.
 
-## Hotspot copy encoding
+## Crop bed visuals
 
-- All `title` / `desc` strings in assemblers must be **UTF-8 Chinese** (or intentional English ids).
-- Mojibake (`éº»è¢`, `åè`, double-encoded `Ã¨…`) is a ship blocker — rewrite the file with an editor/Write tool, not PowerShell string literals with `$`.
+- **Forbidden:** opaque green/yellow `ColorRect` slabs covering beds (they hide animals/path/water).
+- Prefer dirt furrows (thin lines, α≤0.35) or future B12 crop sprites via `AreaCraft.spawn_crop_rows`.
 
 ## Animals (B13)
 
@@ -44,4 +44,29 @@ Native B11/AI props are often ~150–230 px tall. Unscaled they read as half-hou
 | sheep / deer / cat / cow / dog | Sliced → `assets/sprites/animals/{id}/` + `AmbientCritter` |
 | chicken / bird | **Missing from B13 sheets** — do not fake; import new sheets before farm poultry denser than cats |
 
-Ambient critters: short wander; skip water + `blocked_mask` via `AreaCraft`.
+`AmbientCritter` normalizes display height vs NPC (`CHARACTER_HEIGHT_PX` ≈ 56):
+
+| Species | Target height px |
+|---|---|
+| cat | 20 |
+| dog | 28 |
+| sheep | 32 |
+| deer | 40 |
+| cow | 42 |
+
+Never pass raw scale ~0.4–0.5 on native 150–260px frames (that makes livestock taller than people).
+
+## Trees: island vs grounded
+
+| Variant | Path | Use |
+|---|---|---|
+| Island (water + baked rocks) | `sprites/trees/tree_XX.png` | Lake / river / waterfall banks only |
+| Grounded (trunk + grass mound) | `sprites/trees/grounded/tree_XX.png` | Farm home, farmland, residential inland |
+
+Tool: `tools/crop_tree_bases.py`. Do not place separate giant `rock_01` under island trees.
+
+## Shore rocks (separate props)
+
+- Prefer `rock_02`–`rock_05` clusters at **target height 18–28 px** (scale from native ~180–200px).
+- Always contact shadow; never overlap tree AABB.
+- Match district: farm/residential = small bank pebbles; wild water edges may keep island trees instead of fake rocks.
