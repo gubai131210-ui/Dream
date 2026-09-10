@@ -123,7 +123,7 @@ func _build_path_distance_field() -> Array:
 		var p: Vector2i = queue[head]
 		head += 1
 		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-			var n := p + d
+			var n: Vector2i = p + d
 			if n.x < 0 or n.y < 0 or n.x >= MAP_W or n.y >= MAP_H:
 				continue
 			var nd: int = int(dist[p.y][p.x]) + 1
@@ -134,7 +134,7 @@ func _build_path_distance_field() -> Array:
 
 
 func _paint_paths(path: TileMapLayer) -> void:
-	var stone := [Vector2i(0, 0), Vector2i(1, 0)]
+	var stone: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0)]
 	TileSetFactory.paint_random(path, 0, stone, Rect2i(14, 10, 12, 10), 7)
 	TileSetFactory.paint_random(path, 0, stone, Rect2i(18, 0, 4, 10), 8)
 	TileSetFactory.paint_random(path, 0, stone, Rect2i(18, 20, 4, 10), 9)
@@ -144,7 +144,7 @@ func _paint_paths(path: TileMapLayer) -> void:
 
 func _paint_river(water: TileMapLayer, ground: TileMapLayer) -> void:
 	# Clear explicit — no leftover old water/grass pads on the west strip.
-	var water_vars := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0)]
+	var water_vars: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0)]
 	TileSetFactory.paint_random(water, 0, water_vars, Rect2i(1, 2, 4, 26), 21)
 	# Soft damp banks just outside water (1 tile ring) where not path.
 	var damp := TileSetFactory.grass_coords("damp")
