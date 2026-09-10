@@ -19,6 +19,12 @@ size = Vector2(200, 160)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p563h"]
 size = Vector2(200, 150)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_forest"]
+size = Vector2(200, 160)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_station"]
+size = Vector2(220, 140)
+
 [node name="WorldHub" type="Node2D" unique_id=1389829867]
 script = ExtResource("1")
 
@@ -82,12 +88,32 @@ shape = SubResource("RectangleShape2D_p563h")
 color = Color(0.85, 0.35, 0.75, 0.28)
 polygon = PackedVector2Array(-100, -75, 100, -75, 100, 75, -100, 75)
 
+[node name="ForestEntrance" type="Area2D" parent="Hotspots"]
+position = Vector2(300, -40)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/ForestEntrance"]
+shape = SubResource("RectangleShape2D_forest")
+
+[node name="Hint" type="Polygon2D" parent="Hotspots/ForestEntrance"]
+color = Color(0.18, 0.42, 0.22, 0.28)
+polygon = PackedVector2Array(-100, -80, 100, -80, 100, 80, -100, 80)
+
+[node name="Station" type="Area2D" parent="Hotspots"]
+position = Vector2(-40, -200)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/Station"]
+shape = SubResource("RectangleShape2D_station")
+
+[node name="Hint" type="Polygon2D" parent="Hotspots/Station"]
+color = Color(0.45, 0.6, 0.9, 0.28)
+polygon = PackedVector2Array(-110, -70, 110, -70, 110, 70, -110, 70)
+
 [node name="UI" type="CanvasLayer" parent="." unique_id=827474002]
 
 [node name="TopBar" type="HBoxContainer" parent="UI" unique_id=796851354]
 offset_left = 12.0
 offset_top = 12.0
-offset_right = 1100.0
+offset_right = 1400.0
 offset_bottom = 56.0
 theme_override_constants/separation = 12
 
@@ -119,6 +145,14 @@ text = "进入农田"
 [node name="EnterMarket" type="Button" parent="UI/TopBar/Buttons" unique_id=284594207]
 layout_mode = 2
 text = "进入商业街"
+
+[node name="EnterForest" type="Button" parent="UI/TopBar/Buttons"]
+layout_mode = 2
+text = "进入森林"
+
+[node name="EnterStation" type="Button" parent="UI/TopBar/Buttons"]
+layout_mode = 2
+text = "进入车站"
 
 [node name="SwitchOverview" type="Button" parent="UI/TopBar/Buttons" unique_id=161341304]
 layout_mode = 2
