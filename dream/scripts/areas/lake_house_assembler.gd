@@ -2,9 +2,12 @@ class_name LakeHouseAssembler
 extends Node
 
 ## Lake house (A15) — single lakeside dwelling + dock spur. Intimate, not a plaza.
+## Dock = dirt spur + props / dock_house_00 only — never ColorRect planks.
 
 const MAP_W := 40
 const MAP_H := 30
+const BUILD_Y := 0.35
+const TREE_Y := 0.40
 
 var craft: AreaCraft = AreaCraft.new()
 
@@ -23,7 +26,7 @@ func assemble(root: Node2D) -> void:
 	craft.paint_water(water, ground)
 	craft.paint_paths(path)
 	_spawn_house(ysort)
-	_spawn_dock(ysort)
+	_spawn_dock_props(ysort)
 	_spawn_props(ysort)
 	_spawn_trees(ysort)
 	_spawn_actors(ysort)
@@ -75,7 +78,7 @@ func _paint_yard_and_dock() -> void:
 	for tx in range(24, 30):
 		_set_dirt(tx, 15)
 		_set_dirt(tx, 16)
-	# Dock spur into water (west).
+	# Dock spur into water (west) — visual dock without ColorRect.
 	for tx in range(10, 24):
 		_set_dirt(tx, 17)
 		_set_dirt(tx, 18)
@@ -83,6 +86,46 @@ func _paint_yard_and_dock() -> void:
 	for ty in range(2, 10):
 		_set_dirt(26, ty)
 		_set_dirt(27, ty)
+
+
+func _scaled_fully_inside(pos: Vector2, tex: Texture2D, y_factor: float, scale_f: float, zone: Rect2) -> bool:
+	var size := Vector2(float(tex.get_width()), float(tex.get_height())) * scale_f
+	var offset := Vector2(0.0, -float(tex.get_height()) * y_factor) * scale_f
+	var top_left := pos + offset - size * 0.5
+	var r := Rect2(top_left, size)
+	return (
+		r.position.x >= zone.position.x
+		and r.position.y >= zone.position.y
+		and r.end.x <= zone.end.x
+		and r.end.y <= zone.end.y
+	)
+
+
+func _find_scaled_inside(
+	ideal: Vector2,
+	tex: Texture2D,
+	y_factor: float,
+	scale_f: float,
+	zone: Rect2,
+	half_w: int,
+	half_h: int,
+	max_r: int,
+	allow_path: bool
+) -> Vector2:
+	if craft.footprint_ok(ideal, half_w, half_h, allow_path) and _scaled_fully_inside(ideal, tex, y_factor, scale_f, zone):
+		return ideal
+	var t := craft.world_to_tile(ideal)
+	for r in range(0, max_r + 1):
+		for oy in range(-r, r + 1):
+			for ox in range(-r, r + 1):
+				if r > 0 and maxi(absi(ox), absi(oy)) != r:
+					continue
+				var cand := craft.tile_center(t.x + ox, t.y + oy)
+				if not craft.footprint_ok(cand, half_w, half_h, allow_path):
+					continue
+				if _scaled_fully_inside(cand, tex, y_factor, scale_f, zone):
+					return cand
+	return Vector2.ZERO
 
 
 func _spawn_house(ysort: Node2D) -> void:
@@ -95,35 +138,41 @@ func _spawn_house(ysort: Node2D) -> void:
 	if not ResourceLoader.exists(path):
 		return
 	var tex := load(path) as Texture2D
+	if tex == null:
+		return
 	var offset := craft.building_offset_for(tex)
-	var ideal := Vector2(860, 360)
-	var cleared := craft.find_building_inside(ideal, tex, offset, zone, 2, 1, 16, true)
+	# South enough that tall dock_house AABB clears north play margin.
+	var ideal := Vector2(860, 480)
+	var cleared := craft.find_building_inside(ideal, tex, offset, zone, 2, 1, 18, true)
+	var scale_f := 1.0
+	if cleared == Vector2.ZERO:
+		# Oversized sheet (dock_house ~575×485): scale down, keep full AABB ⊆ zone.
+		for s in [0.7, 0.55, 0.45]:
+			cleared = _find_scaled_inside(ideal, tex, BUILD_Y, s, zone, 2, 1, 20, true)
+			if cleared != Vector2.ZERO:
+				offset = craft.building_offset_for(tex)
+				scale_f = s
+				break
 	if cleared == Vector2.ZERO:
 		push_warning("LakeHouse: could not place house fully inside play zone")
 		return
 	craft.add_contact_shadow(ysort, cleared, Vector2(40, 14))
 	var spr := craft.spawn_sprite(ysort, path, cleared)
 	spr.offset = offset
+	if scale_f < 0.999:
+		spr.scale = Vector2(scale_f, scale_f)
+	craft.make_hotspot(ysort, "湖畔小屋", "临湖木屋，西侧土径伸入浅湾。", cleared + Vector2(0, 24), Vector2(110, 80))
 
 
-func _spawn_dock(ysort: Node2D) -> void:
-	# No opaque ColorRect deck — dock read from dirt spur + sparse props.
-	# When dock_house art is missing, thin low-alpha planks sit behind props.
-	if ResourceLoader.exists("res://assets/sprites/buildings/dock_house_00.png"):
-		return
-	var strips := [
-		{"pos": Vector2(360, 548), "size": Vector2(220, 8)},
-		{"pos": Vector2(360, 562), "size": Vector2(220, 8)},
+func _spawn_dock_props(ysort: Node2D) -> void:
+	# Dock read from dirt spur + end props — no ColorRect deck.
+	var samples := [
+		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(400, 560), "title": "系缆桶", "desc": "码头尽头的系缆空桶。", "scale": 0.5},
+		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(480, 548), "title": "卸货箱", "desc": "小舟卸货用的木箱。", "scale": 0.52},
+		{"path": "res://assets/sprites/props/rock_02.png", "pos": Vector2(360, 580), "title": "岸石", "desc": "码头旁的浅滩石。", "scale": 0.38},
 	]
-	for i in strips.size():
-		var bar := ColorRect.new()
-		bar.name = "DockPlank_%d" % i
-		bar.color = Color(0.5, 0.38, 0.25, 0.22)
-		bar.position = strips[i]["pos"]
-		bar.size = strips[i]["size"]
-		bar.z_index = -2
-		bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		ysort.add_child(bar)
+	for s in samples:
+		_place_land_prop(ysort, s)
 
 
 func _spawn_props(ysort: Node2D) -> void:
@@ -134,20 +183,26 @@ func _spawn_props(ysort: Node2D) -> void:
 		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(700, 520), "title": "渔网袋", "desc": "码头边晒干的网袋。", "scale": 0.5},
 	]
 	for s in samples:
-		if not ResourceLoader.exists(s["path"]):
-			continue
-		var pos: Vector2 = s["pos"]
-		var cleared := craft.find_clear_near(pos, 1, 1, 6, true)
-		if cleared != Vector2.ZERO:
-			pos = cleared
-		var t := craft.world_to_tile(pos)
-		if craft.is_water(t.x, t.y):
-			continue
-		craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
-		var spr := craft.spawn_sprite(ysort, s["path"], pos)
-		var sc := float(s.get("scale", 0.55))
-		spr.scale = Vector2(sc, sc)
-		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
+		_place_land_prop(ysort, s)
+
+
+func _place_land_prop(ysort: Node2D, s: Dictionary) -> void:
+	if not ResourceLoader.exists(s["path"]):
+		return
+	var pos: Vector2 = s["pos"]
+	var cleared := craft.find_clear_near(pos, 1, 1, 6, true)
+	if cleared != Vector2.ZERO:
+		pos = cleared
+	var t := craft.world_to_tile(pos)
+	if craft.is_water(t.x, t.y):
+		return
+	craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
+	var spr := craft.spawn_sprite(ysort, s["path"], pos)
+	var sc := float(s.get("scale", 0.55))
+	spr.scale = Vector2(sc, sc)
+	var title := str(s.get("title", ""))
+	if title != "":
+		var hs := craft.make_hotspot(ysort, title, str(s.get("desc", "")), pos, Vector2(48, 48))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
 

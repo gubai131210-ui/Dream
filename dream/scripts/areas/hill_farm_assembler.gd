@@ -16,7 +16,8 @@ func assemble(root: Node2D) -> void:
 	var water: TileMapLayer = root.get_node("Water")
 	var ysort: Node2D = root.get_node("YSortRoot")
 
-	craft.setup(MAP_W, MAP_H, "farm_home")
+	# Terraced plots → farmland eco weights (closer to A03 farmland than farm_home yard).
+	craft.setup(MAP_W, MAP_H, "farmland")
 	_rebuild_masks()
 	craft.prepare_layers(ground, path, water)
 	craft.paint_ecological_grass(ground)
@@ -102,17 +103,17 @@ func _spawn_sheds(ysort: Node2D) -> void:
 
 
 func _spawn_terrace_markers(ysort: Node2D) -> void:
-	# Sparse rock lip markers — no opaque ColorRect terrace walls.
+	# Sparse rock lip markers — no opaque ColorRect terrace walls; rocks ~0.35–0.45.
 	var rocks := [
-		{"path": "res://assets/sprites/props/rock_00.png", "pos": Vector2(300, 310)},
-		{"path": "res://assets/sprites/props/rock_01.png", "pos": Vector2(520, 305)},
-		{"path": "res://assets/sprites/props/rock_02.png", "pos": Vector2(740, 315)},
-		{"path": "res://assets/sprites/props/rock_00.png", "pos": Vector2(260, 500)},
-		{"path": "res://assets/sprites/props/rock_03.png", "pos": Vector2(480, 495)},
-		{"path": "res://assets/sprites/props/rock_01.png", "pos": Vector2(700, 505)},
-		{"path": "res://assets/sprites/props/rock_02.png", "pos": Vector2(220, 690)},
-		{"path": "res://assets/sprites/props/rock_04.png", "pos": Vector2(440, 685)},
-		{"path": "res://assets/sprites/props/rock_05.png", "pos": Vector2(660, 695)},
+		{"path": "res://assets/sprites/props/rock_00.png", "pos": Vector2(300, 310), "s": 0.42},
+		{"path": "res://assets/sprites/props/rock_01.png", "pos": Vector2(520, 305), "s": 0.4},
+		{"path": "res://assets/sprites/props/rock_02.png", "pos": Vector2(740, 315), "s": 0.38},
+		{"path": "res://assets/sprites/props/rock_00.png", "pos": Vector2(260, 500), "s": 0.4},
+		{"path": "res://assets/sprites/props/rock_03.png", "pos": Vector2(480, 495), "s": 0.42},
+		{"path": "res://assets/sprites/props/rock_01.png", "pos": Vector2(700, 505), "s": 0.38},
+		{"path": "res://assets/sprites/props/rock_02.png", "pos": Vector2(220, 690), "s": 0.36},
+		{"path": "res://assets/sprites/props/rock_04.png", "pos": Vector2(440, 685), "s": 0.4},
+		{"path": "res://assets/sprites/props/rock_05.png", "pos": Vector2(660, 695), "s": 0.38},
 	]
 	for r in rocks:
 		if not ResourceLoader.exists(r["path"]):
@@ -126,7 +127,8 @@ func _spawn_terrace_markers(ysort: Node2D) -> void:
 			continue
 		craft.add_contact_shadow(ysort, pos, Vector2(10, 4))
 		var spr := craft.spawn_sprite(ysort, r["path"], pos)
-		spr.scale = Vector2(0.45, 0.45)
+		var sc := float(r.get("s", 0.4))
+		spr.scale = Vector2(sc, sc)
 
 
 func _spawn_props(ysort: Node2D) -> void:

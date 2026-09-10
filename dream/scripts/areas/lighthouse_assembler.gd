@@ -139,7 +139,7 @@ func _spawn_lighthouse(ysort: Node2D) -> void:
 		cleared = craft.find_building_inside(ideal, tex, offset, zone, 2, 1, 22, true)
 	if cleared == Vector2.ZERO:
 		# Oversized sheet: scale down while keeping full AABB inside zone.
-		for s in [0.65, 0.55, 0.45]:
+		for s in [0.7, 0.55, 0.45, 0.38]:
 			cleared = _find_scaled_inside(ideal, tex, BUILD_Y, s, zone, 2, 1, 22, true)
 			if cleared != Vector2.ZERO:
 				offset = craft.building_offset_for(tex)
@@ -163,12 +163,12 @@ func _spawn_lighthouse(ysort: Node2D) -> void:
 
 func _spawn_rocks(ysort: Node2D) -> void:
 	var zone := craft.map_play_rect(2.0)
-	# Coast rocks — large sheets, must scale ~0.35–0.45.
-	# Keep feet on peninsula dirt (tx < coast edge ~24), not open water.
+	# Coast rocks — large sheets, must scale ~0.35–0.45; feet on peninsula dirt only.
 	var specs := [
-		{"i": 0, "pos": Vector2(688, 560), "s": 0.4},
-		{"i": 1, "pos": Vector2(704, 672), "s": 0.38},
-		{"i": 3, "pos": Vector2(480, 688), "s": 0.36},
+		{"i": 0, "pos": Vector2(688, 560), "s": 0.42},
+		{"i": 1, "pos": Vector2(704, 672), "s": 0.4},
+		{"i": 3, "pos": Vector2(480, 688), "s": 0.38},
+		{"i": 5, "pos": Vector2(560, 720), "s": 0.36},
 	]
 	for s in specs:
 		var path := "res://assets/sprites/props/rock_%02d.png" % int(s["i"])

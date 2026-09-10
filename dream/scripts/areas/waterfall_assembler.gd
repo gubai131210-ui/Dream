@@ -214,13 +214,13 @@ func _spawn_scaled_prop(
 
 
 func _spawn_cliff_rocks(ysort: Node2D) -> void:
-	# North cliff mass behind the fall — gives the cascade a source wall.
+	# North cliff mass behind the fall — rock sheets ~0.35–0.45 (no ColorRect cliff).
 	var specs := [
-		{"i": 0, "pos": Vector2(520, 220), "s": 0.55, "z": 1},
-		{"i": 1, "pos": Vector2(760, 230), "s": 0.52, "z": 1},
-		{"i": 2, "pos": Vector2(640, 180), "s": 0.6, "z": 1},
-		{"i": 4, "pos": Vector2(440, 280), "s": 0.42, "z": 1},
-		{"i": 5, "pos": Vector2(840, 290), "s": 0.42, "z": 1},
+		{"i": 0, "pos": Vector2(520, 220), "s": 0.44, "z": 1},
+		{"i": 1, "pos": Vector2(760, 230), "s": 0.42, "z": 1},
+		{"i": 2, "pos": Vector2(640, 180), "s": 0.45, "z": 1},
+		{"i": 4, "pos": Vector2(440, 280), "s": 0.38, "z": 1},
+		{"i": 5, "pos": Vector2(840, 290), "s": 0.38, "z": 1},
 	]
 	for s in specs:
 		var path := "res://assets/sprites/props/rock_%02d.png" % int(s["i"])
@@ -230,8 +230,8 @@ func _spawn_cliff_rocks(ysort: Node2D) -> void:
 func _spawn_waterfall(ysort: Node2D) -> void:
 	var tall := "res://assets/sprites/props/waterfall_tall_00.png"
 	var mid := "res://assets/sprites/props/waterfall_mid_00.png"
-	# Prefer mid if tall slice looks like a disconnected prop — try tall first at larger scale.
-	# Foot sits on north pool rim / shallow water so cascade reads into the pond.
+	# Foot on north pool rim (ty≈11 notch into pool) so cascade reads into the pond.
+	# allow_water_foot — never place a dirt road under the fall column.
 	var foot := craft.tile_center(int(POOL_CX), 11)
 	var fall: Sprite2D = null
 	if ResourceLoader.exists(tall):
@@ -246,11 +246,12 @@ func _spawn_waterfall(ysort: Node2D) -> void:
 
 
 func _spawn_rim_rocks(ysort: Node2D) -> void:
-	# Pool rim flanks — land only, not on the E–W dirt road.
+	# Pool rim flanks — land only, never through cascade / fall keep-water.
 	var specs := [
-		{"i": 0, "pos": Vector2(400, 480), "s": 0.38},
-		{"i": 1, "pos": Vector2(880, 500), "s": 0.36},
-		{"i": 3, "pos": Vector2(480, 720), "s": 0.34},
+		{"i": 0, "pos": Vector2(400, 480), "s": 0.4},
+		{"i": 1, "pos": Vector2(880, 500), "s": 0.38},
+		{"i": 3, "pos": Vector2(480, 720), "s": 0.36},
+		{"i": 4, "pos": Vector2(780, 700), "s": 0.35},
 	]
 	for s in specs:
 		var path := "res://assets/sprites/props/rock_%02d.png" % int(s["i"])
@@ -262,12 +263,13 @@ func _spawn_mist(ysort: Node2D) -> void:
 		Vector2(600, 360), Vector2(680, 380), Vector2(640, 340), Vector2(620, 420),
 	]
 	for i in samples.size():
-		var path := "res://assets/sprites/fx/smoke_%02d.png" % (i % 6)
+		var mist_path := "res://assets/sprites/fx/waterfall_mist_%02d.png" % (i % 2)
+		var path := mist_path if ResourceLoader.exists(mist_path) else ("res://assets/sprites/fx/smoke_%02d.png" % (i % 6))
 		if not ResourceLoader.exists(path):
 			continue
 		var spr := craft.spawn_sprite(ysort, path, samples[i], 5)
-		spr.modulate = Color(0.88, 0.94, 0.98, 0.32)
-		spr.scale = Vector2(2.0, 1.6)
+		spr.modulate = Color(0.88, 0.94, 0.98, 0.36)
+		spr.scale = Vector2(1.8, 1.5)
 
 
 func _spawn_trees(ysort: Node2D) -> void:

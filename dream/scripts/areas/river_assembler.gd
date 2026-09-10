@@ -93,6 +93,8 @@ func _spawn_props(ysort: Node2D) -> void:
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(280, 320), "title": "岸边木箱", "desc": "渔民用的湿木箱。", "scale": 0.55},
 		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(980, 560), "title": "浮桶", "desc": "系在岸桩旁的空桶。", "scale": 0.5},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(360, 700), "title": "河岸灯", "desc": "桥头微光。", "scale": 0.55},
+		{"path": "res://assets/sprites/props/rock_00.png", "pos": Vector2(420, 400), "title": "", "desc": "", "scale": 0.4},
+		{"path": "res://assets/sprites/props/rock_03.png", "pos": Vector2(880, 640), "title": "", "desc": "", "scale": 0.36},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):
@@ -108,7 +110,10 @@ func _spawn_props(ysort: Node2D) -> void:
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
 		var sc := float(s.get("scale", 0.55))
 		spr.scale = Vector2(sc, sc)
-		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
+		var title := str(s.get("title", ""))
+		if title == "":
+			continue
+		var hs := craft.make_hotspot(ysort, title, s["desc"], pos, Vector2(48, 48))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
 
