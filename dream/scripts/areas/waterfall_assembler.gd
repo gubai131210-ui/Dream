@@ -172,15 +172,16 @@ func _spawn_waterfall_props(ysort: Node2D) -> void:
 	if fall:
 		craft.make_hotspot(ysort, "瀑布", "岩壁倾泻而下的水帘与水雾。", fall.position + Vector2(0, 24), Vector2(96, 72))
 	if ResourceLoader.exists(splash):
-		_spawn_scaled_prop(ysort, splash, Vector2(640, 480), 0.38, 2, 1, 1, true)
+		# Foot on viewing ledge (dirt ty 11–12), not in the pool ellipse.
+		_spawn_scaled_prop(ysort, splash, Vector2(640, 400), 0.38, 2, 1, 1, true)
 
 
 func _spawn_rocks(ysort: Node2D) -> void:
-	# 2–3 large B07 rocks on pool rim (must scale — sheets are ~280px).
+	# 2–3 large B07 rocks on pool rim dirt/bank (must scale — sheets are ~280px).
 	var specs := [
 		{"i": 0, "pos": Vector2(448, 400), "s": 0.4},
-		{"i": 1, "pos": Vector2(800, 432), "s": 0.38},
-		{"i": 2, "pos": Vector2(720, 608), "s": 0.36},
+		{"i": 1, "pos": Vector2(848, 400), "s": 0.38},
+		{"i": 2, "pos": Vector2(608, 768), "s": 0.36},
 	]
 	for s in specs:
 		var path := "res://assets/sprites/props/rock_%02d.png" % int(s["i"])

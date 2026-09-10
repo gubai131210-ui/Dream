@@ -164,10 +164,11 @@ func _spawn_lighthouse(ysort: Node2D) -> void:
 func _spawn_rocks(ysort: Node2D) -> void:
 	var zone := craft.map_play_rect(2.0)
 	# Coast rocks — large sheets, must scale ~0.35–0.45.
+	# Keep feet on peninsula dirt (tx < coast edge ~24), not open water.
 	var specs := [
-		{"i": 0, "pos": Vector2(720, 560), "s": 0.4},
-		{"i": 1, "pos": Vector2(780, 640), "s": 0.38},
-		{"i": 3, "pos": Vector2(480, 680), "s": 0.36},
+		{"i": 0, "pos": Vector2(688, 560), "s": 0.4},
+		{"i": 1, "pos": Vector2(704, 672), "s": 0.38},
+		{"i": 3, "pos": Vector2(480, 688), "s": 0.36},
 	]
 	for s in specs:
 		var path := "res://assets/sprites/props/rock_%02d.png" % int(s["i"])
