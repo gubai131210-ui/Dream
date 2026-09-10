@@ -18,6 +18,7 @@
 
 All area assemblers MUST follow `.cursor/skills/realistic-scene-craft/`:
 - Meander / bank / plantable / facing / footprint / walk graph
+- **Full building sprite AABB inside play/farm build zone** — `docs/BUILDING_PLACEMENT.md` (no roof straddling fence/map edge)
 - Pass order: masks → ground → water → path → buildings → props → trees → actors → FX
 
 ## Architecture

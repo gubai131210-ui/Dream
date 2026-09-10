@@ -65,6 +65,23 @@ sort_y = foot_y   # contact point, not sprite center
 # buildings: use south edge of footprint
 ```
 
+## Building sprite AABB (LOCKED — see docs/BUILDING_PLACEMENT.md)
+
+```text
+offset = (0, -height * 0.35)          # AreaCraft.BUILDING_Y_OFFSET_FACTOR
+AABB   = Rect(foot + offset - size/2, size)
+sprite_top_y ≈ foot_y - 0.85 * height
+
+# Must hold:
+AABB ⊆ BUILD_ZONE
+# Farm: BUILD_ZONE = FARM_BUILD_ZONE (inset past fence), NOT FARM_ZONE
+# Unfenced: BUILD_ZONE = map_play_rect(margin_tiles)
+
+# Door dirt: paint south of foot tiles (clear of half_h), or allow_path=true for buildings
+```
+
+Place with `AreaCraft.find_building_inside(...)`. Never foot-only.
+
 ## Drainage (only large maps)
 
 Red Blob mapgen4: downslope queue → moisture → flow accumulation → width ∝ log(flow).  

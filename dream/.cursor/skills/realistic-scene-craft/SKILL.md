@@ -2,16 +2,17 @@
 name: realistic-scene-craft
 description: >-
   Crafts and reviews Godot 2D village/tile scenes with real-world-consistent
-  placement — meandering water, ecological ground, door-facing buildings, NPC
-  walk graphs, seamless tiles, and asset draw order. Use when assembling or
-  fixing village squares, rivers, grass/sand/path layers, building orientation,
-  tree/prop footprints, tile atlases, or when the user mentions A09 layout,
-  LAYOUT.md, SEAMLESS.md, 蜿蜒, 河岸, 朝向, or scene realism.
+  placement — meandering water, ecological ground, door-facing buildings with
+  full-sprite AABB inside play/farm build zones, NPC walk graphs, seamless
+  tiles, and asset draw order. Use when assembling or fixing village squares,
+  rivers, grass/sand/path layers, building orientation, farm fences, tree/prop
+  footprints, tile atlases, or when the user mentions A09 layout, LAYOUT.md,
+  BUILDING_PLACEMENT.md, SEAMLESS.md, 蜿蜒, 河岸, 朝向, 围栏, 农舍, or scene realism.
 ---
 
 # Realistic scene craft (Dream)
 
-Operate on **craft**, not genre labels. Primary locks: `docs/SCALE.md`, `docs/LAYOUT.md`, `docs/SEAMLESS.md`. Research backing: `docs/research/SYNTHESIS.md`.
+Operate on **craft**, not genre labels. Primary locks: `docs/SCALE.md`, `docs/LAYOUT.md`, `docs/BUILDING_PLACEMENT.md`, `docs/SEAMLESS.md`. Research backing: `docs/research/SYNTHESIS.md`.
 
 ## Leading words
 
@@ -19,7 +20,8 @@ Operate on **craft**, not genre labels. Primary locks: `docs/SCALE.md`, `docs/LA
 - **bank** — land cells touching water; paint damp/reed, never plant trees in water
 - **facing** — door/camera axis of art; layout must obey art (south-door → north-of-plaza)
 - **pass** — ordered generation: masks → ground → water → path → buildings → props → actors → FX
-- **footprint** — multi-tile ground AABB clear of forbidden masks
+- **footprint** — multi-tile ground AABB clear of forbidden masks (necessary but not sufficient for buildings)
+- **sprite AABB / build zone** — full building texture rect in world space must sit inside play rect or fenced inset (`FARM_BUILD_ZONE`), never foot-only
 
 ## When this skill runs
 
@@ -27,19 +29,20 @@ Copy and track:
 
 ```
 Scene craft checklist:
-- [ ] 1. Re-read SCALE / LAYOUT / SEAMLESS
+- [ ] 1. Re-read SCALE / LAYOUT / BUILDING_PLACEMENT / SEAMLESS
 - [ ] 2. Rebuild masks (water meander, path, bank, plantable)
 - [ ] 3. Paint ground ecology + banks
 - [ ] 4. Place paths/bridges with span rules
-- [ ] 5. Place buildings by facing slots + footprint
-- [ ] 6. Place trees/props with footprint
-- [ ] 7. Actors on walk graph only
-- [ ] 8. Asset/draw pass if new art
-- [ ] 9. MCP or user visual QA vs reference
-- [ ] 10. Update LAYOUT notes if rules changed
+- [ ] 5. Place buildings by facing slots + footprint + full sprite AABB in build zone
+- [ ] 6. Door dirt south of feet (or allow_path for buildings); no apron/footprint fight
+- [ ] 7. Place trees/props with footprint (yard props ⊆ build zone when fenced)
+- [ ] 8. Actors on walk graph only
+- [ ] 9. Asset/draw pass if new art
+- [ ] 10. MCP or user visual QA: roofs fully inside zone/fence
+- [ ] 11. Update LAYOUT / BUILDING_PLACEMENT if rules changed
 ```
 
-**Done when:** every checklist item is checked, and a review can name the mask functions / slot positions used.
+**Done when:** every checklist item is checked, and a review can name the mask functions / slot positions / build zones used.
 
 ## Hard rules (Dream)
 
@@ -48,11 +51,12 @@ Scene craft checklist:
 3. Trees/yard props: **footprint** on plantable land only — never water, never plaza stone.
 4. Civic props (well, bench, lamp) may sit on plaza; still never in water.
 5. Building art is **south-facing** unless new sheets exist → main lots **north of plaza**; doors toward civic space.
-6. Roads stop before river except a **bridge span** with parallel bank anchors.
-7. NPCs: sparse anchors on preferred surfaces (stone > dirt > grass); no random full-map roam.
-8. Runtime paint prefers `set_cell` / precomputed coords; do not spam `set_cells_terrain_connect` every frame.
-9. Fill tiles wrap-match (`L==R`, `T==B`); Nearest + `use_texture_padding`; integer zoom.
-10. Chinese paths: prefer writing tools under `dream/tools/`; ask user to run Godot tests locally when risky.
+6. **Buildings: full sprite AABB ⊆ play/build zone** via `AreaCraft.find_building_inside` — see `docs/BUILDING_PLACEMENT.md`. Foot-only / small tile footprint is forbidden. Fenced farms use inset `FARM_BUILD_ZONE`, not fence-line `FARM_ZONE`.
+7. Roads stop before river except a **bridge span** with parallel bank anchors.
+8. NPCs: sparse anchors on preferred surfaces (stone > dirt > grass); no random full-map roam.
+9. Runtime paint prefers `set_cell` / precomputed coords; do not spam `set_cells_terrain_connect` every frame.
+10. Fill tiles wrap-match (`L==R`, `T==B`); Nearest + `use_texture_padding`; integer zoom.
+11. Chinese paths: prefer writing tools under `dream/tools/`; ask user to run Godot tests locally when risky.
 
 ## Pass order (assembler)
 
@@ -60,7 +64,7 @@ Scene craft checklist:
 2. Ecological grass (distance-to-path + edge + damp)  
 3. Water layer (skip bridge deck cells)  
 4. Path/plaza stone  
-5. Buildings (named plaza-relative slots + `_footprint_ok`)  
+5. Buildings (named slots + `find_building_inside` / full AABB)  
 6. Props  
 7. Trees  
 8. Actors  
@@ -102,8 +106,9 @@ Phrase positively as targets:
 - Meander centerline + variable width + bank ring  
 - Named plaza slots (N town hall, NE church, NW/NE houses)  
 - `_footprint_ok` before every plantable spawn  
+- `find_building_inside` + inset build zone for every building (no roof-over-fence)  
 - Ecological grass variants, not one pad  
-- Document rule changes in `LAYOUT.md`  
+- Document rule changes in `LAYOUT.md` / `BUILDING_PLACEMENT.md`  
 
 ## After changes
 
