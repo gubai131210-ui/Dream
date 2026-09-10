@@ -59,7 +59,7 @@ func assemble(root: Node2D) -> void:
 
 
 func _spawn_edge_portals(ysort: Node2D) -> void:
-	# PHASE2: square links east → A08 residential, south → A02 farm (world-space portals).
+	# PHASE2/3: square links east → A08 residential + A10 market, south → A02 farm.
 	var craft := AreaCraft.new()
 	craft.setup(MAP_W, MAP_H)
 	craft.make_portal(
@@ -67,6 +67,13 @@ func _spawn_edge_portals(ysort: Node2D) -> void:
 		"→住宅区",
 		SceneRouter.RESIDENTIAL_PATH,
 		Vector2(1220, 480),
+		Vector2(88, 56)
+	)
+	craft.make_portal(
+		ysort,
+		"→商业街",
+		SceneRouter.MARKET_PATH,
+		Vector2(1220, 320),
 		Vector2(88, 56)
 	)
 	craft.make_portal(
