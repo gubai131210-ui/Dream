@@ -1,7 +1,8 @@
 # Dream Phase 4 — Forest edge + Station spine
 
 **Status:** IN PROGRESS  
-**Depends on:** Phase 3 (A03/A10 + Hub), `AREA_FRAMEWORK.md`, `BUILDING_PLACEMENT.md`, `NPC_ANIM.md`, skill `realistic-scene-craft`
+**Depends on:** Phase 3 (A03/A10 + Hub), `AREA_FRAMEWORK.md`, `BUILDING_PLACEMENT.md`, `NPC_ANIM.md`, skill `realistic-scene-craft`  
+**Next:** Finish remaining outdoor shell (A05–A07, A12–A15 as scoped) → then [`PHASE5.md`](PHASE5.md) / [`INTERIOR_LIBRARY.md`](INTERIOR_LIBRARY.md) (C 类室内，室外完成后再开工)
 
 Village ring (plaza / residential / farm / farmland / market) is in place. Phase 4 opens the **nature edge** and **transit spine**.
 

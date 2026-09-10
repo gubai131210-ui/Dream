@@ -70,6 +70,9 @@
 | --- | --- |
 | `AREA_FRAMEWORK.md` | **District parameter lock** (plaza / residential / farm_home / farmland / market) |
 | `LAYOUT.md` / `SEAMLESS.md` / `BUILDING_PLACEMENT.md` | Execution rules |
+| `ASSET_TAXONOMY.md` | A–H asset layers (outdoor → interior → dungeon → gameplay → events → env) |
+| `INTERIOR_LIBRARY.md` | **C 类**可进入/特殊区域目录；室外壳层完成后再落地 |
+| `PHASE5.md` | Interior wave draft (优先 10) |
 | `realistic-scene-craft` | Assembler checklist + formulas + anti-lazy |
 | `painting-asset-craft` | Sizes, frames, views, inpaint, tool loop |
 
@@ -79,7 +82,8 @@
 2. Enforce silhouette test in QA (1/8 screenshot distinguishability).  
 3. Optional Garden-Lane style buffer scene between farm hub and plaza (future).  
 4. Water overlay animation on meander mask (Stardew).  
-5. User installs IOPaint for hole-fill; always BiRefNet for 抠图.
+5. User installs IOPaint for hole-fill; always BiRefNet for 抠图.  
+6. **Interior layer after outdoor shell** — enterable C scenes (`INTERIOR_LIBRARY.md`), not door InfoPanels only.
 
 ---
 

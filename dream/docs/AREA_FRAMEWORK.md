@@ -137,3 +137,15 @@
 - 禁止文档与 assembler 头注释不一致  
 
 更新本文件时同步：`LAYOUT.md`、`SYNTHESIS.md`、`realistic-scene-craft` skill。
+
+---
+
+## 室内与特殊区域
+
+本文件的 district 参数表 **只约束室外壳层**。可进入室内、地下、钓鱼玩法场景、昼夜天气等见：
+
+- [`INTERIOR_LIBRARY.md`](INTERIOR_LIBRARY.md)（C 类目录与优先 10）  
+- [`ASSET_TAXONOMY.md`](ASSET_TAXONOMY.md)（A–H 分层）  
+- [`PHASE5.md`](PHASE5.md)（室外壳层完成后再启动）
+
+禁止把室外开敞度/路宽表直接套到室内房间布局。

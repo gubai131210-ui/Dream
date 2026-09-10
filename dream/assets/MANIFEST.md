@@ -1,5 +1,8 @@
 # Dream Asset Manifest
 
+**Taxonomy (A–H layers):** see [`docs/ASSET_TAXONOMY.md`](../docs/ASSET_TAXONOMY.md).  
+**Interiors / special areas (C):** see [`docs/INTERIOR_LIBRARY.md`](../docs/INTERIOR_LIBRARY.md).
+
 Source: `D:/GoDot_Projects/Dream/素材/素材文件`
 Destination: `D:/GoDot_Projects/Dream/dream/assets/raw`
 BASE_TILE: 32 (see dream/docs/SCALE.md)
