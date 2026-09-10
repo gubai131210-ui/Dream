@@ -334,10 +334,10 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_03.png",
-			"pos": Vector2(1080, 560),
+			"pos": Vector2(1080, 240),
 			"hw": 3, "hh": 2,
 			"title": "东侧住宅",
-			"desc": "东路南侧住宅（仍偏北朝向，避免把门背对广场）。",
+			"desc": "广场东北民居：与教堂同列北侧，门脸朝南，院落朝向广场方向。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_04.png",
