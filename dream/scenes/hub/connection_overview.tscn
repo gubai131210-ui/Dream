@@ -1,8 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dream_connection_hub"]
+[gd_scene format=3 uid="uid://c6lrr1temdgou"]
 
-[ext_resource type="Script" path="res://scripts/hub/hub_controller.gd" id="1"]
-[ext_resource type="Script" path="res://scripts/core/camera_controller.gd" id="2"]
-[ext_resource type="Texture2D" path="res://assets/raw/references/A16_scene_connections.png" id="3"]
+[ext_resource type="Script" uid="uid://b6ugxqjgrtwv7" path="res://scripts/hub/hub_controller.gd" id="1"]
+[ext_resource type="Script" uid="uid://cd348pgsm88ig" path="res://scripts/core/camera_controller.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://bf5icnusmnp" path="res://assets/raw/references/A16_scene_connections.png" id="3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_square"]
 size = Vector2(240, 160)
@@ -13,84 +13,114 @@ size = Vector2(200, 150)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_farm"]
 size = Vector2(210, 150)
 
-[node name="ConnectionOverview" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ij0m8"]
+size = Vector2(200, 150)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m2n6g"]
+size = Vector2(200, 140)
+
+[node name="ConnectionOverview" type="Node2D" unique_id=1855193640]
 script = ExtResource("1")
 hub_mode = "connections"
 
-[node name="MapSprite" type="Sprite2D" parent="."]
-texture_filter = 0
+[node name="MapSprite" type="Sprite2D" parent="." unique_id=601362654]
 texture = ExtResource("3")
 
-[node name="CameraController" type="Camera2D" parent="."]
+[node name="CameraController" type="Camera2D" parent="." unique_id=1044546198]
 script = ExtResource("2")
 min_zoom = 0.25
 max_zoom = 2.5
 
-[node name="Hotspots" type="Node2D" parent="."]
+[node name="Hotspots" type="Node2D" parent="." unique_id=1480503080]
 
-[node name="VillageSquare" type="Area2D" parent="Hotspots"]
+[node name="VillageSquare" type="Area2D" parent="Hotspots" unique_id=1370334174]
 position = Vector2(40, 40)
-input_pickable = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/VillageSquare"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/VillageSquare" unique_id=408618611]
 shape = SubResource("RectangleShape2D_square")
 
-[node name="Hint" type="Polygon2D" parent="Hotspots/VillageSquare"]
+[node name="Hint" type="Polygon2D" parent="Hotspots/VillageSquare" unique_id=836174632]
 color = Color(0.3, 0.85, 1, 0.3)
 polygon = PackedVector2Array(-120, -80, 120, -80, 120, 80, -120, 80)
 
-[node name="VillageResidential" type="Area2D" parent="Hotspots"]
+[node name="VillageResidential" type="Area2D" parent="Hotspots" unique_id=428337147]
 position = Vector2(220, 100)
-input_pickable = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/VillageResidential"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/VillageResidential" unique_id=1355242696]
 shape = SubResource("RectangleShape2D_residential")
 
-[node name="Hint" type="Polygon2D" parent="Hotspots/VillageResidential"]
+[node name="Hint" type="Polygon2D" parent="Hotspots/VillageResidential" unique_id=596164293]
 color = Color(0.35, 0.95, 0.45, 0.3)
 polygon = PackedVector2Array(-100, -75, 100, -75, 100, 75, -100, 75)
 
-[node name="FarmResidential" type="Area2D" parent="Hotspots"]
+[node name="FarmResidential" type="Area2D" parent="Hotspots" unique_id=5242655]
 position = Vector2(-160, 20)
-input_pickable = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/FarmResidential"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/FarmResidential" unique_id=1148900357]
 shape = SubResource("RectangleShape2D_farm")
 
-[node name="Hint" type="Polygon2D" parent="Hotspots/FarmResidential"]
+[node name="Hint" type="Polygon2D" parent="Hotspots/FarmResidential" unique_id=1405949434]
 color = Color(0.95, 0.55, 0.25, 0.3)
 polygon = PackedVector2Array(-105, -75, 105, -75, 105, 75, -105, 75)
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="Farmland" type="Area2D" parent="Hotspots" unique_id=375095069]
+position = Vector2(-280, 140)
 
-[node name="TopBar" type="HBoxContainer" parent="UI"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/Farmland" unique_id=686784601]
+shape = SubResource("RectangleShape2D_ij0m8")
+
+[node name="Hint" type="Polygon2D" parent="Hotspots/Farmland" unique_id=1103601763]
+color = Color(0.2, 0.8, 0.55, 0.3)
+polygon = PackedVector2Array(-100, -75, 100, -75, 100, 75, -100, 75)
+
+[node name="MarketStreet" type="Area2D" parent="Hotspots" unique_id=848598154]
+position = Vector2(100, -80)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/MarketStreet" unique_id=152971349]
+shape = SubResource("RectangleShape2D_m2n6g")
+
+[node name="Hint" type="Polygon2D" parent="Hotspots/MarketStreet" unique_id=916078215]
+color = Color(0.85, 0.35, 0.75, 0.3)
+polygon = PackedVector2Array(-100, -70, 100, -70, 100, 70, -100, 70)
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1771598198]
+
+[node name="TopBar" type="HBoxContainer" parent="UI" unique_id=1221471346]
 offset_left = 12.0
 offset_top = 12.0
 offset_right = 1100.0
 offset_bottom = 56.0
 theme_override_constants/separation = 12
 
-[node name="Status" type="Label" parent="UI/TopBar"]
+[node name="Status" type="Label" parent="UI/TopBar" unique_id=577894402]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "场景连接总览"
 
-[node name="Buttons" type="HBoxContainer" parent="UI/TopBar"]
+[node name="Buttons" type="HBoxContainer" parent="UI/TopBar" unique_id=620630577]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="EnterSquare" type="Button" parent="UI/TopBar/Buttons"]
+[node name="EnterSquare" type="Button" parent="UI/TopBar/Buttons" unique_id=852195158]
 layout_mode = 2
 text = "进入村庄广场"
 
-[node name="EnterResidential" type="Button" parent="UI/TopBar/Buttons"]
+[node name="EnterResidential" type="Button" parent="UI/TopBar/Buttons" unique_id=1397310087]
 layout_mode = 2
 text = "进入住宅区"
 
-[node name="EnterFarm" type="Button" parent="UI/TopBar/Buttons"]
+[node name="EnterFarm" type="Button" parent="UI/TopBar/Buttons" unique_id=1462144091]
 layout_mode = 2
 text = "进入农场"
 
-[node name="SwitchOverview" type="Button" parent="UI/TopBar/Buttons"]
+[node name="EnterFarmland" type="Button" parent="UI/TopBar/Buttons" unique_id=37482128]
+layout_mode = 2
+text = "进入农田"
+
+[node name="EnterMarket" type="Button" parent="UI/TopBar/Buttons" unique_id=1094839136]
+layout_mode = 2
+text = "进入商业街"
+
+[node name="SwitchOverview" type="Button" parent="UI/TopBar/Buttons" unique_id=362553113]
 layout_mode = 2
 text = "返回世界总览"

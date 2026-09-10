@@ -17,20 +17,28 @@ extends Node2D
 @onready var btn_square: Button = $UI/TopBar/Buttons/EnterSquare
 @onready var btn_residential: Button = $UI/TopBar/Buttons/EnterResidential
 @onready var btn_farm: Button = $UI/TopBar/Buttons/EnterFarm
+@onready var btn_farmland: Button = $UI/TopBar/Buttons/EnterFarmland
+@onready var btn_market: Button = $UI/TopBar/Buttons/EnterMarket
 @onready var btn_other: Button = $UI/TopBar/Buttons/SwitchOverview
 @onready var hotspot_square: Area2D = $Hotspots/VillageSquare
 @onready var hotspot_residential: Area2D = $Hotspots/VillageResidential
 @onready var hotspot_farm: Area2D = $Hotspots/FarmResidential
+@onready var hotspot_farmland: Area2D = $Hotspots/Farmland
+@onready var hotspot_market: Area2D = $Hotspots/MarketStreet
 
 
 func _ready() -> void:
 	btn_square.pressed.connect(_enter_square)
 	btn_residential.pressed.connect(_enter_residential)
 	btn_farm.pressed.connect(_enter_farm)
+	btn_farmland.pressed.connect(_enter_farmland)
+	btn_market.pressed.connect(_enter_market)
 	btn_other.pressed.connect(_switch_overview)
 	_wire_hotspot(hotspot_square, "村庄广场（可进入）", _enter_square)
 	_wire_hotspot(hotspot_residential, "村庄住宅区（可进入）", _enter_residential)
 	_wire_hotspot(hotspot_farm, "农场住宅区（可进入）", _enter_farm)
+	_wire_hotspot(hotspot_farmland, "农田区（可进入）", _enter_farmland)
+	_wire_hotspot(hotspot_market, "商业街（可进入）", _enter_market)
 	status_label.text = _default_status()
 	_fit_camera_to_map()
 
@@ -72,6 +80,14 @@ func _enter_residential() -> void:
 
 func _enter_farm() -> void:
 	get_tree().change_scene_to_file(SceneRouter.FARM_HOME_PATH)
+
+
+func _enter_farmland() -> void:
+	get_tree().change_scene_to_file(SceneRouter.FARMLAND_PATH)
+
+
+func _enter_market() -> void:
+	get_tree().change_scene_to_file(SceneRouter.MARKET_PATH)
 
 
 func _switch_overview() -> void:
