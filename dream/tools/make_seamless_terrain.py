@@ -159,10 +159,32 @@ def make_grass_set(base_pal: np.ndarray) -> list[np.ndarray]:
 	pal = shade_pal(base_pal, 0.95, cool=0.0)
 	t = add_weeds(add_blades(fill_from_noise(mix, pal), pal, 30, 2, 400), 401)
 	tiles.append(enforce_wrap(t))
-	# damp riverside
-	mix = 0.45 * tileable_noise(BASE, 8, 110) + 0.55 * tileable_noise(BASE, 3, 111)
-	pal = shade_pal(base_pal, 0.88, cool=0.55)
-	t = add_blades(fill_from_noise(mix, pal), pal, 35, 3, 500)
+	# damp riverside — cooler mud + reed-like tall blades (bank-specific)
+	mix = 0.35 * tileable_noise(BASE, 8, 110) + 0.35 * tileable_noise(BASE, 3, 111) + 0.3 * tileable_noise(BASE, 2, 112)
+	pal = shade_pal(base_pal, 0.82, cool=0.75)
+	# muddy darker base
+	mud = [
+		np.array([48, 72, 52], np.uint8),
+		np.array([58, 78, 48], np.uint8),
+		np.array([40, 58, 44], np.uint8),
+	]
+	t = fill_from_noise(mix, pal)
+	rng = np.random.default_rng(503)
+	for _ in range(40):
+		x = int(rng.integers(0, BASE))
+		y = int(rng.integers(0, BASE))
+		c = mud[int(rng.integers(0, 3))]
+		t[y, x, :3] = c
+		t[(y + 1) % BASE, x, :3] = c
+		t[y, (x + 1) % BASE, :3] = c
+	t = add_blades(t, pal, 48, 4, 500)
+	# sparse reed tips (olive)
+	reed = np.array([70, 95, 40], np.uint8)
+	for _ in range(12):
+		x = int(rng.integers(0, BASE))
+		y = int(rng.integers(0, BASE))
+		for dy in range(5):
+			t[(y - dy) % BASE, x, :3] = reed
 	tiles.append(enforce_wrap(t))
 	return tiles
 

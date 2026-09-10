@@ -19,6 +19,7 @@ Ground looked like separate pads because:
    - **damp** — riverbank
 2. Assembler **clears** TileMapLayers first, paints by distance-to-path / edge / water, removes old `grass_atlas` deco pads, moves west trees inland.
 3. `TileSetFactory`: `use_texture_padding` + Nearest; camera zoom snaps to integers.
+4. River is a **meandering mask** (not a straight canal); bank cells use damp grass with mud/reed detail. See `LAYOUT.md`.
 
 ## Rebuild
 
