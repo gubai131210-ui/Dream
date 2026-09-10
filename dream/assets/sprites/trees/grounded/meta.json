@@ -1,0 +1,152 @@
+{
+  "description": "Tree sprites with water-island bases removed; trunk+canopy+small grass mound retained.",
+  "source_dir": "assets/sprites/trees",
+  "output_dir": "assets/sprites/trees/grounded",
+  "grass_keep": 7,
+  "trees": [
+    {
+      "file": "tree_00.png",
+      "source": "tree_00.png",
+      "src_size": [
+        114,
+        128
+      ],
+      "out_size": [
+        114,
+        111
+      ],
+      "crop_box": [
+        0,
+        0,
+        114,
+        111
+      ],
+      "island_cut": {
+        "clean_y": 103,
+        "crop_y1_before_bbox": 111,
+        "grass_keep": 7
+      },
+      "filter": "NEAREST"
+    },
+    {
+      "file": "tree_01.png",
+      "source": "tree_01.png",
+      "src_size": [
+        144,
+        144
+      ],
+      "out_size": [
+        144,
+        125
+      ],
+      "crop_box": [
+        0,
+        0,
+        144,
+        125
+      ],
+      "island_cut": {
+        "clean_y": 119,
+        "crop_y1_before_bbox": 127,
+        "grass_keep": 7
+      },
+      "filter": "NEAREST"
+    },
+    {
+      "file": "tree_02.png",
+      "source": "tree_02.png",
+      "src_size": [
+        135,
+        152
+      ],
+      "out_size": [
+        135,
+        130
+      ],
+      "crop_box": [
+        0,
+        0,
+        135,
+        130
+      ],
+      "island_cut": {
+        "clean_y": 122,
+        "crop_y1_before_bbox": 130,
+        "grass_keep": 7
+      },
+      "filter": "NEAREST"
+    },
+    {
+      "file": "tree_03.png",
+      "source": "tree_03.png",
+      "src_size": [
+        160,
+        160
+      ],
+      "out_size": [
+        160,
+        137
+      ],
+      "crop_box": [
+        0,
+        0,
+        160,
+        137
+      ],
+      "island_cut": {
+        "clean_y": 129,
+        "crop_y1_before_bbox": 137,
+        "grass_keep": 7
+      },
+      "filter": "NEAREST"
+    },
+    {
+      "file": "tree_04.png",
+      "source": "tree_04.png",
+      "src_size": [
+        114,
+        128
+      ],
+      "out_size": [
+        114,
+        111
+      ],
+      "crop_box": [
+        0,
+        0,
+        114,
+        111
+      ],
+      "island_cut": {
+        "clean_y": 103,
+        "crop_y1_before_bbox": 111,
+        "grass_keep": 7
+      },
+      "filter": "NEAREST"
+    },
+    {
+      "file": "tree_05.png",
+      "source": "tree_05.png",
+      "src_size": [
+        144,
+        144
+      ],
+      "out_size": [
+        144,
+        125
+      ],
+      "crop_box": [
+        0,
+        0,
+        144,
+        125
+      ],
+      "island_cut": {
+        "clean_y": 119,
+        "crop_y1_before_bbox": 127,
+        "grass_keep": 7
+      },
+      "filter": "NEAREST"
+    }
+  ]
+}

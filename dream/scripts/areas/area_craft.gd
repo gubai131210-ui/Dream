@@ -333,7 +333,8 @@ func mark_dirt_rect(x0: int, y0: int, x1: int, y1: int, force: bool = false) -> 
 			dirt_mask[ty][tx] = true
 
 
-## Visual crop rows inside a world-space bed rect (placeholder until B12 slices exist).
+## Crop bed marker: hotspot + thin dirt furrows only (no opaque green ColorRect slabs).
+## Until B12 crop sprites exist, beds read as tilled dirt with subtle row lines.
 func spawn_crop_rows(
 	parent: Node2D,
 	bed: Rect2,
@@ -344,17 +345,25 @@ func spawn_crop_rows(
 ) -> void:
 	var hs := make_hotspot(parent, title, desc, bed.get_center(), bed.size)
 	var visual: Node2D = hs.get_node("Visual")
-	var inset := 6.0
+	var inset := 8.0
 	var inner := Rect2(bed.position + Vector2(inset, inset), bed.size - Vector2(inset, inset) * 2.0)
 	if inner.size.x <= 4.0 or inner.size.y <= 4.0:
 		return
+	# Derive a muted soil furrow from row_color (never full-bed green overlays).
+	var furrow := Color(
+		lerpf(0.42, row_color.r, 0.25),
+		lerpf(0.32, row_color.g, 0.2),
+		lerpf(0.18, row_color.b, 0.15),
+		0.35
+	)
 	var row_h: float = inner.size.y / float(maxi(rows, 1))
 	for i in range(rows):
-		var strip := ColorRect.new()
-		strip.color = row_color.darkened(0.05 * float(i % 3))
-		strip.size = Vector2(inner.size.x, maxf(4.0, row_h - 3.0))
-		strip.position = inner.position - bed.get_center() + Vector2(0.0, row_h * float(i) + 1.0)
-		visual.add_child(strip)
+		var line := ColorRect.new()
+		line.color = furrow.darkened(0.04 * float(i % 2))
+		line.size = Vector2(inner.size.x, 2.0)
+		line.position = inner.position - bed.get_center() + Vector2(0.0, row_h * (float(i) + 0.5) - 1.0)
+		line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		visual.add_child(line)
 
 
 func spawn_sprite(parent: Node2D, path: String, pos: Vector2, z: int = 0) -> Sprite2D:

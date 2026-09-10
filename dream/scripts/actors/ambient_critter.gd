@@ -2,6 +2,7 @@ class_name AmbientCritter
 extends Node2D
 
 ## Ambient farm animal: idle stand + short wander. Skips water/blocked tiles via AreaCraft.
+## Native B13 frames are ~150–260px; always normalize to TARGET_HEIGHT_PX vs CHARACTER ~56.
 
 const IDLE_FPS := 2.0
 const WALK_FPS := 6.0
@@ -10,6 +11,15 @@ const WANDER_RADIUS := 56.0
 const PAUSE_MIN := 1.4
 const PAUSE_MAX := 3.8
 const PICK_TRIES := 10
+
+## Display height in pixels (must stay clearly below NPC ~56px except cow/deer slightly under).
+const TARGET_HEIGHT_PX := {
+	"cat": 20.0,
+	"dog": 28.0,
+	"sheep": 32.0,
+	"cow": 42.0,
+	"deer": 40.0,
+}
 
 var species_id: String = ""
 var craft: AreaCraft = null
@@ -25,7 +35,7 @@ func setup(
 	species: String,
 	at: Vector2,
 	area_craft: AreaCraft = null,
-	draw_scale: float = 0.45
+	draw_scale: float = -1.0
 ) -> void:
 	species_id = species
 	craft = area_craft
@@ -35,12 +45,18 @@ func setup(
 	_pause_left = randf_range(0.4, 1.6)
 	name = "Critter_%s" % species
 
+	var frames := _build_frames(species)
+	var scale_f := draw_scale
+	if scale_f <= 0.0:
+		scale_f = _scale_for_species(species, frames)
+
 	var shadow := Polygon2D.new()
 	shadow.color = Color(0, 0, 0, 0.22)
+	var sw := clampf(6.0 + scale_f * 40.0, 6.0, 14.0)
 	shadow.polygon = PackedVector2Array([
-		Vector2(-10, 0), Vector2(0, -4), Vector2(10, 0), Vector2(0, 4),
+		Vector2(-sw, 0), Vector2(0, -sw * 0.4), Vector2(sw, 0), Vector2(0, sw * 0.4),
 	])
-	shadow.position = Vector2(0, 6)
+	shadow.position = Vector2(0, 4)
 	shadow.z_index = -1
 	add_child(shadow)
 
@@ -48,11 +64,25 @@ func setup(
 	_anim.name = "Anim"
 	_anim.centered = true
 	_anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	_anim.scale = Vector2(draw_scale, draw_scale)
-	_anim.offset = Vector2(0, -12)
-	_anim.sprite_frames = _build_frames(species)
+	_anim.scale = Vector2(scale_f, scale_f)
+	_anim.offset = Vector2(0, -10.0 * scale_f / 0.15)
+	_anim.sprite_frames = frames
 	add_child(_anim)
 	_play_idle()
+
+
+func _scale_for_species(species: String, frames: SpriteFrames) -> float:
+	var target: float = float(TARGET_HEIGHT_PX.get(species, 28.0))
+	var native_h := 180.0
+	if frames.has_animation("idle") and frames.get_frame_count("idle") > 0:
+		var tex := frames.get_frame_texture("idle", 0)
+		if tex:
+			native_h = float(tex.get_height())
+	elif frames.has_animation("walk") and frames.get_frame_count("walk") > 0:
+		var tex2 := frames.get_frame_texture("walk", 0)
+		if tex2:
+			native_h = float(tex2.get_height())
+	return clampf(target / maxf(native_h, 1.0), 0.06, 0.35)
 
 
 func _build_frames(species: String) -> SpriteFrames:

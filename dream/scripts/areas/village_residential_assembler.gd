@@ -1,7 +1,7 @@
 class_name VillageResidentialAssembler
 extends Node
 
-## A08 village residential â lane grid, yards, south-facing houses north of lanes.
+## A08 village residential Ã¢ÂÂ lane grid, yards, south-facing houses north of lanes.
 ## District: residential (AREA_FRAMEWORK). craft.setup(..., "residential").
 ## Uses AreaCraft for masks / paint / footprint / portals (do not duplicate helpers).
 ## Pass: masks -> ecology -> dirt -> water -> path -> buildings -> props -> trees -> actors -> FX.
@@ -73,7 +73,7 @@ func _rebuild_masks() -> void:
 
 
 func _pond_center() -> Vector2:
-	# SE residential pond â oval / meander, not a Rect2i canal.
+	# SE residential pond Ã¢ÂÂ oval / meander, not a Rect2i canal.
 	return Vector2(33.2, 23.4)
 
 
@@ -114,10 +114,10 @@ func _compute_dirt_lane(tx: int, ty: int) -> bool:
 
 
 func _compute_stone_path(tx: int, ty: int) -> bool:
-	# West approach to square â stone on main lane head.
+	# West approach to square Ã¢ÂÂ stone on main lane head.
 	if ty >= MAIN_LANE_TY0 and ty <= MAIN_LANE_TY1 and tx >= 0 and tx <= 5:
 		return true
-	# Small NE pocket plaza â keep clear of house lots.
+	# Small NE pocket plaza Ã¢ÂÂ keep clear of house lots.
 	if tx >= 36 and tx <= 38 and ty >= 4 and ty <= 6:
 		return true
 	# North-west connector strip toward square portal.
@@ -150,56 +150,56 @@ func _paint_door_spur_masks() -> void:
 
 
 func _house_slots() -> Array:
-	# South-facing cottages NORTH of their door lane â foot Y leaves full sprite inside PLAY_ZONE.
+	# South-facing cottages NORTH of their door lane Ã¢ÂÂ foot Y leaves full sprite inside PLAY_ZONE.
 	return [
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
 			"pos": Vector2(288, 520),
 			"hw": 2, "hh": 1,
-			"title": "西巷民居",
-			"desc": "主巷北侧住宅：整栋在住宅区内，门朝南。",
+			"title": "è¥¿å··æ°å±",
+			"desc": "ä¸»å··åä¾§ä½å®ï¼æ´æ å¨ä½å®åºåï¼é¨æåã",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_03.png",
 			"pos": Vector2(544, 520),
 			"hw": 2, "hh": 1,
-			"title": "中巷民居",
-			"desc": "主巷中段北侧宅院。",
+			"title": "ä¸­å··æ°å±",
+			"desc": "ä¸»å··ä¸­æ®µåä¾§å®é¢ã",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_04.png",
 			"pos": Vector2(800, 520),
 			"hw": 2, "hh": 1,
-			"title": "东巷民居",
-			"desc": "主巷东段北侧小屋。",
+			"title": "ä¸å··æ°å±",
+			"desc": "ä¸»å··ä¸æ®µåä¾§å°å±ã",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
 			"pos": Vector2(1000, 520),
 			"hw": 2, "hh": 1,
-			"title": "东角宅",
-			"desc": "东段住宅，整栋在区内。",
+			"title": "ä¸è§å®",
+			"desc": "ä¸æ®µä½å®ï¼æ´æ å¨åºåã",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_00.png",
 			"pos": Vector2(400, 280),
 			"hw": 2, "hh": 1,
-			"title": "北排西宅",
-			"desc": "北巷北侧住宅：屋顶不穿出地图上沿。",
+			"title": "åæè¥¿å®",
+			"desc": "åå··åä¾§ä½å®ï¼å±é¡¶ä¸ç©¿åºå°å¾ä¸æ²¿ã",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
 			"pos": Vector2(656, 280),
 			"hw": 2, "hh": 1,
-			"title": "北排中宅",
-			"desc": "北巷中段宅院。",
+			"title": "åæä¸­å®",
+			"desc": "åå··ä¸­æ®µå®é¢ã",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_03.png",
 			"pos": Vector2(912, 280),
 			"hw": 2, "hh": 1,
-			"title": "北排东宅",
-			"desc": "北巷东端住宅。",
+			"title": "åæä¸å®",
+			"desc": "åå··ä¸ç«¯ä½å®ã",
 		},
 	]
 
@@ -236,18 +236,18 @@ func _spawn_props(ysort: Node2D) -> void:
 			craft.add_contact_shadow(ysort, well_pos, Vector2(20, 8))
 			var wspr := craft.spawn_sprite(ysort, well_path, well_pos)
 			wspr.scale = Vector2(0.55, 0.55)
-			var whs := craft.make_hotspot(ysort, "石井", "住宅区东北石板水井。", well_pos, Vector2(64, 48))
+			var whs := craft.make_hotspot(ysort, "ç³äº", "ä½å®åºä¸åç³æ¿æ°´äºã", well_pos, Vector2(64, 48))
 			wspr.reparent(whs.get_node("Visual"))
 			wspr.position = Vector2.ZERO
 
 	var yard_props := [
-		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(250, 300), "title": "木桶", "desc": "西宅院落木桶。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(500, 300), "title": "木箱", "desc": "中宅院落货箱。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(760, 300), "title": "麻袋", "desc": "东宅院落麻袋。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(360, 200), "title": "长椅", "desc": "北巷旁歇脚长椅。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(620, 480), "title": "路灯", "desc": "主巷路灯。", "hw": 1, "hh": 1, "allow_path": true},
-		{"path": "res://assets/sprites/props/lamp_1.png", "pos": Vector2(880, 480), "title": "路灯", "desc": "主巷东段路灯。", "hw": 1, "hh": 1, "allow_path": true},
-		{"path": "res://assets/sprites/props/well_1.png", "pos": Vector2(480, 280), "title": "院井", "desc": "宅院小井。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(250, 300), "title": "æ¨æ¡¶", "desc": "è¥¿å®é¢è½æ¨æ¡¶ã", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(500, 300), "title": "æ¨ç®±", "desc": "ä¸­å®é¢è½è´§ç®±ã", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(760, 300), "title": "éº»è¢", "desc": "ä¸å®é¢è½éº»è¢ã", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(360, 200), "title": "é¿æ¤", "desc": "åå··ææ­èé¿æ¤ã", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(620, 480), "title": "è·¯ç¯", "desc": "ä¸»å··è·¯ç¯ã", "hw": 1, "hh": 1, "allow_path": true},
+		{"path": "res://assets/sprites/props/lamp_1.png", "pos": Vector2(880, 480), "title": "è·¯ç¯", "desc": "ä¸»å··ä¸æ®µè·¯ç¯ã", "hw": 1, "hh": 1, "allow_path": true},
+		{"path": "res://assets/sprites/props/well_1.png", "pos": Vector2(480, 280), "title": "é¢äº", "desc": "å®é¢å°äºã", "hw": 1, "hh": 1},
 	]
 	for s in yard_props:
 		if not ResourceLoader.exists(s["path"]):
@@ -276,7 +276,7 @@ func _spawn_props(ysort: Node2D) -> void:
 
 
 func _spawn_fence_props(ysort: Node2D) -> void:
-	# Optional yard fence markers (props only â not a full collision fence system).
+	# Optional yard fence markers (props only Ã¢ÂÂ not a full collision fence system).
 	var fence_path := "res://assets/sprites/props/B11-08_pots_lamps_00.png"
 	if not ResourceLoader.exists(fence_path):
 		fence_path = "res://assets/sprites/props/lamp_2.png"
@@ -301,7 +301,7 @@ func _spawn_fence_props(ysort: Node2D) -> void:
 
 
 func _spawn_trees(ysort: Node2D) -> void:
-	# Border / yard trees — full crown AABB via spawn_tree (no north-edge clip).
+	# Border / yard trees â full crown AABB via spawn_tree (no north-edge clip).
 	# Keep SE pond shoreline clear of crowns so rock_01 can sit on the bank.
 	var zone := craft.map_play_rect(2.0)
 	var ideals: Array[Vector2] = [
@@ -322,7 +322,9 @@ func _spawn_trees(ysort: Node2D) -> void:
 		Vector2(200, 560),
 	]
 	for i in ideals.size():
-		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
+		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % (i % 6)
+		if not ResourceLoader.exists(path):
+			path = "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
 		var spr := craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 8, false)
 		if spr == null:
 			continue
@@ -332,15 +334,7 @@ func _spawn_trees(ysort: Node2D) -> void:
 
 
 func _spawn_se_pond_rock(ysort: Node2D) -> void:
-	# Shoreline boulder at SE pond — ~half character height; avoid tree crown AABB.
-	var path := "res://assets/sprites/props/rock_01.png"
-	if not ResourceLoader.exists(path):
-		return
-	var tex := load(path) as Texture2D
-	if tex == null:
-		return
-	var scale_f := 0.30
-	var rock_size := Vector2(float(tex.get_width()), float(tex.get_height())) * scale_f
+	# SE pond bank: small rock cluster (not one cottage-tall boulder). Target ~22–28px tall.
 	var tree_rects: Array[Rect2] = []
 	for child in ysort.get_children():
 		if child is Sprite2D:
@@ -353,66 +347,61 @@ func _spawn_se_pond_rock(ysort: Node2D) -> void:
 			var toff := craft.tree_offset_for(ts.texture)
 			tree_rects.append(craft.sprite_world_rect(ts.position, ts.texture, toff))
 
-	var ideal := Vector2(1040, 620)
-	var pos := craft.find_clear_near(ideal, 1, 1, 10, false)
-	if pos == Vector2.ZERO:
-		pos = ideal
-	var best := Vector2.ZERO
-	var t0 := craft.world_to_tile(pos)
-	for r in range(0, 12):
-		for oy in range(-r, r + 1):
-			for ox in range(-r, r + 1):
-				if r > 0 and maxi(absi(ox), absi(oy)) != r:
-					continue
-				var cand := craft.tile_center(t0.x + ox, t0.y + oy)
-				if craft.is_water(craft.world_to_tile(cand).x, craft.world_to_tile(cand).y):
-					continue
-				if not craft.footprint_ok(cand, 1, 1, false):
-					continue
-				var rock_rect := Rect2(cand - rock_size * 0.5, rock_size)
-				var hits := false
-				for tr in tree_rects:
-					if rock_rect.intersects(tr):
-						hits = true
-						break
-				if not hits:
-					best = cand
-					break
-			if best != Vector2.ZERO:
+	var cluster := [
+		{"path": "res://assets/sprites/props/rock_02.png", "pos": Vector2(1040, 620), "target_h": 24.0},
+		{"path": "res://assets/sprites/props/rock_03.png", "pos": Vector2(1070, 640), "target_h": 20.0},
+		{"path": "res://assets/sprites/props/rock_04.png", "pos": Vector2(1010, 640), "target_h": 18.0},
+	]
+	for s in cluster:
+		if not ResourceLoader.exists(str(s["path"])):
+			continue
+		var tex := load(str(s["path"])) as Texture2D
+		if tex == null:
+			continue
+		var scale_f: float = clampf(float(s["target_h"]) / float(tex.get_height()), 0.12, 0.35)
+		var rock_size := Vector2(float(tex.get_width()), float(tex.get_height())) * scale_f
+		var ideal: Vector2 = s["pos"]
+		var pos := craft.find_clear_near(ideal, 0, 0, 8, false)
+		if pos == Vector2.ZERO:
+			pos = ideal
+		if craft.is_water(craft.world_to_tile(pos).x, craft.world_to_tile(pos).y):
+			continue
+		var rock_rect := Rect2(pos - rock_size * 0.5, rock_size)
+		var hits := false
+		for tr in tree_rects:
+			if rock_rect.intersects(tr):
+				hits = true
 				break
-		if best != Vector2.ZERO:
-			break
-	if best == Vector2.ZERO:
-		best = pos
-		if craft.is_water(craft.world_to_tile(best).x, craft.world_to_tile(best).y):
-			return
-	craft.add_contact_shadow(ysort, best, Vector2(14, 6))
-	var spr := craft.spawn_sprite(ysort, path, best)
-	spr.scale = Vector2(scale_f, scale_f)
-	var hs := craft.make_hotspot(ysort, "院石", "东南池塘岸边石。", best, Vector2(44, 44))
-	spr.reparent(hs.get_node("Visual"))
-	spr.position = Vector2.ZERO
+		if hits:
+			continue
+		craft.add_contact_shadow(ysort, pos, Vector2(10, 4))
+		var spr := craft.spawn_sprite(ysort, str(s["path"]), pos)
+		spr.scale = Vector2(scale_f, scale_f)
+		var hs := craft.make_hotspot(ysort, "岸石", "东南池塘岸边小石。", pos, Vector2(36, 36))
+		spr.reparent(hs.get_node("Visual"))
+		spr.position = Vector2.ZERO
+		tree_rects.append(rock_rect)
 
 
 func _spawn_actors(ysort: Node2D) -> void:
-	# PatrolActor walk frames â never tween-slide static sprites.
+	# PatrolActor walk frames Ã¢ÂÂ never tween-slide static sprites.
 	var actors := [
 		{
 			"id": "elder_woman",
-			"title": "邻居",
-			"desc": "沿主巷土路散步。",
+			"title": "é»å±",
+			"desc": "æ²¿ä¸»å··åè·¯æ£æ­¥ã",
 			"waypoints": [Vector2(320, 500), Vector2(560, 500), Vector2(800, 500), Vector2(560, 500)],
 		},
 		{
 			"id": "farmer",
-			"title": "孩童",
-			"desc": "在主巷与南档口之间跑动。",
+			"title": "å­©ç«¥",
+			"desc": "å¨ä¸»å··ä¸åæ¡£å£ä¹é´è·å¨ã",
 			"waypoints": [Vector2(640, 500), Vector2(640, 640), Vector2(640, 500)],
 		},
 		{
 			"id": "merchant",
-			"title": "访客",
-			"desc": "从西石路走进住宅区。",
+			"title": "è®¿å®¢",
+			"desc": "ä»è¥¿ç³è·¯èµ°è¿ä½å®åºã",
 			"waypoints": [Vector2(80, 500), Vector2(240, 500), Vector2(400, 500), Vector2(240, 500)],
 		},
 	]
@@ -424,14 +413,14 @@ func _spawn_portals(ysort: Node2D) -> void:
 	# West / north edges -> village square.
 	craft.make_portal(
 		ysort,
-		"→广场",
+		"âå¹¿åº",
 		SceneRouter.SQUARE_PATH,
 		Vector2(40, 500),
 		Vector2(72, 56)
 	)
 	craft.make_portal(
 		ysort,
-		"→广场",
+		"âå¹¿åº",
 		SceneRouter.SQUARE_PATH,
 		Vector2(640, 40),
 		Vector2(96, 48)
@@ -439,14 +428,14 @@ func _spawn_portals(ysort: Node2D) -> void:
 	# South / east -> farm home (SceneRouter.FARM_HOME_PATH).
 	craft.make_portal(
 		ysort,
-		"→农场",
+		"âååº",
 		SceneRouter.FARM_HOME_PATH,
 		Vector2(640, 900),
 		Vector2(96, 48)
 	)
 	craft.make_portal(
 		ysort,
-		"→农场",
+		"âååº",
 		SceneRouter.FARM_HOME_PATH,
 		Vector2(1220, 500),
 		Vector2(72, 56)

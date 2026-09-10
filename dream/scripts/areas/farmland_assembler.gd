@@ -1,16 +1,16 @@
 class_name FarmlandAssembler
 extends Node
 
-## Farmland (A03) — irrigation stream, fenced crop beds, central shed hub.
+## Farmland (A03) â irrigation stream, fenced crop beds, central shed hub.
 ## District: farmland (AREA_FRAMEWORK). craft.setup(..., "farmland").
-## Layout follows A03_farmland.png: forest belt → fence → plots around dirt hub.
+## Layout follows A03_farmland.png: forest belt â fence â plots around dirt hub.
 ## Buildings: full sprite AABB inside FARM_BUILD_ZONE (BUILDING_PLACEMENT).
 
 const MAP_W := 40
 const MAP_H := 30
 const PROP_SCALE := 0.55
 
-## Visual farmyard — forest belt outside; fence hugs this rect.
+## Visual farmyard â forest belt outside; fence hugs this rect.
 const FARM_ZONE := Rect2(96, 96, 1088, 768)
 ## Buildings/props must sit fully *inside* the fence (not just FARM_ZONE).
 const FARM_BUILD_ZONE := Rect2(136, 136, 1008, 688)
@@ -90,7 +90,7 @@ func _stream_center_x(ty: float) -> float:
 
 
 func _stream_half_width(ty: float) -> float:
-	# Narrow irrigation: ~2–4 tiles most of the run, with irregular pinch/widen.
+	# Narrow irrigation: ~2â4 tiles most of the run, with irregular pinch/widen.
 	return (
 		1.35
 		+ 0.7 * sin(ty * 0.27 + 0.6)
@@ -108,7 +108,7 @@ func _compute_stream_tile(tx: int, ty: int) -> bool:
 	var dx: float = absf(float(tx) - cx)
 	if dx <= hw:
 		return true
-	# Soft ragged banks / oxbow nips — avoid straight canal walls.
+	# Soft ragged banks / oxbow nips â avoid straight canal walls.
 	if dx <= hw + 1.15 and sin(float(ty) * 0.95 + float(tx) * 0.55 + cx * 0.2) > 0.35:
 		return true
 	if dx <= hw + 0.55 and cos(float(tx) * 1.3 - float(ty) * 0.7) > 0.62:
@@ -153,7 +153,7 @@ func _fill_path(x0: int, y0: int, x1: int, y1: int, force: bool = false) -> void
 func _paint_hub_and_paths() -> void:
 	# Central dirt hub (packed earth around sheds).
 	_fill_dirt(16, 11, 24, 17)
-	# Door lane south of building feet (clear of half_h ~1 around ty~12–13).
+	# Door lane south of building feet (clear of half_h ~1 around ty~12â13).
 	_fill_dirt(16, DOOR_LANE_TY0, 24, DOOR_LANE_TY1)
 	_fill_dirt(17, DOOR_LANE_TY0, 19, DOOR_LANE_TY1) # west shed apron
 	_fill_dirt(21, DOOR_LANE_TY0, 23, DOOR_LANE_TY1) # east barn apron
@@ -187,7 +187,7 @@ func _paint_hub_and_paths() -> void:
 
 
 func _paint_crop_beds() -> void:
-	# ≥6 rectangular dirt beds around hub (avoid stream corridor ~tx 8–14).
+	# â¥6 rectangular dirt beds around hub (avoid stream corridor ~tx 8â14).
 	var beds: Array[Dictionary] = [
 		{"x0": 4, "y0": 4, "x1": 8, "y1": 7, "title": "西北麦田", "desc": "灌溉渠西侧小麦畦。", "color": Color(0.78, 0.7, 0.28, 0.92), "rows": 4},
 		{"x0": 4, "y0": 11, "x1": 8, "y1": 15, "title": "西蔬菜畦", "desc": "渠西绿叶蔬菜。", "color": Color(0.38, 0.68, 0.3, 0.9), "rows": 5},
@@ -227,7 +227,7 @@ func _paint_bridge_band(ty0: int, ty1: int) -> void:
 		# Fallback mid-stream crossing.
 		lo = 9
 		hi = 12
-	# Widen to 3–5 for a readable span, then deck + one land anchor each side.
+	# Widen to 3â5 for a readable span, then deck + one land anchor each side.
 	var width := hi - lo + 1
 	if width < 3:
 		hi = mini(MAP_W - 1, lo + 2)
@@ -241,21 +241,21 @@ func _paint_bridge_band(ty0: int, ty1: int) -> void:
 
 
 func _spawn_buildings(ysort: Node2D) -> void:
-	# Foot Y ≥ ~352: tall sheets clear FARM_BUILD_ZONE top (same lock as A02).
+	# Foot Y â¥ ~352: tall sheets clear FARM_BUILD_ZONE top (same lock as A02).
 	var specs := [
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
 			"pos": Vector2(560, 400),
 			"hw": 2, "hh": 1,
-			"title": "农具棚",
-			"desc": "农田中心工具棚：门朝南对土路枢纽。",
+			"title": "åå·æ£",
+			"desc": "åç°ä¸­å¿å·¥å·æ£ï¼é¨æåå¯¹åè·¯æ¢çº½ã",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
 			"pos": Vector2(720, 400),
 			"hw": 2, "hh": 1,
-			"title": "仓储棚",
-			"desc": "枢纽东侧仓储棚（风车占位），整栋在围栏内侧。",
+			"title": "ä»å¨æ£",
+			"desc": "æ¢çº½ä¸ä¾§ä»å¨æ£ï¼é£è½¦å ä½ï¼ï¼æ´æ å¨å´æ åä¾§ã",
 		},
 	]
 	for s in specs:
@@ -330,7 +330,7 @@ func _spawn_bed_fences(ysort: Node2D) -> void:
 			post.position = Vector2(-3, -12)
 			post.color = Color(0.4, 0.26, 0.12, 0.8)
 			var hs := craft.make_hotspot(
-				ysort, "畦栏", "%s围栏" % str(b["title"]), pos, Vector2(18, 22)
+				ysort, "ç¦æ ", "%så´æ " % str(b["title"]), pos, Vector2(18, 22)
 			)
 			hs.get_node("Visual").add_child(post)
 
@@ -338,12 +338,12 @@ func _spawn_bed_fences(ysort: Node2D) -> void:
 func _spawn_props(ysort: Node2D) -> void:
 	# Upright barrel_1 default; small props scaled to match village residential (0.55).
 	var samples := [
-		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(500, 480), "title": "货箱", "desc": "枢纽旁货箱。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(640, 500), "title": "麻袋", "desc": "粮袋堆在土路旁。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/sack_1.png", "pos": Vector2(780, 490), "title": "粮袋", "desc": "仓储棚前粮袋。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(520, 520), "title": "木桶", "desc": "灌溉旁木桶。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(640, 560), "title": "田灯", "desc": "农田枢纽路灯。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/crate_1.png", "pos": Vector2(900, 460), "title": "木箱", "desc": "东畦旁木箱。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(500, 480), "title": "è´§ç®±", "desc": "æ¢çº½æè´§ç®±ã", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(640, 500), "title": "éº»è¢", "desc": "ç²®è¢å å¨åè·¯æã", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/sack_1.png", "pos": Vector2(780, 490), "title": "ç²®è¢", "desc": "ä»å¨æ£åç²®è¢ã", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(520, 520), "title": "æ¨æ¡¶", "desc": "çæºææ¨æ¡¶ã", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(640, 560), "title": "ç°ç¯", "desc": "åç°æ¢çº½è·¯ç¯ã", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/crate_1.png", "pos": Vector2(900, 460), "title": "æ¨ç®±", "desc": "ä¸ç¦ææ¨ç®±ã", "hw": 1, "hh": 1},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):
@@ -371,10 +371,10 @@ func _spawn_perimeter_fence(ysort: Node2D) -> void:
 	var bottom := FARM_ZONE.end.y - 8.0
 	var step := 40.0
 	var segments: Array[Dictionary] = [
-		{"origin": Vector2(left, top), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "北围栏"},
-		{"origin": Vector2(left, bottom), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "南围栏"},
-		{"origin": Vector2(left, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "西围栏"},
-		{"origin": Vector2(right, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "东围栏"},
+		{"origin": Vector2(left, top), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "åå´æ "},
+		{"origin": Vector2(left, bottom), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "åå´æ "},
+		{"origin": Vector2(left, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "è¥¿å´æ "},
+		{"origin": Vector2(right, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "ä¸å´æ "},
 	]
 	for seg in segments:
 		var origin: Vector2 = seg["origin"]
@@ -390,14 +390,14 @@ func _spawn_perimeter_fence(ysort: Node2D) -> void:
 			post.position = Vector2(-4, -18)
 			post.color = Color(0.42, 0.28, 0.14, 0.85)
 			var hs := craft.make_hotspot(
-				ysort, str(seg["title"]), "农田外圈围栏：建筑与菜畦均在围栏内侧。", pos, Vector2(24, 32)
+				ysort, str(seg["title"]), "åç°å¤åå´æ ï¼å»ºç­ä¸èç¦åå¨å´æ åä¾§ã", pos, Vector2(24, 32)
 			)
 			hs.get_node("Visual").add_child(post)
 
 
 func _spawn_trees(ysort: Node2D) -> void:
-	# Forest belt OUTSIDE farm zone — full crown AABB via spawn_tree.
-	# spawn_tree auto mark_blocked_footprint — do not duplicate.
+	# Forest belt OUTSIDE farm zone â full crown AABB via spawn_tree.
+	# spawn_tree auto mark_blocked_footprint â do not duplicate.
 	var map_zone := craft.map_play_rect(2.0)
 	var forest := [
 		Vector2(48, 48), Vector2(48, 320), Vector2(48, 640), Vector2(48, 900),
@@ -406,25 +406,29 @@ func _spawn_trees(ysort: Node2D) -> void:
 		Vector2(320, 920), Vector2(640, 930), Vector2(960, 920),
 	]
 	for i in forest.size():
-		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
+		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % (i % 6)
+		if not ResourceLoader.exists(path):
+			path = "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
 		craft.spawn_tree(ysort, path, forest[i], map_zone, 1, 1, 8, false)
 
-	# Sparse yard shade trees inside fence on grass gaps (not crop dirt) — AABB ⊆ FARM_BUILD_ZONE.
+	# Sparse yard shade trees inside fence on grass gaps (not crop dirt) â AABB â FARM_BUILD_ZONE.
 	var yard := [
 		Vector2(360, 280), Vector2(1000, 280), Vector2(360, 640), Vector2(1000, 640),
 	]
 	for i in yard.size():
-		var path := "res://assets/sprites/trees/tree_%02d.png" % ((i + 3) % 6)
+		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % ((i + 3) % 6)
+		if not ResourceLoader.exists(path):
+			path = "res://assets/sprites/trees/tree_%02d.png" % ((i + 3) % 6)
 		craft.spawn_tree(ysort, path, yard[i], FARM_BUILD_ZONE, 1, 1, 8, false)
 
 
 func _spawn_actors(ysort: Node2D) -> void:
-	# PatrolActor walk cycles — never animate_patrol sliding (NPC_ANIM).
+	# PatrolActor walk cycles â never animate_patrol sliding (NPC_ANIM).
 	var actors := [
 		{
 			"id": "farmer",
-			"title": "田农",
-			"desc": "沿枢纽土路巡视菜圃。",
+			"title": "ç°å",
+			"desc": "æ²¿æ¢çº½åè·¯å·¡è§èåã",
 			"waypoints": [
 				Vector2(640, 480),
 				Vector2(800, 420),
@@ -435,8 +439,8 @@ func _spawn_actors(ysort: Node2D) -> void:
 		},
 		{
 			"id": "elder_woman",
-			"title": "灌溉工",
-			"desc": "在桥与西圃之间走动。",
+			"title": "çæºå·¥",
+			"desc": "å¨æ¡¥ä¸è¥¿åä¹é´èµ°å¨ã",
 			"waypoints": [
 				Vector2(200, 280),
 				Vector2(400, 280),
@@ -447,8 +451,8 @@ func _spawn_actors(ysort: Node2D) -> void:
 		},
 		{
 			"id": "blacksmith",
-			"title": "仓前帮手",
-			"desc": "在工具棚与仓储棚前廊之间走动。",
+			"title": "ä»åå¸®æ",
+			"desc": "å¨å·¥å·æ£ä¸ä»å¨æ£åå»ä¹é´èµ°å¨ã",
 			"waypoints": [
 				Vector2(560, 460),
 				Vector2(720, 460),
@@ -463,22 +467,22 @@ func _spawn_actors(ysort: Node2D) -> void:
 
 
 func _spawn_animals(ysort: Node2D) -> void:
-	# Dense small cats near beds; sparse dog/sheep/cow. No chicken/bird in B13.
+	# Auto height vs NPC via AmbientCritter (scale <=0). Dense cats; sparse livestock.
 	var specs: Array[Dictionary] = [
-		{"id": "cat", "pos": Vector2(220, 420), "scale": 0.40},
-		{"id": "cat", "pos": Vector2(240, 680), "scale": 0.42},
-		{"id": "cat", "pos": Vector2(980, 420), "scale": 0.40},
-		{"id": "cat", "pos": Vector2(1000, 680), "scale": 0.40},
-		{"id": "dog", "pos": Vector2(640, 620), "scale": 0.44},
-		{"id": "sheep", "pos": Vector2(420, 300), "scale": 0.48},
-		{"id": "cow", "pos": Vector2(880, 300), "scale": 0.52},
-		{"id": "deer", "pos": Vector2(200, 520), "scale": 0.46},
+		{"id": "cat", "pos": Vector2(220, 420)},
+		{"id": "cat", "pos": Vector2(240, 680)},
+		{"id": "cat", "pos": Vector2(980, 420)},
+		{"id": "cat", "pos": Vector2(1000, 680)},
+		{"id": "dog", "pos": Vector2(640, 620)},
+		{"id": "sheep", "pos": Vector2(420, 300)},
+		{"id": "cow", "pos": Vector2(880, 300)},
+		{"id": "deer", "pos": Vector2(200, 520)},
 	]
 	for s in specs:
-		_spawn_one_critter(ysort, str(s["id"]), s["pos"] as Vector2, float(s["scale"]))
+		_spawn_one_critter(ysort, str(s["id"]), s["pos"] as Vector2)
 
 
-func _spawn_one_critter(ysort: Node2D, species: String, ideal: Vector2, draw_scale: float) -> void:
+func _spawn_one_critter(ysort: Node2D, species: String, ideal: Vector2) -> void:
 	var base := "res://assets/sprites/animals/%s/idle_0.png" % species
 	if not ResourceLoader.exists(base):
 		return
@@ -489,10 +493,10 @@ func _spawn_one_critter(ysort: Node2D, species: String, ideal: Vector2, draw_sca
 		return
 	var critter := AmbientCritter.new()
 	ysort.add_child(critter)
-	critter.setup(species, pos, craft, draw_scale)
+	critter.setup(species, pos, craft, -1.0)
 
 
 func _spawn_portals(ysort: Node2D) -> void:
-	craft.make_portal(ysort, "→农场住宅", SceneRouter.FARM_HOME_PATH, Vector2(80, 480), Vector2(96, 56))
-	craft.make_portal(ysort, "→广场", SceneRouter.SQUARE_PATH, Vector2(1200, 480), Vector2(96, 56))
-	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))
+	craft.make_portal(ysort, "âååºä½å®", SceneRouter.FARM_HOME_PATH, Vector2(80, 480), Vector2(96, 56))
+	craft.make_portal(ysort, "âå¹¿åº", SceneRouter.SQUARE_PATH, Vector2(1200, 480), Vector2(96, 56))
+	craft.make_portal(ysort, "âæ»è§", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))
