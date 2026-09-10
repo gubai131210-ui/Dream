@@ -9,7 +9,7 @@ Skill: `.cursor/skills/realistic-scene-craft/`.
 2. **Bank grass** uses `damp` tiles on cells that touch water.
 3. **No trees in water / on stone or dirt walks.** Footprint AABB check.
 4. **West road** stops before the river; **bridge band** at `ty=14–15` spans water with ±1 land anchors (ACNH-like 3–5 width).
-5. **Buildings** south-facing art → lots **north of plaza**; doors toward civic space.
+5. Buildings use south-facing art → lots **north of plaza**; doors toward civic space. **Entire sprite AABB** must sit inside the play/farm zone (no straddling fence or map edge).
 6. **Door spurs**: dirt tiles (`dirt_seamless_atlas`) from plaza/arms to door aprons.
 7. **Props**: civic on plaza; yard props on plantable grass only.
 8. **NPCs**: sparse waypoint loops on walk surfaces (stone preferred); contact shadows at feet.

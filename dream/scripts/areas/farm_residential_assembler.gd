@@ -7,9 +7,11 @@ extends Node
 const MAP_W := 40
 const MAP_H := 30
 
-## Playable farmyard inset — forest belt outside; fence hugs this rect.
-## Leave ≥1 tile margin so tall cottage sprites (≤224px) fit under the top edge.
+## Visual farmyard — forest belt outside; fence hugs this rect.
 const FARM_ZONE := Rect2(96, 96, 1088, 768)
+## Buildings/props must sit fully *inside* the fence (not just FARM_ZONE).
+## Fence is drawn at FARM_ZONE ±8; this rect insets past posts + roof clearance.
+const FARM_BUILD_ZONE := Rect2(136, 136, 1008, 688)
 
 const POND_CX := 30.5
 const POND_CY := 23.0
@@ -104,10 +106,10 @@ func _fill_dirt_rect(x0: int, y0: int, x1: int, y1: int, force: bool = false) ->
 func _paint_dirt_network() -> void:
 	# Door lane south of fully-inset farm buildings.
 	_fill_dirt_rect(6, DOOR_LANE_TY0, 33, DOOR_LANE_TY1)
-	# Door aprons under each building.
-	_fill_dirt_rect(18, 9, 21, DOOR_LANE_TY1) # farmhouse
-	_fill_dirt_rect(7, 9, 10, DOOR_LANE_TY1) # coop
-	_fill_dirt_rect(28, 9, 32, DOOR_LANE_TY1) # barn
+	# Door aprons under each building (feet ≈ tile y 10 @ world y 336).
+	_fill_dirt_rect(18, 10, 21, DOOR_LANE_TY1) # farmhouse
+	_fill_dirt_rect(7, 10, 10, DOOR_LANE_TY1) # coop
+	_fill_dirt_rect(28, 10, 32, DOOR_LANE_TY1) # barn
 	# Yard spine to gardens / pond.
 	_fill_dirt_rect(18, DOOR_LANE_TY1, 21, 21)
 	_fill_dirt_rect(6, 16, 33, 17)
@@ -142,28 +144,28 @@ func _paint_stone_approach() -> void:
 
 
 func _spawn_buildings(ysort: Node2D) -> void:
-	# Foot Y ≥ ~280 so 224px cottages stay inside FARM_ZONE top (y=96).
+	# Foot Y ≥ ~336: 224px cottages (offset 0.35) keep roofs south of north fence.
 	var specs := [
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
-			"pos": Vector2(640, 288),
+			"pos": Vector2(640, 336),
 			"hw": 2, "hh": 1,
 			"title": "农舍",
 			"desc": "农舍完整落在院落围栏内：门朝南对土路。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_04.png",
-			"pos": Vector2(280, 288),
+			"pos": Vector2(280, 336),
 			"hw": 2, "hh": 1,
 			"title": "鸡舍",
-			"desc": "西北鸡舍，整栋在农场区内。",
+			"desc": "西北鸡舍，整栋在围栏内侧。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
-			"pos": Vector2(980, 288),
+			"pos": Vector2(980, 336),
 			"hw": 2, "hh": 1,
 			"title": "谷仓",
-			"desc": "东北谷仓，整栋在农场区内。",
+			"desc": "东北谷仓，整栋在围栏内侧。",
 		},
 	]
 	for s in specs:
@@ -173,10 +175,10 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		var offset := craft.building_offset_for(tex)
 		var pos: Vector2 = s["pos"]
 		var cleared := craft.find_building_inside(
-			pos, tex, offset, FARM_ZONE, int(s["hw"]), int(s["hh"]), 16, false
+			pos, tex, offset, FARM_BUILD_ZONE, int(s["hw"]), int(s["hh"]), 16, false
 		)
 		if cleared == Vector2.ZERO:
-			push_warning("FarmResidential: could not place %s fully inside farm zone" % s["title"])
+			push_warning("FarmResidential: could not place %s fully inside farm build zone" % s["title"])
 			continue
 		pos = cleared
 		craft.add_contact_shadow(ysort, pos, Vector2(36, 12))
@@ -204,9 +206,9 @@ func _spawn_props(ysort: Node2D) -> void:
 		var cleared := craft.find_clear_near(pos, int(s["hw"]), int(s["hh"]), 6, false)
 		if cleared == Vector2.ZERO:
 			continue
-		# Keep props inside farm zone too.
+		# Keep props inside the fenced build zone too.
 		var tex := load(s["path"]) as Texture2D
-		if tex and not craft.sprite_fully_inside(cleared, tex, Vector2.ZERO, FARM_ZONE):
+		if tex and not craft.sprite_fully_inside(cleared, tex, Vector2.ZERO, FARM_BUILD_ZONE):
 			continue
 		pos = cleared
 		craft.add_contact_shadow(ysort, pos, Vector2(14, 6))

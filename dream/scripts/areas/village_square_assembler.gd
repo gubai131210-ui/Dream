@@ -496,53 +496,72 @@ func _make_hotspot(parent: Node2D, title: String, desc: String, pos: Vector2, si
 
 
 func _spawn_buildings(ysort: Node2D) -> void:
+	# Full sprite AABB must stay inside map play rect (tall cottages were clipping the top).
+	var craft := AreaCraft.new()
+	craft.setup(MAP_W, MAP_H)
+	for y in range(MAP_H):
+		for x in range(MAP_W):
+			craft.water_mask[y][x] = _is_river_tile(x, y)
+			craft.path_mask[y][x] = _is_path_tile(x, y)
+			craft.dirt_mask[y][x] = _is_dirt_tile(x, y)
+	var zone := craft.map_play_rect(1.5)
 	var specs := [
 		{
 			"path": "res://assets/sprites/buildings/building_00.png",
-			"pos": Vector2(640, 150),
-			"hw": 3, "hh": 2,
+			"pos": Vector2(640, 280),
+			"hw": 2, "hh": 1,
 			"title": "村公所",
-			"desc": "广场北侧主建筑：门脸朝南，门前石路/土路接到广场。",
+			"desc": "广场北侧主建筑：整栋在场景内，门脸朝南。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
-			"pos": Vector2(1000, 220),
-			"hw": 3, "hh": 2,
+			"pos": Vector2(1000, 280),
+			"hw": 2, "hh": 1,
 			"title": "教堂",
-			"desc": "广场东北公共建筑，东臂道路北上的门前小路。",
+			"desc": "广场东北公共建筑，整栋在区内。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
-			"pos": Vector2(300, 220),
-			"hw": 3, "hh": 2,
+			"pos": Vector2(320, 280),
+			"hw": 2, "hh": 1,
 			"title": "西侧住宅",
-			"desc": "河东岸西北民居；门朝南，土路连向广场。",
+			"desc": "河东岸西北民居；整栋在陆地上。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_03.png",
-			"pos": Vector2(1080, 240),
-			"hw": 3, "hh": 2,
+			"pos": Vector2(1080, 300),
+			"hw": 2, "hh": 1,
 			"title": "东侧住宅",
 			"desc": "东北民居，门脸朝南。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_04.png",
-			"pos": Vector2(420, 220),
-			"hw": 2, "hh": 2,
+			"pos": Vector2(440, 280),
+			"hw": 2, "hh": 1,
 			"title": "北侧小屋",
 			"desc": "村公所旁附属小屋。",
 		},
 	]
 	for s in specs:
+		if not ResourceLoader.exists(s["path"]):
+			continue
+		var tex := load(s["path"]) as Texture2D
+		var offset := craft.building_offset_for(tex)
 		var pos: Vector2 = s["pos"]
-		var cleared := _find_clear_near(pos, int(s["hw"]), int(s["hh"]), 10, false)
+		var cleared := craft.find_building_inside(
+			pos, tex, offset, zone, int(s["hw"]), int(s["hh"]), 16, false
+		)
 		if cleared == Vector2.ZERO:
+			cleared = craft.find_building_inside(
+				pos, tex, offset, zone, int(s["hw"]), int(s["hh"]), 16, true
+			)
+		if cleared == Vector2.ZERO:
+			push_warning("VillageSquare: could not place %s fully inside play zone" % s["title"])
 			continue
 		pos = cleared
 		_add_contact_shadow(ysort, pos, Vector2(36, 12))
 		var spr := _spawn_sprite(ysort, s["path"], pos)
-		# South edge of footprint drives perceived facing / Y order.
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.35)
+		spr.offset = offset
 		var hs := _make_hotspot(ysort, s["title"], s["desc"], pos + Vector2(0, 24), Vector2(120, 80))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
