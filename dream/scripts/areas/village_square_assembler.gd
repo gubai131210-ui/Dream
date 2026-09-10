@@ -7,8 +7,10 @@ const GRASS_ATLAS := "res://assets/tilesets/grass_seamless_atlas.png"
 const STONE_ATLAS := "res://assets/tilesets/stone_seamless_atlas.png"
 const DIRT_ATLAS := "res://assets/tilesets/dirt_seamless_atlas.png"
 const WATER_ATLAS := "res://assets/tilesets/water_seamless_atlas.png"
-## Optional sparse accents from original (bordered) atlas — deco only, not base fill.
-const GRASS_DECO_ATLAS := "res://assets/tilesets/grass_atlas.png"
+
+# Path / plaza footprints in tile coords (must stay in sync with paint below).
+const MAP_W := 40
+const MAP_H := 30
 
 
 func assemble(root: Node2D) -> void:
@@ -17,9 +19,13 @@ func assemble(root: Node2D) -> void:
 	var water: TileMapLayer = root.get_node("Water")
 	var ysort: Node2D = root.get_node("YSortRoot")
 
+	# Wipe any leftover cells from previous runs / old atlases.
+	TileSetFactory.clear_layer(ground)
+	TileSetFactory.clear_layer(path)
+	TileSetFactory.clear_layer(water)
+
 	var grass_tex := load(GRASS_ATLAS) as Texture2D
 	var stone_tex := load(STONE_ATLAS) as Texture2D
-	var _dirt_tex := load(DIRT_ATLAS) as Texture2D
 	var water_tex := load(WATER_ATLAS) as Texture2D
 
 	ground.tile_set = TileSetFactory.from_atlas(grass_tex)
@@ -29,22 +35,11 @@ func assemble(root: Node2D) -> void:
 	TileSetFactory.configure_layer(path)
 	TileSetFactory.configure_layer(water)
 
-	# Seamless base grass — mostly ONE wrap-matched tile so the field reads continuous.
-	# Sparse second variant only (very low rate) to break obvious large-scale repeat.
-	TileSetFactory.paint_random(ground, 0, [Vector2i(0, 0), Vector2i(0, 0), Vector2i(0, 0), Vector2i(1, 0)], Rect2i(0, 0, 40, 30), 42)
+	_paint_ecological_grass(ground)
+	_paint_paths(path)
+	_paint_river(water, ground)
 
-	# Seamless stone — prefer few close variants
-	TileSetFactory.paint_random(path, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(14, 10, 12, 10), 7)
-	TileSetFactory.paint_random(path, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(18, 0, 4, 10), 8)
-	TileSetFactory.paint_random(path, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(18, 20, 4, 10), 9)
-	TileSetFactory.paint_random(path, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(0, 13, 14, 4), 10)
-	TileSetFactory.paint_random(path, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(26, 13, 14, 4), 11)
-
-	# River on west — seamless water (not bordered AI pads)
-	TileSetFactory.paint_random(water, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(1, 2, 4, 26), 21)
-	TileSetFactory.paint_random(water, 0, [Vector2i(0, 0), Vector2i(2, 0)], Rect2i(2, 4, 3, 8), 22)
-
-	_spawn_grass_deco(ysort)
+	# Do NOT spawn old bordered grass_atlas pads — they reintroduce grid seams.
 	_spawn_buildings(ysort)
 	_spawn_props(ysort)
 	_spawn_trees(ysort)
@@ -53,33 +48,113 @@ func assemble(root: Node2D) -> void:
 	_spawn_fx(ysort)
 
 
-func _spawn_grass_deco(ysort: Node2D) -> void:
-	# Sparse flower/clump accents from original atlas — placed as sprites so they
-	# never create ground seams. Skip if atlas missing.
-	if not ResourceLoader.exists(GRASS_DECO_ATLAS):
-		return
-	var atlas := load(GRASS_DECO_ATLAS) as Texture2D
-	if atlas == null:
-		return
-	# Pick a few flower-looking cells from lower rows of the old atlas.
-	var spots := [
-		Vector2(160, 200), Vector2(320, 640), Vector2(900, 180), Vector2(1040, 560),
-		Vector2(240, 480), Vector2(720, 220), Vector2(480, 700), Vector2(860, 640),
-	]
-	for i in spots.size():
-		var region := AtlasTexture.new()
-		region.atlas = atlas
-		# old atlas is 8 cols; use mid/lower tiles that often have flowers
-		var cx := 2 + (i % 4)
-		var cy := 1 + (i % 3)
-		region.region = Rect2(cx * Scale.BASE_TILE, cy * Scale.BASE_TILE, Scale.BASE_TILE, Scale.BASE_TILE)
-		var spr := Sprite2D.new()
-		spr.texture = region
-		spr.position = spots[i]
-		spr.centered = true
-		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		spr.z_index = 1
-		ysort.add_child(spr)
+func _is_path_tile(tx: int, ty: int) -> bool:
+	# Plaza + cross roads (same rects as _paint_paths).
+	if tx >= 14 and tx < 26 and ty >= 10 and ty < 20:
+		return true
+	if tx >= 18 and tx < 22 and ty >= 0 and ty < 10:
+		return true
+	if tx >= 18 and tx < 22 and ty >= 20 and ty < 30:
+		return true
+	if tx >= 0 and tx < 14 and ty >= 13 and ty < 17:
+		return true
+	if tx >= 26 and tx < 40 and ty >= 13 and ty < 17:
+		return true
+	return false
+
+
+func _is_river_tile(tx: int, ty: int) -> bool:
+	if tx >= 1 and tx < 5 and ty >= 2 and ty < 28:
+		return true
+	if tx >= 2 and tx < 5 and ty >= 4 and ty < 12:
+		return true
+	return false
+
+
+func _paint_ecological_grass(ground: TileMapLayer) -> void:
+	## Village ecology:
+	## - Roadside / plaza belt: short mowed grass (foot traffic + upkeep)
+	## - Open yards: meadow
+	## - Map edges & quiet corners: taller wild grass
+	## - Disturbed spots: weeds
+	## - River cells: damp underlay
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 42
+	var dist := _build_path_distance_field()
+	for ty in range(MAP_H):
+		for tx in range(MAP_W):
+			if _is_path_tile(tx, ty):
+				continue
+			if _is_river_tile(tx, ty):
+				var damp := TileSetFactory.grass_coords("damp")
+				ground.set_cell(Vector2i(tx, ty), 0, damp[0])
+				continue
+
+			var dpath: int = dist[ty][tx]
+			var edge := mini(tx, mini(ty, mini(MAP_W - 1 - tx, MAP_H - 1 - ty)))
+			var kind := "meadow"
+			if dpath <= 2:
+				kind = "mowed"
+			elif edge <= 2 or dpath >= 8:
+				kind = "tall"
+			elif rng.randf() < 0.06:
+				kind = "weed"
+
+			var variants := TileSetFactory.grass_coords(kind)
+			var pick: Vector2i = variants[rng.randi_range(0, variants.size() - 1)]
+			ground.set_cell(Vector2i(tx, ty), 0, pick)
+
+
+func _build_path_distance_field() -> Array:
+	var dist: Array = []
+	var queue: Array[Vector2i] = []
+	for y in range(MAP_H):
+		var row: Array = []
+		row.resize(MAP_W)
+		for x in range(MAP_W):
+			if _is_path_tile(x, y):
+				row[x] = 0
+				queue.append(Vector2i(x, y))
+			else:
+				row[x] = 999
+		dist.append(row)
+	var head := 0
+	while head < queue.size():
+		var p: Vector2i = queue[head]
+		head += 1
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var n := p + d
+			if n.x < 0 or n.y < 0 or n.x >= MAP_W or n.y >= MAP_H:
+				continue
+			var nd: int = int(dist[p.y][p.x]) + 1
+			if nd < int(dist[n.y][n.x]):
+				dist[n.y][n.x] = nd
+				queue.append(n)
+	return dist
+
+
+func _paint_paths(path: TileMapLayer) -> void:
+	var stone := [Vector2i(0, 0), Vector2i(1, 0)]
+	TileSetFactory.paint_random(path, 0, stone, Rect2i(14, 10, 12, 10), 7)
+	TileSetFactory.paint_random(path, 0, stone, Rect2i(18, 0, 4, 10), 8)
+	TileSetFactory.paint_random(path, 0, stone, Rect2i(18, 20, 4, 10), 9)
+	TileSetFactory.paint_random(path, 0, stone, Rect2i(0, 13, 14, 4), 10)
+	TileSetFactory.paint_random(path, 0, stone, Rect2i(26, 13, 14, 4), 11)
+
+
+func _paint_river(water: TileMapLayer, ground: TileMapLayer) -> void:
+	# Clear explicit — no leftover old water/grass pads on the west strip.
+	var water_vars := [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0)]
+	TileSetFactory.paint_random(water, 0, water_vars, Rect2i(1, 2, 4, 26), 21)
+	# Soft damp banks just outside water (1 tile ring) where not path.
+	var damp := TileSetFactory.grass_coords("damp")
+	for ty in range(1, 29):
+		for tx in [0, 5, 6]:
+			if _is_path_tile(tx, ty):
+				continue
+			if _is_river_tile(tx, ty):
+				continue
+			ground.set_cell(Vector2i(tx, ty), 0, damp[0])
 
 
 func _spawn_sprite(parent: Node2D, path: String, pos: Vector2, z: int = 0) -> Sprite2D:
@@ -172,9 +247,11 @@ func _spawn_props(ysort: Node2D) -> void:
 
 
 func _spawn_trees(ysort: Node2D) -> void:
+	# Keep trees off the far-west strip: their baked pond/grass pads looked like
+	# leftover bordered tiles along the left edge.
 	var spots := [
-		Vector2(120, 180), Vector2(160, 700), Vector2(1100, 200), Vector2(1080, 700),
-		Vector2(420, 180), Vector2(860, 720), Vector2(200, 400), Vector2(1050, 450),
+		Vector2(240, 160), Vector2(260, 700), Vector2(1100, 200), Vector2(1080, 700),
+		Vector2(420, 180), Vector2(860, 720), Vector2(300, 400), Vector2(1050, 450),
 	]
 	for i in spots.size():
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)

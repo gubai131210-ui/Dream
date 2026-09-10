@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Rebuild seamless terrain atlases (wrap-matched procedural tiles from source palettes).
+"""Build seamless multi-type grass + stone/dirt/water atlases.
 
-See dream/docs/SEAMLESS.md.
+Grass types (scientific / village maintenance logic):
+  0-1 mowed   — near paths & plaza (trampled / kept short)
+  2-3 meadow  — open yards
+  4-5 tall    — edges, behind buildings, less foot traffic
+  6   weed    — disturbed soil / fence corners
+  7   damp    — riverbank moisture (cooler, darker green)
+
+All tiles are wrap-seamless (L==R, T==B).
 """
 from __future__ import annotations
 
@@ -24,18 +31,18 @@ TILESETS = REPO / "dream" / "assets" / "tilesets"
 OUT = REPO / "dream" / "assets" / "sliced" / "terrain_seamless"
 
 
-def load_palette(atlas_path: Path, n: int = 5, grass_filter: bool = False) -> np.ndarray:
+def load_palette(atlas_path: Path, n: int = 6, grass_filter: bool = False) -> np.ndarray:
 	im = np.array(Image.open(atlas_path).convert("RGBA"))
 	rgb = im[:, :, :3][im[:, :, 3] > 200].astype(np.float32)
 	if grass_filter:
-		keep = (rgb[:, 1] > rgb[:, 0] * 0.9) & (rgb[:, 1] > rgb[:, 2] * 0.9) & (rgb[:, 1] > 40)
+		keep = (rgb[:, 1] > rgb[:, 0] * 0.85) & (rgb[:, 1] > rgb[:, 2] * 0.85) & (rgb[:, 1] > 35)
 		if keep.sum() > 100:
 			rgb = rgb[keep]
-	rng = np.random.default_rng(1)
-	idx = rng.choice(len(rgb), size=min(3000, len(rgb)), replace=False)
+	rng = np.random.default_rng(2)
+	idx = rng.choice(len(rgb), size=min(4000, len(rgb)), replace=False)
 	pts = rgb[idx]
 	centers = pts[rng.choice(len(pts), size=n, replace=False)]
-	for _ in range(10):
+	for _ in range(12):
 		d = ((pts[:, None, :] - centers[None, :, :]) ** 2).sum(2)
 		lab = d.argmin(1)
 		for k in range(n):
@@ -44,9 +51,9 @@ def load_palette(atlas_path: Path, n: int = 5, grass_filter: bool = False) -> np
 	return np.clip(centers, 0, 255).astype(np.uint8)
 
 
-def tileable_noise(size: int, scale: int, seed: int) -> np.ndarray:
+def tileable_noise(size: int, scale: float, seed: int) -> np.ndarray:
 	rng = np.random.default_rng(seed)
-	gsize = size // scale + 2
+	gsize = int(size / scale) + 3
 	g = rng.random((gsize, gsize))
 	g[-1] = g[0]
 	g[:, -1] = g[:, 0]
@@ -58,87 +65,174 @@ def tileable_noise(size: int, scale: int, seed: int) -> np.ndarray:
 	y1 = (y0 + 1) % (gsize - 1)
 	tx = xs - np.floor(xs)
 	ty = ys - np.floor(ys)
-	v00 = g[y0, x0]
-	v10 = g[y0, x1]
-	v01 = g[y1, x0]
-	v11 = g[y1, x1]
-	return (v00 * (1 - tx) + v10 * tx) * (1 - ty) + (v01 * (1 - tx) + v11 * tx) * ty
+	return (g[y0, x0] * (1 - tx) + g[y0, x1] * tx) * (1 - ty) + (
+		g[y1, x0] * (1 - tx) + g[y1, x1] * tx
+	) * ty
 
 
-def make_soft(pal: np.ndarray, seed: int) -> np.ndarray:
-	mix = (
-		0.4 * tileable_noise(BASE, 8, seed)
-		+ 0.35 * tileable_noise(BASE, 4, seed + 2)
-		+ 0.25 * tileable_noise(BASE, 2, seed + 4)
-	)
-	pal_s = sorted(list(pal), key=lambda c: float(np.mean(c)))
+def enforce_wrap(tile: np.ndarray) -> np.ndarray:
+	tile = tile.copy()
+	tile[:, -1] = tile[:, 0]
+	tile[-1] = tile[0]
+	tile[:, :, 3] = 255
+	return tile
+
+
+def shade_pal(pal: np.ndarray, brightness: float, cool: float = 0.0) -> list[np.ndarray]:
+	out = []
+	for c in sorted(list(pal), key=lambda x: float(np.mean(x))):
+		v = c.astype(np.float32) * brightness
+		v[2] = np.clip(v[2] + cool * 20.0, 0, 255)  # push blue for damp
+		v[0] = np.clip(v[0] - cool * 10.0, 0, 255)
+		out.append(np.clip(v, 0, 255).astype(np.uint8))
+	return out
+
+
+def fill_from_noise(mix: np.ndarray, pal: list[np.ndarray]) -> np.ndarray:
 	tile = np.zeros((BASE, BASE, 4), np.uint8)
 	for y in range(BASE):
 		for x in range(BASE):
-			idx = min(len(pal_s) - 1, int(mix[y, x] * len(pal_s)))
-			tile[y, x, :3] = pal_s[idx]
+			idx = min(len(pal) - 1, int(mix[y, x] * len(pal)))
+			tile[y, x, :3] = pal[idx]
 			tile[y, x, 3] = 255
-	rng = np.random.default_rng(seed + 50)
-	for _ in range(40):
+	return tile
+
+
+def add_blades(tile: np.ndarray, pal: list[np.ndarray], count: int, height: int, seed: int) -> np.ndarray:
+	rng = np.random.default_rng(seed)
+	out = tile.copy()
+	hi = pal[min(len(pal) - 1, len(pal) * 3 // 4) :]
+	for _ in range(count):
 		x = int(rng.integers(0, BASE))
 		y = int(rng.integers(0, BASE))
-		c = pal_s[int(rng.integers(len(pal_s) // 2, len(pal_s)))]
-		tile[y, x, :3] = c
-		tile[(y - 1) % BASE, x, :3] = c
-	tile[:, -1] = tile[:, 0]
-	tile[-1] = tile[0]
-	return tile
+		c = hi[int(rng.integers(0, len(hi)))]
+		for dy in range(height):
+			yy = (y - dy) % BASE
+			out[yy, x, :3] = c
+			if height > 2 and dy > 0 and rng.random() < 0.35:
+				out[yy, (x + 1) % BASE, :3] = c
+	return out
 
 
-def make_stone(pal: np.ndarray, seed: int) -> np.ndarray:
-	mix = 0.65 * tileable_noise(BASE, 8, seed) + 0.35 * tileable_noise(BASE, 3, seed + 1)
-	pal_s = sorted(list(pal), key=lambda c: float(np.mean(c)))
-	tile = np.zeros((BASE, BASE, 4), np.uint8)
-	for y in range(BASE):
-		for x in range(BASE):
-			v = mix[y, x]
-			crack = abs(np.sin((x + 3) * 0.9) + np.cos((y + 5) * 0.9))
-			if crack < 0.15:
-				v *= 0.75
-			idx = min(len(pal_s) - 1, int(v * len(pal_s)))
-			tile[y, x, :3] = pal_s[idx]
-			tile[y, x, 3] = 255
-	tile[:, -1] = tile[:, 0]
-	tile[-1] = tile[0]
-	return tile
+def add_weeds(tile: np.ndarray, seed: int) -> np.ndarray:
+	rng = np.random.default_rng(seed)
+	out = tile.copy()
+	browns = [
+		np.array([110, 95, 45], np.uint8),
+		np.array([90, 70, 35], np.uint8),
+		np.array([140, 120, 55], np.uint8),
+	]
+	for _ in range(22):
+		x = int(rng.integers(0, BASE))
+		y = int(rng.integers(0, BASE))
+		c = browns[int(rng.integers(0, 3))]
+		out[y, x, :3] = c
+		out[(y + 1) % BASE, x, :3] = c
+	return out
+
+
+def make_grass_set(base_pal: np.ndarray) -> list[np.ndarray]:
+	tiles: list[np.ndarray] = []
+	# mowed x2 — fine noise, brighter, short blades
+	for s in (0, 1):
+		mix = 0.55 * tileable_noise(BASE, 6, 10 + s) + 0.45 * tileable_noise(BASE, 3, 20 + s)
+		pal = shade_pal(base_pal, 1.08, cool=0.0)
+		t = fill_from_noise(mix, pal)
+		t = add_blades(t, pal, count=18, height=1, seed=100 + s)
+		tiles.append(enforce_wrap(t))
+	# meadow x2
+	for s in (0, 1):
+		mix = 0.4 * tileable_noise(BASE, 8, 30 + s) + 0.35 * tileable_noise(BASE, 4, 40 + s) + 0.25 * tileable_noise(BASE, 2, 50 + s)
+		pal = shade_pal(base_pal, 1.0, cool=0.0)
+		t = fill_from_noise(mix, pal)
+		t = add_blades(t, pal, count=28, height=2, seed=200 + s)
+		tiles.append(enforce_wrap(t))
+	# tall / wild x2
+	for s in (0, 1):
+		mix = 0.35 * tileable_noise(BASE, 10, 60 + s) + 0.4 * tileable_noise(BASE, 4, 70 + s) + 0.25 * tileable_noise(BASE, 2, 80 + s)
+		pal = shade_pal(base_pal, 0.92, cool=0.05)
+		t = fill_from_noise(mix, pal)
+		t = add_blades(t, pal, count=55, height=4, seed=300 + s)
+		tiles.append(enforce_wrap(t))
+	# weed
+	mix = 0.5 * tileable_noise(BASE, 7, 90) + 0.5 * tileable_noise(BASE, 3, 91)
+	pal = shade_pal(base_pal, 0.95, cool=0.0)
+	t = add_weeds(add_blades(fill_from_noise(mix, pal), pal, 30, 2, 400), 401)
+	tiles.append(enforce_wrap(t))
+	# damp riverside
+	mix = 0.45 * tileable_noise(BASE, 8, 110) + 0.55 * tileable_noise(BASE, 3, 111)
+	pal = shade_pal(base_pal, 0.88, cool=0.55)
+	t = add_blades(fill_from_noise(mix, pal), pal, 35, 3, 500)
+	tiles.append(enforce_wrap(t))
+	return tiles
+
+
+def make_stone_set(pal: np.ndarray) -> list[np.ndarray]:
+	tiles = []
+	base = sorted(list(pal), key=lambda c: float(np.mean(c)))
+	for s in range(6):
+		mix = 0.65 * tileable_noise(BASE, 8, 200 + s) + 0.35 * tileable_noise(BASE, 3, 210 + s)
+		t = np.zeros((BASE, BASE, 4), np.uint8)
+		for y in range(BASE):
+			for x in range(BASE):
+				v = mix[y, x]
+				crack = abs(np.sin((x + 3 + s) * 0.85) + np.cos((y + 5 - s) * 0.85))
+				if crack < 0.12:
+					v *= 0.72
+				idx = min(len(base) - 1, int(v * len(base)))
+				t[y, x, :3] = base[idx]
+				t[y, x, 3] = 255
+		tiles.append(enforce_wrap(t))
+	return tiles
+
+
+def make_water_set() -> list[np.ndarray]:
+	pal = [
+		np.array([28, 85, 155], np.uint8),
+		np.array([36, 105, 175], np.uint8),
+		np.array([48, 125, 195], np.uint8),
+		np.array([60, 145, 210], np.uint8),
+		np.array([22, 65, 125], np.uint8),
+	]
+	tiles = []
+	for s in range(4):
+		mix = 0.55 * tileable_noise(BASE, 8, 300 + s) + 0.45 * tileable_noise(BASE, 3, 310 + s)
+		tiles.append(enforce_wrap(fill_from_noise(mix, pal)))
+	return tiles
 
 
 def pack(tiles: list[np.ndarray], path: Path, cols: int = 4) -> None:
 	rows = (len(tiles) + cols - 1) // cols
-	atlas = Image.new("RGBA", (cols * BASE, rows * BASE))
+	atlas = Image.new("RGBA", (cols * BASE, rows * BASE), (0, 0, 0, 0))
 	for i, t in enumerate(tiles):
 		atlas.paste(Image.fromarray(t), ((i % cols) * BASE, (i // cols) * BASE))
 	atlas.save(path)
-	print("wrote", path.name, len(tiles))
+	print("wrote", path.name, "n=", len(tiles), "size=", atlas.size)
+	assert np.array_equal(tiles[0][:, 0], tiles[0][:, -1])
 
 
 def main() -> None:
 	gpal = load_palette(TILESETS / "grass_atlas.png", grass_filter=True)
 	spal = load_palette(TILESETS / "stone_atlas.png")
 	dpal = load_palette(TILESETS / "dirt_atlas.png")
-	grass = [make_soft(gpal, s) for s in range(8)]
-	stone = [make_stone(spal, s) for s in range(6)]
-	dirt = [make_soft(dpal, s + 30) for s in range(6)]
+	grass = make_grass_set(gpal)
+	stone = make_stone_set(spal)
+	dirt = make_grass_set(dpal)[:6]
+	water = make_water_set()
 	(OUT / "grass").mkdir(parents=True, exist_ok=True)
 	for i, t in enumerate(grass):
 		Image.fromarray(t).save(OUT / "grass" / f"tile_{i:02d}.png")
-	pack(grass, TILESETS / "grass_seamless_atlas.png")
-	pack(stone, TILESETS / "stone_seamless_atlas.png")
-	pack(dirt, TILESETS / "dirt_seamless_atlas.png")
-	preview = Image.new("RGBA", (BASE * 6, BASE * 4))
-	tile0 = Image.fromarray(grass[0])
-	for y in range(4):
-		for x in range(6):
-			preview.paste(tile0, (x * BASE, y * BASE))
-	preview.save(TILESETS / "grass_seamless_preview_field.png")
-	assert np.array_equal(grass[0][:, 0], grass[0][:, -1])
-	assert np.array_equal(grass[0][0], grass[0][-1])
-	print("edge wrap OK")
+	pack(grass, TILESETS / "grass_seamless_atlas.png", cols=4)
+	pack(stone, TILESETS / "stone_seamless_atlas.png", cols=4)
+	pack(dirt, TILESETS / "dirt_seamless_atlas.png", cols=4)
+	pack(water, TILESETS / "water_seamless_atlas.png", cols=4)
+	# labeled preview strip
+	preview = Image.new("RGBA", (BASE * 8, BASE))
+	labels = ["mow0", "mow1", "mead0", "mead1", "tall0", "tall1", "weed", "damp"]
+	for i, t in enumerate(grass):
+		preview.paste(Image.fromarray(t), (i * BASE, 0))
+	preview.save(TILESETS / "grass_types_preview.png")
+	print("types", labels)
 
 
 if __name__ == "__main__":
