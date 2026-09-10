@@ -6,7 +6,7 @@ extends Node
 const GRASS_ATLAS := "res://assets/tilesets/grass_seamless_atlas.png"
 const STONE_ATLAS := "res://assets/tilesets/stone_seamless_atlas.png"
 const DIRT_ATLAS := "res://assets/tilesets/dirt_seamless_atlas.png"
-const WATER_ATLAS := "res://assets/tilesets/water_atlas.png"
+const WATER_ATLAS := "res://assets/tilesets/water_seamless_atlas.png"
 ## Optional sparse accents from original (bordered) atlas — deco only, not base fill.
 const GRASS_DECO_ATLAS := "res://assets/tilesets/grass_atlas.png"
 
@@ -40,9 +40,9 @@ func assemble(root: Node2D) -> void:
 	TileSetFactory.paint_random(path, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(0, 13, 14, 4), 10)
 	TileSetFactory.paint_random(path, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(26, 13, 14, 4), 11)
 
-	# River on west
-	TileSetFactory.paint_rect(water, 0, Vector2i(0, 0), Rect2i(1, 2, 4, 26))
-	TileSetFactory.paint_rect(water, 0, Vector2i(1, 0), Rect2i(2, 4, 3, 8))
+	# River on west — seamless water (not bordered AI pads)
+	TileSetFactory.paint_random(water, 0, [Vector2i(0, 0), Vector2i(1, 0)], Rect2i(1, 2, 4, 26), 21)
+	TileSetFactory.paint_random(water, 0, [Vector2i(0, 0), Vector2i(2, 0)], Rect2i(2, 4, 3, 8), 22)
 
 	_spawn_grass_deco(ysort)
 	_spawn_buildings(ysort)
@@ -206,7 +206,9 @@ func _spawn_actors(ysort: Node2D) -> void:
 func _spawn_water_fx(ysort: Node2D) -> void:
 	# Fake water_frame_* sheets are mismatched tiles (grass/noise), not a flow strip.
 	# Keep river as TileMap only; soft pulse on a single static water tile if present.
-	var sample := "res://assets/tilesets/water_atlas.png"
+	var sample := "res://assets/tilesets/water_seamless_atlas.png"
+	if not ResourceLoader.exists(sample):
+		sample = "res://assets/tilesets/water_atlas.png"
 	if not ResourceLoader.exists(sample):
 		return
 	var atlas := load(sample) as Texture2D
