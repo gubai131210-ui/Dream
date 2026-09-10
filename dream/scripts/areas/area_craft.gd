@@ -251,6 +251,62 @@ func spawn_sprite(parent: Node2D, path: String, pos: Vector2, z: int = 0) -> Spr
 	return spr
 
 
+## Buildings use this Y offset so the door reads near the foot tile.
+const BUILDING_Y_OFFSET_FACTOR := 0.35
+
+
+func building_offset_for(tex: Texture2D) -> Vector2:
+	return Vector2(0.0, -float(tex.get_height()) * BUILDING_Y_OFFSET_FACTOR)
+
+
+func sprite_world_rect(pos: Vector2, tex: Texture2D, offset: Vector2) -> Rect2:
+	var size := Vector2(float(tex.get_width()), float(tex.get_height()))
+	var top_left := pos + offset - size * 0.5
+	return Rect2(top_left, size)
+
+
+func map_play_rect(margin_tiles: float = 1.0) -> Rect2:
+	var m: float = margin_tiles * float(tile)
+	return Rect2(m, m, float(map_w) * float(tile) - m * 2.0, float(map_h) * float(tile) - m * 2.0)
+
+
+func sprite_fully_inside(pos: Vector2, tex: Texture2D, offset: Vector2, zone: Rect2) -> bool:
+	var r := sprite_world_rect(pos, tex, offset)
+	return (
+		r.position.x >= zone.position.x
+		and r.position.y >= zone.position.y
+		and r.end.x <= zone.end.x
+		and r.end.y <= zone.end.y
+	)
+
+
+## Prefer ideal, else search so the full sprite AABB stays inside zone AND tile footprint is clear.
+func find_building_inside(
+	ideal: Vector2,
+	tex: Texture2D,
+	offset: Vector2,
+	zone: Rect2,
+	half_w: int,
+	half_h: int,
+	max_r: int = 14,
+	allow_path: bool = false
+) -> Vector2:
+	if footprint_ok(ideal, half_w, half_h, allow_path) and sprite_fully_inside(ideal, tex, offset, zone):
+		return ideal
+	var t := world_to_tile(ideal)
+	for r in range(0, max_r + 1):
+		for oy in range(-r, r + 1):
+			for ox in range(-r, r + 1):
+				if r > 0 and maxi(absi(ox), absi(oy)) != r:
+					continue
+				var cand := tile_center(t.x + ox, t.y + oy)
+				if not footprint_ok(cand, half_w, half_h, allow_path):
+					continue
+				if sprite_fully_inside(cand, tex, offset, zone):
+					return cand
+	return Vector2.ZERO
+
+
 func add_contact_shadow(parent: Node2D, at: Vector2, radius: Vector2 = Vector2(18, 8)) -> void:
 	var shadow := Polygon2D.new()
 	shadow.color = Color(0, 0, 0, 0.28)

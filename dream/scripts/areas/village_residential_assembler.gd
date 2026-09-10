@@ -9,11 +9,14 @@ const MAP_W := 40
 const MAP_H := 30
 
 ## Main east-west dirt lane (houses sit NORTH; doors face this lane).
-const MAIN_LANE_TY0 := 15
-const MAIN_LANE_TY1 := 16
+const MAIN_LANE_TY0 := 18
+const MAIN_LANE_TY1 := 19
 ## Secondary north EW lane for the upper house row.
-const NORTH_LANE_TY0 := 6
-const NORTH_LANE_TY1 := 7
+const NORTH_LANE_TY0 := 10
+const NORTH_LANE_TY1 := 11
+
+## Full sprite AABB must stay inside this play rect (forest/edge margin).
+const PLAY_ZONE := Rect2(64, 64, 1152, 832)
 
 var craft: AreaCraft = AreaCraft.new()
 
@@ -112,8 +115,8 @@ func _compute_stone_path(tx: int, ty: int) -> bool:
 	# West approach to square — stone on main lane head.
 	if ty >= MAIN_LANE_TY0 and ty <= MAIN_LANE_TY1 and tx >= 0 and tx <= 5:
 		return true
-	# Small NE pocket plaza (A08 fountain / statue mood) — keep clear of house lots.
-	if tx >= 36 and tx <= 38 and ty >= 2 and ty <= 4:
+	# Small NE pocket plaza — keep clear of house lots.
+	if tx >= 36 and tx <= 38 and ty >= 4 and ty <= 6:
 		return true
 	# North-west connector strip toward square portal.
 	if tx >= 0 and tx <= 2 and ty >= 4 and ty <= MAIN_LANE_TY1:
@@ -125,14 +128,14 @@ func _paint_door_spur_masks() -> void:
 	# Dirt aprons from lanes up to south-facing doors (house slots below).
 	var spurs: Array[Vector2i] = [
 		# Main-lane row aprons (just north of MAIN_LANE).
-		Vector2i(8, 14), Vector2i(9, 14),
-		Vector2i(16, 14), Vector2i(17, 14),
-		Vector2i(24, 14), Vector2i(25, 14),
-		Vector2i(29, 14), Vector2i(30, 14),
+		Vector2i(8, 17), Vector2i(9, 17),
+		Vector2i(16, 17), Vector2i(17, 17),
+		Vector2i(24, 17), Vector2i(25, 17),
+		Vector2i(29, 17), Vector2i(30, 17),
 		# North-lane row aprons.
-		Vector2i(11, 5), Vector2i(12, 5),
-		Vector2i(19, 5), Vector2i(20, 5),
-		Vector2i(27, 5), Vector2i(28, 5),
+		Vector2i(11, 9), Vector2i(12, 9),
+		Vector2i(19, 9), Vector2i(20, 9),
+		Vector2i(27, 9), Vector2i(28, 9),
 	]
 	for c in spurs:
 		if c.x < 0 or c.y < 0 or c.x >= MAP_W or c.y >= MAP_H:
@@ -145,53 +148,53 @@ func _paint_door_spur_masks() -> void:
 
 
 func _house_slots() -> Array:
-	# South-facing cottages NORTH of their door lane. World px @ BASE_TILE=32.
+	# South-facing cottages NORTH of their door lane — foot Y leaves full sprite inside PLAY_ZONE.
 	return [
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
-			"pos": Vector2(288, 360),
-			"hw": 2, "hh": 2,
+			"pos": Vector2(288, 520),
+			"hw": 2, "hh": 1,
 			"title": "西巷民居",
-			"desc": "主巷北侧住宅：门朝南，土路接到东西主巷。",
+			"desc": "主巷北侧住宅：整栋在住宅区内，门朝南。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_03.png",
-			"pos": Vector2(544, 360),
-			"hw": 2, "hh": 2,
+			"pos": Vector2(544, 520),
+			"hw": 2, "hh": 1,
 			"title": "中巷民居",
-			"desc": "主巷中段北侧宅院，门脸朝南。",
+			"desc": "主巷中段北侧宅院。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_04.png",
-			"pos": Vector2(800, 360),
-			"hw": 2, "hh": 2,
+			"pos": Vector2(800, 520),
+			"hw": 2, "hh": 1,
 			"title": "东巷民居",
-			"desc": "主巷东段北侧小屋，门朝南对主路。",
+			"desc": "主巷东段北侧小屋。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
-			"pos": Vector2(960, 350),
-			"hw": 2, "hh": 2,
+			"pos": Vector2(1000, 520),
+			"hw": 2, "hh": 1,
 			"title": "东角宅",
-			"desc": "靠近东北石坪的住宅，门朝南。",
+			"desc": "东段住宅，整栋在区内。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_00.png",
-			"pos": Vector2(400, 80),
+			"pos": Vector2(400, 280),
 			"hw": 2, "hh": 1,
 			"title": "北排西宅",
-			"desc": "北巷北侧住宅：门朝南对北巷。",
+			"desc": "北巷北侧住宅：屋顶不穿出地图上沿。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
-			"pos": Vector2(656, 80),
+			"pos": Vector2(656, 280),
 			"hw": 2, "hh": 1,
 			"title": "北排中宅",
 			"desc": "北巷中段宅院。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_03.png",
-			"pos": Vector2(912, 80),
+			"pos": Vector2(912, 280),
 			"hw": 2, "hh": 1,
 			"title": "北排东宅",
 			"desc": "北巷东端住宅。",
@@ -201,14 +204,21 @@ func _house_slots() -> Array:
 
 func _spawn_buildings(ysort: Node2D) -> void:
 	for s in _house_slots():
+		if not ResourceLoader.exists(s["path"]):
+			continue
+		var tex := load(s["path"]) as Texture2D
+		var offset := craft.building_offset_for(tex)
 		var pos: Vector2 = s["pos"]
-		var cleared := craft.find_clear_near(pos, int(s["hw"]), int(s["hh"]), 10, false)
+		var cleared := craft.find_building_inside(
+			pos, tex, offset, PLAY_ZONE, int(s["hw"]), int(s["hh"]), 16, false
+		)
 		if cleared == Vector2.ZERO:
+			push_warning("VillageResidential: could not place %s fully inside play zone" % s["title"])
 			continue
 		pos = cleared
 		craft.add_contact_shadow(ysort, pos, Vector2(32, 11))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.35)
+		spr.offset = offset
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos + Vector2(0, 20), Vector2(100, 72))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
@@ -218,7 +228,7 @@ func _spawn_props(ysort: Node2D) -> void:
 	# NE stone pocket well / fountain (civic on path ok).
 	var well_path := "res://assets/sprites/props/well_0.png"
 	if ResourceLoader.exists(well_path):
-		var well_pos := Vector2(1184, 112)
+		var well_pos := Vector2(1184, 176)
 		if not craft.is_water(craft.world_to_tile(well_pos).x, craft.world_to_tile(well_pos).y):
 			craft.add_contact_shadow(ysort, well_pos, Vector2(20, 8))
 			var wspr := craft.spawn_sprite(ysort, well_path, well_pos)

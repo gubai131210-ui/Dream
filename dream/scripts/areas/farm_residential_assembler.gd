@@ -2,17 +2,23 @@ class_name FarmResidentialAssembler
 extends Node
 
 ## Farm residential (A02) — AreaCraft masks + layered assemble.
-## Pass: masks → ecology → dirt → water → path → buildings → props → trees → actors → FX.
-## Facing: south-door farmhouse north of yard path. No animals in pond.
+## Buildings must sit FULLY inside the farm play zone (sprite AABB), not straddling fence/forest.
 
 const MAP_W := 40
 const MAP_H := 30
 
-## Pond oval center (tile coords) — SE yard, meander/soft edge.
-const POND_CX := 31.2
-const POND_CY := 22.6
-const POND_RX := 4.2
-const POND_RY := 3.1
+## Playable farmyard inset — forest belt outside; fence hugs this rect.
+## Leave ≥1 tile margin so tall cottage sprites (≤224px) fit under the top edge.
+const FARM_ZONE := Rect2(96, 96, 1088, 768)
+
+const POND_CX := 30.5
+const POND_CY := 23.0
+const POND_RX := 4.0
+const POND_RY := 2.8
+
+## Dirt lane directly south of building doors (tile Y).
+const DOOR_LANE_TY0 := 11
+const DOOR_LANE_TY1 := 12
 
 var craft: AreaCraft = AreaCraft.new()
 
@@ -50,7 +56,6 @@ func _rebuild_masks() -> void:
 	_paint_dirt_network()
 	_paint_garden_beds()
 	_paint_stone_approach()
-	# Paths / dirt / gardens clear water (pond stays SE; beds never become water).
 	for y in range(MAP_H):
 		for x in range(MAP_W):
 			if craft.is_path(x, y) or craft.is_dirt(x, y):
@@ -59,13 +64,11 @@ func _rebuild_masks() -> void:
 
 
 func _compute_pond_tile(tx: int, ty: int) -> bool:
-	# Soft oval + cove noise (skill meander style, localized pond).
 	var nx: float = (float(tx) - POND_CX) / POND_RX
 	var ny: float = (float(ty) - POND_CY) / POND_RY
 	var d2: float = nx * nx + ny * ny
 	if d2 <= 1.0:
 		return true
-	# Soft cove / irregular shoreline — not a Rect2i.
 	var wobble: float = 0.18 * sin(float(tx) * 0.9 + float(ty) * 0.55) + 0.12 * cos(float(ty) * 1.1 + 0.4)
 	if d2 <= 1.0 + wobble and sin(float(tx) * 0.7 + float(ty) * 1.3) > 0.15:
 		return true
@@ -99,54 +102,39 @@ func _fill_dirt_rect(x0: int, y0: int, x1: int, y1: int, force: bool = false) ->
 
 
 func _paint_dirt_network() -> void:
-	# Horizontal building lane in front of coop / farmhouse / barn (door aprons face south).
-	_fill_dirt_rect(5, 8, 34, 9)
-	# Farmhouse door spur (south of house footprint into yard).
-	_fill_dirt_rect(18, 7, 21, 11)
-	# Central yard spine toward gardens.
-	_fill_dirt_rect(18, 10, 21, 20)
-	# Coop run / approach from lane.
-	_fill_dirt_rect(5, 7, 10, 9)
-	_fill_dirt_rect(6, 9, 8, 11)
-	# Barn approach.
-	_fill_dirt_rect(28, 7, 34, 9)
-	_fill_dirt_rect(30, 9, 33, 11)
-	# Cross lanes between garden beds.
-	_fill_dirt_rect(5, 17, 34, 18)
-	_fill_dirt_rect(11, 12, 12, 17)
-	_fill_dirt_rect(17, 12, 18, 17)
-	_fill_dirt_rect(26, 12, 27, 17)
-	# Pond approach (dirt to north bank — no animals in water).
-	_fill_dirt_rect(22, 19, 28, 20)
-	_fill_dirt_rect(27, 18, 29, 21)
-	# Dock stub on north bank (force land apron over soft pond edge).
-	_fill_dirt_rect(29, 19, 32, 19, true)
+	# Door lane south of fully-inset farm buildings.
+	_fill_dirt_rect(6, DOOR_LANE_TY0, 33, DOOR_LANE_TY1)
+	# Door aprons under each building.
+	_fill_dirt_rect(18, 9, 21, DOOR_LANE_TY1) # farmhouse
+	_fill_dirt_rect(7, 9, 10, DOOR_LANE_TY1) # coop
+	_fill_dirt_rect(28, 9, 32, DOOR_LANE_TY1) # barn
+	# Yard spine to gardens / pond.
+	_fill_dirt_rect(18, DOOR_LANE_TY1, 21, 21)
+	_fill_dirt_rect(6, 16, 33, 17)
+	_fill_dirt_rect(11, 13, 12, 16)
+	_fill_dirt_rect(17, 13, 18, 16)
+	_fill_dirt_rect(25, 13, 26, 16)
+	_fill_dirt_rect(22, 18, 28, 20)
+	_fill_dirt_rect(28, 18, 31, 19, true)
 
 
 func _paint_garden_beds() -> void:
-	# Crop-adjacent dirt patches (garden beds) — dirt_mask rows, never water.
-	# West bed.
-	_fill_dirt_rect(5, 12, 10, 16)
-	# Center-west bed.
-	_fill_dirt_rect(13, 12, 16, 16)
-	# Center-east bed (sunflower strip zone).
-	_fill_dirt_rect(22, 12, 25, 16)
-	# East raised planter strip.
-	_fill_dirt_rect(28, 12, 32, 15)
-	# Restore walk lanes that beds would have filled (beds sit beside paths).
-	_fill_dirt_rect(11, 12, 12, 17)
-	_fill_dirt_rect(17, 12, 18, 17)
-	_fill_dirt_rect(18, 12, 21, 18)
-	_fill_dirt_rect(26, 12, 27, 17)
-	_fill_dirt_rect(5, 17, 34, 18)
+	_fill_dirt_rect(6, 13, 10, 15)
+	_fill_dirt_rect(13, 13, 16, 15)
+	_fill_dirt_rect(22, 13, 24, 15)
+	_fill_dirt_rect(27, 13, 31, 15)
+	# Restore cross lanes.
+	_fill_dirt_rect(11, 13, 12, 16)
+	_fill_dirt_rect(17, 13, 18, 16)
+	_fill_dirt_rect(18, 13, 21, 17)
+	_fill_dirt_rect(25, 13, 26, 16)
+	_fill_dirt_rect(6, 16, 33, 17)
 
 
 func _paint_stone_approach() -> void:
-	# Short stone approach from south edge portal into dirt spine.
 	for ty in range(24, 29):
 		for tx in range(18, 22):
 			_set_path(tx, ty)
-	# Soft merge onto dirt spine.
 	for tx in range(18, 22):
 		_set_dirt(tx, 21)
 		_set_dirt(tx, 22)
@@ -154,55 +142,60 @@ func _paint_stone_approach() -> void:
 
 
 func _spawn_buildings(ysort: Node2D) -> void:
-	# South-facing art → lots north of yard path; doors toward yard.
+	# Foot Y ≥ ~280 so 224px cottages stay inside FARM_ZONE top (y=96).
 	var specs := [
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
-			"pos": Vector2(640, 150),
-			"hw": 3, "hh": 2,
+			"pos": Vector2(640, 288),
+			"hw": 2, "hh": 1,
 			"title": "农舍",
-			"desc": "农场主宅：门脸朝南，门前土路通向院落与菜畦。",
+			"desc": "农舍完整落在院落围栏内：门朝南对土路。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_04.png",
-			"pos": Vector2(240, 150),
-			"hw": 2, "hh": 2,
+			"pos": Vector2(280, 288),
+			"hw": 2, "hh": 1,
 			"title": "鸡舍",
-			"desc": "西北鸡舍与围栏区；门朝南接土路（不下水塘）。",
+			"desc": "西北鸡舍，整栋在农场区内。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
-			"pos": Vector2(1020, 150),
-			"hw": 3, "hh": 2,
+			"pos": Vector2(980, 288),
+			"hw": 2, "hh": 1,
 			"title": "谷仓",
-			"desc": "东北谷仓位，门朝南，土路接农舍前廊。",
+			"desc": "东北谷仓，整栋在农场区内。",
 		},
 	]
 	for s in specs:
+		if not ResourceLoader.exists(s["path"]):
+			continue
+		var tex := load(s["path"]) as Texture2D
+		var offset := craft.building_offset_for(tex)
 		var pos: Vector2 = s["pos"]
-		var cleared := craft.find_clear_near(pos, int(s["hw"]), int(s["hh"]), 10, false)
+		var cleared := craft.find_building_inside(
+			pos, tex, offset, FARM_ZONE, int(s["hw"]), int(s["hh"]), 16, false
+		)
 		if cleared == Vector2.ZERO:
+			push_warning("FarmResidential: could not place %s fully inside farm zone" % s["title"])
 			continue
 		pos = cleared
 		craft.add_contact_shadow(ysort, pos, Vector2(36, 12))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.35)
+		spr.offset = offset
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos + Vector2(0, 24), Vector2(120, 80))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
 
 
 func _spawn_props(ysort: Node2D) -> void:
-	# Crates / sacks / barrels on plantable grass near beds & house (footprint_ok).
 	var samples := [
-		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(420, 280), "title": "货箱", "desc": "菜畦旁货箱。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/crate_1.png", "pos": Vector2(860, 280), "title": "木箱", "desc": "东畦旁木箱。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(540, 260), "title": "麻袋", "desc": "农舍前草皮麻袋。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/sack_1.png", "pos": Vector2(700, 300), "title": "粮袋", "desc": "院落粮袋。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(300, 300), "title": "木桶", "desc": "鸡舍旁木桶。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(1080, 300), "title": "水桶", "desc": "谷仓旁水桶。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(580, 360), "title": "院灯", "desc": "院落路灯。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/B11-06_mailbox_board_00.png", "pos": Vector2(760, 620), "title": "路牌", "desc": "通向水塘的岔路标识。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(420, 420), "title": "货箱", "desc": "菜畦旁货箱。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/crate_1.png", "pos": Vector2(860, 420), "title": "木箱", "desc": "东畦旁木箱。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(540, 400), "title": "麻袋", "desc": "农舍前草皮麻袋。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/sack_1.png", "pos": Vector2(700, 440), "title": "粮袋", "desc": "院落粮袋。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(300, 420), "title": "木桶", "desc": "鸡舍旁木桶。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(1040, 420), "title": "水桶", "desc": "谷仓旁水桶。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(580, 480), "title": "院灯", "desc": "院落路灯。", "hw": 1, "hh": 1},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):
@@ -210,6 +203,10 @@ func _spawn_props(ysort: Node2D) -> void:
 		var pos: Vector2 = s["pos"]
 		var cleared := craft.find_clear_near(pos, int(s["hw"]), int(s["hh"]), 6, false)
 		if cleared == Vector2.ZERO:
+			continue
+		# Keep props inside farm zone too.
+		var tex := load(s["path"]) as Texture2D
+		if tex and not craft.sprite_fully_inside(cleared, tex, Vector2.ZERO, FARM_ZONE):
 			continue
 		pos = cleared
 		craft.add_contact_shadow(ysort, pos, Vector2(14, 6))
@@ -220,44 +217,43 @@ func _spawn_props(ysort: Node2D) -> void:
 
 
 func _spawn_fences(ysort: Node2D) -> void:
-	# Post-and-rail proxies along west garden + outer yard (no dedicated fence sheet).
+	# Fence follows FARM_ZONE outer edge — buildings stay strictly inside, never straddling.
+	var left := FARM_ZONE.position.x + 8.0
+	var right := FARM_ZONE.end.x - 8.0
+	var top := FARM_ZONE.position.y + 8.0
+	var bottom := FARM_ZONE.end.y - 8.0
+	var step := 40.0
 	var segments: Array[Dictionary] = [
-		{"origin": Vector2(160, 380), "count": 6, "step": Vector2(32, 0), "title": "西畦围栏"},
-		{"origin": Vector2(160, 380), "count": 5, "step": Vector2(0, 32), "title": "西畦侧栏"},
-		{"origin": Vector2(160, 520), "count": 6, "step": Vector2(32, 0), "title": "西畦南栏"},
-		{"origin": Vector2(200, 200), "count": 4, "step": Vector2(28, 0), "title": "鸡舍围栏"},
+		{"origin": Vector2(left, top), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "北围栏"},
+		{"origin": Vector2(left, bottom), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "南围栏"},
+		{"origin": Vector2(left, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "西围栏"},
+		{"origin": Vector2(right, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "东围栏"},
 	]
 	for seg in segments:
 		var origin: Vector2 = seg["origin"]
-		var step: Vector2 = seg["step"]
+		var st: Vector2 = seg["step"]
 		var count: int = int(seg["count"])
 		for i in range(count):
-			var ideal: Vector2 = origin + step * float(i)
-			var pos := craft.find_clear_near(ideal, 0, 0, 4, false)
-			if pos == Vector2.ZERO:
+			var pos: Vector2 = origin + st * float(i)
+			# Skip fence posts that would sit on portals / pond water tiles.
+			var t := craft.world_to_tile(pos)
+			if craft.is_water(t.x, t.y):
 				continue
 			var post := ColorRect.new()
 			post.size = Vector2(8, 22)
 			post.position = Vector2(-4, -18)
 			post.color = Color(0.42, 0.28, 0.14, 0.85)
-			var hs := craft.make_hotspot(ysort, str(seg["title"]), "木围栏，围住菜畦/鸡舍跑场。", pos, Vector2(24, 32))
+			var hs := craft.make_hotspot(ysort, str(seg["title"]), "农场围栏：农舍等建筑均在围栏内侧。", pos, Vector2(24, 32))
 			hs.get_node("Visual").add_child(post)
-			# Rail between posts.
-			if i < count - 1:
-				var rail := ColorRect.new()
-				rail.size = Vector2(maxi(4, int(step.length()) - 4), 3)
-				rail.position = Vector2(2, -12)
-				rail.color = Color(0.5, 0.34, 0.18, 0.7)
-				hs.get_node("Visual").add_child(rail)
 
 
 func _spawn_trees(ysort: Node2D) -> void:
-	# Forest ring + a few orchard trees on plantable only (never water / walks).
+	# Forest OUTSIDE farm zone (and a few orchard trees inside if clear).
 	var ideals := [
-		Vector2(80, 80), Vector2(160, 60), Vector2(80, 400), Vector2(60, 700),
-		Vector2(1200, 80), Vector2(1180, 360), Vector2(1200, 700), Vector2(1000, 820),
-		Vector2(200, 820), Vector2(400, 860), Vector2(700, 880), Vector2(900, 100),
-		Vector2(1120, 520), Vector2(100, 520), Vector2(480, 80), Vector2(800, 60),
+		Vector2(48, 48), Vector2(48, 480), Vector2(48, 900),
+		Vector2(640, 48), Vector2(1200, 48), Vector2(1230, 480), Vector2(1230, 900),
+		Vector2(400, 920), Vector2(800, 920),
+		Vector2(200, 500), Vector2(1100, 500), # inside orchard candidates
 	]
 	for i in ideals.size():
 		var pos := craft.find_clear_near(ideals[i], 1, 1, 8, false)
@@ -275,18 +271,17 @@ func _spawn_trees(ysort: Node2D) -> void:
 
 
 func _spawn_actors(ysort: Node2D) -> void:
-	# Sparse NPC patrol on dirt / stone walks only — never into pond.
 	var actors := [
 		{
 			"path": "res://assets/sprites/npc/npc_00.png",
 			"title": "农夫",
 			"desc": "沿院落土路巡视菜畦。",
 			"waypoints": [
-				Vector2(640, 300),
+				Vector2(640, 400),
 				Vector2(640, 560),
 				Vector2(400, 560),
-				Vector2(400, 300),
-				Vector2(640, 300),
+				Vector2(400, 400),
+				Vector2(640, 400),
 			],
 		},
 		{
@@ -294,16 +289,16 @@ func _spawn_actors(ysort: Node2D) -> void:
 			"title": "帮手",
 			"desc": "在农舍与谷仓前廊之间走动。",
 			"waypoints": [
-				Vector2(320, 280),
-				Vector2(640, 280),
-				Vector2(1000, 280),
-				Vector2(640, 280),
+				Vector2(320, 380),
+				Vector2(640, 380),
+				Vector2(980, 380),
+				Vector2(640, 380),
 			],
 		},
 		{
 			"path": "res://assets/sprites/npc/npc_02.png",
 			"title": "访客",
-			"desc": "从南口石板走进院落（不下水塘）。",
+			"desc": "从南口走进院落（不下水塘）。",
 			"waypoints": [
 				Vector2(640, 820),
 				Vector2(640, 700),
@@ -329,25 +324,6 @@ func _spawn_actors(ysort: Node2D) -> void:
 
 
 func _spawn_portals(ysort: Node2D) -> void:
-	# Edge portals — top bar also mirrors these; keep scene ring connected.
-	craft.make_portal(
-		ysort,
-		"→住宅区",
-		SceneRouter.RESIDENTIAL_PATH,
-		Vector2(80, 480),
-		Vector2(96, 56)
-	)
-	craft.make_portal(
-		ysort,
-		"→广场",
-		SceneRouter.SQUARE_PATH,
-		Vector2(1200, 480),
-		Vector2(96, 56)
-	)
-	craft.make_portal(
-		ysort,
-		"→总览",
-		SceneRouter.HUB_PATH,
-		Vector2(640, 40),
-		Vector2(96, 48)
-	)
+	craft.make_portal(ysort, "→住宅区", SceneRouter.RESIDENTIAL_PATH, Vector2(80, 480), Vector2(96, 56))
+	craft.make_portal(ysort, "→广场", SceneRouter.SQUARE_PATH, Vector2(1200, 480), Vector2(96, 56))
+	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))

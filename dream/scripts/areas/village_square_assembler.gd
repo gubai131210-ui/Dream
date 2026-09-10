@@ -796,7 +796,3 @@ func _start_water_frame_ticker(overlay: Node2D) -> void:
 				c.set_meta("frame_i", fi)
 				(c as Sprite2D).texture = frames[fi]
 	)
-
-
-func _spawn_fx(_ysort: Node2D) -> void:
-	pass
