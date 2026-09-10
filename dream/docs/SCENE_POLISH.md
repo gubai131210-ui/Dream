@@ -1,6 +1,6 @@
 # Scene polish wave — existing outdoor assemblers
 
-**Status:** IN PROGRESS  
+**Status:** CODE COMPLETE — awaiting local Godot visual QA  
 **Date:** 2026-09-10  
 **Skills:** `realistic-scene-craft`, `painting-asset-craft`  
 **Locks:** `AREA_FRAMEWORK.md`, `BUILDING_PLACEMENT.md`, `LAYOUT.md`, `SEAMLESS.md`, `NPC_ANIM.md`, `PHASE4B.md`
@@ -12,15 +12,15 @@ Optimize **already shipped** outdoor scenes against the latest craft locks. No n
 ## Shared checklist (every agent)
 
 ```
-- [ ] craft.setup(W, H, district_id) — correct district for eco weights
-- [ ] Silhouette ≠ plaza clone (district table)
-- [ ] Water = meander role for THIS district (not Rect2i canal)
-- [ ] Buildings: find_building_inside + full AABB ⊆ zone
-- [ ] Trees: craft.spawn_tree (or find_sprite_inside) — no footprint-only
-- [ ] NPCs: spawn_patrol_actor only
-- [ ] No opaque ColorRect landmark hacks
-- [ ] Props use real paths (barrel_0/crate_0/lamp_0/rock_0N/…) scale ≤0.6
-- [ ] Portals + TopBar return Hub
+- [x] craft.setup(W, H, district_id) — correct district for eco weights
+- [x] Silhouette ≠ plaza clone (district table)
+- [x] Water = meander role for THIS district (not Rect2i canal)
+- [x] Buildings: find_building_inside + full AABB ⊆ zone
+- [x] Trees: craft.spawn_tree (or find_sprite_inside) — no footprint-only
+- [x] NPCs: spawn_patrol_actor only
+- [~] No opaque ColorRect landmark hacks — soft residuals: market awning strips, station track sleepers/rails, tiny plaza bridge label
+- [x] Props use real paths (barrel_0/crate_0/lamp_0/rock_0N/…) scale ≤0.6
+- [x] Portals + TopBar return Hub
 ```
 
 ## Multi-agent ownership (exclusive)
