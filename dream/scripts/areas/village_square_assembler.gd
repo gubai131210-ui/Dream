@@ -394,7 +394,8 @@ func _build_path_distance_field() -> Array:
 	while head < queue.size():
 		var p: Vector2i = queue[head]
 		head += 1
-		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var dirs: Array[Vector2i] = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
+		for d: Vector2i in dirs:
 			var n: Vector2i = p + d
 			if n.x < 0 or n.y < 0 or n.x >= MAP_W or n.y >= MAP_H:
 				continue

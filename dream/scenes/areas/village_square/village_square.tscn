@@ -63,3 +63,11 @@ text = "世界总览"
 [node name="BackConnections" type="Button" parent="UI/TopBar"]
 layout_mode = 2
 text = "连接总览"
+
+[node name="ToResidential" type="Button" parent="UI/TopBar"]
+layout_mode = 2
+text = "住宅区"
+
+[node name="ToFarm" type="Button" parent="UI/TopBar"]
+layout_mode = 2
+text = "农场"
