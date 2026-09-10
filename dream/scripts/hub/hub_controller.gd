@@ -99,11 +99,20 @@ func _enter_market() -> void:
 
 
 func _enter_forest() -> void:
-	get_tree().change_scene_to_file(SceneRouter.FOREST_ENTRANCE_PATH)
+	_change_if_exists(SceneRouter.FOREST_ENTRANCE_PATH, "森林入口")
 
 
 func _enter_station() -> void:
-	get_tree().change_scene_to_file(SceneRouter.STATION_PATH)
+	_change_if_exists(SceneRouter.STATION_PATH, "车站")
+
+
+func _change_if_exists(path: String, label: String) -> void:
+	if not ResourceLoader.exists(path):
+		push_warning("Hub: scene missing for %s (%s) — rescan/import project" % [label, path])
+		if status_label:
+			status_label.text = "%s场景尚未就绪，请稍后重试或刷新文件系统" % label
+		return
+	get_tree().change_scene_to_file(path)
 
 
 func _switch_overview() -> void:
