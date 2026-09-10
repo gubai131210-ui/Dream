@@ -121,23 +121,34 @@ func _compute_river_tile(tx: int, ty: int) -> bool:
 
 
 func _normalize_bridge_water() -> void:
-	# Ensure bridge rows have a continuous water run of 3–5 cells for a readable span.
+	# Keep the densest contiguous water run on bridge rows; widen/trim to 3–5 without
+	# flooding every gap between distant cove cells.
 	for ty in [BRIDGE_TY0, BRIDGE_TY1]:
-		var cells: Array[int] = []
-		for tx in range(MAP_W):
-			if _water_mask[ty][tx]:
-				cells.append(tx)
-		if cells.is_empty():
+		var best_lo := -1
+		var best_hi := -1
+		var best_len := 0
+		var run_lo := -1
+		for tx in range(MAP_W + 1):
+			var wet := tx < MAP_W and bool(_water_mask[ty][tx])
+			if wet:
+				if run_lo < 0:
+					run_lo = tx
+			elif run_lo >= 0:
+				var run_hi := tx - 1
+				var run_len := run_hi - run_lo + 1
+				if run_len > best_len:
+					best_len = run_len
+					best_lo = run_lo
+					best_hi = run_hi
+				run_lo = -1
+		if best_lo < 0:
 			continue
-		var lo: int = cells[0]
-		var hi: int = cells[cells.size() - 1]
-		# Fill gaps in the main cluster.
-		for tx in range(lo, hi + 1):
-			_water_mask[ty][tx] = true
+		var lo := best_lo
+		var hi := best_hi
 		var width := hi - lo + 1
 		if width < 3:
 			var need := 3 - width
-			for i in range(need):
+			for _i in range(need):
 				if hi + 1 < MAP_W:
 					hi += 1
 					_water_mask[ty][hi] = true
@@ -145,7 +156,6 @@ func _normalize_bridge_water() -> void:
 					lo -= 1
 					_water_mask[ty][lo] = true
 		elif width > 5:
-			# Trim outer edges so bridge stays 3–5.
 			var excess := width - 5
 			for i in range(excess):
 				if i % 2 == 0:
@@ -288,7 +298,7 @@ func _find_clear_near(ideal: Vector2, half_w: int, half_h: int, max_r: int = 8, 
 	for r in range(1, max_r + 1):
 		for oy in range(-r, r + 1):
 			for ox in range(-r, r + 1):
-				if maxi(abs(ox), abs(oy)) != r:
+				if maxi(absi(ox), absi(oy)) != r:
 					continue
 				var cand := _tile_center(t.x + ox, t.y + oy)
 				if _footprint_ok(cand, half_w, half_h, allow_path):
@@ -329,37 +339,38 @@ func _paint_ecological_grass(ground: TileMapLayer) -> void:
 
 
 func _paint_dirt_spurs(ground: TileMapLayer) -> void:
-	# Door yards use dirt atlas painted onto Ground (walk line ≠ plaza stone).
-	if not ResourceLoader.exists(DIRT_ATLAS):
-		return
-	var dirt_tex := load(DIRT_ATLAS) as Texture2D
-	if dirt_tex == null:
-		return
-	# Temporarily swap tileset is awkward; instead stamp dirt by rebuilding a dual-source set.
-	# Practical approach: create a combined TileSet once.
-	var combined := _grass_with_dirt_tileset(ground.tile_set, dirt_tex)
-	ground.tile_set = combined
+	# Door yards: dirt atlas when available; else mowed grass so spurs never leave holes.
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 11
+	var has_dirt := ResourceLoader.exists(DIRT_ATLAS)
+	var dirt_tex: Texture2D = load(DIRT_ATLAS) as Texture2D if has_dirt else null
+	if dirt_tex != null:
+		ground.tile_set = _grass_with_dirt_tileset(ground.tile_set, dirt_tex)
+	var mowed := TileSetFactory.grass_coords("mowed")
 	for ty in range(MAP_H):
 		for tx in range(MAP_W):
 			if not _is_dirt_tile(tx, ty):
 				continue
-			# source_id 1 = dirt atlas (see _grass_with_dirt_tileset).
-			ground.set_cell(Vector2i(tx, ty), 1, Vector2i(rng.randi_range(0, 1), 0))
+			if dirt_tex != null:
+				ground.set_cell(Vector2i(tx, ty), 1, Vector2i(rng.randi_range(0, 1), 0))
+			else:
+				ground.set_cell(Vector2i(tx, ty), 0, mowed[rng.randi_range(0, mowed.size() - 1)])
 
 
 func _grass_with_dirt_tileset(grass_ts: TileSet, dirt_tex: Texture2D) -> TileSet:
-	var ts := grass_ts
-	# If dirt source already present, reuse.
+	var ts: TileSet = grass_ts.duplicate() as TileSet
 	if ts.get_source_count() >= 2:
 		return ts
 	var src := TileSetAtlasSource.new()
 	src.texture = dirt_tex
 	src.texture_region_size = Vector2i(TILE, TILE)
 	src.use_texture_padding = true
-	for y in range(dirt_tex.get_height() / TILE):
-		for x in range(dirt_tex.get_width() / TILE):
+	@warning_ignore("integer_division")
+	var cols: int = maxi(1, int(dirt_tex.get_width()) / TILE)
+	@warning_ignore("integer_division")
+	var rows: int = maxi(1, int(dirt_tex.get_height()) / TILE)
+	for y in range(rows):
+		for x in range(cols):
 			src.create_tile(Vector2i(x, y))
 	ts.add_source(src, 1)
 	return ts
@@ -626,18 +637,43 @@ func _spawn_actors(ysort: Node2D) -> void:
 		if not ResourceLoader.exists(a["path"]):
 			continue
 		var start: Vector2 = a["waypoints"][0]
-		# Snap start onto walk surface when possible.
-		var st := _world_to_tile(start)
-		if not _is_walk_surface(st.x, st.y):
-			var snapped := _find_walk_near(start, 6)
-			if snapped != Vector2.ZERO:
-				start = snapped
+		var route: Array[Vector2] = _snap_patrol_route(a["waypoints"])
+		if route.is_empty():
+			continue
+		start = route[0]
 		var hs := _make_hotspot(ysort, a["title"], a["desc"], start, Vector2(40, 56))
 		var visual: Node2D = hs.get_node("Visual")
 		_add_contact_shadow(visual, Vector2(0, 0), Vector2(12, 5))
 		var spr := _spawn_sprite(visual, a["path"], Vector2.ZERO)
 		spr.offset = Vector2(0, -spr.texture.get_height() * 0.35)
-		_animate_patrol(hs, a["waypoints"])
+		_animate_patrol(hs, route)
+
+
+func _snap_patrol_route(waypoints: Array) -> Array[Vector2]:
+	var route: Array[Vector2] = []
+	for wp in waypoints:
+		var ideal: Vector2 = wp
+		var snapped := _find_walk_near(ideal, 6)
+		if snapped == Vector2.ZERO:
+			continue
+		# Drop consecutive duplicates after snap.
+		if route.size() > 0 and route[route.size() - 1].distance_to(snapped) < 4.0:
+			continue
+		route.append(snapped)
+	if route.size() == 1:
+		# Need a loop: add a nearby walk neighbor if possible.
+		var t := _world_to_tile(route[0])
+		for d in [Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)]:
+			var n := t + d
+			if n.x < 0 or n.y < 0 or n.x >= MAP_W or n.y >= MAP_H:
+				continue
+			if _is_walk_surface(n.x, n.y):
+				route.append(_tile_center(n.x, n.y))
+				route.append(route[0])
+				break
+	elif route.size() >= 2 and route[0].distance_to(route[route.size() - 1]) > 4.0:
+		route.append(route[0])
+	return route
 
 
 func _find_walk_near(ideal: Vector2, max_r: int) -> Vector2:
@@ -647,7 +683,7 @@ func _find_walk_near(ideal: Vector2, max_r: int) -> Vector2:
 	for r in range(1, max_r + 1):
 		for oy in range(-r, r + 1):
 			for ox in range(-r, r + 1):
-				if maxi(abs(ox), abs(oy)) != r:
+				if maxi(absi(ox), absi(oy)) != r:
 					continue
 				var nx := t.x + ox
 				var ny := t.y + oy
@@ -658,18 +694,17 @@ func _find_walk_near(ideal: Vector2, max_r: int) -> Vector2:
 	return Vector2.ZERO
 
 
-func _animate_patrol(node: Node2D, waypoints: Array) -> void:
+func _animate_patrol(node: Node2D, waypoints: Array[Vector2]) -> void:
 	if waypoints.size() < 2:
 		return
 	var tw := node.create_tween().set_loops()
 	for i in range(1, waypoints.size()):
 		var target: Vector2 = waypoints[i]
 		var t := _world_to_tile(target)
-		if not _is_walk_surface(t.x, t.y) and not _is_path_tile(t.x, t.y):
-			# Prefer stone; allow plaza-adjacent if marked path in mask rebuild.
-			pass
-		var dist := node.position.distance_to(target)
-		var dur := clampf(dist / 40.0, 1.2, 4.0)
+		if not _is_walk_surface(t.x, t.y):
+			continue
+		var dist: float = node.position.distance_to(target)
+		var dur: float = clampf(dist / 40.0, 1.2, 4.0)
 		tw.tween_property(node, "position", target, dur).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		tw.tween_interval(0.35)
 
@@ -691,6 +726,7 @@ func _spawn_water_overlay(ysort: Node2D) -> void:
 		at.atlas = atlas
 		at.region = Rect2(i * TILE, 0, TILE, TILE)
 		frames.append(at)
+	const OVERLAY_CAP := 80
 	var idx := 0
 	for ty in range(MAP_H):
 		for tx in range(MAP_W):
@@ -698,26 +734,27 @@ func _spawn_water_overlay(ysort: Node2D) -> void:
 				continue
 			if _is_path_tile(tx, ty):
 				continue
+			if idx >= OVERLAY_CAP:
+				break
 			var spr := Sprite2D.new()
 			spr.texture = frames[(tx + ty) % frames.size()]
 			spr.position = _tile_center(tx, ty)
 			spr.modulate = Color(1, 1, 1, 0.42)
 			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			overlay.add_child(spr)
-			var phase := 0.2 * float((tx + ty) % 4)
+			var phase: float = 0.2 * float((tx + ty) % 4)
 			var tw := spr.create_tween().set_loops()
 			tw.tween_interval(phase)
 			tw.tween_property(spr, "modulate:a", 0.22, 0.9).set_trans(Tween.TRANS_SINE)
 			tw.tween_property(spr, "modulate:a", 0.5, 0.9).set_trans(Tween.TRANS_SINE)
-			# Swap frame every ~0.6s via callback chain.
-			var frame_i := (tx + ty) % frames.size()
+			var frame_i: int = (tx + ty) % frames.size()
 			spr.set_meta("frame_i", frame_i)
 			spr.set_meta("frames", frames)
 			idx += 1
-			if idx > 80:
-				# Cap overlay sprites for performance on large rivers.
-				return
-	_start_water_frame_ticker(overlay)
+		if idx >= OVERLAY_CAP:
+			break
+	if idx > 0:
+		_start_water_frame_ticker(overlay)
 
 
 func _start_water_frame_ticker(overlay: Node2D) -> void:
