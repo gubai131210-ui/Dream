@@ -3,15 +3,31 @@ extends RefCounted
 
 ## Shared village/farm area craft helpers (realistic-scene-craft skill).
 ## Hold masks + paint/spawn utilities. Assemblers own layout policy.
+## District ecology: docs/AREA_FRAMEWORK.md + reference-formulas.md zone profiles.
 
 const GRASS_ATLAS := "res://assets/tilesets/grass_seamless_atlas.png"
 const STONE_ATLAS := "res://assets/tilesets/stone_seamless_atlas.png"
 const DIRT_ATLAS := "res://assets/tilesets/dirt_seamless_atlas.png"
 const WATER_ATLAS := "res://assets/tilesets/water_seamless_atlas.png"
 
+## Ecology thresholds per district (mowed_max / tall_dpath / edge_tall / weed_p).
+## Keep in sync with docs/AREA_FRAMEWORK.md and realistic-scene-craft/reference-formulas.md.
+const ECO_PROFILES := {
+	"plaza": {"mowed_max": 2, "tall_dpath": 8, "edge_tall": 2, "weed_p": 0.05},
+	"residential": {"mowed_max": 1, "tall_dpath": 999, "edge_tall": 2, "weed_p": 0.03},
+	"farm_home": {"mowed_max": 1, "tall_dpath": 14, "edge_tall": 1, "weed_p": 0.08},
+	"farmland": {"mowed_max": 1, "tall_dpath": 12, "edge_tall": 2, "weed_p": 0.04},
+	"market": {"mowed_max": 2, "tall_dpath": 14, "edge_tall": 1, "weed_p": 0.03},
+	## Outdoor shells (forest / river / lake / station edges): tall-biased, little mow.
+	"wild": {"mowed_max": 0, "tall_dpath": 4, "edge_tall": 3, "weed_p": 0.06},
+	"transit": {"mowed_max": 1, "tall_dpath": 10, "edge_tall": 2, "weed_p": 0.04},
+}
+
 var map_w: int = 40
 var map_h: int = 30
 var tile: int = Scale.BASE_TILE
+## AREA_FRAMEWORK district id — must be set by assembler before paint_ecological_grass.
+var district: String = "plaza"
 
 var water_mask: Array = []
 var bank_mask: Array = []
@@ -19,11 +35,38 @@ var path_mask: Array = []
 var dirt_mask: Array = []
 
 
-func setup(width: int, height: int) -> void:
+func setup(width: int, height: int, district_id: String = "plaza") -> void:
 	map_w = width
 	map_h = height
 	tile = Scale.BASE_TILE
+	set_district(district_id)
 	clear_masks()
+
+
+func set_district(district_id: String) -> void:
+	if ECO_PROFILES.has(district_id):
+		district = district_id
+	else:
+		push_warning("AreaCraft: unknown district '%s', falling back to plaza" % district_id)
+		district = "plaza"
+
+
+static func eco_kind(dpath: int, edge: int, damp: bool, weed_roll: float, district_id: String) -> String:
+	## Shared ecology classifier so non-AreaCraft assemblers (e.g. village square) stay in sync.
+	if damp:
+		return "damp"
+	var profile: Dictionary = ECO_PROFILES.get(district_id, ECO_PROFILES["plaza"])
+	var mowed_max: int = int(profile.get("mowed_max", 2))
+	var tall_dpath: int = int(profile.get("tall_dpath", 8))
+	var edge_tall: int = int(profile.get("edge_tall", 2))
+	var weed_p: float = float(profile.get("weed_p", 0.05))
+	if dpath <= mowed_max:
+		return "mowed"
+	if edge <= edge_tall or dpath >= tall_dpath:
+		return "tall"
+	if weed_roll < weed_p:
+		return "weed"
+	return "meadow"
 
 
 func clear_masks() -> void:
@@ -179,18 +222,10 @@ func paint_ecological_grass(ground: TileMapLayer) -> void:
 		for tx in range(map_w):
 			if is_path(tx, ty) or is_dirt(tx, ty):
 				continue
-			var kind := "meadow"
-			if is_water(tx, ty) or is_bank(tx, ty):
-				kind = "damp"
-			else:
-				var dpath: int = dist[ty][tx]
-				var edge := mini(tx, mini(ty, mini(map_w - 1 - tx, map_h - 1 - ty)))
-				if dpath <= 2:
-					kind = "mowed"
-				elif edge <= 2 or dpath >= 8:
-					kind = "tall"
-				elif rng.randf() < 0.05:
-					kind = "weed"
+			var dpath: int = dist[ty][tx]
+			var edge := mini(tx, mini(ty, mini(map_w - 1 - tx, map_h - 1 - ty)))
+			var damp := is_water(tx, ty) or is_bank(tx, ty)
+			var kind := eco_kind(dpath, edge, damp, rng.randf(), district)
 			var variants := TileSetFactory.grass_coords(kind)
 			ground.set_cell(Vector2i(tx, ty), 0, variants[rng.randi_range(0, variants.size() - 1)])
 

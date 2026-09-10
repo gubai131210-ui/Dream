@@ -57,10 +57,6 @@
 | **道具语法** | 井、长椅、灯 | 信箱、花箱、矮篱 | 木桶、草料、工具 | 作物床、袋、篱柱 | 箱、桶、篷、灯 |
 | **禁止同构** | 禁止变成「农田矩阵」 | 禁止中央大石板广场 | 禁止市政喷泉作中心 | 禁止北排住宅街景 | 禁止正中大广场（用长街） |
 
-| Coral Island | **西农 → 绿缓冲 → 铺装镇**；每区一种开放空间 | [`coral-island.md`](docs/research/games/coral-island.md) |
-| Portia | 双广场 + 主街脊；工坊城外；河硬分区 | [`my-time-at-portia.md`](docs/research/games/my-time-at-portia.md) |
-| RF4 | 东商店廊 / 西住宅 / 北交通脊 / 城堡后田 | [`rune-factory-4.md`](docs/research/games/rune-factory-4.md) |
-
 ### 一眼可辨（silhouette test）
 
 缩到 1/8 截图仍应能分辨：

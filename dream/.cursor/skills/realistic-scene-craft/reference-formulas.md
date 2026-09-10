@@ -42,15 +42,17 @@ BFS from all path cells → `dpath`.
 
 ### Zone profiles (district-weighted)
 
-Tune thresholds so districts do not share one grass look (`AREA_FRAMEWORK.md`):
+Implemented in `AreaCraft.ECO_PROFILES` + `AreaCraft.eco_kind()` / `paint_ecological_grass()`.
 
-| District | mowed if | tall if | notes |
-| --- | --- | --- | --- |
-| plaza | dpath ≤ 2 | dpath ≥ 8 or edge | stone-adjacent short grass |
-| residential | dpath ≤ 1 (lanes only) | edge ≤ 2 | yards stay meadow |
-| farm_home | dpath ≤ 1 | rare | more weed RNG (~3%) |
-| farmland | dpath ≤ 1 on hub rings | outside play | crop beds = dirt cells, not grass |
-| market | dpath ≤ 2 on street | avoid inside stall band | keep street readable |
+| District | mowed if | tall if | weed_p | notes |
+| --- | --- | --- | --- | --- |
+| plaza | dpath ≤ 2 | dpath ≥ 8 or edge≤2 | 0.05 | stone-adjacent short grass |
+| residential | dpath ≤ 1 | edge ≤ 2 only | 0.03 | yards stay meadow |
+| farm_home | dpath ≤ 1 | dpath ≥ 14 or edge≤1 | 0.08 | more weed |
+| farmland | dpath ≤ 1 | dpath ≥ 12 or edge≤2 | 0.04 | crop beds = dirt cells |
+| market | dpath ≤ 2 | dpath ≥ 14 or edge≤1 | 0.03 | keep street readable |
+| wild | never mow | dpath ≥ 4 or edge≤3 | 0.06 | forest/river shells |
+| transit | dpath ≤ 1 | dpath ≥ 10 or edge≤2 | 0.04 | station spine |
 
 ## Poisson-ish props (anti-clump)
 

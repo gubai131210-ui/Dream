@@ -2,6 +2,7 @@ class_name MarketStreetAssembler
 extends Node
 
 ## Market street / commercial lane (A10) — AreaCraft masks + layered assemble.
+## District: market (AREA_FRAMEWORK). craft.setup(..., "market").
 ## Elongated E–W cobble street + shallow stall alcoves (not a fountain square).
 ## Shops flank the street (north + one east), south-facing.
 ## Reference craft: A10_commercial_street / A10_market_street (do not paste as background).
@@ -30,7 +31,7 @@ func assemble(root: Node2D) -> void:
 	var water: TileMapLayer = root.get_node("Water")
 	var ysort: Node2D = root.get_node("YSortRoot")
 
-	craft.setup(MAP_W, MAP_H)
+	craft.setup(MAP_W, MAP_H, "market")
 	_rebuild_masks()
 	craft.prepare_layers(ground, path, water)
 

@@ -61,7 +61,7 @@ Scene craft checklist:
 9. Runtime paint prefers `set_cell` / precomputed coords; do not spam `set_cells_terrain_connect` every frame.
 10. Fill tiles wrap-match (`L==R`, `T==B`); Nearest + `use_texture_padding`; integer zoom.
 11. Chinese paths: prefer writing tools under `dream/tools/`; ask user to run Godot tests locally when risky.
-12. **District differentiation** — follow `docs/AREA_FRAMEWORK.md` parameter table. Silhouette test must distinguish plaza ≠ residential ≠ farm_home ≠ farmland ≠ market.
+12. **District differentiation** — follow `docs/AREA_FRAMEWORK.md` parameter table. Assemblers must call `craft.setup(w, h, district_id)` (or `AreaCraft.eco_kind(..., district)`). Silhouette test must distinguish plaza ≠ residential ≠ farm_home ≠ farmland ≠ market.
 
 ## Pass order (assembler)
 

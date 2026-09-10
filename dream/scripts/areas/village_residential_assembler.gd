@@ -2,6 +2,7 @@ class_name VillageResidentialAssembler
 extends Node
 
 ## A08 village residential — lane grid, yards, south-facing houses north of lanes.
+## District: residential (AREA_FRAMEWORK). craft.setup(..., "residential").
 ## Uses AreaCraft for masks / paint / footprint / portals (do not duplicate helpers).
 ## Pass: masks → ecology → dirt → water → path → buildings → props → trees → actors → FX.
 
@@ -27,7 +28,7 @@ func assemble(root: Node2D) -> void:
 	var water: TileMapLayer = root.get_node("Water")
 	var ysort: Node2D = root.get_node("YSortRoot")
 
-	craft.setup(MAP_W, MAP_H)
+	craft.setup(MAP_W, MAP_H, "residential")
 	_rebuild_masks()
 	craft.prepare_layers(ground, path, water)
 

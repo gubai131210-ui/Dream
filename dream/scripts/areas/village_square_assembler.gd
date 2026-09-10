@@ -2,6 +2,7 @@ class_name VillageSquareAssembler
 extends Node
 
 ## Village square assembler — follows realistic-scene-craft skill.
+## District: plaza (A09). Ecology via AreaCraft.eco_kind(..., "plaza").
 ## Pass: masks → ecology → water → path → buildings → props → trees → actors → FX.
 ## Facing: south-door art → north-of-plaza lots. Reference: A09.
 
@@ -59,9 +60,9 @@ func assemble(root: Node2D) -> void:
 
 
 func _spawn_edge_portals(ysort: Node2D) -> void:
-	# PHASE2/3: square links east → A08 residential + A10 market, south → A02 farm.
+	# PHASE2/3/4: east residential+market, south farm, north station.
 	var craft := AreaCraft.new()
-	craft.setup(MAP_W, MAP_H)
+	craft.setup(MAP_W, MAP_H, "plaza")
 	craft.make_portal(
 		ysort,
 		"→住宅区",
@@ -82,6 +83,13 @@ func _spawn_edge_portals(ysort: Node2D) -> void:
 		SceneRouter.FARM_HOME_PATH,
 		Vector2(640, 900),
 		Vector2(96, 56)
+	)
+	craft.make_portal(
+		ysort,
+		"→车站",
+		SceneRouter.STATION_PATH,
+		Vector2(640, 40),
+		Vector2(96, 48)
 	)
 
 
@@ -349,18 +357,10 @@ func _paint_ecological_grass(ground: TileMapLayer) -> void:
 		for tx in range(MAP_W):
 			if _is_path_tile(tx, ty) or _is_dirt_tile(tx, ty):
 				continue
-			var kind := "meadow"
-			if _is_river_tile(tx, ty) or _is_bank_tile(tx, ty):
-				kind = "damp"
-			else:
-				var dpath: int = dist[ty][tx]
-				var edge := mini(tx, mini(ty, mini(MAP_W - 1 - tx, MAP_H - 1 - ty)))
-				if dpath <= 2:
-					kind = "mowed"
-				elif edge <= 2 or dpath >= 8:
-					kind = "tall"
-				elif rng.randf() < 0.05:
-					kind = "weed"
+			var dpath: int = dist[ty][tx]
+			var edge := mini(tx, mini(ty, mini(MAP_W - 1 - tx, MAP_H - 1 - ty)))
+			var damp := _is_river_tile(tx, ty) or _is_bank_tile(tx, ty)
+			var kind := AreaCraft.eco_kind(dpath, edge, damp, rng.randf(), "plaza")
 			var variants := TileSetFactory.grass_coords(kind)
 			ground.set_cell(Vector2i(tx, ty), 0, variants[rng.randi_range(0, variants.size() - 1)])
 
@@ -505,7 +505,7 @@ func _make_hotspot(parent: Node2D, title: String, desc: String, pos: Vector2, si
 func _spawn_buildings(ysort: Node2D) -> void:
 	# Full sprite AABB must stay inside map play rect (tall cottages were clipping the top).
 	var craft := AreaCraft.new()
-	craft.setup(MAP_W, MAP_H)
+	craft.setup(MAP_W, MAP_H, "plaza")
 	for y in range(MAP_H):
 		for x in range(MAP_W):
 			craft.water_mask[y][x] = _is_river_tile(x, y)

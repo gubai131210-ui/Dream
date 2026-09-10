@@ -38,7 +38,7 @@ func assemble(root: Node2D) -> void:
 	var water: TileMapLayer = root.get_node("Water")
 	var ysort: Node2D = root.get_node("YSortRoot")
 
-	craft.setup(MAP_W, MAP_H)
+	craft.setup(MAP_W, MAP_H, "transit")
 	_rebuild_masks()
 	craft.prepare_layers(ground, path, water)
 

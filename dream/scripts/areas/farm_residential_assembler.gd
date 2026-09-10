@@ -2,6 +2,7 @@ class_name FarmResidentialAssembler
 extends Node
 
 ## Farm residential (A02) — AreaCraft masks + layered assemble.
+## District: farm_home (AREA_FRAMEWORK). craft.setup(..., "farm_home").
 ## Buildings must sit FULLY inside the farm play zone (sprite AABB), not straddling fence/forest.
 
 const MAP_W := 40
@@ -32,7 +33,7 @@ func assemble(root: Node2D) -> void:
 	var water: TileMapLayer = root.get_node("Water")
 	var ysort: Node2D = root.get_node("YSortRoot")
 
-	craft.setup(MAP_W, MAP_H)
+	craft.setup(MAP_W, MAP_H, "farm_home")
 	_rebuild_masks()
 	craft.prepare_layers(ground, path, water)
 

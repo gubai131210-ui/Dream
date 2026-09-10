@@ -2,6 +2,7 @@ class_name FarmlandAssembler
 extends Node
 
 ## Farmland (A03) — irrigation stream, fenced crop beds, central shed hub.
+## District: farmland (AREA_FRAMEWORK). craft.setup(..., "farmland").
 ## Layout follows A03_farmland.png: forest belt → fence → plots around dirt hub.
 ## Buildings: full sprite AABB inside FARM_BUILD_ZONE (BUILDING_PLACEMENT).
 
@@ -35,7 +36,7 @@ func assemble(root: Node2D) -> void:
 	var water: TileMapLayer = root.get_node("Water")
 	var ysort: Node2D = root.get_node("YSortRoot")
 
-	craft.setup(MAP_W, MAP_H)
+	craft.setup(MAP_W, MAP_H, "farmland")
 	_rebuild_masks()
 	craft.prepare_layers(ground, path, water)
 

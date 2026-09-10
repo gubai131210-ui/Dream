@@ -78,10 +78,10 @@
 
 ### Priority craft upgrades
 
-1. Assemblers read explicit `district_id` + ZoneParams (ecology thresholds from formulas).  
+1. ~~Assemblers read explicit `district_id` + ZoneParams (ecology thresholds from formulas).~~ **Done** — `AreaCraft.ECO_PROFILES` + `setup(..., district)` / `eco_kind`.  
 2. Enforce silhouette test in QA (1/8 screenshot distinguishability).  
 3. Optional Garden-Lane style buffer scene between farm hub and plaza (future).  
-4. Water overlay animation on meander mask (Stardew).  
+4. Water overlay animation on meander mask (Stardew) — present on several assemblers; keep expanding.  
 5. User installs IOPaint for hole-fill; always BiRefNet for 抠图.  
 6. **Interior layer after outdoor shell** — enterable C scenes (`INTERIOR_LIBRARY.md`), not door InfoPanels only.
 
