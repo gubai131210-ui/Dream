@@ -94,33 +94,44 @@ func _spawn_buildings(ysort: Node2D) -> void:
 
 
 func _spawn_props(ysort: Node2D) -> void:
-	# Prefer dedicated plaza fountain from ArtPipeline (B11-05).
-	var fountain_path := "res://assets/sprites/props/plaza_fountain.png"
-	if not ResourceLoader.exists(fountain_path):
-		fountain_path = "res://assets/sprites/props/fountain.png"
-	if ResourceLoader.exists(fountain_path):
-		var f := _spawn_sprite(ysort, fountain_path, Vector2(640, 480))
-		var hs := _make_hotspot(ysort, "中央喷泉", "广场核心喷泉，流水使用序列帧表现动态。", Vector2(640, 500), Vector2(96, 64))
+	# Center structure from B11-05 is a roofed stone well (file was misnamed fountain).
+	var well_path := "res://assets/sprites/props/plaza_fountain.png"
+	if not ResourceLoader.exists(well_path):
+		well_path = "res://assets/sprites/props/fountain.png"
+	if ResourceLoader.exists(well_path):
+		var f := _spawn_sprite(ysort, well_path, Vector2(640, 480))
+		var hs := _make_hotspot(ysort, "水井", "广场中央的石砌水井，带木顶与吊桶。", Vector2(640, 500), Vector2(96, 64))
 		f.reparent(hs.get_node("Visual"))
 		f.position = Vector2.ZERO
-	# market stalls approx using props
+	# Note: raw B11-03 sheet is sacks, not wells — keep names honest.
 	var samples := [
 		"res://assets/sprites/props/barrel_0.png",
 		"res://assets/sprites/props/crate_0.png",
 		"res://assets/sprites/props/bench_0.png",
 		"res://assets/sprites/props/lamp_0.png",
-		"res://assets/sprites/props/well_0.png",
+		"res://assets/sprites/props/sack_0.png",
 	]
 	var positions := [
 		Vector2(480, 420), Vector2(800, 420), Vector2(520, 560), Vector2(760, 560), Vector2(980, 700),
 	]
-	var titles := ["木桶", "货箱摊位", "长椅", "路灯", "水井"]
+	var titles := ["木桶", "货箱摊位", "长椅", "路灯", "麻袋"]
+	var descs := [
+		"装水或谷物的木桶。",
+		"市场旁堆放的货箱。",
+		"供村民休息的长椅。",
+		"照亮广场的路灯。",
+		"装满物资的麻袋（素材表 B11-03 实际是袋子，不是水井）。",
+	]
 	for i in samples.size():
 		var p: String = samples[i]
 		if not ResourceLoader.exists(p):
-			continue
+			# fallback if sack_0 missing
+			if p.ends_with("sack_0.png"):
+				p = "res://assets/sprites/props/well_0.png"
+			else:
+				continue
 		var spr := _spawn_sprite(ysort, p, positions[i])
-		var hs := _make_hotspot(ysort, titles[i], "广场装饰与可点击热点。", positions[i], Vector2(48, 48))
+		var hs := _make_hotspot(ysort, titles[i], descs[i], positions[i], Vector2(48, 48))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
 
