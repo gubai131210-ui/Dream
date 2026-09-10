@@ -1,0 +1,63 @@
+{
+  "source": "B03_water_03.png",
+  "frames": [
+    {
+      "file": "water_frame_0.png",
+      "src_box": [
+        24,
+        22,
+        128,
+        130
+      ]
+    },
+    {
+      "file": "water_frame_1.png",
+      "src_box": [
+        144,
+        22,
+        250,
+        130
+      ]
+    },
+    {
+      "file": "water_frame_2.png",
+      "src_box": [
+        266,
+        22,
+        368,
+        130
+      ]
+    },
+    {
+      "file": "water_frame_3.png",
+      "src_box": [
+        384,
+        22,
+        484,
+        130
+      ]
+    },
+    {
+      "file": "water_frame_4.png",
+      "src_box": [
+        498,
+        22,
+        598,
+        130
+      ]
+    },
+    {
+      "file": "water_frame_5.png",
+      "src_box": [
+        614,
+        22,
+        716,
+        130
+      ]
+    }
+  ],
+  "size": [
+    32,
+    32
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "npcs": [
+    {
+      "file": "npc_00.png",
+      "source": "B14_npc_01.png",
+      "src_box": [
+        90,
+        90,
+        182,
+        262
+      ],
+      "height_px": 56,
+      "filter": "NEAREST"
+    },
+    {
+      "file": "npc_01.png",
+      "source": "B14_npc_01.png",
+      "src_box": [
+        874,
+        168,
+        960,
+        344
+      ],
+      "height_px": 56,
+      "filter": "NEAREST"
+    },
+    {
+      "file": "npc_02.png",
+      "source": "B14_npc_01.png",
+      "src_box": [
+        1276,
+        170,
+        1360,
+        344
+      ],
+      "height_px": 56,
+      "filter": "NEAREST"
+    }
+  ],
+  "idle": {
+    "has_idle_animation": true,
+    "source": "B14_npc_01.png",
+    "frame_count": 4,
+    "color_dists": [
+      0.72,
+      0.45,
+      1.33
+    ],
+    "frames": [
+      {
+        "file": "idle_frame_0.png",
+        "src_box": [
+          90,
+          90,
+          182,
+          262
+        ]
+      },
+      {
+        "file": "idle_frame_1.png",
+        "src_box": [
+          270,
+          90,
+          358,
+          262
+        ]
+      },
+      {
+        "file": "idle_frame_2.png",
+        "src_box": [
+          448,
+          90,
+          536,
+          262
+        ]
+      },
+      {
+        "file": "idle_frame_3.png",
+        "src_box": [
+          626,
+          90,
+          714,
+          262
+        ]
+      }
+    ],
+    "note": "Real sheet row used; no synthetic offset duplicates."
+  },
+  "height_px": 56,
+  "filter": "NEAREST"
+}

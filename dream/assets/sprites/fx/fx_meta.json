@@ -1,0 +1,340 @@
+{
+  "sources": [
+    "B15_effects_01.png",
+    "B15_effects_02.png"
+  ],
+  "items": [
+    {
+      "file": "sparkle_00.png",
+      "kind": "sparkle",
+      "source": "B15_effects_02.png",
+      "src_box": [
+        780,
+        100,
+        788,
+        110
+      ],
+      "mean_rgb": [
+        155.4,
+        181.3,
+        191.4
+      ],
+      "max_lum": 255.0,
+      "bright_px": 29
+    },
+    {
+      "file": "sparkle_01.png",
+      "kind": "sparkle",
+      "source": "B15_effects_02.png",
+      "src_box": [
+        886,
+        100,
+        896,
+        110
+      ],
+      "mean_rgb": [
+        146.2,
+        170.5,
+        187.0
+      ],
+      "max_lum": 255.0,
+      "bright_px": 32
+    },
+    {
+      "file": "sparkle_02.png",
+      "kind": "sparkle",
+      "source": "B15_effects_02.png",
+      "src_box": [
+        1014,
+        280,
+        1050,
+        316
+      ],
+      "mean_rgb": [
+        159.8,
+        150.3,
+        150.5
+      ],
+      "max_lum": 255.0,
+      "bright_px": 144
+    },
+    {
+      "file": "sparkle_03.png",
+      "kind": "sparkle",
+      "source": "B15_effects_02.png",
+      "src_box": [
+        352,
+        260,
+        430,
+        306
+      ],
+      "mean_rgb": [
+        140.2,
+        131.2,
+        135.0
+      ],
+      "max_lum": 255.0,
+      "bright_px": 166
+    },
+    {
+      "file": "smoke_00.png",
+      "kind": "smoke",
+      "source": "B15_effects_02.png",
+      "src_box": [
+        1246,
+        302,
+        1258,
+        312
+      ],
+      "mean_rgb": [
+        103.5,
+        98.3,
+        101.6
+      ],
+      "max_lum": 195.7,
+      "bright_px": 0
+    },
+    {
+      "file": "smoke_01.png",
+      "kind": "smoke",
+      "source": "B15_effects_02.png",
+      "src_box": [
+        1132,
+        258,
+        1146,
+        270
+      ],
+      "mean_rgb": [
+        56.7,
+        51.5,
+        64.8
+      ],
+      "max_lum": 81.7,
+      "bright_px": 0
+    },
+    {
+      "file": "smoke_02.png",
+      "kind": "smoke",
+      "source": "B15_effects_02.png",
+      "src_box": [
+        686,
+        264,
+        698,
+        278
+      ],
+      "mean_rgb": [
+        55.7,
+        50.6,
+        63.4
+      ],
+      "max_lum": 74.0,
+      "bright_px": 0
+    },
+    {
+      "file": "smoke_03.png",
+      "kind": "smoke",
+      "source": "B15_effects_02.png",
+      "src_box": [
+        1260,
+        290,
+        1278,
+        304
+      ],
+      "mean_rgb": [
+        129.5,
+        121.3,
+        124.5
+      ],
+      "max_lum": 206.3,
+      "bright_px": 2
+    },
+    {
+      "file": "smoke_04.png",
+      "kind": "smoke",
+      "source": "B15_effects_02.png",
+      "src_box": [
+        914,
+        248,
+        932,
+        266
+      ],
+      "mean_rgb": [
+        76.6,
+        70.5,
+        81.8
+      ],
+      "max_lum": 107.7,
+      "bright_px": 0
+    },
+    {
+      "file": "smoke_05.png",
+      "kind": "smoke",
+      "source": "B15_effects_02.png",
+      "src_box": [
+        1290,
+        270,
+        1312,
+        288
+      ],
+      "mean_rgb": [
+        92.7,
+        86.5,
+        94.4
+      ],
+      "max_lum": 149.0,
+      "bright_px": 0
+    },
+    {
+      "file": "sparkle_04.png",
+      "kind": "sparkle",
+      "source": "B15_effects_01.png",
+      "src_box": [
+        1280,
+        678,
+        1296,
+        694
+      ],
+      "mean_rgb": [
+        53.1,
+        54.8,
+        22.9
+      ],
+      "max_lum": 245.7,
+      "bright_px": 13
+    },
+    {
+      "file": "sparkle_05.png",
+      "kind": "sparkle",
+      "source": "B15_effects_01.png",
+      "src_box": [
+        890,
+        704,
+        906,
+        720
+      ],
+      "mean_rgb": [
+        56.5,
+        58.4,
+        21.0
+      ],
+      "max_lum": 244.0,
+      "bright_px": 5
+    },
+    {
+      "file": "leaf_00.png",
+      "kind": "leaf",
+      "source": "B15_effects_01.png",
+      "src_box": [
+        920,
+        252,
+        932,
+        268
+      ],
+      "mean_rgb": [
+        112.3,
+        150.5,
+        61.1
+      ],
+      "max_lum": 160.7,
+      "bright_px": 0
+    },
+    {
+      "file": "leaf_01.png",
+      "kind": "leaf",
+      "source": "B15_effects_01.png",
+      "src_box": [
+        1088,
+        60,
+        1098,
+        80
+      ],
+      "mean_rgb": [
+        68.8,
+        105.2,
+        48.6
+      ],
+      "max_lum": 147.3,
+      "bright_px": 0
+    },
+    {
+      "file": "leaf_02.png",
+      "kind": "leaf",
+      "source": "B15_effects_01.png",
+      "src_box": [
+        1386,
+        368,
+        1402,
+        382
+      ],
+      "mean_rgb": [
+        102.2,
+        143.2,
+        60.2
+      ],
+      "max_lum": 157.7,
+      "bright_px": 0
+    },
+    {
+      "file": "leaf_03.png",
+      "kind": "leaf",
+      "source": "B15_effects_01.png",
+      "src_box": [
+        196,
+        372,
+        210,
+        388
+      ],
+      "mean_rgb": [
+        103.3,
+        142.4,
+        62.1
+      ],
+      "max_lum": 156.0,
+      "bright_px": 0
+    },
+    {
+      "file": "leaf_04.png",
+      "kind": "leaf",
+      "source": "B15_effects_01.png",
+      "src_box": [
+        448,
+        252,
+        468,
+        264
+      ],
+      "mean_rgb": [
+        95.7,
+        135.7,
+        56.6
+      ],
+      "max_lum": 154.0,
+      "bright_px": 0
+    },
+    {
+      "file": "leaf_05.png",
+      "kind": "leaf",
+      "source": "B15_effects_01.png",
+      "src_box": [
+        682,
+        234,
+        698,
+        250
+      ],
+      "mean_rgb": [
+        94.3,
+        135.9,
+        60.7
+      ],
+      "max_lum": 167.7,
+      "bright_px": 0
+    }
+  ],
+  "counts": {
+    "smoke": 6,
+    "sparkle": 6,
+    "leaf": 6
+  },
+  "filter": "NEAREST",
+  "target_max_px": 32,
+  "note": "Small FX islands from B15; sparkle via bright-pixel heuristic"
+}

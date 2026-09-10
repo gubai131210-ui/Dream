@@ -1,0 +1,59 @@
+[gd_scene load_steps=5 format=3 uid="uid://dream_world_hub"]
+
+[ext_resource type="Script" path="res://scripts/hub/hub_controller.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/core/camera_controller.gd" id="2"]
+[ext_resource type="Texture2D" path="res://assets/raw/references/A01_world_overview.png" id="3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_square"]
+size = Vector2(220, 180)
+
+[node name="WorldHub" type="Node2D"]
+script = ExtResource("1")
+hub_mode = "world"
+
+[node name="MapSprite" type="Sprite2D" parent="."]
+texture_filter = 0
+texture = ExtResource("3")
+
+[node name="CameraController" type="Camera2D" parent="."]
+script = ExtResource("2")
+min_zoom = 0.25
+max_zoom = 2.5
+
+[node name="Hotspots" type="Node2D" parent="."]
+
+[node name="VillageSquare" type="Area2D" parent="Hotspots"]
+position = Vector2(60, 80)
+input_pickable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/VillageSquare"]
+shape = SubResource("RectangleShape2D_square")
+
+[node name="Hint" type="Polygon2D" parent="Hotspots/VillageSquare"]
+color = Color(1, 0.9, 0.2, 0.28)
+polygon = PackedVector2Array(-110, -90, 110, -90, 110, 90, -110, 90)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="TopBar" type="HBoxContainer" parent="UI"]
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 980.0
+offset_bottom = 56.0
+theme_override_constants/separation = 12
+
+[node name="Status" type="Label" parent="UI/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "世界总览"
+
+[node name="Buttons" type="HBoxContainer" parent="UI/TopBar"]
+layout_mode = 2
+
+[node name="EnterSquare" type="Button" parent="UI/TopBar/Buttons"]
+layout_mode = 2
+text = "进入村庄广场"
+
+[node name="SwitchOverview" type="Button" parent="UI/TopBar/Buttons"]
+layout_mode = 2
+text = "场景连接总览"

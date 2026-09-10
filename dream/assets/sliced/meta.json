@@ -1,0 +1,12 @@
+{
+  "base_tile": 32,
+  "counts": {
+    "grass": 96,
+    "path": 63,
+    "water": 40,
+    "props": 76,
+    "buildings": 29
+  },
+  "total_sliced": 304,
+  "failures": []
+}

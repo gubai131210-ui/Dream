@@ -1,0 +1,11 @@
+{
+  "source": "B03_water_lake.png",
+  "base_tile": 32,
+  "count": 40,
+  "target_size": [
+    32,
+    32
+  ],
+  "resampling": "NEAREST",
+  "note": "lake sheet preferred when identifiable"
+}

@@ -1,0 +1,11 @@
+{
+  "source": "B01-01_grass.png",
+  "base_tile": 32,
+  "method": "grid_12x8_or_cc",
+  "count": 96,
+  "target_size": [
+    32,
+    32
+  ],
+  "resampling": "NEAREST"
+}

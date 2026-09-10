@@ -1,0 +1,169 @@
+{
+  "source": "B03_water_03.png",
+  "base_tile": 32,
+  "filter": "NEAREST",
+  "tiles": [
+    {
+      "file": "tile_000.png",
+      "src_box": [
+        24,
+        22,
+        128,
+        130
+      ],
+      "src_wh": [
+        104,
+        108
+      ]
+    },
+    {
+      "file": "tile_001.png",
+      "src_box": [
+        144,
+        22,
+        250,
+        130
+      ],
+      "src_wh": [
+        106,
+        108
+      ]
+    },
+    {
+      "file": "tile_002.png",
+      "src_box": [
+        266,
+        22,
+        368,
+        130
+      ],
+      "src_wh": [
+        102,
+        108
+      ]
+    },
+    {
+      "file": "tile_003.png",
+      "src_box": [
+        384,
+        22,
+        484,
+        130
+      ],
+      "src_wh": [
+        100,
+        108
+      ]
+    },
+    {
+      "file": "tile_004.png",
+      "src_box": [
+        498,
+        22,
+        598,
+        130
+      ],
+      "src_wh": [
+        100,
+        108
+      ]
+    },
+    {
+      "file": "tile_005.png",
+      "src_box": [
+        614,
+        22,
+        716,
+        130
+      ],
+      "src_wh": [
+        102,
+        108
+      ]
+    },
+    {
+      "file": "tile_006.png",
+      "src_box": [
+        732,
+        22,
+        834,
+        130
+      ],
+      "src_wh": [
+        102,
+        108
+      ]
+    },
+    {
+      "file": "tile_007.png",
+      "src_box": [
+        850,
+        22,
+        952,
+        130
+      ],
+      "src_wh": [
+        102,
+        108
+      ]
+    }
+  ],
+  "atlas": "water_atlas.png",
+  "ripple_frames": [
+    {
+      "file": "water_frame_0.png",
+      "src_box": [
+        24,
+        22,
+        128,
+        130
+      ]
+    },
+    {
+      "file": "water_frame_1.png",
+      "src_box": [
+        144,
+        22,
+        250,
+        130
+      ]
+    },
+    {
+      "file": "water_frame_2.png",
+      "src_box": [
+        266,
+        22,
+        368,
+        130
+      ]
+    },
+    {
+      "file": "water_frame_3.png",
+      "src_box": [
+        384,
+        22,
+        484,
+        130
+      ]
+    },
+    {
+      "file": "water_frame_4.png",
+      "src_box": [
+        498,
+        22,
+        598,
+        130
+      ]
+    },
+    {
+      "file": "water_frame_5.png",
+      "src_box": [
+        614,
+        22,
+        716,
+        130
+      ]
+    }
+  ],
+  "note": "Extracted 8 water tiles + 6 ripple frames from B03_water_03.png"
+}

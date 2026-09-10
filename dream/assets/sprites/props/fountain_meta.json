@@ -1,0 +1,14 @@
+{
+  "found": true,
+  "file": "plaza_fountain.png",
+  "source": "B11-05_fountain.png",
+  "src_box": [
+    898,
+    74,
+    1226,
+    466
+  ],
+  "height_px": 96,
+  "filter": "NEAREST",
+  "note": "Used B11-05_fountain.png (fountain sheet). B11-06 is mailbox_board, not fountain \u2014 preferred B11-05_fountain."
+}

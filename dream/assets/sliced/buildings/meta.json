@@ -1,0 +1,531 @@
+{
+  "base_tile": 32,
+  "cottage_height_px": 160,
+  "large_height_px": 224,
+  "count": 29,
+  "resampling": "NEAREST",
+  "items": [
+    {
+      "file": "B08-01_agriculture_01.png",
+      "source": "B08-01_agriculture.png",
+      "native_bbox": [
+        16,
+        18,
+        445,
+        392
+      ],
+      "native_height": 374,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        184,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-01_agriculture_02.png",
+      "source": "B08-01_agriculture.png",
+      "native_bbox": [
+        497,
+        70,
+        774,
+        404
+      ],
+      "native_height": 334,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        133,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-01_agriculture_03.png",
+      "source": "B08-01_agriculture.png",
+      "native_bbox": [
+        811,
+        48,
+        1237,
+        392
+      ],
+      "native_height": 344,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        198,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-01_agriculture_04.png",
+      "source": "B08-01_agriculture.png",
+      "native_bbox": [
+        444,
+        431,
+        820,
+        841
+      ],
+      "native_height": 410,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        147,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-01_agriculture_05.png",
+      "source": "B08-01_agriculture.png",
+      "native_bbox": [
+        879,
+        438,
+        1212,
+        862
+      ],
+      "native_height": 424,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        126,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-01_agriculture_06.png",
+      "source": "B08-01_agriculture.png",
+      "native_bbox": [
+        37,
+        549,
+        377,
+        824
+      ],
+      "native_height": 275,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        198,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-01_agriculture_07.png",
+      "source": "B08-01_agriculture.png",
+      "native_bbox": [
+        546,
+        865,
+        716,
+        1220
+      ],
+      "native_height": 355,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        77,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-02_houses_01.png",
+      "source": "B08-02_houses.png",
+      "native_bbox": [
+        392,
+        68,
+        874,
+        511
+      ],
+      "native_height": 443,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        174,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-02_houses_02.png",
+      "source": "B08-02_houses.png",
+      "native_bbox": [
+        932,
+        74,
+        1217,
+        516
+      ],
+      "native_height": 442,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        103,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-02_houses_03.png",
+      "source": "B08-02_houses.png",
+      "native_bbox": [
+        39,
+        125,
+        336,
+        507
+      ],
+      "native_height": 382,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        124,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-02_houses_04.png",
+      "source": "B08-02_houses.png",
+      "native_bbox": [
+        42,
+        585,
+        588,
+        1171
+      ],
+      "native_height": 586,
+      "target_height_px": 224,
+      "target_height_tiles": 7.0,
+      "size": [
+        209,
+        224
+      ],
+      "role": "landmark"
+    },
+    {
+      "file": "B08-02_houses_05.png",
+      "source": "B08-02_houses.png",
+      "native_bbox": [
+        652,
+        560,
+        1217,
+        1186
+      ],
+      "native_height": 626,
+      "target_height_px": 224,
+      "target_height_tiles": 7.0,
+      "size": [
+        202,
+        224
+      ],
+      "role": "landmark"
+    },
+    {
+      "file": "B08-03_shops_01.png",
+      "source": "B08-03_shops.png",
+      "native_bbox": [
+        17,
+        75,
+        408,
+        558
+      ],
+      "native_height": 483,
+      "target_height_px": 224,
+      "target_height_tiles": 7.0,
+      "size": [
+        181,
+        224
+      ],
+      "role": "landmark"
+    },
+    {
+      "file": "B08-03_shops_02.png",
+      "source": "B08-03_shops.png",
+      "native_bbox": [
+        436,
+        72,
+        830,
+        554
+      ],
+      "native_height": 482,
+      "target_height_px": 224,
+      "target_height_tiles": 7.0,
+      "size": [
+        183,
+        224
+      ],
+      "role": "landmark"
+    },
+    {
+      "file": "B08-03_shops_03.png",
+      "source": "B08-03_shops.png",
+      "native_bbox": [
+        858,
+        108,
+        1241,
+        586
+      ],
+      "native_height": 478,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        128,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-03_shops_04.png",
+      "source": "B08-03_shops.png",
+      "native_bbox": [
+        15,
+        642,
+        404,
+        1137
+      ],
+      "native_height": 495,
+      "target_height_px": 224,
+      "target_height_tiles": 7.0,
+      "size": [
+        176,
+        224
+      ],
+      "role": "landmark"
+    },
+    {
+      "file": "B08-03_shops_05.png",
+      "source": "B08-03_shops.png",
+      "native_bbox": [
+        435,
+        676,
+        820,
+        1128
+      ],
+      "native_height": 452,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        136,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-03_shops_06.png",
+      "source": "B08-03_shops.png",
+      "native_bbox": [
+        847,
+        689,
+        1241,
+        1129
+      ],
+      "native_height": 440,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        143,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-04_public_01.png",
+      "source": "B08-04_public.png",
+      "native_bbox": [
+        8,
+        54,
+        422,
+        570
+      ],
+      "native_height": 516,
+      "target_height_px": 224,
+      "target_height_tiles": 7.0,
+      "size": [
+        180,
+        224
+      ],
+      "role": "landmark"
+    },
+    {
+      "file": "B08-04_public_02.png",
+      "source": "B08-04_public.png",
+      "native_bbox": [
+        434,
+        100,
+        819,
+        542
+      ],
+      "native_height": 442,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        139,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-04_public_03.png",
+      "source": "B08-04_public.png",
+      "native_bbox": [
+        840,
+        138,
+        1244,
+        547
+      ],
+      "native_height": 409,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        158,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-04_public_04.png",
+      "source": "B08-04_public.png",
+      "native_bbox": [
+        424,
+        613,
+        740,
+        1169
+      ],
+      "native_height": 556,
+      "target_height_px": 224,
+      "target_height_tiles": 7.0,
+      "size": [
+        127,
+        224
+      ],
+      "role": "landmark"
+    },
+    {
+      "file": "B08-04_public_05.png",
+      "source": "B08-04_public.png",
+      "native_bbox": [
+        14,
+        699,
+        413,
+        1141
+      ],
+      "native_height": 442,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        144,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-04_public_06.png",
+      "source": "B08-04_public.png",
+      "native_bbox": [
+        754,
+        750,
+        1242,
+        1147
+      ],
+      "native_height": 397,
+      "target_height_px": 160,
+      "target_height_tiles": 5.0,
+      "size": [
+        197,
+        160
+      ],
+      "role": "cottage"
+    },
+    {
+      "file": "B08-05_special_01.png",
+      "source": "B08-05_special.png",
+      "native_bbox": [
+        16,
+        15,
+        373,
+        632
+      ],
+      "native_height": 617,
+      "target_height_px": 224,
+      "target_height_tiles": 7.0,
+      "size": [
+        130,
+        224
+      ],
+      "role": "landmark"
+    },
+    {
+      "file": "B08-05_special_02.png",
+      "source": "B08-05_special.png",
+      "native_bbox": [
+        893,
+        72,
+        1242,
+        602
+      ],
+      "native_height": 530,
+      "target_height_px": 224,
+      "target_height_tiles": 7.0,
+      "size": [
+        148,
+        224
+      ],
+      "role": "landmark"
+    },
+    {
+      "file": "B08-05_special_03.png",
+      "source": "B08-05_special.png",
+      "native_bbox": [
+        406,
+        123,
+        867,
+        607
+      ],
+      "native_height": 484,
+      "target_height_px": 224,
+      "target_height_tiles": 7.0,
+      "size": [
+        213,
+        224
+      ],
+      "role": "landmark"
+    },
+    {
+      "file": "B08-05_special_04.png",
+      "source": "B08-05_special.png",
+      "native_bbox": [
+        742,
+        609,
+        1204,
+        1227
+      ],
+      "native_height": 618,
+      "target_height_px": 224,
+      "target_height_tiles": 7.0,
+      "size": [
+        167,
+        224
+      ],
+      "role": "landmark"
+    },
+    {
+      "file": "B08-05_special_05.png",
+      "source": "B08-05_special.png",
+      "native_bbox": [
+        108,
+        679,
+        679,
+        1164
+      ],
+      "native_height": 485,
+      "target_height_px": 224,
+      "target_height_tiles": 7.0,
+      "size": [
+        264,
+        224
+      ],
+      "role": "landmark"
+    }
+  ]
+}

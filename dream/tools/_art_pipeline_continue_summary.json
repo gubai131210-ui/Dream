@@ -1,0 +1,89 @@
+{
+  "file_counts": {
+    "sliced/water/tile_*.png": 8,
+    "tilesets/water_atlas.png": 1,
+    "sprites/fx/water_frame_*.png": 6,
+    "sprites/fx/smoke_*.png": 6,
+    "sprites/fx/sparkle_*.png": 6,
+    "sprites/fx/leaf_*.png": 6,
+    "sprites/fx total png": 32,
+    "sprites/npc/npc_*.png": 3,
+    "sprites/npc/idle_frame_*.png": 4,
+    "sprites/trees/tree_*.png": 4,
+    "sprites/props/plaza_fountain.png": 1
+  },
+  "meta_files": {
+    "sliced\\water\\meta.json": true,
+    "sprites\\fx\\water_ripple_meta.json": true,
+    "sprites\\fx\\fx_meta.json": true,
+    "sprites\\npc\\meta.json": true,
+    "sprites\\trees\\meta.json": true,
+    "sprites\\props\\fountain_meta.json": true
+  },
+  "water_source": "B03_water_03.png",
+  "npc_idle": {
+    "has_idle_animation": true,
+    "source": "B14_npc_01.png",
+    "frame_count": 4,
+    "color_dists": [
+      0.72,
+      0.45,
+      1.33
+    ],
+    "frames": [
+      {
+        "file": "idle_frame_0.png",
+        "src_box": [
+          90,
+          90,
+          182,
+          262
+        ]
+      },
+      {
+        "file": "idle_frame_1.png",
+        "src_box": [
+          270,
+          90,
+          358,
+          262
+        ]
+      },
+      {
+        "file": "idle_frame_2.png",
+        "src_box": [
+          448,
+          90,
+          536,
+          262
+        ]
+      },
+      {
+        "file": "idle_frame_3.png",
+        "src_box": [
+          626,
+          90,
+          714,
+          262
+        ]
+      }
+    ],
+    "note": "Real sheet row used; no synthetic offset duplicates."
+  },
+  "fountain": {
+    "found": true,
+    "file": "plaza_fountain.png",
+    "source": "B11-05_fountain.png",
+    "src_box": [
+      898,
+      74,
+      1226,
+      466
+    ],
+    "height_px": 96,
+    "filter": "NEAREST",
+    "note": "Used B11-05_fountain.png (fountain sheet). B11-06 is mailbox_board, not fountain \u2014 preferred B11-05_fountain."
+  },
+  "total_new_pngs": 45,
+  "total_pipeline_pngs": 45
+}

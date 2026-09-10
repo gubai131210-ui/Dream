@@ -1,0 +1,695 @@
+{
+  "base_tile": 32,
+  "count": 76,
+  "resampling": "NEAREST",
+  "items": [
+    {
+      "file": "B11-01_barrels_01.png",
+      "source": "B11-01_barrels.png",
+      "size": [
+        70,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-01_barrels_02.png",
+      "source": "B11-01_barrels.png",
+      "size": [
+        73,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-01_barrels_03.png",
+      "source": "B11-01_barrels.png",
+      "size": [
+        76,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-01_barrels_04.png",
+      "source": "B11-01_barrels.png",
+      "size": [
+        75,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-01_barrels_05.png",
+      "source": "B11-01_barrels.png",
+      "size": [
+        70,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-01_barrels_06.png",
+      "source": "B11-01_barrels.png",
+      "size": [
+        62,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-01_barrels_07.png",
+      "source": "B11-01_barrels.png",
+      "size": [
+        84,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-01_barrels_08.png",
+      "source": "B11-01_barrels.png",
+      "size": [
+        69,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-01_barrels_09.png",
+      "source": "B11-01_barrels.png",
+      "size": [
+        72,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-01_barrels_10.png",
+      "source": "B11-01_barrels.png",
+      "size": [
+        92,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-02_crates_boxes_01.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        85,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-02_crates_boxes_02.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        86,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-02_crates_boxes_03.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        92,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-02_crates_boxes_04.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        82,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-02_crates_boxes_05.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        104,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-02_crates_boxes_06.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        85,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-02_crates_boxes_07.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        103,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-02_crates_boxes_08.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        123,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-02_crates_boxes_09.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        123,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-02_crates_boxes_10.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        112,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-02_crates_boxes_11.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        83,
+        48
+      ],
+      "target_height_px": 48
+    },
+    {
+      "file": "B11-02_crates_boxes_12.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        60,
+        48
+      ],
+      "target_height_px": 48
+    },
+    {
+      "file": "B11-02_crates_boxes_13.png",
+      "source": "B11-02_crates_boxes.png",
+      "size": [
+        71,
+        48
+      ],
+      "target_height_px": 48
+    },
+    {
+      "file": "B11-03_well_01.png",
+      "source": "B11-03_well.png",
+      "size": [
+        83,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-03_well_02.png",
+      "source": "B11-03_well.png",
+      "size": [
+        97,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-03_well_03.png",
+      "source": "B11-03_well.png",
+      "size": [
+        94,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-03_well_04.png",
+      "source": "B11-03_well.png",
+      "size": [
+        96,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-03_well_05.png",
+      "source": "B11-03_well.png",
+      "size": [
+        78,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-03_well_06.png",
+      "source": "B11-03_well.png",
+      "size": [
+        101,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-03_well_07.png",
+      "source": "B11-03_well.png",
+      "size": [
+        87,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-03_well_08.png",
+      "source": "B11-03_well.png",
+      "size": [
+        84,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-03_well_09.png",
+      "source": "B11-03_well.png",
+      "size": [
+        100,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-03_well_10.png",
+      "source": "B11-03_well.png",
+      "size": [
+        114,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-04_benches_tables_01.png",
+      "source": "B11-04_benches_tables.png",
+      "size": [
+        167,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-04_benches_tables_02.png",
+      "source": "B11-04_benches_tables.png",
+      "size": [
+        213,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-04_benches_tables_03.png",
+      "source": "B11-04_benches_tables.png",
+      "size": [
+        206,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-04_benches_tables_04.png",
+      "source": "B11-04_benches_tables.png",
+      "size": [
+        64,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-04_benches_tables_05.png",
+      "source": "B11-04_benches_tables.png",
+      "size": [
+        61,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-04_benches_tables_06.png",
+      "source": "B11-04_benches_tables.png",
+      "size": [
+        88,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-04_benches_tables_07.png",
+      "source": "B11-04_benches_tables.png",
+      "size": [
+        96,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-04_benches_tables_08.png",
+      "source": "B11-04_benches_tables.png",
+      "size": [
+        101,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-04_benches_tables_09.png",
+      "source": "B11-04_benches_tables.png",
+      "size": [
+        63,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-04_benches_tables_10.png",
+      "source": "B11-04_benches_tables.png",
+      "size": [
+        142,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-04_benches_tables_11.png",
+      "source": "B11-04_benches_tables.png",
+      "size": [
+        94,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-04_benches_tables_12.png",
+      "source": "B11-04_benches_tables.png",
+      "size": [
+        98,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-05_fountain_01.png",
+      "source": "B11-05_fountain.png",
+      "size": [
+        80,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-05_fountain_02.png",
+      "source": "B11-05_fountain.png",
+      "size": [
+        67,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-05_fountain_03.png",
+      "source": "B11-05_fountain.png",
+      "size": [
+        93,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-05_fountain_04.png",
+      "source": "B11-05_fountain.png",
+      "size": [
+        100,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-05_fountain_05.png",
+      "source": "B11-05_fountain.png",
+      "size": [
+        75,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-05_fountain_06.png",
+      "source": "B11-05_fountain.png",
+      "size": [
+        78,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-05_fountain_07.png",
+      "source": "B11-05_fountain.png",
+      "size": [
+        99,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-05_fountain_08.png",
+      "source": "B11-05_fountain.png",
+      "size": [
+        104,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-05_fountain_09.png",
+      "source": "B11-05_fountain.png",
+      "size": [
+        121,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-05_fountain_10.png",
+      "source": "B11-05_fountain.png",
+      "size": [
+        124,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-06_mailbox_board_01.png",
+      "source": "B11-06_mailbox_board.png",
+      "size": [
+        121,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-06_mailbox_board_02.png",
+      "source": "B11-06_mailbox_board.png",
+      "size": [
+        61,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-06_mailbox_board_03.png",
+      "source": "B11-06_mailbox_board.png",
+      "size": [
+        89,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-06_mailbox_board_04.png",
+      "source": "B11-06_mailbox_board.png",
+      "size": [
+        103,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-06_mailbox_board_05.png",
+      "source": "B11-06_mailbox_board.png",
+      "size": [
+        99,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-06_mailbox_board_06.png",
+      "source": "B11-06_mailbox_board.png",
+      "size": [
+        101,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-06_mailbox_board_07.png",
+      "source": "B11-06_mailbox_board.png",
+      "size": [
+        111,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-06_mailbox_board_08.png",
+      "source": "B11-06_mailbox_board.png",
+      "size": [
+        112,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-06_mailbox_board_09.png",
+      "source": "B11-06_mailbox_board.png",
+      "size": [
+        134,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-06_mailbox_board_10.png",
+      "source": "B11-06_mailbox_board.png",
+      "size": [
+        182,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-06_mailbox_board_11.png",
+      "source": "B11-06_mailbox_board.png",
+      "size": [
+        49,
+        46
+      ],
+      "target_height_px": 46
+    },
+    {
+      "file": "B11-06_mailbox_board_12.png",
+      "source": "B11-06_mailbox_board.png",
+      "size": [
+        41,
+        27
+      ],
+      "target_height_px": 27
+    },
+    {
+      "file": "B11-08_pots_lamps_01.png",
+      "source": "B11-08_pots_lamps.png",
+      "size": [
+        47,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-08_pots_lamps_02.png",
+      "source": "B11-08_pots_lamps.png",
+      "size": [
+        75,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-08_pots_lamps_03.png",
+      "source": "B11-08_pots_lamps.png",
+      "size": [
+        70,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-08_pots_lamps_04.png",
+      "source": "B11-08_pots_lamps.png",
+      "size": [
+        81,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-08_pots_lamps_05.png",
+      "source": "B11-08_pots_lamps.png",
+      "size": [
+        75,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-08_pots_lamps_06.png",
+      "source": "B11-08_pots_lamps.png",
+      "size": [
+        32,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-08_pots_lamps_07.png",
+      "source": "B11-08_pots_lamps.png",
+      "size": [
+        48,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-08_pots_lamps_08.png",
+      "source": "B11-08_pots_lamps.png",
+      "size": [
+        42,
+        96
+      ],
+      "target_height_px": 96
+    },
+    {
+      "file": "B11-08_pots_lamps_09.png",
+      "source": "B11-08_pots_lamps.png",
+      "size": [
+        58,
+        96
+      ],
+      "target_height_px": 96
+    }
+  ],
+  "prop_height_band_px": [
+    16,
+    96
+  ]
+}

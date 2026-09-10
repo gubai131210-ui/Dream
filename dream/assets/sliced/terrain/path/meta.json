@@ -1,0 +1,10 @@
+{
+  "source": "B02_path_dirt_trail.png",
+  "base_tile": 32,
+  "count": 63,
+  "target_size": [
+    32,
+    32
+  ],
+  "resampling": "NEAREST"
+}

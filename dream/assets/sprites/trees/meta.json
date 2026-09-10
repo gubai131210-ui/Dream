@@ -1,0 +1,57 @@
+{
+  "source": "B05_trees_02.png",
+  "trees": [
+    {
+      "file": "tree_00.png",
+      "source": "B05_trees_02.png",
+      "src_box": [
+        15,
+        318,
+        285,
+        621
+      ],
+      "height_px": 128,
+      "filter": "NEAREST"
+    },
+    {
+      "file": "tree_01.png",
+      "source": "B05_trees_02.png",
+      "src_box": [
+        315,
+        324,
+        612,
+        621
+      ],
+      "height_px": 144,
+      "filter": "NEAREST"
+    },
+    {
+      "file": "tree_02.png",
+      "source": "B05_trees_02.png",
+      "src_box": [
+        18,
+        633,
+        285,
+        933
+      ],
+      "height_px": 152,
+      "filter": "NEAREST"
+    },
+    {
+      "file": "tree_03.png",
+      "source": "B05_trees_02.png",
+      "src_box": [
+        315,
+        639,
+        612,
+        936
+      ],
+      "height_px": 160,
+      "filter": "NEAREST"
+    }
+  ],
+  "height_range": [
+    128,
+    160
+  ]
+}

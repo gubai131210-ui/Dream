@@ -1,0 +1,20 @@
+# Godot
+**/ .godot/
+**/.godot/
+**/android/
+*.translation
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+
+# Local previews / analysis
+_preview/
+_analyze_scale.py
+**/addons/godot_mcp/cache/
+
+# Build
+*.mono/
+data_*/
