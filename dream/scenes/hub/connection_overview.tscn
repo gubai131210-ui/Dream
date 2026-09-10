@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dream_connection_hub"]
+[gd_scene load_steps=7 format=3 uid="uid://dream_connection_hub"]
 
 [ext_resource type="Script" path="res://scripts/hub/hub_controller.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/core/camera_controller.gd" id="2"]
@@ -6,6 +6,12 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_square"]
 size = Vector2(240, 160)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_residential"]
+size = Vector2(200, 150)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_farm"]
+size = Vector2(210, 150)
 
 [node name="ConnectionOverview" type="Node2D"]
 script = ExtResource("1")
@@ -33,12 +39,34 @@ shape = SubResource("RectangleShape2D_square")
 color = Color(0.3, 0.85, 1, 0.3)
 polygon = PackedVector2Array(-120, -80, 120, -80, 120, 80, -120, 80)
 
+[node name="VillageResidential" type="Area2D" parent="Hotspots"]
+position = Vector2(220, 100)
+input_pickable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/VillageResidential"]
+shape = SubResource("RectangleShape2D_residential")
+
+[node name="Hint" type="Polygon2D" parent="Hotspots/VillageResidential"]
+color = Color(0.35, 0.95, 0.45, 0.3)
+polygon = PackedVector2Array(-100, -75, 100, -75, 100, 75, -100, 75)
+
+[node name="FarmResidential" type="Area2D" parent="Hotspots"]
+position = Vector2(-160, 20)
+input_pickable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hotspots/FarmResidential"]
+shape = SubResource("RectangleShape2D_farm")
+
+[node name="Hint" type="Polygon2D" parent="Hotspots/FarmResidential"]
+color = Color(0.95, 0.55, 0.25, 0.3)
+polygon = PackedVector2Array(-105, -75, 105, -75, 105, 75, -105, 75)
+
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="TopBar" type="HBoxContainer" parent="UI"]
 offset_left = 12.0
 offset_top = 12.0
-offset_right = 980.0
+offset_right = 1100.0
 offset_bottom = 56.0
 theme_override_constants/separation = 12
 
@@ -49,10 +77,19 @@ text = "场景连接总览"
 
 [node name="Buttons" type="HBoxContainer" parent="UI/TopBar"]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="EnterSquare" type="Button" parent="UI/TopBar/Buttons"]
 layout_mode = 2
 text = "进入村庄广场"
+
+[node name="EnterResidential" type="Button" parent="UI/TopBar/Buttons"]
+layout_mode = 2
+text = "进入住宅区"
+
+[node name="EnterFarm" type="Button" parent="UI/TopBar/Buttons"]
+layout_mode = 2
+text = "进入农场"
 
 [node name="SwitchOverview" type="Button" parent="UI/TopBar/Buttons"]
 layout_mode = 2
