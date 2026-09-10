@@ -1,10 +1,16 @@
 # Dream Phase 5 — Interior & special areas (draft)
 
-**Status:** DRAFT — **do not start implementation** until outdoor map shell is DONE  
+**Status:** IN PROGRESS — Wave A kickoff: Systems-Interior + C01 vertical slice
 **Depends on:** Outdoor A-class scenes shell ([`PHASE4B.md`](PHASE4B.md) A05–A07, A12–A15 DONE), Phase 4 exit, [`INTERIOR_LIBRARY.md`](INTERIOR_LIBRARY.md), [`ASSET_TAXONOMY.md`](ASSET_TAXONOMY.md), `BUILDING_PLACEMENT.md`, `NPC_ANIM.md`
 
 Phase 5 打开世界 **第二/三层**：可进入室内、地下入口、钓鱼最小闭环、昼夜天气壳。  
 **不**一次实现 C01–C62 全表。
+
+### Current Wave A checkpoint
+
+- `InteriorCraft` builds C01 on a **32px foundation** (floor / wall / door / window / rug tiles) — see [`INTERIOR_FOUNDATION.md`](INTERIOR_FOUNDATION.md).
+- Furniture reuses outdoor wood props at scale **0.55**; warm light is **local** `PointLight2D` (not full-room orange).
+- Remaining Wave A packages stay gated behind this slice's visual QA; extend the same foundation API instead of one-off controllers.
 
 ## Start gate
 
@@ -48,6 +54,7 @@ C06–C11 全套公服、C16 全洞穴族、C23 潜水、C31 下水道、C36 全
 - 禁止节日/夜市整盘新大地图（默认复用广场+装饰层）  
 - 禁止 UI 一个「更多」弹层塞全部室内入口  
 - 禁止复制室外 assembler 改名交差  
+- 禁止室内用棋盘格/平色块地板或整屋橙色洗色冒充温馨（必须先过 `INTERIOR_FOUNDATION.md`）  
 
 ## Acceptance (Wave A)
 

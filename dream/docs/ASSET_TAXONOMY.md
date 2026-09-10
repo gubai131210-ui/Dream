@@ -39,7 +39,7 @@ E 玩法 · F 事件 · G 交互 · H 时空状态
 | --- | --- |
 | A | `assets/raw/A*.png`, `assets/raw/references/` |
 | B | `assets/raw/B*`, `assets/sprites/`, `assets/tilesets/` |
-| C | `scenes/interiors/{c_id}/`, `assets/sprites/interior/`（待建） |
+| C | `scenes/interiors/{c_id}/`, `assets/sprites/interior/` + `tiles/` 32px foundation (`INTERIOR_FOUNDATION.md`) |
 | D | `scenes/dungeons/{id}/`（待建） |
 | E | `scenes/gameplay/` 或挂在室内节点下 |
 | F | `scenes/events/` 或装饰层资源 |
