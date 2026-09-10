@@ -110,12 +110,12 @@ func _river_half_width(ty: float) -> float:
 
 
 func _compute_river_tile(tx: int, ty: int) -> bool:
-	var cx := _river_center_x(float(ty))
-	var hw := _river_half_width(float(ty))
-	var dx := abs(float(tx) - cx)
+	var cx: float = _river_center_x(float(ty))
+	var hw: float = _river_half_width(float(ty))
+	var dx: float = absf(float(tx) - cx)
 	if dx <= hw:
 		return true
-	if dx <= hw + 1.15 and sin(ty * 0.85 + tx * 0.4) > 0.52:
+	if dx <= hw + 1.15 and sin(float(ty) * 0.85 + float(tx) * 0.4) > 0.52:
 		return true
 	return false
 
