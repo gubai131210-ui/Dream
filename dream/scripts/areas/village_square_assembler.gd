@@ -663,9 +663,10 @@ func _snap_patrol_route(waypoints: Array) -> Array[Vector2]:
 		route.append(snapped)
 	if route.size() == 1:
 		# Need a loop: add a nearby walk neighbor if possible.
-		var t := _world_to_tile(route[0])
-		for d in [Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)]:
-			var n := t + d
+		var t: Vector2i = _world_to_tile(route[0])
+		var dirs: Array[Vector2i] = [Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)]
+		for d: Vector2i in dirs:
+			var n: Vector2i = t + d
 			if n.x < 0 or n.y < 0 or n.x >= MAP_W or n.y >= MAP_H:
 				continue
 			if _is_walk_surface(n.x, n.y):
