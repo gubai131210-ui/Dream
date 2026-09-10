@@ -1,0 +1,35 @@
+{
+  "characters": [
+    {
+      "id": "elder_woman",
+      "title": "\u8001\u5987\u4eba",
+      "dir": "elder_woman",
+      "source": "B14_npc_01.png"
+    },
+    {
+      "id": "station_master",
+      "title": "\u7ad9\u957f",
+      "dir": "station_master",
+      "source": "B14_npc_02.png"
+    },
+    {
+      "id": "blacksmith",
+      "title": "\u94c1\u5320",
+      "dir": "blacksmith",
+      "source": "B14_npc_03.png"
+    },
+    {
+      "id": "farmer",
+      "title": "\u519c\u592b",
+      "dir": "farmer",
+      "source": "gen_npc_farmer.png"
+    },
+    {
+      "id": "merchant",
+      "title": "\u5546\u8d29",
+      "dir": "merchant",
+      "source": "gen_npc_merchant.png"
+    }
+  ],
+  "height_px": 56
+}
