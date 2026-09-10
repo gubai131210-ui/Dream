@@ -92,7 +92,7 @@ func _spawn_props(ysort: Node2D) -> void:
 	var samples := [
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(280, 320), "title": "岸边木箱", "desc": "渔民用的湿木箱。", "scale": 0.55},
 		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(980, 560), "title": "浮桶", "desc": "系在岸桩旁的空桶。", "scale": 0.5},
-		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(360, 700), "title": "河岸灯", "desc": "桥头微光。"},
+		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(360, 700), "title": "河岸灯", "desc": "桥头微光。", "scale": 0.55},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):
@@ -101,10 +101,13 @@ func _spawn_props(ysort: Node2D) -> void:
 		var cleared := craft.find_clear_near(pos, 1, 1, 8, true)
 		if cleared != Vector2.ZERO:
 			pos = cleared
+		var t := craft.world_to_tile(pos)
+		if craft.is_water(t.x, t.y):
+			continue
 		craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
-		if s.has("scale"):
-			spr.scale = Vector2(float(s["scale"]), float(s["scale"]))
+		var sc := float(s.get("scale", 0.55))
+		spr.scale = Vector2(sc, sc)
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
@@ -113,12 +116,13 @@ func _spawn_props(ysort: Node2D) -> void:
 func _spawn_trees(ysort: Node2D) -> void:
 	var zone := craft.map_play_rect(2.0)
 	var ideals: Array[Vector2] = []
-	for gy in range(3, MAP_H - 3, 4):
+	# Bank belts only — inset Y so crowns clear map north.
+	for gy in range(4, MAP_H - 3, 4):
 		for gx in [2, 4, 35, 37]:
 			ideals.append(craft.tile_center(gx, gy))
 	for i in ideals.size():
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 6, false)
+		craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 5, false)
 
 
 func _spawn_actors(ysort: Node2D) -> void:

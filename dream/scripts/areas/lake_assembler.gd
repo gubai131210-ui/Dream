@@ -95,8 +95,8 @@ func _paint_shore_ring() -> void:
 func _spawn_props(ysort: Node2D) -> void:
 	var samples := [
 		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(980, 460), "title": "码头桶", "desc": "系缆用空桶。", "scale": 0.5},
-		{"path": "res://assets/sprites/props/crate_1.png", "pos": Vector2(360, 700), "title": "渔获箱", "desc": "湖岸临时货箱。", "scale": 0.55},
-		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(640, 780), "title": "湖灯", "desc": "南岸小径灯。"},
+		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(360, 700), "title": "渔获箱", "desc": "湖岸临时货箱。", "scale": 0.55},
+		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(640, 780), "title": "湖灯", "desc": "南岸小径灯。", "scale": 0.55},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):
@@ -105,10 +105,13 @@ func _spawn_props(ysort: Node2D) -> void:
 		var cleared := craft.find_clear_near(pos, 1, 1, 7, true)
 		if cleared != Vector2.ZERO:
 			pos = cleared
+		var t := craft.world_to_tile(pos)
+		if craft.is_water(t.x, t.y):
+			continue
 		craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
-		if s.has("scale"):
-			spr.scale = Vector2(float(s["scale"]), float(s["scale"]))
+		var sc := float(s.get("scale", 0.55))
+		spr.scale = Vector2(sc, sc)
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
@@ -117,12 +120,13 @@ func _spawn_props(ysort: Node2D) -> void:
 func _spawn_trees(ysort: Node2D) -> void:
 	var zone := craft.map_play_rect(2.0)
 	var ideals: Array[Vector2] = []
-	for a in range(20, 360, 40):
+	# Shore ring — wider angle step, radius inset so AABB fits play rect.
+	for a in range(20, 340, 40):
 		var rad := deg_to_rad(float(a))
-		ideals.append(Vector2(640 + cos(rad) * 480, 480 + sin(rad) * 340))
+		ideals.append(Vector2(640 + cos(rad) * 460, 480 + sin(rad) * 320))
 	for i in ideals.size():
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 6, false)
+		craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 5, false)
 
 
 func _spawn_actors(ysort: Node2D) -> void:
