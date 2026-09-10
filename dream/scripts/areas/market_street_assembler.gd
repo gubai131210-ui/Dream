@@ -282,7 +282,8 @@ func _spawn_buildings(ysort: Node2D) -> void:
 
 
 func _spawn_trees(ysort: Node2D) -> void:
-	# Frame street edges / alcoves — not only map-corner squares.
+	# Frame street edges / alcoves — full crown AABB (no footprint-only).
+	var zone := craft.map_play_rect(2.0)
 	var ideals := [
 		# West river / bridge approach
 		Vector2(180, 120), Vector2(200, 360), Vector2(160, 560),
@@ -296,18 +297,11 @@ func _spawn_trees(ysort: Node2D) -> void:
 		Vector2(240, 760), Vector2(1040, 100),
 	]
 	for i in ideals.size():
-		var pos := craft.find_clear_near(ideals[i], 1, 1, 8, false)
-		if pos == Vector2.ZERO:
-			continue
-		var t := craft.world_to_tile(pos)
-		if craft.is_water(t.x, t.y):
-			continue
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		if not ResourceLoader.exists(path):
+		var spr := craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 8, false)
+		if spr == null:
 			continue
-		craft.add_contact_shadow(ysort, pos, Vector2(22, 8))
-		var spr := craft.spawn_sprite(ysort, path, pos)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.4)
+		var t := craft.world_to_tile(spr.position)
 		if craft.is_bank(t.x, t.y) or craft.touches_water(t.x, t.y):
 			spr.flip_h = (i % 2 == 0)
 

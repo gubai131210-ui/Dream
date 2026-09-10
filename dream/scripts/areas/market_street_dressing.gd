@@ -161,7 +161,7 @@ func _spawn_zone_benches_and_props(ysort: Node2D) -> void:
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
 
-	# Bridge landmark on west span.
+	# Bridge hotspot only (stone deck is path tiles) — no ColorRect landmark slab.
 	var br_lo := 2
 	var br_hi := 5
 	for ty in [14, 15]:
@@ -171,18 +171,13 @@ func _spawn_zone_benches_and_props(ysort: Node2D) -> void:
 				br_hi = maxi(br_hi, tx)
 	var mid_x := int((br_lo + br_hi) * 0.5)
 	var bpos := craft.tile_center(mid_x, 14)
-	var bhs := craft.make_hotspot(
+	craft.make_hotspot(
 		ysort,
 		"市集桥",
 		"西河短跨：石板桥面连向广场方向。",
 		bpos,
 		Vector2(96, 48)
 	)
-	var plank := ColorRect.new()
-	plank.size = Vector2(72, 18)
-	plank.position = Vector2(-36, -8)
-	plank.color = Color(0.45, 0.32, 0.18, 0.55)
-	bhs.get_node("Visual").add_child(plank)
 
 
 func _spawn_actors(ysort: Node2D) -> void:
