@@ -131,57 +131,66 @@ func _paint_winding_dirt() -> void:
 func _spawn_props(ysort: Node2D) -> void:
 	# Sparse forest litter only — no cabin / no plaza furniture cluster.
 	var samples := [
-		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(420, 340), "title": "苔藓行囊", "desc": "被遗弃在树根旁的行囊。", "scale": 0.6},
-		{"path": "res://assets/sprites/props/crate_1.png", "pos": Vector2(720, 580), "title": "朽木箱", "desc": "深林小径旁潮湿木箱。", "scale": 0.5},
-		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(560, 700), "title": "林灯", "desc": "土径急弯处的微弱路灯。"},
+		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(420, 340), "title": "苔藓行囊", "desc": "被遗弃在树根旁的行囊。", "scale": 0.55},
+		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(720, 580), "title": "朽木箱", "desc": "深林小径旁潮湿木箱。", "scale": 0.5},
+		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(560, 700), "title": "林灯", "desc": "土径急弯处的微弱路灯。", "scale": 0.55},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):
 			continue
 		var pos: Vector2 = s["pos"]
 		var cleared := craft.find_clear_near(pos, 1, 1, 7, true)
-		if cleared == Vector2.ZERO:
-			var t := craft.world_to_tile(pos)
-			if craft.is_water(t.x, t.y):
-				continue
-		else:
+		if cleared != Vector2.ZERO:
 			pos = cleared
+		var t := craft.world_to_tile(pos)
+		if craft.is_water(t.x, t.y):
+			continue
 		craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
 		spr.modulate = Color(0.78, 0.82, 0.76)
-		if s.has("scale"):
-			spr.scale = Vector2(float(s["scale"]), float(s["scale"]))
+		var sc := float(s.get("scale", 0.55))
+		spr.scale = Vector2(sc, sc)
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
 
 
 func _spawn_trees(ysort: Node2D) -> void:
-	# Dense but AABB-safe — crowns must fully fit map_play_rect (no half-trees).
-	var zone := craft.map_play_rect(2.5)
+	# Moderately dense canopy — full AABB via spawn_tree (no north-edge crown clip).
+	var zone := craft.map_play_rect(2.0)
 	var ideals: Array[Vector2] = []
-	for gy in range(4, MAP_H - 3, 3):
-		for gx in range(2, MAP_W - 2, 3):
-			var jx := (gy * 17 + gx * 13) % 3 - 1
-			var jy := (gx * 11 + gy * 7) % 3 - 1
-			ideals.append(craft.tile_center(clampi(gx + jx, 2, MAP_W - 3), clampi(gy + jy, 4, MAP_H - 4)))
+	# Step 4 grid + inset from map edges so crowns fit zone.
+	for gy in range(4, MAP_H - 3, 4):
+		for gx in range(3, MAP_W - 3, 4):
+			var jx := (gy * 17 + gx * 13) % 5 - 2
+			var jy := (gx * 11 + gy * 7) % 5 - 2
+			ideals.append(craft.tile_center(clampi(gx + jx, 3, MAP_W - 4), clampi(gy + jy, 4, MAP_H - 4)))
+	# Soft side mass (still inset — no foot on map north rim).
+	ideals.append_array([
+		Vector2(120, 220), Vector2(100, 480), Vector2(140, 720),
+		Vector2(1120, 240), Vector2(1160, 520), Vector2(1100, 760),
+		Vector2(320, 180), Vector2(640, 200), Vector2(900, 190),
+		Vector2(280, 820), Vector2(640, 840), Vector2(960, 800),
+	])
 	var placed := 0
 	for i in ideals.size():
-		var t0 := craft.world_to_tile(ideals[i])
+		var ideal: Vector2 = ideals[i]
+		var t0 := craft.world_to_tile(ideal)
 		if craft.is_water(t0.x, t0.y) or craft.is_dirt(t0.x, t0.y):
 			continue
+		# Keep a narrow visual gap along the trail.
 		var trail := _trail_cx(float(t0.y))
-		if absf(float(t0.x) - trail) < 2.4:
+		if absf(float(t0.x) - trail) < 2.2 and t0.y >= 2 and t0.y <= 27:
 			continue
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		var spr := craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 6, false)
+		var spr := craft.spawn_tree(ysort, path, ideal, zone, 1, 1, 5, false)
 		if spr == null:
 			continue
 		spr.flip_h = (i % 2 == 0)
 		spr.modulate = Color(0.68, 0.74, 0.66)
 		placed += 1
 	if placed < 18:
-		push_warning("ForestDeep: sparse AABB-safe trees (%d)" % placed)
+		push_warning("ForestDeep: sparse tree spawn (%d) — check tree assets / AABB zone" % placed)
 
 
 func _spawn_actors(ysort: Node2D) -> void:
