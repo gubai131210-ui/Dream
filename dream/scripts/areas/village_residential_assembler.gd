@@ -4,7 +4,7 @@ extends Node
 ## A08 village residential — lane grid, yards, south-facing houses north of lanes.
 ## District: residential (AREA_FRAMEWORK). craft.setup(..., "residential").
 ## Uses AreaCraft for masks / paint / footprint / portals (do not duplicate helpers).
-## Pass: masks → ecology → dirt → water → path → buildings → props → trees → actors → FX.
+## Pass: masks -> ecology -> dirt -> water -> path -> buildings -> props -> trees -> actors -> FX.
 
 const MAP_W := 40
 const MAP_H := 30
@@ -233,7 +233,8 @@ func _spawn_props(ysort: Node2D) -> void:
 		if not craft.is_water(craft.world_to_tile(well_pos).x, craft.world_to_tile(well_pos).y):
 			craft.add_contact_shadow(ysort, well_pos, Vector2(20, 8))
 			var wspr := craft.spawn_sprite(ysort, well_path, well_pos)
-			var whs := craft.make_hotspot(ysort, "石井", "住宅区东北石坪水井。", well_pos, Vector2(64, 48))
+			wspr.scale = Vector2(0.55, 0.55)
+			var whs := craft.make_hotspot(ysort, "石井", "住宅区东北石板水井。", well_pos, Vector2(64, 48))
 			wspr.reparent(whs.get_node("Visual"))
 			wspr.position = Vector2.ZERO
 
@@ -245,6 +246,7 @@ func _spawn_props(ysort: Node2D) -> void:
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(620, 480), "title": "路灯", "desc": "主巷路灯。", "hw": 1, "hh": 1, "allow_path": true},
 		{"path": "res://assets/sprites/props/lamp_1.png", "pos": Vector2(880, 480), "title": "路灯", "desc": "主巷东段路灯。", "hw": 1, "hh": 1, "allow_path": true},
 		{"path": "res://assets/sprites/props/well_1.png", "pos": Vector2(480, 280), "title": "院井", "desc": "宅院小井。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/rock_01.png", "pos": Vector2(1080, 640), "title": "院石", "desc": "东南池塘岸边石。", "hw": 1, "hh": 1},
 	]
 	for s in yard_props:
 		if not ResourceLoader.exists(s["path"]):
@@ -260,8 +262,11 @@ func _spawn_props(ysort: Node2D) -> void:
 			if cleared == Vector2.ZERO:
 				continue
 			pos = cleared
+		if craft.is_water(craft.world_to_tile(pos).x, craft.world_to_tile(pos).y):
+			continue
 		craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
+		spr.scale = Vector2(0.55, 0.55)
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(44, 44))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
@@ -280,12 +285,14 @@ func _spawn_fence_props(ysort: Node2D) -> void:
 		Vector2(220, 320), Vector2(340, 320),
 		Vector2(480, 320), Vector2(600, 320),
 		Vector2(740, 320), Vector2(860, 320),
-		Vector2(360, 90), Vector2(480, 90),
-		Vector2(620, 90), Vector2(740, 90),
+		Vector2(360, 160), Vector2(480, 160),
+		Vector2(620, 160), Vector2(740, 160),
 	]
 	for i in posts.size():
 		var pos := craft.find_clear_near(posts[i], 0, 0, 4, false)
 		if pos == Vector2.ZERO:
+			continue
+		if craft.is_water(craft.world_to_tile(pos).x, craft.world_to_tile(pos).y):
 			continue
 		craft.add_contact_shadow(ysort, pos, Vector2(8, 4))
 		var spr := craft.spawn_sprite(ysort, fence_path, pos, -1)
@@ -293,79 +300,63 @@ func _spawn_fence_props(ysort: Node2D) -> void:
 
 
 func _spawn_trees(ysort: Node2D) -> void:
-	# Border / yard trees — plantable only via footprint_ok.
+	# Border / yard trees — full crown AABB via spawn_tree (no north-edge clip).
+	var zone := craft.map_play_rect(2.0)
 	var ideals: Array[Vector2] = [
-		Vector2(120, 80),
+		Vector2(120, 180),
 		Vector2(200, 200),
 		Vector2(100, 400),
 		Vector2(140, 700),
 		Vector2(400, 720),
 		Vector2(700, 740),
 		Vector2(1000, 700),
-		Vector2(1180, 200),
+		Vector2(1180, 220),
 		Vector2(1180, 520),
-		Vector2(500, 80),
-		Vector2(780, 80),
-		Vector2(1080, 80),
+		Vector2(500, 160),
+		Vector2(780, 160),
+		Vector2(1080, 160),
 		Vector2(300, 520),
 		Vector2(980, 280),
 		Vector2(200, 560),
 	]
 	for i in ideals.size():
-		var pos := craft.find_clear_near(ideals[i], 1, 1, 8, false)
-		if pos == Vector2.ZERO:
-			continue
-		var t := craft.world_to_tile(pos)
-		if not craft.is_plantable(t.x, t.y):
-			continue
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		if not ResourceLoader.exists(path):
+		var spr := craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 8, false)
+		if spr == null:
 			continue
-		craft.add_contact_shadow(ysort, pos, Vector2(20, 8))
-		var spr := craft.spawn_sprite(ysort, path, pos)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.4)
+		var t := craft.world_to_tile(spr.position)
 		if craft.is_bank(t.x, t.y) or craft.touches_water(t.x, t.y):
 			spr.flip_h = (i % 2 == 0)
 
 
 func _spawn_actors(ysort: Node2D) -> void:
+	# PatrolActor walk frames — never tween-slide static sprites.
 	var actors := [
 		{
-			"path": "res://assets/sprites/npc/npc_00.png",
+			"id": "elder_woman",
 			"title": "邻居",
 			"desc": "沿主巷土路散步。",
 			"waypoints": [Vector2(320, 500), Vector2(560, 500), Vector2(800, 500), Vector2(560, 500)],
 		},
 		{
-			"path": "res://assets/sprites/npc/npc_01.png",
+			"id": "farmer",
 			"title": "孩童",
-			"desc": "在主巷与南岔口之间跑动。",
+			"desc": "在主巷与南档口之间跑动。",
 			"waypoints": [Vector2(640, 500), Vector2(640, 640), Vector2(640, 500)],
 		},
 		{
-			"path": "res://assets/sprites/npc/npc_02.png",
+			"id": "merchant",
 			"title": "访客",
 			"desc": "从西石路走进住宅区。",
 			"waypoints": [Vector2(80, 500), Vector2(240, 500), Vector2(400, 500), Vector2(240, 500)],
 		},
 	]
 	for a in actors:
-		if not ResourceLoader.exists(a["path"]):
-			continue
-		var route: Array[Vector2] = craft.snap_patrol_route(a["waypoints"])
-		if route.is_empty():
-			continue
-		var start: Vector2 = route[0]
-		var hs := craft.make_hotspot(ysort, a["title"], a["desc"], start, Vector2(40, 56))
-		var visual: Node2D = hs.get_node("Visual")
-		craft.add_contact_shadow(visual, Vector2.ZERO, Vector2(12, 5))
-		var spr := craft.spawn_sprite(visual, a["path"], Vector2.ZERO)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.35)
-		craft.animate_patrol(hs, route)
+		craft.spawn_patrol_actor(ysort, a["id"], a["title"], a["desc"], a["waypoints"])
 
 
 func _spawn_portals(ysort: Node2D) -> void:
-	# West / north edges → village square.
+	# West / north edges -> village square.
 	craft.make_portal(
 		ysort,
 		"→广场",
@@ -380,7 +371,7 @@ func _spawn_portals(ysort: Node2D) -> void:
 		Vector2(640, 40),
 		Vector2(96, 48)
 	)
-	# South / east → farm home (SceneRouter.FARM_HOME_PATH).
+	# South / east -> farm home (SceneRouter.FARM_HOME_PATH).
 	craft.make_portal(
 		ysort,
 		"→农场",

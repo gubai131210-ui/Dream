@@ -579,11 +579,14 @@ func _spawn_props(ysort: Node2D) -> void:
 	if not ResourceLoader.exists(well_path):
 		well_path = "res://assets/sprites/props/fountain.png"
 	if ResourceLoader.exists(well_path):
-		_add_contact_shadow(ysort, Vector2(640, 480), Vector2(28, 10))
-		var f := _spawn_sprite(ysort, well_path, Vector2(640, 480))
-		var hs := _make_hotspot(ysort, "水井", "广场中央石井（A09 喷泉区位）。", Vector2(640, 500), Vector2(96, 64))
-		f.reparent(hs.get_node("Visual"))
-		f.position = Vector2.ZERO
+		var well_pos := Vector2(640, 480)
+		if not _is_river_tile(_world_to_tile(well_pos).x, _world_to_tile(well_pos).y):
+			_add_contact_shadow(ysort, well_pos, Vector2(28, 10))
+			var f := _spawn_sprite(ysort, well_path, well_pos)
+			f.scale = Vector2(0.55, 0.55)
+			var hs := _make_hotspot(ysort, "水井", "广场中央石井（A09 喷泉区位）。", Vector2(640, 500), Vector2(96, 64))
+			f.reparent(hs.get_node("Visual"))
+			f.position = Vector2.ZERO
 
 	var samples := [
 		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(500, 430), "title": "木桶", "desc": "摊位旁木桶。", "on_path_ok": true, "hw": 1, "hh": 1},
@@ -591,8 +594,11 @@ func _spawn_props(ysort: Node2D) -> void:
 		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(560, 540), "title": "长椅", "desc": "面向水井的长椅。", "on_path_ok": true, "hw": 1, "hh": 1},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(720, 540), "title": "路灯", "desc": "广场路灯。", "on_path_ok": true, "hw": 1, "hh": 1},
 		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(360, 300), "title": "麻袋", "desc": "屋前草地麻袋。", "on_path_ok": false, "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/rock_00.png", "pos": Vector2(200, 520), "title": "河石", "desc": "西岸路边石。", "on_path_ok": false, "hw": 1, "hh": 1},
 	]
 	for s in samples:
+		if not ResourceLoader.exists(s["path"]):
+			continue
 		var pos: Vector2 = s["pos"]
 		if s["on_path_ok"]:
 			if _is_river_tile(_world_to_tile(pos).x, _world_to_tile(pos).y):
@@ -602,10 +608,11 @@ func _spawn_props(ysort: Node2D) -> void:
 			if cleared == Vector2.ZERO:
 				continue
 			pos = cleared
-		if not ResourceLoader.exists(s["path"]):
+		if _is_river_tile(_world_to_tile(pos).x, _world_to_tile(pos).y):
 			continue
 		_add_contact_shadow(ysort, pos, Vector2(14, 6))
 		var spr := _spawn_sprite(ysort, s["path"], pos)
+		spr.scale = Vector2(0.55, 0.55)
 		var hs := _make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
@@ -631,13 +638,28 @@ func _spawn_bridge_prop(ysort: Node2D) -> void:
 	hs.get_node("Visual").add_child(label_proxy)
 
 
+func _make_craft() -> AreaCraft:
+	var craft := AreaCraft.new()
+	craft.setup(MAP_W, MAP_H, "plaza")
+	for y in range(MAP_H):
+		for x in range(MAP_W):
+			craft.water_mask[y][x] = _is_river_tile(x, y)
+			craft.path_mask[y][x] = _is_path_tile(x, y)
+			craft.dirt_mask[y][x] = _is_dirt_tile(x, y)
+	craft.rebuild_banks()
+	return craft
+
+
 func _spawn_trees(ysort: Node2D) -> void:
+	# Full crown AABB via spawn_tree — no north-edge clip / footprint-only feet.
+	var craft := _make_craft()
+	var zone := craft.map_play_rect(2.0)
 	var ideals := [
-		Vector2(220, 120),
-		Vector2(380, 100),
+		Vector2(220, 200),
+		Vector2(380, 180),
 		Vector2(240, 400),
 		Vector2(260, 700),
-		Vector2(1100, 120),
+		Vector2(1100, 200),
 		Vector2(1140, 400),
 		Vector2(1100, 700),
 		Vector2(860, 760),
@@ -645,119 +667,40 @@ func _spawn_trees(ysort: Node2D) -> void:
 		Vector2(200, 300),
 	]
 	for i in ideals.size():
-		var pos := _find_clear_near(ideals[i], 1, 1, 8, false)
-		if pos == Vector2.ZERO:
-			continue
-		var t := _world_to_tile(pos)
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		if not ResourceLoader.exists(path):
+		var spr := craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 8, false)
+		if spr == null:
 			continue
-		_add_contact_shadow(ysort, pos, Vector2(22, 8))
-		var spr := _spawn_sprite(ysort, path, pos)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.4)
-		if _is_bank_tile(t.x, t.y) or _touches_water(t.x, t.y):
+		var t := craft.world_to_tile(spr.position)
+		if craft.is_bank(t.x, t.y) or craft.touches_water(t.x, t.y):
 			spr.flip_h = (i % 2 == 0)
 
 
 func _spawn_actors(ysort: Node2D) -> void:
-	# Sparse anchors on stone preference graph (Stardew-like schedules).
+	# PatrolActor walk frames — never tween-slide static sprites.
+	var craft := _make_craft()
 	var actors := [
 		{
-			"path": "res://assets/sprites/npc/npc_00.png",
+			"id": "elder_woman",
 			"title": "村民",
 			"desc": "在井边与长椅之间走动。",
 			"waypoints": [Vector2(600, 520), Vector2(560, 540), Vector2(640, 500), Vector2(600, 520)],
 		},
 		{
-			"path": "res://assets/sprites/npc/npc_01.png",
+			"id": "merchant",
 			"title": "摊主",
 			"desc": "守着东侧摊位一带。",
 			"waypoints": [Vector2(720, 500), Vector2(780, 430), Vector2(720, 460), Vector2(720, 500)],
 		},
 		{
-			"path": "res://assets/sprites/npc/npc_02.png",
+			"id": "farmer",
 			"title": "访客",
 			"desc": "沿广场石路环行。",
 			"waypoints": [Vector2(540, 480), Vector2(700, 480), Vector2(700, 560), Vector2(540, 560), Vector2(540, 480)],
 		},
 	]
 	for a in actors:
-		if not ResourceLoader.exists(a["path"]):
-			continue
-		var start: Vector2 = a["waypoints"][0]
-		var route: Array[Vector2] = _snap_patrol_route(a["waypoints"])
-		if route.is_empty():
-			continue
-		start = route[0]
-		var hs := _make_hotspot(ysort, a["title"], a["desc"], start, Vector2(40, 56))
-		var visual: Node2D = hs.get_node("Visual")
-		_add_contact_shadow(visual, Vector2(0, 0), Vector2(12, 5))
-		var spr := _spawn_sprite(visual, a["path"], Vector2.ZERO)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.35)
-		_animate_patrol(hs, route)
-
-
-func _snap_patrol_route(waypoints: Array) -> Array[Vector2]:
-	var route: Array[Vector2] = []
-	for wp in waypoints:
-		var ideal: Vector2 = wp
-		var snapped := _find_walk_near(ideal, 6)
-		if snapped == Vector2.ZERO:
-			continue
-		# Drop consecutive duplicates after snap.
-		if route.size() > 0 and route[route.size() - 1].distance_to(snapped) < 4.0:
-			continue
-		route.append(snapped)
-	if route.size() == 1:
-		# Need a loop: add a nearby walk neighbor if possible.
-		var t: Vector2i = _world_to_tile(route[0])
-		var dirs: Array[Vector2i] = [Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)]
-		for d: Vector2i in dirs:
-			var n: Vector2i = t + d
-			if n.x < 0 or n.y < 0 or n.x >= MAP_W or n.y >= MAP_H:
-				continue
-			if _is_walk_surface(n.x, n.y):
-				route.append(_tile_center(n.x, n.y))
-				route.append(route[0])
-				break
-	elif route.size() >= 2 and route[0].distance_to(route[route.size() - 1]) > 4.0:
-		route.append(route[0])
-	return route
-
-
-func _find_walk_near(ideal: Vector2, max_r: int) -> Vector2:
-	var t := _world_to_tile(ideal)
-	if _is_walk_surface(t.x, t.y):
-		return _tile_center(t.x, t.y)
-	for r in range(1, max_r + 1):
-		for oy in range(-r, r + 1):
-			for ox in range(-r, r + 1):
-				if maxi(absi(ox), absi(oy)) != r:
-					continue
-				var nx := t.x + ox
-				var ny := t.y + oy
-				if nx < 0 or ny < 0 or nx >= MAP_W or ny >= MAP_H:
-					continue
-				if _is_walk_surface(nx, ny):
-					return _tile_center(nx, ny)
-	return Vector2.ZERO
-
-
-func _animate_patrol(node: Node2D, waypoints: Array[Vector2]) -> void:
-	if waypoints.size() < 2:
-		return
-	var tw := node.create_tween().set_loops()
-	var prev: Vector2 = waypoints[0]
-	for i in range(1, waypoints.size()):
-		var target: Vector2 = waypoints[i]
-		var t := _world_to_tile(target)
-		if not _is_walk_surface(t.x, t.y):
-			continue
-		var dist: float = prev.distance_to(target)
-		var dur: float = clampf(dist / 40.0, 1.2, 4.0)
-		tw.tween_property(node, "position", target, dur).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-		tw.tween_interval(0.35)
-		prev = target
+		craft.spawn_patrol_actor(ysort, a["id"], a["title"], a["desc"], a["waypoints"])
 
 
 func _spawn_water_overlay(ysort: Node2D) -> void:
