@@ -11,10 +11,9 @@ config_version=5
 [application]
 
 config/name="Dream"
-run/main_scene="res://scenes/areas/village_square/village_square.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
-config/run/main_scene="res://scenes/hub/world_hub.tscn"
+run/main_scene="res://scenes/hub/world_hub.tscn"
 
 [autoload]
 
