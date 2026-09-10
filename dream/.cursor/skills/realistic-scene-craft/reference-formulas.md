@@ -30,7 +30,7 @@ bank = !water && any_8_neighbor(water) && !path
 ## Path distance field (ecology)
 
 BFS from all path cells → `dpath`.  
-Example mapping:
+**Default plaza mapping:**
 
 | Condition | Grass kind |
 | --- | --- |
@@ -39,6 +39,33 @@ Example mapping:
 | map edge ≤ 2 or dpath ≥ 8 | tall |
 | rare RNG | weed |
 | else | meadow |
+
+### Zone profiles (district-weighted)
+
+Tune thresholds so districts do not share one grass look (`AREA_FRAMEWORK.md`):
+
+| District | mowed if | tall if | notes |
+| --- | --- | --- | --- |
+| plaza | dpath ≤ 2 | dpath ≥ 8 or edge | stone-adjacent short grass |
+| residential | dpath ≤ 1 (lanes only) | edge ≤ 2 | yards stay meadow |
+| farm_home | dpath ≤ 1 | rare | more weed RNG (~3%) |
+| farmland | dpath ≤ 1 on hub rings | outside play | crop beds = dirt cells, not grass |
+| market | dpath ≤ 2 on street | avoid inside stall band | keep street readable |
+
+## Poisson-ish props (anti-clump)
+
+```text
+# Reject candidate if distance to existing prop < r_min (tiles)
+# plaza civic r_min ≈ 3; residential yard r_min ≈ 2; market stalls along line spacing ≈ 2–3
+```
+
+## Crop bed grid (farmland)
+
+```text
+beds = axis-aligned Rect2i array
+gap ≥ 1 tile dirt/path between beds
+no bed ∩ water; no bed ∩ building AABB
+```
 
 ## Bridge span (from ACNH craft)
 
@@ -84,11 +111,14 @@ Place with `AreaCraft.find_building_inside(...)`. Never foot-only.
 
 ## Drainage (only large maps)
 
-Red Blob mapgen4: downslope queue → moisture → flow accumulation → width ∝ log(flow).  
-Village squares: skip unless designing a whole region map.
+Red Blob mapgen4: downslope queue → moisture → flow accumulation → width ∝ log(flow) / Strahler-like thickness.  
+Village squares: prefer sine/noise meander (`cx(ty)` above). Full drainage only for continent-scale maps.
 
 ## Sources
 
 - https://www.redblobgames.com/maps/mapgen4/
 - https://www.redblobgames.com/x/1723-procedural-river-growing/
+- https://ir.cwi.nl/pub/35899/35899.pdf (path hierarchy / center density)
 - `docs/research/practitioners/engineers-tilemap-terrain.md`
+- `docs/research/practitioners/engineers-zone-richness.md`
+- `docs/AREA_FRAMEWORK.md`

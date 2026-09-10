@@ -1,7 +1,8 @@
-# Scene layout rules (Village Square)
+# Scene layout rules
 
-Reference: A09 — meandering west river, plaza-centered buildings, trees on land only.  
-Skill: `.cursor/skills/realistic-scene-craft/`.  
+**District framework (all areas):** [`AREA_FRAMEWORK.md`](AREA_FRAMEWORK.md) — plaza / residential / farm_home / farmland / market 参数差；禁止五区同构。  
+Reference (plaza): A09 — meandering west river, plaza-centered buildings, trees on land only.  
+Skills: `.cursor/skills/realistic-scene-craft/` · `.cursor/skills/painting-asset-craft/`.  
 **Buildings (all areas):** [`BUILDING_PLACEMENT.md`](BUILDING_PLACEMENT.md) — full sprite AABB must stay inside the play/farm **build** zone.
 
 ## Hard rules
@@ -30,6 +31,10 @@ masks → ecological grass → dirt spurs → water → stone path → buildings
 - NPC roam off the walk graph
 - Building foot inside zone while roof straddles fence/map edge
 - Using outer `FARM_ZONE` as building containment instead of inset `FARM_BUILD_ZONE`
+- Copy-paste plaza skeleton into A08/A02/A03/A10 with only coordinate tweaks (see `AREA_FRAMEWORK.md`)
+- Same path width + same stone material in every district
+- Market as centered square plaza instead of E–W street strip
+- Farmland without rectangular crop beds as the readable silhouette
 
 ## Rebuild terrain art
 

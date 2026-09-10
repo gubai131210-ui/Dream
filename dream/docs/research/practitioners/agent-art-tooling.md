@@ -1,247 +1,362 @@
-# Agent art tooling — cutout, upscale, slice, seamless tiles (Windows)
+# Agent art tooling — cutout, inpaint, upscale, slice, seamless (2025–2026)
 
-**Status:** Research note (practitioner)  
+**Status:** Research note (practitioner), Batch B refresh  
 **Date:** 2026-09-10  
-**Scope:** Tools that coding agents can drive (CLI / Python / HTTP API) to improve game-asset drawing, 抠图 (matting/cutout), slicing, upscaling, and seamless tile generation for the Dream Godot project.  
-**Related in-repo:** [`docs/SEAMLESS.md`](../../SEAMLESS.md), [`docs/SCALE.md`](../../SCALE.md), `dream/tools/make_seamless_terrain.py`, `slice_normalize.py`, `normalize_assets.py`.
+**Scope:** CLI / Python / HTTP-first tools that coding agents can drive for Dream (Godot 4) asset loops: 抠图、补缺失、换背景、放大、切序列帧、无缝贴图。  
+**Related in-repo:** [`docs/SEAMLESS.md`](../../SEAMLESS.md), [`docs/SCALE.md`](../../SCALE.md), `dream/tools/make_seamless_terrain.py`, `slice_normalize.py`, `normalize_assets.py`, `art_pipeline_continue.py`.  
+**Skill digest:** [`.cursor/skills/realistic-scene-craft/reference-tooling.md`](../../../.cursor/skills/realistic-scene-craft/reference-tooling.md).
+
+### What’s new vs prior note
+
+| Delta | Why it matters for Dream agents |
+|---|---|
+| **rembg default is now `bria-rmbg`** | Default weights are **non-commercial without BRIA agreement**. Agents must pass `-m birefnet-general` (or another MIT-safe model) for shippable packs. |
+| **Inpaint / erase stack** | IOPaint + LaMa (and SD inpaint) fill the “补缺失 / 去脏物 / 换背景空洞” gap rembg cannot invent. |
+| **Florence-2 + SAM 2** | Text→box→mask without Grounding-DINO-only paths; better multi-object sheet parsing when rembg grabs everything. |
+| **Upscayl vs Real-ESRGAN** | GUI vs portable CLI; Upscayl-ncnn is AGPL — prefer upstream Real-ESRGAN ncnn zip for agent PATH. |
+| **Compress note** | Official `@squoosh/cli` is retired; use ImageMagick / oxipng / community `@frostoven/squoosh-cli` carefully. |
+| **MCP reality** | No first-party “art MCP” in Dream; Godot MCP for QA; optional ComfyUI MCP; preferred pattern = thin `dream/tools/` wrappers. |
 
 ---
 
-## 1. Tool matrix
+## 1. Must / Should / Optional — Windows + PowerShell
 
-| Capability | Tool | Agent fit | Notes | Primary source |
-|---|---|---|---|---|
-| Auto 抠图 (general) | **rembg** CLI/lib | ★★★★★ | `rembg i -m …`; batch-friendly; ONNX models | [danielgatis/rembg](https://github.com/danielgatis/rembg) |
-| High-quality 抠图 | **BiRefNet** via rembg (`birefnet-general`, `-lite`, `-massive`, …) | ★★★★★ | Prefer over default for props/characters; heavier | [ZhengPeng7/BiRefNet](https://github.com/ZhengPeng7/BiRefNet) · rembg model list |
-| Prompted 抠图 | rembg **`sam`** model + JSON prompts | ★★★★☆ | Point/box prompts via `-x`; still one CLI | rembg README `sam` example |
-| Open-world segment | **SAM** (Meta) | ★★★☆☆ | Needs prompts; heavier install than rembg ONNX | [facebookresearch/segment-anything](https://github.com/facebookresearch/segment-anything) |
-| Text → box → mask | **Grounded-SAM** / **Grounded-SAM-2** | ★★☆☆☆ | Strong quality; poor agent DX (CUDA env, multi-repo) | [IDEA-Research/Grounded-Segment-Anything](https://github.com/IDEA-Research/Grounded-Segment-Anything) · [Grounded-SAM-2](https://github.com/IDEA-Research/Grounded-SAM-2) |
-| Soft alpha matting | **Matting Anything (MAM)** | ★★☆☆☆ | Mask→matte; pairs with Grounded-SAM text boxes | [SHI-Labs/Matting-Anything](https://github.com/shi-labs/matting-anything) |
-| Upscale (portable) | **Real-ESRGAN ncnn-vulkan** | ★★★★★ | No Python CUDA; Windows zip CLI | [xinntao/Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) |
-| Upscale (anime/pixel-ish) | Real-ESRGAN `-n realesrgan-x4plus-anime` | ★★★★★ | Better than generic for 2D sheets | [anime_model.md](https://github.com/xinntao/Real-ESRGAN/blob/master/docs/anime_model.md) |
-| Upscale (classic anime) | **waifu2x-ncnn-vulkan** | ★★★☆☆ | Still useful; Real-ESRGAN anime often preferred | [nihui/waifu2x-ncnn-vulkan](https://github.com/nihui/waifu2x-ncnn-vulkan) |
-| Slice / export | **Aseprite CLI** | ★★★★☆ | `--batch --split-slices --split-grid --sheet` | [aseprite.org/docs/cli](https://www.aseprite.org/docs/cli/) |
-| Raster ops / batch | **ImageMagick** `magick` | ★★★★★ | Crop, montage, FFT (HDRI), edge tests | [ImageMagick](https://imagemagick.org/) · [Fourier examples](https://usage.imagemagick.org/fourier/) |
-| Programmatic pipeline | **Pillow** (+ NumPy) | ★★★★★ | Already used in Dream tools; wrap/offset/crop | [Pillow docs](https://pillow.readthedocs.io/) |
-| Wrap-paint (human) | **Aseprite Tiled Mode** / **GIMP Symmetry→Tiling** | ★☆☆☆☆ | Great for artists; weak for unattended agents | [Aseprite tiled mode](https://www.aseprite.org/docs/tiled-mode/) · [GIMP Symmetry Painting](https://docs.gimp.org/3.2/en/gimp-symmetry-dialog.html) |
-| Make Seamless (post) | GIMP **Filters → Map → Tile Seamless** | ★★☆☆☆ | Script-Fu/Python-Fu possible; fuzzy results | [GIMP Tile Seamless](https://docs.gimp.org/3.2/en/gimp-filter-tile-seamless.html) |
-| Procedural seamless | Dream `make_seamless_terrain.py` (periodic noise + `enforce_wrap`) | ★★★★★ | Deterministic; matches `BASE_TILE=32` | In-repo + [`SEAMLESS.md`](../../SEAMLESS.md) |
-| Gen seamless (latent) | ComfyUI **circular / seamless latent tiling** nodes | ★★★☆☆ | Best *generation-time* seamlessness | e.g. [ComfyUI-seamless_latent_tiling](https://github.com/mikemojen/ComfyUI-seamless_latent_tiling) |
-| Gen seamless (post) | ComfyUI **MakeSeamlessTexture** (offset + radial blend) | ★★★☆☆ | Fixes AI vignette / leftover seams | [SparknightLLC/ComfyUI-MakeSeamlessTexture](https://github.com/SparknightLLC/ComfyUI-MakeSeamlessTexture) |
-| Controlled structure | **ControlNet Depth / Tile** in ComfyUI | ★★★☆☆ | Depth = layout; Tile = detail/upscale; can fight circular padding | [ComfyUI](https://github.com/comfyanonymous/ComfyUI) · ControlNet usage guides |
-| Engine import QA | Godot **Nearest** + **`use_texture_padding`** | ★★★★★ | Fixes *engine* bleed, not art vignettes | [Importing images](https://docs.godotengine.org/en/stable/tutorials/assets_pipeline/importing_images.html) · [TileSetAtlasSource](https://docs.godotengine.org/en/stable/classes/class_tilesetatlassource.html) |
-| Runtime visual QA | Godot MCP **`take_screenshot`** (+ `run_scene`) | ★★★★★ | Agent can see seams in-game | MCP `user-godot-tomyud1` / `take_screenshot` |
+### Must (agent can close Dream art loops today)
 
-**License caution:** rembg itself is MIT; **model weights have their own licenses** (e.g. BRIA RMBG-2.0 may require a commercial agreement). Always check the linked model source before shipping assets commercially — [rembg README](https://github.com/danielgatis/rembg).
-
----
-
-## 2. Recommended install list (Windows / PowerShell)
-
-### Must (agent can run Dream art loops today)
-
-| Package | Install hint | Verify |
+| Package | Install | Verify |
 |---|---|---|
-| **Python 3.10–3.13** | [python.org](https://www.python.org/downloads/) or `winget install Python.Python.3.12` | `python --version` |
+| **Python 3.11–3.13** | `winget install -e --id Python.Python.3.12` or [python.org](https://www.python.org/downloads/) | `python --version` |
 | **Pillow + NumPy** | `pip install pillow numpy` | `python -c "from PIL import Image; import numpy"` |
-| **Godot 4.x** (project editor) | Steam / official build | Open `dream/` project |
-| **Godot MCP** (Cursor) | Project addon + MCP server wired | Agent can `run_scene` / `take_screenshot` |
+| **Godot 4.x** | Official / Steam build opening `dream/` | Project loads |
+| **Godot MCP** (`user-godot-tomyud1`) | Addon + Cursor MCP wired | `run_scene` + `take_screenshot` |
 
 ### Should (high ROI for AI sheets → game tiles)
 
-| Package | Install hint | Verify |
+| Package | Install | Verify |
 |---|---|---|
-| **rembg** (CPU or GPU) | `pip install "rembg[cpu,cli]"` or `"rembg[gpu,cli]"` | `rembg --help` |
-| **BiRefNet weights** (via rembg) | First run of `-m birefnet-general` auto-downloads to `~/.u2net` / rembg model cache | `rembg i -m birefnet-general in.png out.png` |
-| **Real-ESRGAN ncnn-vulkan** (Windows zip) | [Release zip](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) → put on `PATH` or fixed tools dir | `realesrgan-ncnn-vulkan.exe -h` |
-| **ImageMagick 7** | `winget install -e --id ImageMagick.ImageMagick` | `magick -version` |
+| **rembg** (CLI) | `pip install "rembg[cpu,cli]"` or `"rembg[gpu,cli]"` | `rembg --help` |
+| **BiRefNet via rembg** (explicit model) | First run downloads into `~/.rembg/models/` | `rembg i -m birefnet-general in.png out.png` |
+| **Real-ESRGAN ncnn-vulkan** | [Windows zip](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) → `D:\Tools\…` on PATH | `realesrgan-ncnn-vulkan.exe -h` |
+| **ImageMagick 7** (`magick`) | `winget install -e --id ImageMagick.ImageMagick` | `magick -version` |
 
-### Optional (power / generation / pixel authorship)
-
-| Package | When to install | Notes |
-|---|---|---|
-| **Aseprite** (+ CLI on PATH) | Human pixel polish + scripted `--split-slices` / `--split-grid` | [CLI docs](https://www.aseprite.org/docs/cli/) |
-| **waifu2x-ncnn-vulkan** | Compare vs Real-ESRGAN anime on specific sheets | [nihui/waifu2x-ncnn-vulkan](https://github.com/nihui/waifu2x-ncnn-vulkan) |
-| **ComfyUI** + API workflows | Controlled tile *generation* (Depth/Tile + seamless nodes) | Export **API Format** JSON; POST `http://127.0.0.1:8188/prompt` — [ComfyUI](https://github.com/comfyanonymous/ComfyUI) |
-| **ControlNet** models (Depth, Tile) | Structure-preserving regen / detail upscale | Pair carefully with circular seamless nodes (ControlNet can reintroduce edge seams) |
-| **CUDA / PyTorch** stack | Only if running Grounded-SAM / MAM / full Real-ESRGAN Python | Prefer ncnn + rembg ONNX for agents |
-| **GIMP** (+ optional Python-Fu) | Occasional `Tile Seamless` / Symmetry Tiling | Prefer Pillow wrap for automation |
-
-**PATH tip (PowerShell profile or session):**
+**Commercial-safe rembg rule:** never rely on bare `rembg i in.png out.png` — current default is **`bria-rmbg`**. Always:
 
 ```powershell
-# Example: keep portable binaries out of Chinese-path friction if possible
+rembg i -m birefnet-general .\in.png .\out_rgba.png
+# Optional edge polish for newer models:
+# rembg i -m birefnet-general -dc .\in.png .\out_rgba.png
+```
+
+### Optional (generation / inpaint / pixel authorship / MCP)
+
+| Package | When | Install hint |
+|---|---|---|
+| **IOPaint** + **LaMa** | Erase watermarks, fill holes, seam clone, simple bg fill | `pip install iopaint` → `iopaint run --model=lama --device=cpu --image=… --mask=… --output=…` |
+| **Aseprite** (+ CLI on PATH) | Named slices, `--split-grid`, human tiled paint | [CLI docs](https://www.aseprite.org/docs/cli/) |
+| **ComfyUI** + API Format workflows | Seamless gen, ControlNet Depth/Tile, IP-Adapter, SD inpaint | Local server `http://127.0.0.1:8188` |
+| **ControlNet** Depth + Tile models | Layout lock / detail refine | Via ComfyUI Manager |
+| **IP-Adapter** (ComfyUI_IPAdapter_plus) | Style / identity from a reference sheet | Keep weights pinned; daisy-chain Unified Loader |
+| **Florence-2** (+ optional SAM 2) | Caption / phrase grounding → boxes for masks | HF `microsoft/Florence-2-base` (+ [Grounded-SAM-2 Florence demos](https://github.com/IDEA-Research/Grounded-SAM-2)) |
+| **transparent-background** | Alternate matting (InSPyReNet); heavier PyTorch | `pip install transparent-background` |
+| **Upscayl** (GUI) / **upscayl-ncnn** | Human batch upscale; CLI exists but **AGPL** | Prefer Real-ESRGAN zip for agents |
+| **waifu2x-ncnn-vulkan** | Compare vs Real-ESRGAN anime on specific sheets | [nihui releases](https://github.com/nihui/waifu2x-ncnn-vulkan) |
+| **oxipng** / ImageMagick | Lossless PNG crush before Godot import | `winget` / cargo / scoop |
+| **@frostoven/squoosh-cli** | Experimental WASM codecs; Google `@squoosh/cli` retired | `npx @frostoven/squoosh-cli --help` — not Must |
+| **ComfyUI MCP** | Optional Cursor bridge to local Comfy | e.g. [joenorton/comfyui-mcp-server](https://github.com/joenorton/comfyui-mcp-server), [artokun/comfyui-mcp](https://github.com/artokun/comfyui-mcp) |
+| **CUDA / PyTorch** | Only for Florence/SAM2/Grounded stacks or full SD | Prefer ONNX rembg + ncnn upscale first |
+| **GIMP** | Rare manual Tile Seamless / symmetry | Prefer Pillow wrap for automation |
+
+**PATH tip (ASCII tool root — Chinese-path friction):**
+
+```powershell
 $env:Path += ";D:\Tools\realesrgan-ncnn-vulkan;C:\Program Files\Aseprite"
+# Optional: pin rembg model cache
+$env:REMBG_HOME = "D:\Tools\rembg-home"
 ```
 
 ---
 
-## 3. Agent workflows
+## 2. Task → tool对照表
 
-### 3.1 AI sheet → cutout prop / character (抠图)
+| Task | First choice (agent) | Escalate / alternate | Avoid / caveats |
+|---|---|---|---|
+| **Seamless grass/water tiles** | In-repo `python dream/tools/make_seamless_terrain.py` + Nearest + `use_texture_padding` | ComfyUI circular latent → MakeSeamlessTexture post; Pillow offset-blend + `enforce_wrap` | GIMP “Tile Seamless” alone; ControlNet Tile at high strength with circular latent (re-seams) |
+| **抠图 (prop / NPC)** | `rembg i -m birefnet-general` (+ `-dc`) | `birefnet-portrait` for characters; rembg `sam` + JSON points; Florence-2 boxes → SAM 2; `transparent-background` | Default `bria-rmbg` for commercial ship; rembg on multi-object sheets without pre-slice |
+| **语义多物体切分** | Pre-grid slice (Pillow/Aseprite) then rembg per cell | Florence-2 `<CAPTION_TO_PHRASE_GROUNDING>` / phrase grounding → SAM 2; Grounded-SAM-2 | Hoping rembg picks one object from a busy sheet |
+| **补缺失元素 / 去脏物** | **IOPaint LaMa** `iopaint run --model=lama` with mask | ComfyUI SD/SDXL inpaint; PowerPaint / BrushNet via IOPaint | rembg (only removes bg); naive clone-stamp without mask QA |
+| **换背景** | rembg cutout → Pillow composite onto new plate | IOPaint erase old bg leftovers; ComfyUI img2img + IP-Adapter for style match | Shipping with BRIA/RMBG weights without license |
+| **放大 (AI sheet / soft pixels)** | `realesrgan-ncnn-vulkan.exe -n realesrgan-x4plus-anime -s 4` then **NEAREST** snap to `BASE_TILE` | Photo tiles: `-n realesrgan-x4plus`; Upscayl GUI for humans | Upscayl-ncnn as redistributed agent binary (AGPL); over-upscale then Linear filter in Godot |
+| **切序列帧 / atlas** | Pillow grid / in-repo `slice_normalize.py`; Aseprite `--split-slices` / `--split-grid` / `--sheet` | ImageMagick `magick` crop + `montage` QA | Manual one-by-one export as default agent path |
+| **压缩 / 格式** | `magick` or oxipng on final PNG | Community squoosh-cli for experiments | Official Squoosh CLI (unmaintained) as production dependency |
+| **In-engine visual QA** | Godot MCP `run_scene` → `take_screenshot` | 2×2 / 3×3 tile montage via `magick montage` | Trusting only file-side seam checks |
 
-1. Source PNG (black or busy bg) from `素材/` or generation output.  
-2. **rembg** with BiRefNet for quality:
+---
 
-```powershell
-rembg i -m birefnet-general .\in.png .\out_rgba.png
-# Optional: -a / -dc per rembg docs for alpha refinement / decontaminate
+## 3. Expanded tool matrix (agent fit)
+
+| Capability | Tool | Agent fit | License (weights / code — verify before ship) | Source |
+|---|---|---|---|---|
+| Auto 抠图 CLI | **rembg** | ★★★★★ | Code MIT; **each `-m` has own weight license** | [danielgatis/rembg](https://github.com/danielgatis/rembg) |
+| Default rembg model | **`bria-rmbg` (RMBG-2.0)** | ★★★★☆ quality / ★☆ commercial | **CC BY-NC / BRIA commercial agreement** | [briaai/RMBG-2.0](https://huggingface.co/briaai/RMBG-2.0) |
+| HQ 抠图 (ship-safe default) | **BiRefNet** via `-m birefnet-*` | ★★★★★ | BiRefNet **MIT** (code + typical open weights) | [ZhengPeng7/BiRefNet](https://github.com/ZhengPeng7/BiRefNet) |
+| Prompted mask | rembg **`sam`** + `-x` JSON | ★★★★☆ | SAM lineage — check Meta terms for weights used | rembg README |
+| Video/image segment SOTA | **SAM 2** | ★★★☆☆ | Code/weights **Apache-2.0** | [facebookresearch/sam2](https://github.com/facebookresearch/sam2) |
+| Text → box → mask | **Grounded-SAM-2** (+ Florence-2 demos) | ★★☆☆☆ DX / ★★★★☆ quality | Mix of Apache/MIT + Grounding-DINO terms | [IDEA-Research/Grounded-SAM-2](https://github.com/IDEA-Research/Grounded-SAM-2) |
+| VL grounding / caption | **Florence-2** | ★★★☆☆ | **MIT** | [microsoft/Florence-2-base](https://huggingface.co/microsoft/Florence-2-base) |
+| Soft matte alt | **transparent-background** (InSPyReNet) | ★★★☆☆ | Check package + checkpoint licenses | [PyPI transparent-background](https://pypi.org/project/transparent-background/) |
+| Soft matte research | **Matting Anything (MAM)** | ★★☆☆☆ | Research stack; heavy | [shi-labs/matting-anything](https://github.com/shi-labs/matting-anything) |
+| Erase / hole fill | **LaMa** via **IOPaint** | ★★★★★ | LaMa **Apache-2.0**; IOPaint Apache-2.0 | [advimman/lama](https://github.com/advimman/lama) · [Sanster/IOPaint](https://github.com/Sanster/IOPaint) |
+| Gen inpaint / outpaint | ComfyUI SD/SDXL inpaint | ★★★☆☆ | Checkpoint-dependent (often non-commercial Civitai) | [ComfyUI](https://github.com/comfyanonymous/ComfyUI) |
+| Style lock | **IP-Adapter** | ★★★☆☆ | Adapter + base model licenses | [cubiq/ComfyUI_IPAdapter_plus](https://github.com/cubiq/ComfyUI_IPAdapter_plus) |
+| Structure / detail | **ControlNet Depth / Tile** | ★★★☆☆ | ControlNet Apache-2.0; base model varies | ComfyUI + CN models |
+| Upscale portable | **Real-ESRGAN ncnn-vulkan** | ★★★★★ | Real-ESRGAN **BSD-3-Clause** | [xinntao/Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) |
+| Upscale GUI | **Upscayl** | ★☆☆☆☆ agent / ★★★★ human | App + **upscayl-ncnn AGPL-3.0** | [upscayl/upscayl](https://github.com/upscayl/upscayl) · [upscayl-ncnn](https://github.com/upscayl/upscayl-ncnn) |
+| Slice / sheet | **Aseprite CLI** | ★★★★☆ | Proprietary app (paid); CLI automation OK if licensed | [aseprite.org/docs/cli](https://www.aseprite.org/docs/cli/) |
+| Raster batch | **ImageMagick `magick`** | ★★★★★ | Apache-2.0 | [imagemagick.org](https://imagemagick.org/) |
+| Programmatic | **Pillow** (+ NumPy) | ★★★★★ | HPND / PIL license | [Pillow docs](https://pillow.readthedocs.io/) |
+| Compress experiment | **@frostoven/squoosh-cli** | ★★☆☆☆ | Check package; Google CLI retired | [npm @frostoven/squoosh-cli](https://www.npmjs.com/package/@frostoven/squoosh-cli) |
+| Seamless gen-time | ComfyUI circular latent | ★★★☆☆ | Node license varies | e.g. [seamless_latent_tiling](https://github.com/mikemojen/ComfyUI-seamless_latent_tiling) |
+| Seamless post | MakeSeamlessTexture / Pillow roll-blend | ★★★☆☆ | — | [SparknightLLC/ComfyUI-MakeSeamlessTexture](https://github.com/SparknightLLC/ComfyUI-MakeSeamlessTexture) |
+| Procedural seamless | Dream terrain tool | ★★★★★ | In-repo | [`SEAMLESS.md`](../../SEAMLESS.md) |
+| Engine QA | Godot Nearest + `use_texture_padding` | ★★★★★ | Godot license | [Importing images](https://docs.godotengine.org/en/stable/tutorials/assets_pipeline/importing_images.html) |
+| Runtime QA | MCP `take_screenshot` | ★★★★★ | — | Godot MCP |
+
+---
+
+## 4. Agent invocation patterns
+
+### 4.1 Preferred architecture for Cursor agents
+
+```
+[Human prep: tools on PATH / weights cached]
+        │
+        ▼
+ dream/tools/*.py  (stable CLI: exit codes, ASCII paths, BASE_TILE=32)
+        │
+        ├─ rembg / realesrgan / magick / iopaint   ← subprocess
+        ├─ ComfyUI HTTP API                        ← optional gen stage
+        └─ Godot MCP run_scene + take_screenshot   ← visual QA
 ```
 
-3. If auto-cut fails (touching props, multi-object sheet): rembg **`sam`** with a point/box JSON (`-x`), or escalate to Grounded-SAM text prompts offline.  
-4. Crop to non-transparent bbox with Pillow / ImageMagick; scale to [`SCALE.md`](../../SCALE.md) (`CHARACTER_HEIGHT_PX`, prop heights).  
-5. Import in Godot; verify silhouette via MCP screenshot.
+**Do not** invent a new MCP for every binary. Wrap CLIs in PowerShell/Python under `dream/tools/` with:
 
-**Agent rule:** Prefer rembg ONNX over standing up full SAM/CUDA unless BiRefNet repeatedly fails.
+- Fixed model flags (`-m birefnet-general`)
+- Inputs/outputs under `dream/assets/…`
+- Non-zero exit on missing binary
+- Optional `--dry-run`
 
-### 3.2 Upscale before / after slice
+**MCP options today**
 
-- **Before slice:** upscale whole sheet if cells are soft / tiny.  
-- **After cutout:** upscale single sprite, then nearest-neighbor snap to target px (avoid blurry mid sizes).
+| Layer | Role | Notes |
+|---|---|---|
+| **Godot MCP** | Scene run + screenshot QA | Already in Dream toolchain |
+| **ComfyUI MCP** (optional) | Queue workflows from chat | Needs local Comfy + pinned API JSON; heavier than raw HTTP |
+| **rembg HTTP** `rembg s` | Long-running cutout service | Useful if many sequential calls; still pin model |
+| **IOPaint** `iopaint start` | HTTP inpaint at `:8080` | Batch prefer `iopaint run` |
+
+### 4.2 抠图
+
+```powershell
+# Ship-safe default for Dream
+rembg i -m birefnet-general -dc .\raw\prop.png .\sprites\prop_rgba.png
+
+# Batch folder
+rembg p -m birefnet-general .\raw\props\ .\sprites\props_rgba\
+
+# Multi-object failure → SAM points (example)
+rembg i -m sam -x '{ "sam_prompt": [{"type": "point", "data": [120, 80], "label": 1}] }' `
+  .\sheet.png .\one_object.png
+```
+
+Then bbox crop + scale with Pillow / in-repo normalizers to [`SCALE.md`](../../SCALE.md).
+
+### 4.3 补缺失 / erase / 简单换背景空洞
+
+```powershell
+# Mask: white = region to fill/erase, black = keep
+iopaint run --model=lama --device=cpu `
+  --image=D:\art\in `
+  --mask=D:\art\masks `
+  --output=D:\art\out
+```
+
+HTTP (agent loop): `iopaint start --model=lama --device=cpu --port=8080` then POST multipart to `/inpaint` (see IOPaint `/docs`).
+
+**Dream mapping:** use LaMa to remove AI watermark blobs / broken tile corners *before* seamless enforce; use SD inpaint only when you need *new* semantic content (door facing, missing prop) — and still human-check orientation rules (LAYOUT / A09).
+
+### 4.4 换背景
+
+1. Cutout with BiRefNet.  
+2. Optional LaMa on residual fringe.  
+3. Pillow alpha-composite onto target plate (solid, gradient, or village plate).  
+4. NEAREST snap; MCP screenshot.
+
+### 4.5 Upscale → snap
 
 ```powershell
 realesrgan-ncnn-vulkan.exe -i sheet.png -o sheet_x4.png -n realesrgan-x4plus-anime -s 4
-# Photo-like tilesets: -n realesrgan-x4plus
+# Then Pillow Image.Resampling.NEAREST down to BASE_TILE multiples
 ```
 
-Then Pillow resize with `Image.Resampling.NEAREST` down to `BASE_TILE` multiples (see in-repo `slice_normalize.py` / `normalize_assets.py`).
+Upscayl GUI is fine for humans; agents should call **Real-ESRGAN ncnn** to avoid AGPL redistribution ambiguity.
 
-### 3.3 Slice / atlas pipelines
+### 4.6 Slice / sequence frames
 
 | Stage | Tool | Example |
 |---|---|---|
-| Grid split | Pillow / ImageMagick | Crop `WxH` cells; Dream already normalizes to **32×32** |
+| Grid split | Pillow / `slice_normalize.py` | Cells → 32×32 |
 | Named slices | Aseprite | `aseprite -b atlas.aseprite --split-slices --save-as out/{slice}.png` |
-| Grid tiles | Aseprite | `--split-grid` or `--export-tileset` + `--sheet` / `--data` JSON |
-| Montage QA | ImageMagick | `magick montage cell-*.png -tile 8x -geometry +0+0 preview.png` |
+| Sheet + JSON | Aseprite | `--sheet` / `--data` |
+| QA montage | ImageMagick | `magick montage cell-*.png -tile 8x -geometry +0+0 preview.png` |
 
-Official Aseprite CLI: [https://www.aseprite.org/docs/cli/](https://www.aseprite.org/docs/cli/).
+### 4.7 Seamless
 
-### 3.4 Seamless terrain / repeating textures
-
-**A. Deterministic (preferred for Dream grass today)**  
-Run existing tool (periodic noise + hard wrap):
+**A. Deterministic (Dream grass today)**
 
 ```powershell
 python dream/tools/make_seamless_terrain.py
 ```
 
-See [`SEAMLESS.md`](../../SEAMLESS.md): art vignettes ≠ engine bleed; fix edges in pixels, then Nearest + `use_texture_padding`.
+**B. Offset-blend (scriptable)** — `numpy.roll` → blend cross → enforce `L==R`, `T==B` → 3×3 montage.
 
-**B. Classic offset-and-blend (agent-scriptable)**
+**C. ComfyUI generation**
 
-1. `numpy.roll` / Pillow crop-paste offset by `W/2`, `H/2`.  
-2. Blend or clone over the center cross (the old seam).  
-3. Roll back; enforce `tile[:,0]==tile[:,-1]` and `tile[0]==tile[-1]` (as `enforce_wrap` does).  
-4. Preview: tile 2×2 or 4×4 montage; look for vertical/horizontal lines.
-
-**C. Fourier / frequency approaches**  
-ImageMagick FFT/IFT ([examples](https://usage.imagemagick.org/fourier/)) and G'MIC “resynthesize texture [FFT]” help *noise-like* materials; poor for large unique motifs (houses, trees). Treat as optional experiment, not default.
-
-**D. GIMP Make Seamless / wrap-paint**  
-- Post: [Filters → Map → Tile Seamless](https://docs.gimp.org/3.2/en/gimp-filter-tile-seamless.html) (often needs hand correction).  
-- Paint-time: [Symmetry Painting → Tiling](https://docs.gimp.org/3.2/en/gimp-symmetry-dialog.html) or Aseprite Tiled Mode — human-centric.
-
-**E. ComfyUI / SD (generation, not post-only)**
-
-Practical agent pattern:
-
-1. Build a **fixed** workflow once in the UI; **Save (API Format)** JSON.  
-2. For *true* tileability at sample time: insert **seamless / circular latent** node between model and sampler ([example](https://github.com/mikemojen/ComfyUI-seamless_latent_tiling)).  
-3. Optional: **ControlNet Depth** (layout from a simple height map / sketch) or **ControlNet Tile** (detail-preserving refine / upscale).  
-4. Warning from seamless-latent authors: **ControlNet spatial features are not circular-padded** — edges can regain seams; prefer low strength, or post-process with MakeSeamless / Pillow blend.  
-5. Agent queues via HTTP:
+1. Build once in UI → **Save (API Format)**.  
+2. Circular / seamless latent between model and sampler.  
+3. Optional ControlNet **Depth** (layout) or **Tile** (detail) at **low** weight — CN spatial maps are often *not* circular-padded.  
+4. Optional **IP-Adapter** for style match to an existing village palette.  
+5. Queue:
 
 ```powershell
-# Pseudocode — POST API-format workflow
-Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8188/prompt -ContentType 'application/json' -Body $apiJson
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8188/prompt `
+  -ContentType 'application/json' -Body $apiJson
+# Poll GET /history/{prompt_id} or WebSocket /ws?clientId=...
 ```
 
-6. Always QA with a 3×3 tile preview **and** Godot TileMap screenshot (MCP).
+6. QA: `magick` 3×3 tile **and** Godot MCP screenshot.
 
-### 3.5 Godot-specific: import + MCP screenshot QA
+Official route list: [ComfyUI server routes](https://docs.comfy.org/development/comfyui-server/comms_routes).
 
-| Concern | Setting / action | Source |
+### 4.8 Florence-2 + SAM 2 (when rembg fails semantically)
+
+Offline pattern (from Grounded-SAM-2 Florence demos):
+
+1. Florence-2 caption or `<CAPTION_TO_PHRASE_GROUNDING>` / referring expression → bboxes.  
+2. SAM 2 `predict(box=…)` → masks.  
+3. Export RGBA; feed Dream normalizers.
+
+Agent DX is weaker than rembg (CUDA/transformers), so treat as **Optional escalate**, not default.
+
+---
+
+## 5. License cheat-sheet (commercial publish)
+
+| Use in shipped game assets | Prefer | Do not use without extra agreement |
 |---|---|---|
-| Soft pixels / atlas bleed | Project default canvas texture filter → **Nearest**; avoid Linear on pixel TileMapLayers | [Importing images](https://docs.godotengine.org/en/stable/tutorials/assets_pipeline/importing_images.html) (filter is CanvasItem / project default since Godot 4, not classic import filter) |
-| Hairline between tiles | `TileSetAtlasSource.use_texture_padding = true` (default) | [class docs](https://docs.godotengine.org/en/stable/classes/class_tilesetatlassource.html) |
-| Art vignette borders | **Cannot** be fixed by padding — remake seamless pixels (Dream terrain tool) | [`SEAMLESS.md`](../../SEAMLESS.md) |
-| Scale lock | Slice/scale to `BASE_TILE = 32` before TileSet | [`SCALE.md`](../../SCALE.md) |
-| Agent visual QA | `run_scene` (wait for runtime) → `take_screenshot` → read PNG (or `return_base64`) | Godot MCP `take_screenshot` |
+| Background removal | **BiRefNet** (`birefnet-general` / lite / portrait) | **`bria-rmbg` / RMBG-2.0** (CC BY-NC + BRIA commercial) |
+| Segmentation assist | SAM 2 (Apache-2.0), Florence-2 (MIT) | Unclear Civitai merges; read each card |
+| Erase / fill | LaMa (Apache-2.0) via IOPaint | SD checkpoints with “non-commercial” tags |
+| Upscale | Real-ESRGAN ncnn (BSD-3) | Redistributing **Upscayl-ncnn** binaries (AGPL) inside your tooling without compliance |
+| Gen art | Pin checkpoint licenses in a project allowlist | Random community checkpoints |
 
-**Import presets:** For 2D pixel packs, keep a project convention (document in SCALE): lossless PNG, no unintended mipmaps for atlases that must stay crisp, Nearest sampling. Re-import after mass overwrites so `.import` sidecars match.
-
-**MCP QA loop (agent):**
-
-1. Write / regenerate PNG under `dream/assets/…`.  
-2. Ensure TileSet / scene references update.  
-3. `run_scene` with runtime connected.  
-4. `take_screenshot` → inspect for grid seams, dark borders, blur.  
-5. Iterate Pillow/rembg/seamless script — not only engine toggles.
+**Rule:** rembg MIT ≠ free to use default weights. Log `-m` model id used per asset batch.
 
 ---
 
-## 4. Gaps (what agents still struggle with)
+## 6. Gaps (agents still struggle)
 
-| Gap | Why it hurts | Mitigation |
-|---|---|---|
-| **Semantic multi-object sheets** | rembg grabs “everything”; SAM needs clicks; Grounded-SAM is heavy | Pre-slice grid first; text-prompt Grounded-SAM offline; human Aseprite slices |
-| **Soft matte (hair, foliage)** | Binary masks look cut-out | rembg alpha flags; MAM if quality critical |
-| **Seamless ≠ aesthetic** | Offset-blend / Tile Seamless removes seams but can ghost motifs or flatten lighting | Prefer generate-with-circular-latent, or procedural tiles like Dream grass |
-| **ControlNet vs circular seamless** | Spatial CN features break wrap continuity | Low CN weight; post MakeSeamless; or CN without claiming perfect tiles |
-| **ComfyUI agent DX** | Must use **API Format** JSON; GPU VRAM; non-deterministic seeds | Pin seeds; version workflow files in repo; treat as optional stage |
-| **Pixel-art identity** | ESRGAN invents detail / breaks grid | Upscale modestly → NEAREST snap to 32-grid; or draw in Aseprite |
-| **Chinese paths / shells** | Some CLIs mishandle non-ASCII cwd | Prefer ASCII tool roots (`D:\Tools\…`); user-run tests when unsure |
-| **License of weights** | Commercial ship risk | Audit rembg model licenses; prefer BiRefNet MIT weights when applicable |
-| **No shared “art MCP”** | Agents glue CLIs ad hoc | Thin PowerShell/Python wrappers under `dream/tools/` with stable exit codes |
+| Gap | Mitigation |
+|---|---|
+| rembg cannot invent correct **door facing** / ecology | LAYOUT rules + human or SD inpaint with reference; never auto-trust gen |
+| Soft hair / foliage mattes | `-dc` / `-a` on BiRefNet; MAM or transparent-background only if needed |
+| Seamless post ≠ aesthetics | Prefer procedural Dream tool or circular-latent gen |
+| ControlNet vs wrap continuity | Low CN strength; Pillow/MakeSeamless post |
+| No shared art MCP | Thin `dream/tools/` wrappers + Godot screenshot QA |
+| Chinese paths | ASCII `D:\Tools\…`; user runs final Godot tests when shell encoding fails |
+| Squoosh CLI ecosystem | Prefer `magick` / oxipng for production crush |
 
 ---
 
-## 5. Sources (primary)
-
-- rembg: https://github.com/danielgatis/rembg  
-- BiRefNet: https://github.com/ZhengPeng7/BiRefNet  
-- Segment Anything: https://github.com/facebookresearch/segment-anything  
-- Grounded-SAM: https://github.com/IDEA-Research/Grounded-Segment-Anything  
-- Grounded-SAM-2: https://github.com/IDEA-Research/Grounded-SAM-2  
-- Matting Anything: https://github.com/shi-labs/matting-anything  
-- Real-ESRGAN: https://github.com/xinntao/Real-ESRGAN  
-- Real-ESRGAN anime notes: https://github.com/xinntao/Real-ESRGAN/blob/master/docs/anime_model.md  
-- waifu2x-ncnn-vulkan: https://github.com/nihui/waifu2x-ncnn-vulkan  
-- Aseprite CLI: https://www.aseprite.org/docs/cli/  
-- ImageMagick Fourier: https://usage.imagemagick.org/fourier/  
-- GIMP Tile Seamless: https://docs.gimp.org/3.2/en/gimp-filter-tile-seamless.html  
-- GIMP Symmetry Painting: https://docs.gimp.org/3.2/en/gimp-symmetry-dialog.html  
-- ComfyUI: https://github.com/comfyanonymous/ComfyUI  
-- Seamless latent tiling (example): https://github.com/mikemojen/ComfyUI-seamless_latent_tiling  
-- MakeSeamlessTexture nodes: https://github.com/SparknightLLC/ComfyUI-MakeSeamlessTexture  
-- Godot importing images: https://docs.godotengine.org/en/stable/tutorials/assets_pipeline/importing_images.html  
-- Godot TileSetAtlasSource: https://docs.godotengine.org/en/stable/classes/class_tilesetatlassource.html  
-- Godot using tilesets: https://docs.godotengine.org/en/stable/tutorials/2d/using_tilesets.html  
-
----
-
-## 6. Prioritized「请用户准备」
+## 7. 请用户准备（人类清单）
 
 ### Must
 
-1. **Python 3.10+** on PATH + `pip install pillow numpy`  
-2. **Godot 4** project opens; **MCP** can run a scene and **`take_screenshot`**  
-3. Confirm agent may write under `dream/assets/` and `dream/tools/`
+1. **Python 3.11+** on PATH；`pip install pillow numpy`  
+2. **Godot 4** 能打开 `dream/`；Cursor **Godot MCP** 可 `run_scene` + `take_screenshot`  
+3. 允许 agent 写入 `dream/assets/` 与 `dream/tools/`  
+4. （商业目标）确认抠图使用 **`-m birefnet-general`**，不要用默认 `bria-rmbg` 除非已签 BRIA
 
 ### Should
 
-4. `pip install "rembg[cpu,cli]"` (or GPU extra) and one successful `birefnet-general` run (downloads weights)  
-5. **Real-ESRGAN ncnn-vulkan** Windows portable on PATH  
-6. **ImageMagick** via `winget install -e --id ImageMagick.ImageMagick`
+5. `pip install "rembg[cpu,cli]"`，并成功跑通一次 BiRefNet（缓存权重到 `REMBG_HOME` 或 `~/.rembg`）  
+6. **Real-ESRGAN ncnn-vulkan** 解压到 `D:\Tools\…` 并加入 PATH  
+7. `winget install -e --id ImageMagick.ImageMagick` → `magick -version`
 
 ### Optional
 
-7. **Aseprite** with CLI on PATH (slice / tiled paint)  
-8. **ComfyUI** local server + one saved **API Format** seamless/Depth/Tile workflow  
-9. CUDA PyTorch only if you want Grounded-SAM / MAM quality beyond rembg  
-10. **GIMP** for rare manual Make Seamless / symmetry tiling  
+8. `pip install iopaint`，准备好 mask 目录约定（白=修补）  
+9. **Aseprite** 已授权且 CLI 在 PATH  
+10. 本机 **ComfyUI** + 一份导出的 **API Format** 工作流（seamless / Depth / Tile / IP-Adapter / inpaint）  
+11. 可选 ComfyUI MCP；或仅用 HTTP `/prompt`  
+12. Florence-2 / SAM 2 仅在需要文本点选多物体时再装 CUDA 栈  
+13. Upscayl GUI（人用）；agent 仍走 Real-ESRGAN zip
 
 ---
 
-*End of research note.*
+## 8. Sources / URLs
+
+### Cutout / segment
+
+- rembg: https://github.com/danielgatis/rembg  
+- BiRefNet: https://github.com/ZhengPeng7/BiRefNet  
+- BRIA RMBG-2.0 (non-commercial default weights): https://huggingface.co/briaai/RMBG-2.0 · https://github.com/bria-ai/rmbg-2.0  
+- SAM: https://github.com/facebookresearch/segment-anything  
+- SAM 2: https://github.com/facebookresearch/sam2  
+- Grounded-SAM: https://github.com/IDEA-Research/Grounded-Segment-Anything  
+- Grounded-SAM-2 (+ Florence demos): https://github.com/IDEA-Research/Grounded-SAM-2  
+- Florence-2: https://huggingface.co/microsoft/Florence-2-base  
+- Matting Anything: https://github.com/shi-labs/matting-anything  
+- transparent-background: https://pypi.org/project/transparent-background/ · https://github.com/plemeri/transparent-background  
+
+### Inpaint / erase
+
+- LaMa: https://github.com/advimman/lama  
+- IOPaint: https://github.com/Sanster/IOPaint · https://www.iopaint.com/  
+
+### Upscale / compress
+
+- Real-ESRGAN: https://github.com/xinntao/Real-ESRGAN  
+- Real-ESRGAN anime notes: https://github.com/xinntao/Real-ESRGAN/blob/master/docs/anime_model.md  
+- Real-ESRGAN ncnn Windows zip: https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip  
+- waifu2x-ncnn-vulkan: https://github.com/nihui/waifu2x-ncnn-vulkan  
+- Upscayl: https://github.com/upscayl/upscayl  
+- upscayl-ncnn (AGPL): https://github.com/upscayl/upscayl-ncnn  
+- Community squoosh-cli: https://www.npmjs.com/package/@frostoven/squoosh-cli  
+
+### Slice / raster / seamless UI
+
+- Aseprite CLI: https://www.aseprite.org/docs/cli/  
+- ImageMagick: https://imagemagick.org/ · Fourier: https://usage.imagemagick.org/fourier/  
+- Pillow: https://pillow.readthedocs.io/  
+- GIMP Tile Seamless: https://docs.gimp.org/3.2/en/gimp-filter-tile-seamless.html  
+- GIMP Symmetry Painting: https://docs.gimp.org/3.2/en/gimp-symmetry-dialog.html  
+- Aseprite tiled mode: https://www.aseprite.org/docs/tiled-mode/  
+
+### Generation / API / MCP
+
+- ComfyUI: https://github.com/comfyanonymous/ComfyUI  
+- ComfyUI server routes: https://docs.comfy.org/development/comfyui-server/comms_routes  
+- Seamless latent example: https://github.com/mikemojen/ComfyUI-seamless_latent_tiling  
+- MakeSeamlessTexture: https://github.com/SparknightLLC/ComfyUI-MakeSeamlessTexture  
+- IP-Adapter plus: https://github.com/cubiq/ComfyUI_IPAdapter_plus  
+- ComfyUI MCP (examples): https://github.com/joenorton/comfyui-mcp-server · https://github.com/artokun/comfyui-mcp  
+
+### Godot
+
+- Importing images: https://docs.godotengine.org/en/stable/tutorials/assets_pipeline/importing_images.html  
+- TileSetAtlasSource: https://docs.godotengine.org/en/stable/classes/class_tilesetatlassource.html  
+- Using tilesets: https://docs.godotengine.org/en/stable/tutorials/2d/using_tilesets.html  
+
+---
+
+*End of Batch B research note.*
