@@ -240,6 +240,41 @@ func paint_water(water: TileMapLayer, ground: TileMapLayer) -> void:
 				ground.set_cell(Vector2i(tx, ty), 0, damp[rng.randi_range(0, damp.size() - 1)])
 
 
+## Mark a rectangular dirt crop bed in the dirt mask (assembler paints via paint_dirt_spurs).
+func mark_dirt_rect(x0: int, y0: int, x1: int, y1: int, force: bool = false) -> void:
+	for ty in range(mini(y0, y1), maxi(y0, y1) + 1):
+		for tx in range(mini(x0, x1), maxi(x0, x1) + 1):
+			if tx < 0 or ty < 0 or tx >= map_w or ty >= map_h:
+				continue
+			if not force and (is_water(tx, ty) or is_path(tx, ty)):
+				continue
+			dirt_mask[ty][tx] = true
+
+
+## Visual crop rows inside a world-space bed rect (placeholder until B12 slices exist).
+func spawn_crop_rows(
+	parent: Node2D,
+	bed: Rect2,
+	title: String,
+	desc: String,
+	row_color: Color = Color(0.45, 0.72, 0.28, 0.9),
+	rows: int = 4
+) -> void:
+	var hs := make_hotspot(parent, title, desc, bed.get_center(), bed.size)
+	var visual: Node2D = hs.get_node("Visual")
+	var inset := 6.0
+	var inner := Rect2(bed.position + Vector2(inset, inset), bed.size - Vector2(inset, inset) * 2.0)
+	if inner.size.x <= 4.0 or inner.size.y <= 4.0:
+		return
+	var row_h: float = inner.size.y / float(maxi(rows, 1))
+	for i in range(rows):
+		var strip := ColorRect.new()
+		strip.color = row_color.darkened(0.05 * float(i % 3))
+		strip.size = Vector2(inner.size.x, maxf(4.0, row_h - 3.0))
+		strip.position = inner.position - bed.get_center() + Vector2(0.0, row_h * float(i) + 1.0)
+		visual.add_child(strip)
+
+
 func spawn_sprite(parent: Node2D, path: String, pos: Vector2, z: int = 0) -> Sprite2D:
 	var spr := Sprite2D.new()
 	spr.texture = load(path) as Texture2D
