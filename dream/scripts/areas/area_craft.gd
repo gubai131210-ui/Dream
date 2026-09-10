@@ -445,6 +445,24 @@ func animate_patrol(node: Node2D, waypoints: Array[Vector2]) -> void:
 		prev = target
 
 
+## Prefer this over animate_patrol — directional walk frames under sprites/npc/{id}/.
+func spawn_patrol_actor(
+	parent: Node2D,
+	character_id: String,
+	title: String,
+	desc: String,
+	waypoints: Array
+) -> PatrolActor:
+	var route: Array[Vector2] = snap_patrol_route(waypoints)
+	if route.is_empty():
+		push_warning("AreaCraft: no walk route for %s" % title)
+		return null
+	var actor := PatrolActor.new()
+	parent.add_child(actor)
+	actor.setup(character_id, title, desc, route)
+	return actor
+
+
 func spawn_water_overlay(parent: Node2D) -> void:
 	if not ResourceLoader.exists(WATER_ATLAS):
 		return

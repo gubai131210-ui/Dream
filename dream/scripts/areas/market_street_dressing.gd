@@ -188,10 +188,9 @@ func _spawn_zone_benches_and_props(ysort: Node2D) -> void:
 func _spawn_actors(ysort: Node2D) -> void:
 	var actors := [
 		{
-			"path": "res://assets/sprites/npc/npc_00.png",
+			"id": "merchant",
 			"title": "摊主甲",
 			"desc": "看守北街中凹口双联摊。",
-			"flip": false,
 			"waypoints": [
 				Vector2(752, 430),
 				Vector2(720, 448),
@@ -200,10 +199,9 @@ func _spawn_actors(ysort: Node2D) -> void:
 			],
 		},
 		{
-			"path": "res://assets/sprites/npc/npc_01.png",
+			"id": "elder_woman",
 			"title": "摊主乙",
 			"desc": "在南凹口蔬摊与杂货之间忙碌。",
-			"flip": true,
 			"waypoints": [
 				Vector2(576, 620),
 				Vector2(700, 620),
@@ -213,10 +211,9 @@ func _spawn_actors(ysort: Node2D) -> void:
 			],
 		},
 		{
-			"path": "res://assets/sprites/npc/npc_02.png",
+			"id": "farmer",
 			"title": "买菜客",
 			"desc": "沿石板主街逛北排摊位。",
-			"flip": false,
 			"waypoints": [
 				Vector2(496, 480),
 				Vector2(640, 500),
@@ -227,10 +224,9 @@ func _spawn_actors(ysort: Node2D) -> void:
 			],
 		},
 		{
-			"path": "res://assets/sprites/npc/idle_frame_0.png",
+			"id": "station_master",
 			"title": "脚夫",
 			"desc": "在货栈与东街角店之间搬货。",
-			"flip": false,
 			"waypoints": [
 				Vector2(448, 380),
 				Vector2(640, 480),
@@ -240,10 +236,9 @@ func _spawn_actors(ysort: Node2D) -> void:
 			],
 		},
 		{
-			"path": "res://assets/sprites/npc/idle_frame_1.png",
+			"id": "blacksmith",
 			"title": "闲逛村民",
 			"desc": "在街市长椅与南口之间闲逛。",
-			"flip": true,
 			"waypoints": [
 				Vector2(560, 520),
 				Vector2(720, 520),
@@ -252,10 +247,9 @@ func _spawn_actors(ysort: Node2D) -> void:
 			],
 		},
 		{
-			"path": "res://assets/sprites/npc/idle_frame_2.png",
-			"title": "访客",
+			"id": "merchant",
+			"title": "访客商贩",
 			"desc": "从南土路走进商业街。",
-			"flip": false,
 			"waypoints": [
 				Vector2(640, 820),
 				Vector2(640, 700),
@@ -265,10 +259,9 @@ func _spawn_actors(ysort: Node2D) -> void:
 			],
 		},
 		{
-			"path": "res://assets/sprites/npc/idle_frame_3.png",
+			"id": "farmer",
 			"title": "桥头看客",
 			"desc": "在西桥与河畔木凳一带停留。",
-			"flip": true,
 			"waypoints": [
 				Vector2(280, 480),
 				Vector2(200, 450),
@@ -277,17 +270,12 @@ func _spawn_actors(ysort: Node2D) -> void:
 			],
 		},
 	]
+	# Prefer unique looks on screen: rotate ids if duplicate titles share one.
+	var used: Dictionary = {}
 	for a in actors:
-		if not ResourceLoader.exists(a["path"]):
-			continue
-		var route: Array[Vector2] = craft.snap_patrol_route(a["waypoints"])
-		if route.is_empty():
-			continue
-		var start: Vector2 = route[0]
-		var hs := craft.make_hotspot(ysort, a["title"], a["desc"], start, Vector2(40, 56))
-		var visual: Node2D = hs.get_node("Visual")
-		craft.add_contact_shadow(visual, Vector2(0, 0), Vector2(12, 5))
-		var spr := craft.spawn_sprite(visual, a["path"], Vector2.ZERO)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.35)
-		spr.flip_h = bool(a["flip"])
-		craft.animate_patrol(hs, route)
+		var cid: String = str(a["id"])
+		if used.has(cid):
+			# second merchant/farmer instances OK for density; keep id
+			pass
+		used[cid] = true
+		craft.spawn_patrol_actor(ysort, cid, a["title"], a["desc"], a["waypoints"])
