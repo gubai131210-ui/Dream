@@ -58,10 +58,10 @@ Portal pattern: edge hotspots `→广场` / `→住宅区` / `→农场` using `
 ## Acceptance
 
 1. From Hub → A08 and A02 run without script errors  
-2. From A09 → A08 (or A02) via portal and back  
-3. Skill checklist items 1–7 pass on both new assemblers  
-4. User local Godot test (Chinese paths)  
-5. Commit; push if remote exists  
+2. From A09 → A08 / A02 via **edge portals** (and TopBar) and back
+3. Skill checklist items 1–7 pass on both new assemblers
+4. User local Godot test (Chinese paths)
+5. Commit; push if remote exists
 
 ## Rebuild art if needed
 
