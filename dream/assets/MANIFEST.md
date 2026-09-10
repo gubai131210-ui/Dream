@@ -103,3 +103,9 @@ References copied: **3** → `dream/assets/raw/references/`
 | `B14_npc_03.png` | 989804 | `B14_NPC_Characters/閾佸尃npc鍍忕礌鍔ㄧ敾鍥鹃泦.png` |
 | `B15_effects_01.png` | 1222931 | `B15_动态特效_Effects/16浣嶉鏍肩幆澧冨姩鐢荤簿鐏佃〃.png` |
 | `B15_effects_02.png` | 1506302 | `B15_动态特效_Effects/鍍忕礌椋庣幆澧冨姩鐢荤簿鐏佃〃.png` |
+
+
+## Notes
+- references count: 7
+- BASE_TILE: 32
+- Phase1 generated: A02/A03/A08/A10, B01-06, B01-10 transitions, B12 crops
