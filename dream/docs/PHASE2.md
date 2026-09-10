@@ -1,7 +1,7 @@
 # Dream Phase 2 — Village ring expansion
 
 **Status:** DONE  
-**Depends on:** Phase 1 (A09 square + A01/A16 hubs), `SCALE.md`, `LAYOUT.md`, skill `realistic-scene-craft`  
+**Depends on:** Phase 1 (A09 square + A01/A16 hubs), `SCALE.md`, `LAYOUT.md`, `BUILDING_PLACEMENT.md`, skill `realistic-scene-craft`  
 **Next:** [`PHASE3.md`](PHASE3.md) — A03 farmland + A10 market street
 
 ## Scope (locked)
