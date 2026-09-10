@@ -242,6 +242,7 @@ func _spawn_station_building(ysort: Node2D) -> void:
 		craft.add_contact_shadow(ysort, pos, Vector2(40, 14))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
 		spr.offset = offset
+		craft.mark_blocked_footprint(pos, int(s["hw"]), int(s["hh"]))
 		var hs := craft.make_hotspot(
 			ysort, s["title"], s["desc"], pos + Vector2(0, 24), Vector2(140, 88)
 		)
@@ -278,13 +279,14 @@ func _spawn_platform_benches_and_props(ysort: Node2D) -> void:
 				continue
 		craft.add_contact_shadow(ysort, pos, Vector2(14, 6))
 		var spr := craft.spawn_sprite(ysort, path, pos)
+		spr.scale = Vector2(0.55, 0.55)
 		var hs := craft.make_hotspot(ysort, b["title"], b["desc"], pos, Vector2(48, 40))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
 
 	var props := [
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(480, 352), "title": "行李箱", "desc": "站台货箱。"},
-		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(720, 360), "title": "站台桶", "desc": "站房旁木桶。"},
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(720, 360), "title": "站台桶", "desc": "站房旁木桶。"},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(352, 352), "title": "站台灯", "desc": "西站台灯柱。"},
 		{"path": "res://assets/sprites/props/lamp_1.png", "pos": Vector2(1040, 352), "title": "站台灯", "desc": "东站台灯柱。"},
 		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(880, 360), "title": "邮包", "desc": "候车邮包堆。"},
@@ -303,6 +305,7 @@ func _spawn_platform_benches_and_props(ysort: Node2D) -> void:
 			pos = cleared
 		craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
+		spr.scale = Vector2(0.55, 0.55)
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(40, 40))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
@@ -324,9 +327,10 @@ func _spawn_platform_benches_and_props(ysort: Node2D) -> void:
 			continue
 		craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
-		if s.has("scale"):
-			var sc := float(s["scale"])
-			spr.scale = Vector2(sc, sc)
+		var sc := float(s.get("scale", 0.55))
+		if sc > 0.55:
+			sc = 0.55
+		spr.scale = Vector2(sc, sc)
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 40))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO

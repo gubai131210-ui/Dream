@@ -1,0 +1,199 @@
+{
+  "source_glob": "B13_animals_01.png … _05.png",
+  "missing_requested": [
+    "chicken",
+    "bird"
+  ],
+  "missing_note": "B13 sheets contain sheep/deer/cat/cow/dog only; no 鸡/鸟 art.",
+  "species": [
+    {
+      "id": "sheep",
+      "zh": "羊",
+      "source": "B13_animals_01.png",
+      "blob_count": 18,
+      "row_counts": [
+        4,
+        8,
+        4,
+        2
+      ],
+      "idle": [
+        "res://assets/sprites/animals/sheep/idle_0.png",
+        "res://assets/sprites/animals/sheep/idle_1.png",
+        "res://assets/sprites/animals/sheep/idle_2.png",
+        "res://assets/sprites/animals/sheep/idle_3.png"
+      ],
+      "walk": [
+        "res://assets/sprites/animals/sheep/walk_0.png",
+        "res://assets/sprites/animals/sheep/walk_1.png",
+        "res://assets/sprites/animals/sheep/walk_2.png",
+        "res://assets/sprites/animals/sheep/walk_3.png",
+        "res://assets/sprites/animals/sheep/walk_4.png",
+        "res://assets/sprites/animals/sheep/walk_5.png",
+        "res://assets/sprites/animals/sheep/walk_6.png",
+        "res://assets/sprites/animals/sheep/walk_7.png"
+      ],
+      "extra": {
+        "row2": [
+          "res://assets/sprites/animals/sheep/pose_r2_0.png"
+        ],
+        "row3": [
+          "res://assets/sprites/animals/sheep/pose_r3_0.png"
+        ]
+      },
+      "notes": "idle=row0, walk=longest later row; black keyed to alpha"
+    },
+    {
+      "id": "deer",
+      "zh": "鹿",
+      "source": "B13_animals_02.png",
+      "blob_count": 18,
+      "row_counts": [
+        4,
+        8,
+        4,
+        2
+      ],
+      "idle": [
+        "res://assets/sprites/animals/deer/idle_0.png",
+        "res://assets/sprites/animals/deer/idle_1.png",
+        "res://assets/sprites/animals/deer/idle_2.png",
+        "res://assets/sprites/animals/deer/idle_3.png"
+      ],
+      "walk": [
+        "res://assets/sprites/animals/deer/walk_0.png",
+        "res://assets/sprites/animals/deer/walk_1.png",
+        "res://assets/sprites/animals/deer/walk_2.png",
+        "res://assets/sprites/animals/deer/walk_3.png",
+        "res://assets/sprites/animals/deer/walk_4.png",
+        "res://assets/sprites/animals/deer/walk_5.png",
+        "res://assets/sprites/animals/deer/walk_6.png",
+        "res://assets/sprites/animals/deer/walk_7.png"
+      ],
+      "extra": {
+        "row2": [
+          "res://assets/sprites/animals/deer/pose_r2_0.png"
+        ],
+        "row3": [
+          "res://assets/sprites/animals/deer/pose_r3_0.png"
+        ]
+      },
+      "notes": "idle=row0, walk=longest later row; black keyed to alpha"
+    },
+    {
+      "id": "cat",
+      "zh": "猫",
+      "source": "B13_animals_03.png",
+      "blob_count": 20,
+      "row_counts": [
+        4,
+        6,
+        4,
+        2,
+        4
+      ],
+      "idle": [
+        "res://assets/sprites/animals/cat/idle_0.png",
+        "res://assets/sprites/animals/cat/idle_1.png",
+        "res://assets/sprites/animals/cat/idle_2.png",
+        "res://assets/sprites/animals/cat/idle_3.png"
+      ],
+      "walk": [
+        "res://assets/sprites/animals/cat/walk_0.png",
+        "res://assets/sprites/animals/cat/walk_1.png",
+        "res://assets/sprites/animals/cat/walk_2.png",
+        "res://assets/sprites/animals/cat/walk_3.png",
+        "res://assets/sprites/animals/cat/walk_4.png",
+        "res://assets/sprites/animals/cat/walk_5.png"
+      ],
+      "extra": {
+        "row2": [
+          "res://assets/sprites/animals/cat/pose_r2_0.png"
+        ],
+        "row3": [
+          "res://assets/sprites/animals/cat/pose_r3_0.png"
+        ],
+        "row4": [
+          "res://assets/sprites/animals/cat/pose_r4_0.png"
+        ]
+      },
+      "notes": "idle=row0, walk=longest later row; black keyed to alpha"
+    },
+    {
+      "id": "cow",
+      "zh": "牛",
+      "source": "B13_animals_04.png",
+      "blob_count": 18,
+      "row_counts": [
+        4,
+        8,
+        4,
+        2
+      ],
+      "idle": [
+        "res://assets/sprites/animals/cow/idle_0.png",
+        "res://assets/sprites/animals/cow/idle_1.png",
+        "res://assets/sprites/animals/cow/idle_2.png",
+        "res://assets/sprites/animals/cow/idle_3.png"
+      ],
+      "walk": [
+        "res://assets/sprites/animals/cow/walk_0.png",
+        "res://assets/sprites/animals/cow/walk_1.png",
+        "res://assets/sprites/animals/cow/walk_2.png",
+        "res://assets/sprites/animals/cow/walk_3.png",
+        "res://assets/sprites/animals/cow/walk_4.png",
+        "res://assets/sprites/animals/cow/walk_5.png",
+        "res://assets/sprites/animals/cow/walk_6.png",
+        "res://assets/sprites/animals/cow/walk_7.png"
+      ],
+      "extra": {
+        "row2": [
+          "res://assets/sprites/animals/cow/pose_r2_0.png"
+        ],
+        "row3": [
+          "res://assets/sprites/animals/cow/pose_r3_0.png"
+        ]
+      },
+      "notes": "idle=row0, walk=longest later row; black keyed to alpha"
+    },
+    {
+      "id": "dog",
+      "zh": "狗",
+      "source": "B13_animals_05.png",
+      "blob_count": 26,
+      "row_counts": [
+        4,
+        6,
+        6,
+        4,
+        6
+      ],
+      "idle": [
+        "res://assets/sprites/animals/dog/idle_0.png",
+        "res://assets/sprites/animals/dog/idle_1.png",
+        "res://assets/sprites/animals/dog/idle_2.png",
+        "res://assets/sprites/animals/dog/idle_3.png"
+      ],
+      "walk": [
+        "res://assets/sprites/animals/dog/walk_0.png",
+        "res://assets/sprites/animals/dog/walk_1.png",
+        "res://assets/sprites/animals/dog/walk_2.png",
+        "res://assets/sprites/animals/dog/walk_3.png",
+        "res://assets/sprites/animals/dog/walk_4.png",
+        "res://assets/sprites/animals/dog/walk_5.png"
+      ],
+      "extra": {
+        "row2": [
+          "res://assets/sprites/animals/dog/pose_r2_0.png"
+        ],
+        "row3": [
+          "res://assets/sprites/animals/dog/pose_r3_0.png"
+        ],
+        "row4": [
+          "res://assets/sprites/animals/dog/pose_r4_0.png"
+        ]
+      },
+      "notes": "idle=row0, walk=longest later row; black keyed to alpha"
+    }
+  ]
+}

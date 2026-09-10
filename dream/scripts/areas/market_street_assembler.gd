@@ -276,6 +276,7 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		craft.add_contact_shadow(ysort, pos, Vector2(36, 12))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
 		spr.offset = offset
+		craft.mark_blocked_footprint(pos, int(s["hw"]), int(s["hh"]))
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos + Vector2(0, 24), Vector2(120, 80))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO

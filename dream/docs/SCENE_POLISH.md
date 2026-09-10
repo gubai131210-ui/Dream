@@ -19,8 +19,9 @@ Optimize **already shipped** outdoor scenes against the latest craft locks. No n
 - [x] Trees: craft.spawn_tree (or find_sprite_inside) — no footprint-only
 - [x] NPCs: spawn_patrol_actor only
 - [~] No opaque ColorRect landmark hacks — soft residuals: market awning strips, station track sleepers/rails, tiny plaza bridge label
-- [x] Props use real paths (barrel_0/crate_0/lamp_0/rock_0N/…) scale ≤0.6
+- [x] Props use real paths (barrel_1 default / barrel_0 specialty; crate/sack/lamp/rock_0N) scale ≤0.55
 - [x] Portals + TopBar return Hub
+- [x] blocked_mask + PatrolActor turn-back; UTF-8 hotspot strings; farm pond meander
 ```
 
 ## Multi-agent ownership (exclusive)

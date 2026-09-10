@@ -100,6 +100,7 @@ func _spawn_sheds(ysort: Node2D) -> void:
 		craft.add_contact_shadow(ysort, cleared, Vector2(36, 12))
 		var spr := craft.spawn_sprite(ysort, s["path"], cleared)
 		spr.offset = offset
+		craft.mark_blocked_footprint(cleared, 2, 1)
 
 
 func _spawn_terrace_markers(ysort: Node2D) -> void:
@@ -135,7 +136,7 @@ func _spawn_props(ysort: Node2D) -> void:
 	var samples := [
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(420, 520), "title": "坡地筐", "desc": "梯田收获用的竹筐。", "scale": 0.55},
 		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(640, 680), "title": "粮袋", "desc": "晒在下层台地的粮袋。", "scale": 0.55},
-		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(540, 360), "title": "水桶", "desc": "台地边取水用桶。", "scale": 0.5},
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(540, 360), "title": "水桶", "desc": "台地边取水用桶。", "scale": 0.5},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):

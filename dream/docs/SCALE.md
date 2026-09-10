@@ -117,8 +117,10 @@ Relative to `BASE_TILE = 32` and `CHARACTER_HEIGHT_PX = 56` (midpoint):
 2. **Door** — opening ≥ character height; width ≥ 1 tile.
 3. **Cottage** — eave/ridge 3–5 tiles; footprint typically 3–6 tiles wide.
 4. **Town hall / landmark** — 5–8 tiles tall; must still read as “big but walkable,” not a skyscraper.
-5. **Props** — never taller than a cottage unless intentional landmark.
-6. **A01 / A09 reference comps** — use for *relative* silhouette hierarchy only (world overview / village square mood). They are **not** 1:1 tilemaps; do not import as TileSet.
+5. **Props** — never taller than a cottage unless intentional landmark. Small yard props (sack/crate/barrel/lamp) must spawn at **display scale ≤0.55** — see `PROP_ORIENTATION.md`.
+6. **Barrel pose** — default **upright** `barrel_1`; horizontal `barrel_0` only for market wine/stall specialty (`PROP_ORIENTATION.md`).
+7. **Shore rocks** — landmark bank rocks ≈ **½ character height** (scale ~0.28–0.35); no tree AABB overlap; contact shadow required.
+8. **A01 / A09 reference comps** — use for *relative* silhouette hierarchy only (world overview / village square mood). They are **not** 1:1 tilemaps; do not import as TileSet.
 
 ### Suggested downscale from native AI sprites
 

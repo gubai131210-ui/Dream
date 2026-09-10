@@ -159,6 +159,7 @@ func _spawn_house(ysort: Node2D) -> void:
 	craft.add_contact_shadow(ysort, cleared, Vector2(40, 14))
 	var spr := craft.spawn_sprite(ysort, path, cleared)
 	spr.offset = offset
+	craft.mark_blocked_footprint(cleared, 2, 1)
 	if scale_f < 0.999:
 		spr.scale = Vector2(scale_f, scale_f)
 	craft.make_hotspot(ysort, "湖畔小屋", "临湖木屋，西侧土径伸入浅湾。", cleared + Vector2(0, 24), Vector2(110, 80))
@@ -167,7 +168,7 @@ func _spawn_house(ysort: Node2D) -> void:
 func _spawn_dock_props(ysort: Node2D) -> void:
 	# Dock read from dirt spur + end props — no ColorRect deck.
 	var samples := [
-		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(400, 560), "title": "系缆桶", "desc": "码头尽头的系缆空桶。", "scale": 0.5},
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(400, 560), "title": "系缆桶", "desc": "码头尽头的系缆空桶。", "scale": 0.5},
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(480, 548), "title": "卸货箱", "desc": "小舟卸货用的木箱。", "scale": 0.52},
 		{"path": "res://assets/sprites/props/rock_02.png", "pos": Vector2(360, 580), "title": "岸石", "desc": "码头旁的浅滩石。", "scale": 0.38},
 	]
@@ -177,7 +178,7 @@ func _spawn_dock_props(ysort: Node2D) -> void:
 
 func _spawn_props(ysort: Node2D) -> void:
 	var samples := [
-		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(520, 560), "title": "码头桶", "desc": "小屋码头旁的桶。", "scale": 0.5},
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(520, 560), "title": "码头桶", "desc": "小屋码头旁的桶。", "scale": 0.5},
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(920, 500), "title": "门前箱", "desc": "湖畔小屋门边木箱。", "scale": 0.55},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(820, 560), "title": "廊灯", "desc": "通向码头的小灯。", "scale": 0.55},
 		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(700, 520), "title": "渔网袋", "desc": "码头边晒干的网袋。", "scale": 0.5},

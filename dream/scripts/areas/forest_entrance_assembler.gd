@@ -123,6 +123,7 @@ func _spawn_cabin(ysort: Node2D) -> void:
 	craft.add_contact_shadow(ysort, cleared, Vector2(32, 11))
 	var spr := craft.spawn_sprite(ysort, path, cleared)
 	spr.offset = offset
+	craft.mark_blocked_footprint(cleared, 2, 1)
 	var hs := craft.make_hotspot(ysort, "林缘小屋", "森林入口空地旁小屋：整栋在 play zone 内。", cleared + Vector2(0, 20), Vector2(100, 72))
 	spr.reparent(hs.get_node("Visual"))
 	spr.position = Vector2.ZERO
@@ -132,7 +133,7 @@ func _spawn_props(ysort: Node2D) -> void:
 	var samples := [
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(600, 480), "title": "林径灯", "desc": "土径旁路灯。"},
 		{"path": "res://assets/sprites/props/bench_2.png", "pos": Vector2(560, 520), "title": "歇脚木凳", "desc": "空地木凳（林缘款）。"},
-		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(700, 400), "title": "行囊", "desc": "小屋旁行囊。", "scale": 0.65},
+		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(700, 400), "title": "行囊", "desc": "小屋旁行囊。", "scale": 0.55},
 		{"path": "res://assets/sprites/props/crate_1.png", "pos": Vector2(500, 400), "title": "木箱", "desc": "林缘补给箱。", "scale": 0.55},
 	]
 	for s in samples:
@@ -148,8 +149,10 @@ func _spawn_props(ysort: Node2D) -> void:
 			pos = cleared
 		craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
-		if s.has("scale"):
-			spr.scale = Vector2(float(s["scale"]), float(s["scale"]))
+		var sc := float(s.get("scale", 0.55))
+		if sc > 0.55:
+			sc = 0.55
+		spr.scale = Vector2(sc, sc)
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO

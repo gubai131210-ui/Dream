@@ -6,26 +6,40 @@ extends InteractableHotspot
 const DIRS: Array[String] = ["down", "left", "right", "up"]
 const SPEED_PX := 42.0
 const PAUSE_SEC := 0.35
+const AVOID_PAUSE_SEC := 0.45
 const FRAME_FPS := 7.0
+const SNAP_MAX_R := 8
 
 var _anim: AnimatedSprite2D
 var _route: Array[Vector2] = []
 var _idx: int = 0
+var _dir: int = 1
 var _pause_left: float = 0.0
 var _facing: String = "down"
 var _moving: bool = false
+## Weak ref so AreaCraft (RefCounted) can be GC'd if scene tears down craft first.
+var _craft_ref: WeakRef = null
 
 
-func setup(character_id: String, actor_title: String, actor_desc: String, route: Array[Vector2]) -> void:
+func setup(
+	character_id: String,
+	actor_title: String,
+	actor_desc: String,
+	route: Array[Vector2],
+	craft: AreaCraft = null
+) -> void:
 	title = actor_title
 	description = actor_desc
 	name = actor_title.replace(" ", "")
 	_route = route.duplicate()
+	set_area_craft(craft)
 	if _route.is_empty():
 		push_warning("PatrolActor: empty route for %s" % character_id)
 		return
+	_snap_blocked_waypoints()
 	position = _route[0]
 	_idx = 1 % maxi(_route.size(), 1)
+	_dir = 1
 
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
@@ -54,6 +68,18 @@ func setup(character_id: String, actor_title: String, actor_desc: String, route:
 	_anim.offset = Vector2(0, -28)
 	visual.add_child(_anim)
 	_set_anim(false)
+
+
+## Optional post-setup bind so assemblers that call setup without craft stay compiling.
+func set_area_craft(craft: AreaCraft) -> void:
+	_craft_ref = weakref(craft) if craft != null else null
+
+
+func _craft() -> AreaCraft:
+	if _craft_ref == null:
+		return null
+	var c: Variant = _craft_ref.get_ref()
+	return c as AreaCraft
 
 
 func _build_frames(character_id: String) -> SpriteFrames:
@@ -88,6 +114,35 @@ func _build_frames(character_id: String) -> SpriteFrames:
 	return frames
 
 
+## If a waypoint sits on water/blocked, snap to nearby NPC-walkable tile center (spiral).
+func _snap_blocked_waypoints() -> void:
+	var craft := _craft()
+	if craft == null or _route.is_empty():
+		return
+	for i in range(_route.size()):
+		var t: Vector2i = craft.world_to_tile(_route[i])
+		if craft.is_npc_walkable(t.x, t.y):
+			continue
+		var snapped := _find_npc_walkable_near(craft, t, SNAP_MAX_R)
+		if snapped != Vector2.ZERO:
+			_route[i] = snapped
+
+
+func _find_npc_walkable_near(craft: AreaCraft, origin: Vector2i, max_r: int) -> Vector2:
+	if craft.is_npc_walkable(origin.x, origin.y):
+		return craft.tile_center(origin.x, origin.y)
+	for r in range(1, max_r + 1):
+		for oy in range(-r, r + 1):
+			for ox in range(-r, r + 1):
+				if maxi(absi(ox), absi(oy)) != r:
+					continue
+				var nx := origin.x + ox
+				var ny := origin.y + oy
+				if craft.is_npc_walkable(nx, ny):
+					return craft.tile_center(nx, ny)
+	return Vector2.ZERO
+
+
 func _physics_process(delta: float) -> void:
 	if _route.size() < 2 or _anim == null:
 		return
@@ -102,7 +157,7 @@ func _physics_process(delta: float) -> void:
 	var dist: float = to.length()
 	if dist <= 2.0:
 		position = target
-		_idx = (_idx + 1) % _route.size()
+		_advance_idx()
 		_pause_left = PAUSE_SEC
 		_moving = false
 		_set_anim(false)
@@ -110,10 +165,35 @@ func _physics_process(delta: float) -> void:
 
 	var step: float = SPEED_PX * delta
 	var dir: Vector2 = to / dist
-	position += dir * minf(step, dist)
+	var move_len: float = minf(step, dist)
+	var next_pos: Vector2 = position + dir * move_len
+
+	var craft := _craft()
+	if craft != null:
+		var nt: Vector2i = craft.world_to_tile(next_pos)
+		if not craft.is_npc_walkable(nt.x, nt.y):
+			_turn_back()
+			return
+
+	position = next_pos
 	_update_facing(dir)
 	_moving = true
 	_set_anim(true)
+
+
+func _advance_idx() -> void:
+	var n: int = _route.size()
+	if n < 1:
+		return
+	_idx = (_idx + _dir + n * 4) % n
+
+
+func _turn_back() -> void:
+	_dir = -_dir
+	_advance_idx()
+	_pause_left = AVOID_PAUSE_SEC
+	_moving = false
+	_set_anim(false)
 
 
 func _update_facing(dir: Vector2) -> void:

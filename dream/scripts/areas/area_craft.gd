@@ -33,6 +33,7 @@ var water_mask: Array = []
 var bank_mask: Array = []
 var path_mask: Array = []
 var dirt_mask: Array = []
+var blocked_mask: Array = []
 
 
 func setup(width: int, height: int, district_id: String = "plaza") -> void:
@@ -74,24 +75,29 @@ func clear_masks() -> void:
 	bank_mask.clear()
 	path_mask.clear()
 	dirt_mask.clear()
+	blocked_mask.clear()
 	for y in range(map_h):
 		var wrow: Array = []
 		var brow: Array = []
 		var prow: Array = []
 		var drow: Array = []
+		var blkrow: Array = []
 		wrow.resize(map_w)
 		brow.resize(map_w)
 		prow.resize(map_w)
 		drow.resize(map_w)
+		blkrow.resize(map_w)
 		for x in range(map_w):
 			wrow[x] = false
 			brow[x] = false
 			prow[x] = false
 			drow[x] = false
+			blkrow[x] = false
 		water_mask.append(wrow)
 		bank_mask.append(brow)
 		path_mask.append(prow)
 		dirt_mask.append(drow)
+		blocked_mask.append(blkrow)
 
 
 func rebuild_banks() -> void:
@@ -118,20 +124,61 @@ func touches_water(tx: int, ty: int) -> bool:
 	return false
 
 
+func _in_bounds(tx: int, ty: int) -> bool:
+	return tx >= 0 and ty >= 0 and tx < map_w and ty < map_h
+
+
 func is_water(tx: int, ty: int) -> bool:
+	if not _in_bounds(tx, ty):
+		return false
 	return bool(water_mask[ty][tx])
 
 
 func is_path(tx: int, ty: int) -> bool:
+	if not _in_bounds(tx, ty):
+		return false
 	return bool(path_mask[ty][tx])
 
 
 func is_dirt(tx: int, ty: int) -> bool:
+	if not _in_bounds(tx, ty):
+		return false
 	return bool(dirt_mask[ty][tx])
 
 
 func is_bank(tx: int, ty: int) -> bool:
+	if not _in_bounds(tx, ty):
+		return false
 	return bool(bank_mask[ty][tx])
+
+
+func is_blocked(tx: int, ty: int) -> bool:
+	if not _in_bounds(tx, ty):
+		return false
+	return bool(blocked_mask[ty][tx])
+
+
+func mark_blocked(tx: int, ty: int) -> void:
+	if not _in_bounds(tx, ty):
+		return
+	blocked_mask[ty][tx] = true
+
+
+## Mark building foot / tree trunk tiles around a world-space center.
+func mark_blocked_footprint(world_pos: Vector2, half_w: int, half_h: int) -> void:
+	var t := world_to_tile(world_pos)
+	for oy in range(-half_h, half_h + 1):
+		for ox in range(-half_w, half_w + 1):
+			mark_blocked(t.x + ox, t.y + oy)
+
+
+## NPC walk: grass/dirt/path OK; water and building/tree blocked tiles are not.
+func is_npc_walkable(tx: int, ty: int) -> bool:
+	if not _in_bounds(tx, ty):
+		return false
+	if is_water(tx, ty) or is_blocked(tx, ty):
+		return false
+	return true
 
 
 func is_walk(tx: int, ty: int) -> bool:
@@ -139,7 +186,7 @@ func is_walk(tx: int, ty: int) -> bool:
 
 
 func is_plantable(tx: int, ty: int) -> bool:
-	if tx < 0 or ty < 0 or tx >= map_w or ty >= map_h:
+	if not _in_bounds(tx, ty):
 		return false
 	if is_water(tx, ty) or is_path(tx, ty) or is_dirt(tx, ty):
 		return false
@@ -423,6 +470,7 @@ func spawn_tree(
 		add_contact_shadow(parent, cleared, Vector2(22, 8))
 	var spr := spawn_sprite(parent, path, cleared, z)
 	spr.offset = offset
+	mark_blocked_footprint(cleared, half_w, half_h)
 	return spr
 
 
@@ -543,7 +591,7 @@ func spawn_patrol_actor(
 		return null
 	var actor := PatrolActor.new()
 	parent.add_child(actor)
-	actor.setup(character_id, title, desc, route)
+	actor.setup(character_id, title, desc, route, self)
 	return actor
 
 

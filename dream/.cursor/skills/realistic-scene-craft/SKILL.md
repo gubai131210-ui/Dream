@@ -39,11 +39,12 @@ Scene craft checklist:
 - [ ] 5. Place paths/bridges with span rules + correct material (stone vs dirt)
 - [ ] 6. Place buildings by facing slots + footprint + full sprite AABB in build zone
 - [ ] 7. Door dirt south of feet (or allow_path for buildings); no apron/footprint fight
-- [ ] 8. Place trees/props with footprint (yard props ⊆ build zone when fenced)
-- [ ] 9. Actors on walk graph only (district anchors)
-- [ ] 10. Asset/draw pass via painting-asset-craft if new art
-- [ ] 11. MCP or user visual QA: roofs fully inside zone/fence; silhouette OK
-- [ ] 12. Update AREA_FRAMEWORK / LAYOUT / BUILDING_PLACEMENT if rules changed
+- [ ] 8. Place trees/props with footprint (yard props ⊆ build zone when fenced); props ≤0.55; barrel_1 default
+- [ ] 9. mark_blocked_footprint on buildings; trees via spawn_tree
+- [ ] 10. Actors on walk graph + blocked_mask turn-back (`spawn_patrol_actor`)
+- [ ] 11. Asset/draw pass via painting-asset-craft if new art
+- [ ] 12. MCP or user visual QA: roofs fully inside zone/fence; silhouette OK; no mojibake hotspots
+- [ ] 13. Update AREA_FRAMEWORK / LAYOUT / BUILDING_PLACEMENT / PROP_ORIENTATION if rules changed
 ```
 
 **Done when:** every checklist item is checked, and a review can name the district, mask functions / slot positions / build zones used.
@@ -57,11 +58,13 @@ Scene craft checklist:
 5. Building art is **south-facing** unless new sheets exist → lots **north of** civic/path; doors toward public space.
 6. **Buildings: full sprite AABB ⊆ play/build zone** via `AreaCraft.find_building_inside` — see `docs/BUILDING_PLACEMENT.md`. Foot-only / small tile footprint is forbidden. Fenced farms use inset `FARM_BUILD_ZONE`, not fence-line `FARM_ZONE`.
 7. Roads stop before river except a **bridge span** with parallel bank anchors.
-8. NPCs: sparse anchors on preferred surfaces (stone > dirt > grass); no random full-map roam.
-9. Runtime paint prefers `set_cell` / precomputed coords; do not spam `set_cells_terrain_connect` every frame.
-10. Fill tiles wrap-match (`L==R`, `T==B`); Nearest + `use_texture_padding`; integer zoom.
-11. Chinese paths: prefer writing tools under `dream/tools/`; ask user to run Godot tests locally when risky.
-12. **District differentiation** — follow `docs/AREA_FRAMEWORK.md` parameter table. Assemblers must call `craft.setup(w, h, district_id)` (or `AreaCraft.eco_kind(..., district)`). Silhouette test must distinguish plaza ≠ residential ≠ farm_home ≠ farmland ≠ market.
+8. NPCs: sparse anchors on preferred surfaces (stone > dirt > grass); no random full-map roam. After buildings/trees, maintain `blocked_mask`; patrol via `spawn_patrol_actor` must turn back on blocked/water (`NPC_ANIM.md`).
+9. Props: upright `barrel_1` default; `barrel_0` specialty only; small props scale ≤0.55; shoreline rocks ~½ person + no tree AABB overlap (`docs/PROP_ORIENTATION.md`).
+10. Hotspot/title strings: UTF-8 Chinese — never ship mojibake (rewrite with Write tool; avoid PowerShell `$` mangling).
+11. Runtime paint prefers `set_cell` / precomputed coords; do not spam `set_cells_terrain_connect` every frame.
+12. Fill tiles wrap-match (`L==R`, `T==B`); Nearest + `use_texture_padding`; integer zoom.
+13. Chinese paths: prefer writing tools under `dream/tools/`; ask user to run Godot tests locally when risky.
+14. **District differentiation** — follow `docs/AREA_FRAMEWORK.md` parameter table. Assemblers must call `craft.setup(w, h, district_id)` (or `AreaCraft.eco_kind(..., district)`). Silhouette test must distinguish plaza ≠ residential ≠ farm_home ≠ farmland ≠ market.
 
 ## Pass order (assembler)
 

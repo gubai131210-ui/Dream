@@ -569,6 +569,7 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		_add_contact_shadow(ysort, pos, Vector2(36, 12))
 		var spr := _spawn_sprite(ysort, s["path"], pos)
 		spr.offset = offset
+		craft.mark_blocked_footprint(pos, int(s["hw"]), int(s["hh"]))
 		var hs := _make_hotspot(ysort, s["title"], s["desc"], pos + Vector2(0, 24), Vector2(120, 80))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
@@ -589,7 +590,7 @@ func _spawn_props(ysort: Node2D) -> void:
 			f.position = Vector2.ZERO
 
 	var samples := [
-		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(500, 430), "title": "木桶", "desc": "摊位旁木桶。", "on_path_ok": true, "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(500, 430), "title": "木桶", "desc": "摊位旁木桶。", "on_path_ok": true, "hw": 1, "hh": 1},
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(780, 430), "title": "货箱", "desc": "市场货箱。", "on_path_ok": true, "hw": 1, "hh": 1},
 		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(560, 540), "title": "长椅", "desc": "面向水井的长椅。", "on_path_ok": true, "hw": 1, "hh": 1},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(720, 540), "title": "路灯", "desc": "广场路灯。", "on_path_ok": true, "hw": 1, "hh": 1},

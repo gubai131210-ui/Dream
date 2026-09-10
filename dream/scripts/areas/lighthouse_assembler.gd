@@ -156,6 +156,7 @@ func _spawn_lighthouse(ysort: Node2D) -> void:
 	craft.add_contact_shadow(ysort, cleared, Vector2(40, 14))
 	var spr := craft.spawn_sprite(ysort, path, cleared)
 	spr.offset = offset
+	craft.mark_blocked_footprint(cleared, 2, 1)
 	if scale_f < 0.999:
 		spr.scale = Vector2(scale_f, scale_f)
 	craft.make_hotspot(ysort, "灯塔", "红白条纹灯塔立于海岸礁岩之上。", cleared + Vector2(0, 28), Vector2(120, 90))
@@ -193,7 +194,7 @@ func _spawn_rocks(ysort: Node2D) -> void:
 func _spawn_props(ysort: Node2D) -> void:
 	var samples := [
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(400, 560), "title": "补给箱", "desc": "灯塔补给木箱。", "scale": 0.55},
-		{"path": "res://assets/sprites/props/barrel_0.png", "pos": Vector2(480, 600), "title": "油桶", "desc": "灯油空桶。", "scale": 0.5},
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(480, 600), "title": "油桶", "desc": "灯油空桶。", "scale": 0.5},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):

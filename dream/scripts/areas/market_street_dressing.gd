@@ -48,7 +48,7 @@ func _spawn_market_stalls(ysort: Node2D) -> void:
 			"title": "南口蔬摊",
 			"desc": "南凹口蔬摊，面向主街。",
 			"crate": "res://assets/sprites/props/crate_1.png",
-			"barrel": "res://assets/sprites/props/barrel_1.png",
+			"barrel": "res://assets/sprites/props/barrel_0.png",
 			"stripe_a": Color(0.2, 0.55, 0.35, 0.92),
 			"stripe_b": Color(0.95, 0.95, 0.9, 0.92),
 		},
@@ -66,7 +66,7 @@ func _spawn_market_stalls(ysort: Node2D) -> void:
 			"title": "灯下小摊",
 			"desc": "东南凹口小摊。",
 			"crate": "res://assets/sprites/props/crate_1.png",
-			"barrel": "res://assets/sprites/props/barrel_1.png",
+			"barrel": "res://assets/sprites/props/barrel_0.png",
 			"stripe_a": Color(0.55, 0.25, 0.65, 0.92),
 			"stripe_b": Color(0.95, 0.95, 0.92, 0.92),
 		},
@@ -134,7 +134,7 @@ func _spawn_zone_benches_and_props(ysort: Node2D) -> void:
 		{"path": "res://assets/sprites/props/lamp_1.png", "pos": Vector2(1040, 464), "title": "东街灯", "desc": "商业街东段路灯。", "on_path": true},
 		{"path": "res://assets/sprites/props/lamp_2.png", "pos": Vector2(640, 608), "title": "南口灯", "desc": "南土路入口路灯。", "on_path": true},
 		# Loose sack off stall sightline (shop side only), scaled down.
-		{"path": "res://assets/sprites/props/sack_1.png", "pos": Vector2(400, 340), "title": "货栈麻袋", "desc": "西货栈旁麻袋，不挡摊面。", "on_path": false, "scale": 0.65},
+		{"path": "res://assets/sprites/props/sack_1.png", "pos": Vector2(400, 340), "title": "货栈麻袋", "desc": "西货栈旁麻袋，不挡摊面。", "on_path": false, "scale": 0.55},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):
@@ -155,8 +155,10 @@ func _spawn_zone_benches_and_props(ysort: Node2D) -> void:
 				pos = cleared
 		craft.add_contact_shadow(ysort, pos, Vector2(14, 6))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
-		if s.has("scale"):
-			spr.scale = Vector2(float(s["scale"]), float(s["scale"]))
+		var sc := float(s.get("scale", 0.55))
+		if sc > 0.55:
+			sc = 0.55
+		spr.scale = Vector2(sc, sc)
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
