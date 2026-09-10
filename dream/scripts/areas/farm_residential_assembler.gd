@@ -18,9 +18,10 @@ const POND_CY := 23.0
 const POND_RX := 4.0
 const POND_RY := 2.8
 
-## Dirt lane directly south of building doors (tile Y).
-const DOOR_LANE_TY0 := 11
-const DOOR_LANE_TY1 := 12
+## Dirt lane directly south of building footprints (tile Y).
+## Must stay clear of building half_h around foot tile (~10 @ world y 336).
+const DOOR_LANE_TY0 := 12
+const DOOR_LANE_TY1 := 13
 
 var craft: AreaCraft = AreaCraft.new()
 
@@ -104,12 +105,12 @@ func _fill_dirt_rect(x0: int, y0: int, x1: int, y1: int, force: bool = false) ->
 
 
 func _paint_dirt_network() -> void:
-	# Door lane south of fully-inset farm buildings.
+	# Door lane south of building footprints (no overlap with half_h around feet).
 	_fill_dirt_rect(6, DOOR_LANE_TY0, 33, DOOR_LANE_TY1)
-	# Door aprons under each building (feet ≈ tile y 10 @ world y 336).
-	_fill_dirt_rect(18, 10, 21, DOOR_LANE_TY1) # farmhouse
-	_fill_dirt_rect(7, 10, 10, DOOR_LANE_TY1) # coop
-	_fill_dirt_rect(28, 10, 32, DOOR_LANE_TY1) # barn
+	# Door aprons only on the lane (not under building tiles).
+	_fill_dirt_rect(18, DOOR_LANE_TY0, 21, DOOR_LANE_TY1) # farmhouse
+	_fill_dirt_rect(7, DOOR_LANE_TY0, 10, DOOR_LANE_TY1) # coop
+	_fill_dirt_rect(28, DOOR_LANE_TY0, 32, DOOR_LANE_TY1) # barn
 	# Yard spine to gardens / pond.
 	_fill_dirt_rect(18, DOOR_LANE_TY1, 21, 21)
 	_fill_dirt_rect(6, 16, 33, 17)
@@ -144,25 +145,25 @@ func _paint_stone_approach() -> void:
 
 
 func _spawn_buildings(ysort: Node2D) -> void:
-	# Foot Y ≥ ~336: 224px cottages (offset 0.35) keep roofs south of north fence.
+	# Foot Y ≥ ~352: margin past FARM_BUILD_ZONE top after tall-cottage AABB.
 	var specs := [
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
-			"pos": Vector2(640, 336),
+			"pos": Vector2(640, 352),
 			"hw": 2, "hh": 1,
 			"title": "农舍",
 			"desc": "农舍完整落在院落围栏内：门朝南对土路。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_04.png",
-			"pos": Vector2(280, 336),
+			"pos": Vector2(280, 352),
 			"hw": 2, "hh": 1,
 			"title": "鸡舍",
 			"desc": "西北鸡舍，整栋在围栏内侧。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
-			"pos": Vector2(980, 336),
+			"pos": Vector2(980, 352),
 			"hw": 2, "hh": 1,
 			"title": "谷仓",
 			"desc": "东北谷仓，整栋在围栏内侧。",
@@ -174,8 +175,9 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		var tex := load(s["path"]) as Texture2D
 		var offset := craft.building_offset_for(tex)
 		var pos: Vector2 = s["pos"]
+		# allow_path: door dirt/stone may touch footprint; water still blocked.
 		var cleared := craft.find_building_inside(
-			pos, tex, offset, FARM_BUILD_ZONE, int(s["hw"]), int(s["hh"]), 16, false
+			pos, tex, offset, FARM_BUILD_ZONE, int(s["hw"]), int(s["hh"]), 16, true
 		)
 		if cleared == Vector2.ZERO:
 			push_warning("FarmResidential: could not place %s fully inside farm build zone" % s["title"])
