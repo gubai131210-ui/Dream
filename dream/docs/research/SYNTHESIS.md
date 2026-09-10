@@ -8,14 +8,14 @@
 
 ## Batch A — games (craft only)
 
-| Game | Agent | Strongest transferable craft |
+| Game | Research note | Strongest transferable craft |
 | --- | --- | --- |
-| Stardew Valley | [Stardew research](215a45a3-53c1-4e8d-ab4e-0e0588566fcd) | Water = **mask + shared overlay anim**; layers split permanent ground / spawnables / collision; NPC = schedule anchors + path preference stone→wood→dirt→grass; **draw dirt tile first** |
-| Animal Crossing NH | [ACNH research](177d0165-25e1-40c7-bcf2-422a48cf0ea4) | Lock **plaza + arrival + drainage mouth** first; buildings **cannot yaw**; rivers as corridors (width ≥3, bridge 3–5); round banks after blocking; NPC graph must reach plaza |
-| Link's Awakening 2019 | [LA research](aae51fc2-befb-45d9-8a03-1b7ebbf06ae0) | Bank = water → damp → dry; Mabe-like **plaza-facing lots**; toy depth via controlled layers; south-facing door art → north-of-plaza placement |
-| Terraria | [Terraria research](0aa6230a-1372-4309-bab8-c94a9461895f) | Water volume ≠ waterfall VFX; grass as **state on soil** + ecological types; **house validity** machine; worldgen as **ordered passes** |
-| Spiritfarer | [Spiritfarer research](79613c3f-4840-4eda-adcf-689c38154403) | Topology first: **pier → walk line → door plane**; irregular water edges; buildings face walkways |
-| Octopath Traveler | [Octopath research](7be76b61-286d-4fea-ab8b-e85663399476) | Raise **tile/color density** near civic mass; water motion as plane/shader on shore mask; sort by **foot / south edge**; steal readability not full HD-2D |
+| Stardew Valley | `games/stardew-valley.md` | Water = **mask + shared overlay anim**; layers split permanent ground / spawnables / collision; NPC = schedule anchors + path preference stone→wood→dirt→grass; **draw dirt tile first** |
+| Animal Crossing NH | `games/animal-crossing-nh.md` | Lock **plaza + arrival + drainage mouth** first; buildings **cannot yaw**; rivers as corridors (width ≥3, bridge 3–5); round banks after blocking; NPC graph must reach plaza |
+| Link's Awakening 2019 | `games/links-awakening-2019.md` | Bank = water → damp → dry; Mabe-like **plaza-facing lots**; toy depth via controlled layers; south-facing door art → north-of-plaza placement |
+| Terraria | `games/terraria.md` | Water volume ≠ waterfall VFX; grass as **state on soil** + ecological types; **house validity** machine; worldgen as **ordered passes** |
+| Spiritfarer | `games/spiritfarer.md` | Topology first: **pier → walk line → door plane**; irregular water edges; buildings face walkways |
+| Octopath Traveler | `games/octopath-traveler.md` | Raise **tile/color density** near civic mass; water motion as plane/shader on shore mask; sort by **foot / south edge**; steal readability not full HD-2D |
 
 ### Cross-game consensus (high confidence)
 
@@ -31,11 +31,11 @@
 
 ## Batch B — practitioners
 
-| Topic | Agent | Strongest transferable craft |
+| Topic | Research note | Strongest transferable craft |
 | --- | --- | --- |
-| Engineers | [Engineer research](329cd995-ef9c-4463-ab1a-f68c29a09771) | Bitmask/Wang for edges; wrap `L==R,T==B`; meander formulas; **runtime `set_cell` not terrain-connect every frame**; ecological noise chooses variants |
-| Artists | [Artist research](cb09787d-48d1-4a99-94d4-05d3f577d2a2) | Silhouette→value→color→detail; **filler wrap first**, then edges/corners, then water foam, then buildings with unified door facing, props last; pivot at feet |
-| Agent tooling | [Tooling research](6e0a40ce-6753-4ff1-a003-a46de043f53d) | rembg/BiRefNet 抠图; Real-ESRGAN; ImageMagick; Pillow seamless; ComfyUI optional; MCP screenshot QA |
+| Engineers | `practitioners/engineers-tilemap-terrain.md` | Bitmask/Wang for edges; wrap `L==R,T==B`; meander formulas; **runtime `set_cell` not terrain-connect every frame**; ecological noise chooses variants |
+| Artists | `practitioners/artists-tile-pipeline.md` | Silhouette→value→color→detail; **filler wrap first**, then edges/corners, then water foam, then buildings with unified door facing, props last; pivot at feet |
+| Agent tooling | `practitioners/agent-art-tooling.md` | rembg/BiRefNet 抠图; Real-ESRGAN; ImageMagick; Pillow seamless; ComfyUI optional; MCP screenshot QA |
 
 ### Engineer ∩ artist consensus
 
