@@ -330,4 +330,5 @@ func _spawn_actors(ysort: Node2D) -> void:
 func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(ysort, "→住宅区", SceneRouter.RESIDENTIAL_PATH, Vector2(80, 480), Vector2(96, 56))
 	craft.make_portal(ysort, "→广场", SceneRouter.SQUARE_PATH, Vector2(1200, 480), Vector2(96, 56))
+	craft.make_portal(ysort, "→农田", SceneRouter.FARMLAND_PATH, Vector2(640, 900), Vector2(96, 56))
 	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))

@@ -1,4 +1,4 @@
-class_name FarmResidentialController
+class_name FarmlandController
 extends Node2D
 
 @onready var camera: CameraController = $CameraController
@@ -6,24 +6,21 @@ extends Node2D
 @onready var ysort_root: Node2D = $YSortRoot
 @onready var btn_hub: Button = $UI/TopBar/BackHub
 @onready var btn_conn: Button = $UI/TopBar/BackConnections
+@onready var btn_farm_home: Button = $UI/TopBar/ToFarmHome
 @onready var btn_square: Button = $UI/TopBar/ToSquare
-@onready var btn_residential: Button = $UI/TopBar/ToResidential
-@onready var btn_farmland: Button = $UI/TopBar/ToFarmland
 @onready var grid_overlay: Node2D = $DebugGrid
 
 
 func _ready() -> void:
-	var assembler := get_node_or_null("Assembler") as FarmResidentialAssembler
+	var assembler := get_node_or_null("Assembler") as FarmlandAssembler
 	if assembler:
 		assembler.assemble(self)
 	btn_hub.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.HUB_PATH))
 	btn_conn.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.CONNECTION_PATH))
+	if btn_farm_home:
+		btn_farm_home.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.FARM_HOME_PATH))
 	if btn_square:
 		btn_square.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.SQUARE_PATH))
-	if btn_residential:
-		btn_residential.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.RESIDENTIAL_PATH))
-	if btn_farmland:
-		btn_farmland.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.FARMLAND_PATH))
 	for child in ysort_root.get_children():
 		_wire_hotspots(child)
 		_wire_portals(child)
