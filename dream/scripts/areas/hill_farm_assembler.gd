@@ -101,23 +101,9 @@ func _spawn_sheds(ysort: Node2D) -> void:
 		spr.offset = offset
 
 
-func _spawn_terrace_markers(ysort: Node2D) -> void:
-	# Low ColorRect strips to read terraces in 1/8 thumbnails.
-	var strips := [
-		Rect2(260, 210, 700, 18),
-		Rect2(200, 400, 720, 18),
-		Rect2(170, 590, 680, 18),
-	]
-	var i := 0
-	for r in strips:
-		var bar := ColorRect.new()
-		bar.name = "TerraceEdge_%d" % i
-		bar.color = Color(0.45, 0.36, 0.22, 0.55)
-		bar.position = r.position
-		bar.size = r.size
-		bar.z_index = 1
-		ysort.add_child(bar)
-		i += 1
+func _spawn_terrace_markers(_ysort: Node2D) -> void:
+	# Terraces read from dirt bands in masks — no opaque ColorRect overlays.
+	pass
 
 
 func _spawn_props(ysort: Node2D) -> void:
@@ -132,6 +118,9 @@ func _spawn_props(ysort: Node2D) -> void:
 		var cleared := craft.find_clear_near(pos, 1, 1, 6, true)
 		if cleared != Vector2.ZERO:
 			pos = cleared
+		var t := craft.world_to_tile(pos)
+		if craft.is_water(t.x, t.y):
+			continue
 		craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
 		var spr := craft.spawn_sprite(ysort, s["path"], pos)
 		if s.has("scale"):
@@ -142,20 +131,14 @@ func _spawn_props(ysort: Node2D) -> void:
 
 
 func _spawn_trees(ysort: Node2D) -> void:
+	var zone := craft.map_play_rect(2.0)
 	var ideals: Array[Vector2] = [
-		Vector2(60, 120), Vector2(80, 400), Vector2(100, 760),
-		Vector2(1180, 140), Vector2(1200, 480), Vector2(1160, 800),
+		Vector2(120, 280), Vector2(140, 520), Vector2(160, 760),
+		Vector2(1120, 260), Vector2(1140, 520), Vector2(1100, 780),
 	]
 	for i in ideals.size():
-		var pos := craft.find_clear_near(ideals[i], 1, 1, 4, false)
-		if pos == Vector2.ZERO:
-			continue
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		if not ResourceLoader.exists(path):
-			continue
-		craft.add_contact_shadow(ysort, pos, Vector2(18, 8))
-		var spr := craft.spawn_sprite(ysort, path, pos)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.4)
+		craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 6, false)
 
 
 func _spawn_actors(ysort: Node2D) -> void:

@@ -323,10 +323,16 @@ func spawn_sprite(parent: Node2D, path: String, pos: Vector2, z: int = 0) -> Spr
 
 ## Buildings use this Y offset so the door reads near the foot tile.
 const BUILDING_Y_OFFSET_FACTOR := 0.35
+## Trees / tall props: trunk at foot, crown mostly above (assemblers used 0.4).
+const TREE_Y_OFFSET_FACTOR := 0.40
 
 
 func building_offset_for(tex: Texture2D) -> Vector2:
 	return Vector2(0.0, -float(tex.get_height()) * BUILDING_Y_OFFSET_FACTOR)
+
+
+func tree_offset_for(tex: Texture2D) -> Vector2:
+	return Vector2(0.0, -float(tex.get_height()) * TREE_Y_OFFSET_FACTOR)
 
 
 func sprite_world_rect(pos: Vector2, tex: Texture2D, offset: Vector2) -> Rect2:
@@ -375,6 +381,49 @@ func find_building_inside(
 				if sprite_fully_inside(cand, tex, offset, zone):
 					return cand
 	return Vector2.ZERO
+
+
+## Alias for trees / tall props — same search as find_building_inside with a custom draw offset.
+func find_sprite_inside(
+	ideal: Vector2,
+	tex: Texture2D,
+	offset: Vector2,
+	zone: Rect2,
+	half_w: int,
+	half_h: int,
+	max_r: int = 14,
+	allow_path: bool = false
+) -> Vector2:
+	return find_building_inside(ideal, tex, offset, zone, half_w, half_h, max_r, allow_path)
+
+
+## Place a tree fully inside zone (footprint clear + crown AABB). Returns null if impossible.
+func spawn_tree(
+	parent: Node2D,
+	path: String,
+	ideal: Vector2,
+	zone: Rect2,
+	half_w: int = 1,
+	half_h: int = 1,
+	max_r: int = 8,
+	allow_path: bool = false,
+	z: int = 0,
+	with_shadow: bool = true
+) -> Sprite2D:
+	if not ResourceLoader.exists(path):
+		return null
+	var tex := load(path) as Texture2D
+	if tex == null:
+		return null
+	var offset := tree_offset_for(tex)
+	var cleared := find_sprite_inside(ideal, tex, offset, zone, half_w, half_h, max_r, allow_path)
+	if cleared == Vector2.ZERO:
+		return null
+	if with_shadow:
+		add_contact_shadow(parent, cleared, Vector2(22, 8))
+	var spr := spawn_sprite(parent, path, cleared, z)
+	spr.offset = offset
+	return spr
 
 
 func add_contact_shadow(parent: Node2D, at: Vector2, radius: Vector2 = Vector2(18, 8)) -> void:

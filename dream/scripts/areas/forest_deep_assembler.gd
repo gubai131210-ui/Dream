@@ -157,44 +157,31 @@ func _spawn_props(ysort: Node2D) -> void:
 
 
 func _spawn_trees(ysort: Node2D) -> void:
-	# Dense canopy fill — almost full coverage except dirt corridor / stream.
+	# Dense but AABB-safe — crowns must fully fit map_play_rect (no half-trees).
+	var zone := craft.map_play_rect(2.5)
 	var ideals: Array[Vector2] = []
-	for gy in range(0, MAP_H, 2):
-		for gx in range(0, MAP_W, 2):
-			var jx := (gy * 17 + gx * 13) % 5 - 2
-			var jy := (gx * 11 + gy * 7) % 5 - 2
-			ideals.append(craft.tile_center(clampi(gx + jx, 0, MAP_W - 1), clampi(gy + jy, 0, MAP_H - 1)))
-	# Extra edge mass for silhouette.
-	ideals.append_array([
-		Vector2(40, 40), Vector2(80, 200), Vector2(60, 500), Vector2(100, 800),
-		Vector2(1200, 60), Vector2(1180, 300), Vector2(1220, 560), Vector2(1160, 860),
-		Vector2(300, 40), Vector2(600, 30), Vector2(900, 50),
-		Vector2(200, 900), Vector2(640, 920), Vector2(1000, 880),
-	])
+	for gy in range(4, MAP_H - 3, 3):
+		for gx in range(2, MAP_W - 2, 3):
+			var jx := (gy * 17 + gx * 13) % 3 - 1
+			var jy := (gx * 11 + gy * 7) % 3 - 1
+			ideals.append(craft.tile_center(clampi(gx + jx, 2, MAP_W - 3), clampi(gy + jy, 4, MAP_H - 4)))
 	var placed := 0
 	for i in ideals.size():
-		var pos := craft.find_clear_near(ideals[i], 1, 1, 3, false)
-		if pos == Vector2.ZERO:
+		var t0 := craft.world_to_tile(ideals[i])
+		if craft.is_water(t0.x, t0.y) or craft.is_dirt(t0.x, t0.y):
 			continue
-		var t := craft.world_to_tile(pos)
-		if craft.is_water(t.x, t.y) or craft.is_dirt(t.x, t.y):
-			continue
-		# Keep a narrow visual gap along the trail (still dense vs A04 clearing).
-		var trail := _trail_cx(float(t.y))
-		if absf(float(t.x) - trail) < 2.2 and t.y >= 2 and t.y <= 27:
+		var trail := _trail_cx(float(t0.y))
+		if absf(float(t0.x) - trail) < 2.4:
 			continue
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		if not ResourceLoader.exists(path):
+		var spr := craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 6, false)
+		if spr == null:
 			continue
-		craft.add_contact_shadow(ysort, pos, Vector2(22, 9))
-		var spr := craft.spawn_sprite(ysort, path, pos)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.42)
 		spr.flip_h = (i % 2 == 0)
-		# Darker understory tint.
 		spr.modulate = Color(0.68, 0.74, 0.66)
 		placed += 1
-	if placed < 40:
-		push_warning("ForestDeep: sparse tree spawn (%d) — check tree assets" % placed)
+	if placed < 18:
+		push_warning("ForestDeep: sparse AABB-safe trees (%d)" % placed)
 
 
 func _spawn_actors(ysort: Node2D) -> void:

@@ -3,7 +3,7 @@
 **Status:** LOCKED  
 **Date:** 2026-09-10  
 **Applies to:** All area assemblers (square, residential, farm, future scenes)  
-**Code:** `scripts/areas/area_craft.gd` (`building_offset_for`, `sprite_world_rect`, `sprite_fully_inside`, `find_building_inside`, `map_play_rect`)  
+**Code:** `scripts/areas/area_craft.gd` (`building_offset_for`, `tree_offset_for`, `sprite_world_rect`, `sprite_fully_inside`, `find_building_inside`, `find_sprite_inside`, `spawn_tree`, `map_play_rect`)  
 **Skill:** `.cursor/skills/realistic-scene-craft/`
 
 This is a hard layout lock. Agents must not place buildings by foot tile alone.
@@ -68,6 +68,10 @@ Measured building sheets (px):
 
 Always load the texture and use real `get_width()` / `get_height()` — do not hardcode these forever.
 
+**Trees / tall props:** same rule. Use `tree_offset_for` + `find_sprite_inside` / `spawn_tree` so crowns stay inside `map_play_rect`. Footprint-only `find_clear_near` is forbidden for trees.
+
+**Forbidden occlusion hacks:** do not use opaque `ColorRect` slabs as waterfall columns, cliffs, docks, or terrace walls — they block real sprites.
+
 ---
 
 ## Solution (required API)
@@ -105,6 +109,8 @@ if cleared == Vector2.ZERO:
 | Farm residential | **`FARM_BUILD_ZONE`**, not bare `FARM_ZONE` | Fence hugs `FARM_ZONE ± ~8px`; build zone must inset **past posts** (e.g. +32px) so roofs stay inside the yard |
 
 Props that belong “in the yard” should use the same build/play zone (`sprite_fully_inside`), not only a tile footprint.
+
+**Trees / tall props** must use the same full-AABB rule (`tree_offset_for` ≈ height×0.40, then `find_sprite_inside` / `spawn_tree`). Footprint-only `find_clear_near` leaves crowns half outside map/zone edges.
 
 ---
 

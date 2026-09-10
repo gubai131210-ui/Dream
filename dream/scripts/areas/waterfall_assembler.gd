@@ -1,11 +1,13 @@
 class_name WaterfallAssembler
 extends Node
 
-## Waterfall (A07) — vertical fall mass + mist pool (not a flat lake).
-## Silhouette: tall pale fall column at north cliff + churning pool south.
+## Waterfall (A07) — sliced waterfall + rocks + soft smoke mist.
+## No ColorRect landmark hacks. Tall sprites use full AABB in play zone.
 
 const MAP_W := 40
 const MAP_H := 30
+const TREE_Y := 0.40
+
 
 var craft: AreaCraft = AreaCraft.new()
 
@@ -23,8 +25,9 @@ func assemble(root: Node2D) -> void:
 	craft.paint_dirt_spurs(ground)
 	craft.paint_water(water, ground)
 	craft.paint_paths(path)
-	_spawn_fall_column(ysort)
-	_spawn_props(ysort)
+	_spawn_waterfall_props(ysort)
+	_spawn_rocks(ysort)
+	_spawn_mist(ysort)
 	_spawn_trees(ysort)
 	_spawn_actors(ysort)
 	craft.spawn_water_overlay(ysort)
@@ -83,82 +86,139 @@ func _paint_approach_dirt() -> void:
 		_set_dirt(tx, 12)
 
 
-func _spawn_fall_column(ysort: Node2D) -> void:
-	# Pale vertical mass — silhouette cue (not a flat pond).
-	var fall := ColorRect.new()
-	fall.name = "FallColumn"
-	fall.color = Color(0.72, 0.86, 0.92, 0.78)
-	fall.size = Vector2(72, 220)
-	fall.position = Vector2(608, 40)
-	fall.z_index = 3
-	ysort.add_child(fall)
-	var mist := ColorRect.new()
-	mist.name = "FallMist"
-	mist.color = Color(0.85, 0.92, 0.95, 0.35)
-	mist.size = Vector2(160, 48)
-	mist.position = Vector2(560, 250)
-	mist.z_index = 3
-	ysort.add_child(mist)
-	# Cliff band hint.
-	var cliff := ColorRect.new()
-	cliff.name = "CliffBand"
-	cliff.color = Color(0.35, 0.38, 0.42, 0.85)
-	cliff.size = Vector2(420, 56)
-	cliff.position = Vector2(430, 20)
-	cliff.z_index = 2
-	ysort.add_child(cliff)
+## Scaled AABB (Godot applies scale to both size and offset).
+func _scaled_fully_inside(pos: Vector2, tex: Texture2D, scale_f: float, zone: Rect2) -> bool:
+	var size := Vector2(float(tex.get_width()), float(tex.get_height())) * scale_f
+	var offset := Vector2(0.0, -float(tex.get_height()) * TREE_Y) * scale_f
+	var top_left := pos + offset - size * 0.5
+	var r := Rect2(top_left, size)
+	return (
+		r.position.x >= zone.position.x
+		and r.position.y >= zone.position.y
+		and r.end.x <= zone.end.x
+		and r.end.y <= zone.end.y
+	)
 
 
-func _spawn_props(ysort: Node2D) -> void:
-	var samples := [
-		{"path": "res://assets/sprites/props/rock_0.png", "pos": Vector2(520, 420), "title": "湿岩", "desc": "瀑雾打湿的岩石。", "scale": 0.7},
-		{"path": "res://assets/sprites/props/rock_1.png", "pos": Vector2(780, 460), "title": "观瀑石", "desc": "可站立观瀑的石台。", "scale": 0.65},
+func _find_scaled_inside(
+	ideal: Vector2,
+	tex: Texture2D,
+	scale_f: float,
+	zone: Rect2,
+	half_w: int,
+	half_h: int,
+	max_r: int,
+	allow_path: bool
+) -> Vector2:
+	if craft.footprint_ok(ideal, half_w, half_h, allow_path) and _scaled_fully_inside(ideal, tex, scale_f, zone):
+		return ideal
+	var t := craft.world_to_tile(ideal)
+	for r in range(0, max_r + 1):
+		for oy in range(-r, r + 1):
+			for ox in range(-r, r + 1):
+				if r > 0 and maxi(absi(ox), absi(oy)) != r:
+					continue
+				var cand := craft.tile_center(t.x + ox, t.y + oy)
+				if not craft.footprint_ok(cand, half_w, half_h, allow_path):
+					continue
+				if _scaled_fully_inside(cand, tex, scale_f, zone):
+					return cand
+	return Vector2.ZERO
+
+
+func _spawn_scaled_prop(
+	ysort: Node2D,
+	path: String,
+	ideal: Vector2,
+	scale_f: float,
+	z: int = 2,
+	half_w: int = 1,
+	half_h: int = 1,
+	allow_path: bool = true
+) -> Sprite2D:
+	if not ResourceLoader.exists(path):
+		return null
+	var tex := load(path) as Texture2D
+	if tex == null:
+		return null
+	var zone := craft.map_play_rect(2.0)
+	var cleared := _find_scaled_inside(ideal, tex, scale_f, zone, half_w, half_h, 16, allow_path)
+	if cleared == Vector2.ZERO:
+		# Raise foot / try smaller scale so tall art clears the north margin.
+		for s2 in [scale_f * 0.85, scale_f * 0.7, 0.35]:
+			cleared = _find_scaled_inside(ideal + Vector2(0, 96), tex, s2, zone, half_w, half_h, 18, allow_path)
+			if cleared != Vector2.ZERO:
+				scale_f = s2
+				break
+	if cleared == Vector2.ZERO:
+		return null
+	craft.add_contact_shadow(ysort, cleared, Vector2(16, 6))
+	var spr := craft.spawn_sprite(ysort, path, cleared, z)
+	spr.offset = craft.tree_offset_for(tex)
+	spr.scale = Vector2(scale_f, scale_f)
+	return spr
+
+
+func _spawn_waterfall_props(ysort: Node2D) -> void:
+	var tall := "res://assets/sprites/props/waterfall_tall_00.png"
+	var mid := "res://assets/sprites/props/waterfall_mid_00.png"
+	var splash := "res://assets/sprites/props/waterfall_splash_00.png"
+	# Foot on viewing ledge (dirt ty 11–12); scale so full AABB fits play zone.
+	var fall: Sprite2D = null
+	if ResourceLoader.exists(tall):
+		fall = _spawn_scaled_prop(ysort, tall, Vector2(640, 384), 0.55, 3, 1, 1, true)
+	if fall == null and ResourceLoader.exists(mid):
+		fall = _spawn_scaled_prop(ysort, mid, Vector2(640, 400), 0.5, 3, 1, 1, true)
+	if fall:
+		craft.make_hotspot(ysort, "瀑布", "岩壁倾泻而下的水帘与水雾。", fall.position + Vector2(0, 24), Vector2(96, 72))
+	if ResourceLoader.exists(splash):
+		_spawn_scaled_prop(ysort, splash, Vector2(640, 480), 0.38, 2, 1, 1, true)
+
+
+func _spawn_rocks(ysort: Node2D) -> void:
+	# 2–3 large B07 rocks on pool rim (must scale — sheets are ~280px).
+	var specs := [
+		{"i": 0, "pos": Vector2(448, 400), "s": 0.4},
+		{"i": 1, "pos": Vector2(800, 432), "s": 0.38},
+		{"i": 2, "pos": Vector2(720, 608), "s": 0.36},
 	]
-	for s in samples:
-		if not ResourceLoader.exists(s["path"]):
-			# Fallback crates if rocks missing.
-			s["path"] = "res://assets/sprites/props/crate_1.png"
-		if not ResourceLoader.exists(s["path"]):
+	for s in specs:
+		var path := "res://assets/sprites/props/rock_%02d.png" % int(s["i"])
+		_spawn_scaled_prop(ysort, path, s["pos"], float(s["s"]), 2, 1, 1, true)
+
+
+func _spawn_mist(ysort: Node2D) -> void:
+	# Soft smoke — translucent, low z; never opaque ColorRect slabs.
+	var samples: Array[Vector2] = [
+		Vector2(600, 320), Vector2(680, 340), Vector2(640, 300),
+	]
+	for i in samples.size():
+		var path := "res://assets/sprites/fx/smoke_%02d.png" % (i % 6)
+		if not ResourceLoader.exists(path):
 			continue
-		var pos: Vector2 = s["pos"]
-		var cleared := craft.find_clear_near(pos, 1, 1, 6, true)
-		if cleared != Vector2.ZERO:
-			pos = cleared
-		craft.add_contact_shadow(ysort, pos, Vector2(14, 6))
-		var spr := craft.spawn_sprite(ysort, s["path"], pos)
-		if s.has("scale"):
-			spr.scale = Vector2(float(s["scale"]), float(s["scale"]))
-		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
-		spr.reparent(hs.get_node("Visual"))
-		spr.position = Vector2.ZERO
+		var spr := craft.spawn_sprite(ysort, path, samples[i], 1)
+		spr.modulate = Color(0.85, 0.92, 0.98, 0.28)
+		spr.scale = Vector2(2.2, 1.8)
 
 
 func _spawn_trees(ysort: Node2D) -> void:
+	var zone := craft.map_play_rect(2.0)
 	var ideals: Array[Vector2] = [
-		Vector2(80, 200), Vector2(120, 480), Vector2(100, 800),
-		Vector2(1180, 220), Vector2(1200, 560), Vector2(1160, 820),
-		Vector2(300, 880), Vector2(900, 880), Vector2(200, 100), Vector2(1000, 80),
+		Vector2(120, 280), Vector2(160, 560), Vector2(140, 780),
+		Vector2(1120, 300), Vector2(1160, 580), Vector2(1100, 800),
+		Vector2(320, 820), Vector2(960, 820),
 	]
 	for i in ideals.size():
-		var pos := craft.find_clear_near(ideals[i], 1, 1, 5, false)
-		if pos == Vector2.ZERO:
-			continue
-		var t := craft.world_to_tile(pos)
-		if craft.is_water(t.x, t.y):
-			continue
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		if not ResourceLoader.exists(path):
-			continue
-		craft.add_contact_shadow(ysort, pos, Vector2(20, 8))
-		var spr := craft.spawn_sprite(ysort, path, pos)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.4)
-		spr.modulate = Color(0.75, 0.82, 0.78)
+		var spr := craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 8, false)
+		if spr:
+			spr.modulate = Color(0.78, 0.84, 0.80)
 
 
 func _spawn_actors(ysort: Node2D) -> void:
 	craft.spawn_patrol_actor(
 		ysort, "farmer", "观瀑旅人", "在观瀑土径与南口之间踱步。",
-		[Vector2(480, 400), Vector2(640, 400), Vector2(640, 780), Vector2(520, 760)],
+		[Vector2(480, 700), Vector2(640, 720), Vector2(640, 820), Vector2(520, 780)],
 	)
 
 

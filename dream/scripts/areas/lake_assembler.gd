@@ -115,23 +115,14 @@ func _spawn_props(ysort: Node2D) -> void:
 
 
 func _spawn_trees(ysort: Node2D) -> void:
+	var zone := craft.map_play_rect(2.0)
 	var ideals: Array[Vector2] = []
-	for a in range(0, 360, 28):
+	for a in range(20, 360, 40):
 		var rad := deg_to_rad(float(a))
-		ideals.append(Vector2(640 + cos(rad) * 520, 460 + sin(rad) * 380))
+		ideals.append(Vector2(640 + cos(rad) * 480, 480 + sin(rad) * 340))
 	for i in ideals.size():
-		var pos := craft.find_clear_near(ideals[i], 1, 1, 4, false)
-		if pos == Vector2.ZERO:
-			continue
-		var t := craft.world_to_tile(pos)
-		if craft.is_water(t.x, t.y):
-			continue
 		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
-		if not ResourceLoader.exists(path):
-			continue
-		craft.add_contact_shadow(ysort, pos, Vector2(18, 8))
-		var spr := craft.spawn_sprite(ysort, path, pos)
-		spr.offset = Vector2(0, -spr.texture.get_height() * 0.4)
+		craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 6, false)
 
 
 func _spawn_actors(ysort: Node2D) -> void:
