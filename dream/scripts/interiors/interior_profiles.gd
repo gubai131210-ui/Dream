@@ -1460,35 +1460,66 @@ static func _all() -> Dictionary:
 			],
 			"actor": {},
 		},
+		# ── C28 巨树洞：北树洞厅（根桌聚会）· 西攀梯 · 东南根系窖 · 中轴南门通廊 ──
+		# ≠ C27 猎人隐所：无卧铺/猎具；暖木调 + 挑高厅，读作树心空洞而非营地。
 		"c28_giant_tree": {
 			"title": "巨树洞",
-			"hint": "巨树内部 · 树洞厅（占位）",
+			"hint": "巨树内部 · 树洞厅 / 攀梯 / 根系",
 			"return_path": FDEEP,
-			"room_w": 20,
-			"room_h": 18,
-			"door_tx0": 8,
-			"door_tx1": 11,
+			"room_w": 22,
+			"room_h": 22,
+			"door_tx0": 9,
+			"door_tx1": 12,
 			"floor": "straw",
-			"modulate": Color(0.50, 0.42, 0.34, 1.0),
-			"rug": null,
+			"modulate": Color(0.72, 0.58, 0.42, 1.0),
+			# Rug under hall talk/sit south of root table (not empty floor).
+			"rug": {"ox": 10, "oy": 10},
 			"window": false,
 			"clusters": [
+				# Verb: 树洞厅聚会 — stump table + log bench; south approach clear.
 				_cluster("hall", 10, 8, [
-					_m(P_TABLE_DINING, 0, 0, "根桌", "树根桌。", 0.85),
-					_m(P_LAMP_FARM, 2, -2, "树洞灯", "洞厅灯。", PROP),
-					_m(P_STOOL, -2, 1, "木墩", "坐墩。", 0.5),
+					_m(P_TABLE_DINING, 0, 0, "根桌", "树心刨平的粗根桌（厅锚）。", 0.9),
+					_m(P_STOOL, -2, 1, "木墩", "桌西坐墩（同 sheet）。", 0.7),
+					_m(P_STOOL, 2, 1, "木墩", "桌东坐墩（东留站位）。", 0.7),
+					_m(P_PEW, 0, 3, "原木长凳", "桌南原木长凳（南站位可坐）。", 0.75),
+					_m(P_NOTICE, 0, -2, "树皮符", "北壁刻纹符板。", 0.65),
+					_m(P_LAMP_INDOOR, 2, -2, "洞厅灯", "暖黄树心灯（非农场仓灯）。", PROP),
+					_m(P_BASKET, -2, -1, "果篮", "厅角野果篮。", 0.55),
 				]),
-				_cluster("roots", 14, 12, [
-					_m(P_CRATE0, 0, 0, "根窖箱", "根系储物。", 0.7),
-					_m(P_HERBS, 2, -1, "苔藓", "洞壁苔藓。", 0.55),
+				# Verb: 攀梯 — west trunk pegs + stump steps (≠ hunt gear rack).
+				_cluster("climb", 4, 7, [
+					_m(P_TOOL_RACK, 0, -2, "木钉梯", "西干壁攀钉/梯档。", 0.85),
+					_m(P_CRATE0, 0, 1, "树墩踏", "攀梯脚底树墩踏级。", 0.75),
+					_m(P_CRATE1, 0, 2, "树墩踏", "下层踏级（南可站）。", 0.7),
+					_m(P_SHELF, 2, -1, "攀具搁板", "绳索与钉楔搁板。", 0.65),
+					_m(P_LAMP_FARM, 2, 1, "梯侧灯", "攀梯侧微光。", PROP),
+				]),
+				# Verb: 根系窖 — SE mass; stays east of door aisle 9–12.
+				_cluster("roots", 17, 13, [
+					_m(P_HAY_STACK, 0, -1, "根须垛", "缠结根须/枯纤维高垛（体量锚）。", 0.8),
+					_m(P_CRATE0, 0, 1, "根窖箱", "根系储物底箱。", PROP),
+					_m(P_CRATE1, 2, 1, "根窖箱", "叠高根窖箱。", 0.75),
+					_m(P_HERBS, 2, -2, "洞苔", "根壁苔藓挂簇。", 0.55),
+					_m(P_SACK0, -2, 1, "树脂袋", "采下的树脂袋。", 0.6),
+					_m(P_BARREL, 2, 2, "树液桶", "树液/积水桶。", 0.7),
+					_m(P_COIN, -1, 2, "根宝匣", "根隙小匣（南可开）。", 0.55),
+					_m(P_LAMP_FARM, 1, -2, "根窖灯", "东南根区油灯。", PROP),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 10, "ty": 5, "oy": -8, "color": Color(1.0, 0.85, 0.55), "energy": 0.75, "scale": 1.9},
+				{"tx": 10, "ty": 5, "oy": -12, "color": Color(1.0, 0.82, 0.48), "energy": 0.95, "scale": 2.4},
+				{"tx": 4, "ty": 5, "oy": -8, "color": Color(1.0, 0.78, 0.45), "energy": 0.7, "scale": 1.6},
+				{"tx": 17, "ty": 11, "oy": -6, "color": Color(0.95, 0.75, 0.4), "energy": 0.7, "scale": 1.7},
 			],
-			"actor": {},
+			"actor": {
+				"id": "elder_woman",
+				"title": "守树人",
+				"desc": "在树洞厅与根系窖之间踱步，偶停攀梯侧察看木钉。",
+				"via_clusters": ["hall", "climb", "roots"],
+				"via_stands": {"hall": [0, 2], "climb": [2, 2], "roots": [-2, 2]},
+			},
 		},
 		"c29_ruins": {
 			"title": "遗迹主殿",
