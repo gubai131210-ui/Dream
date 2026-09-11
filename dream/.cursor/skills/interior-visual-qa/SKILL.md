@@ -38,7 +38,7 @@ Blockers: …
 | # | Gate | Pass if |
 | --- | --- | --- |
 | 1 | **Reality** | Reads as that place in ≤3s (coop≠empty room with chickens). InfoPanel text ≠ spatial grammar. |
-| 2 | **Peer** | Stardew / RM / farm-sim silhouette; cite **1** ref (web OK). |
+| 2 | **Peer** | Stardew / RM / farm-sim silhouette; cite **1** ref (web OK). Tiny lamp-only edits may reuse last room-type cite unless Place/Style failed. |
 | 3 | **Scene-fit** | Function **and** product OK (WAVE_C lamp matrix). 功能对 ≠ 产品对. |
 | 4 | **Territory** | Order: **boundary → mass → count**. Coop/barn need enclosure+corners; shops need stock mass. |
 | 5 | **Composition** | One cluster = one verb; anchor+satellites (|d|≤3); stools face table/hearth; rug under talk/dine; NPC route hits ≥2 anchors; animals at related clusters. |
@@ -48,10 +48,10 @@ Blockers: …
 | # | Gate | Pass if |
 | --- | --- | --- |
 | 6 | **Style** | One 3/4; TL light; shared outline/wood ramp; no AA-density collage. |
-| 7 | **Craft** | Not flat PIL bars. Opaque unique colors roughly outdoor-class (metrics / DIAGNOSIS); silhouette readable at glance. |
+| 7 | **Craft** | Not flat PIL. Spot metrics + `tools/qa_interior_prop_quality.py` when craft in doubt; silhouette readable. |
 | 8 | **Set-complete** | Family has all members (H+V+4 corners; table+matching stools). Missing corner/joiner = FAIL. |
 | 9 | **Bleed** | No outdoor grass/tufts on indoor furniture; no outdoor bench-as-table leftovers. |
-| 10 | **FX** | Fire/forge/water/mist use **sequence frames** where assets exist; FX sit on correct base prop, not floating orphan. |
+| 10 | **FX** | Sequence frames where assets exist; FX on correct base; **don’t cover south exit / interact prompts**. |
 
 ### Assembly
 
@@ -59,7 +59,7 @@ Blockers: …
 | --- | --- | --- |
 | 11 | **Multi-view** | H/V = same fence family; corners = dedicated L-joiners (not H∩V butts). |
 | 12 | **Splice** | Continuous runs (32px, step=1). Hard butts / diagonal fillers / orphan rails = FAIL → draw joiners. |
-| 13 | **Y-sort** | Tall props don’t eat the player wrongly; no random z-fighting; wall trim / counters occlude as expected. |
+| 13 | **Y-sort** | Props under shared Y-sort parent; feet/origin consistent; tall counters occlude correctly — no z-fight, no player “eaten” mid-stride. |
 | 14 | **Corridor** | Door→main axis ≥2 tiles clear; clusters don’t plug the south door; stall aisles readable. |
 
 ### Meta
@@ -68,7 +68,11 @@ Blockers: …
 | --- | --- | --- |
 | 15 | **Name≠pixels** | Filename = visible object (`roost`≠fence). |
 | 16 | **Size** | Family proportions (stool < table; bar stool taller). Footprint ≈ BASE_TILE=32 or documented scale. Don’t normalize all to 64h. |
-| 17 | **Profile-wire** | `interior_profiles.gd` paths exist on disk; lamp/enclosure/mass match WAVE_C / TERRITORY tables. |
+| 17 | **Profile-wire** | Every `interior_profiles.gd` path for touched rooms exists on disk; lamp/enclosure/mass match WAVE_C / TERRITORY. (Script checks lamp+family files; agent greps profile paths.) |
+
+## Out of this sheet (Godot playtest)
+
+Shell trim / diegetic light polish / collider↔sprite fine match — user Godot QA; escalate only if screenshot shows broken walk or occlusion.
 
 ## Screenshot protocol
 
