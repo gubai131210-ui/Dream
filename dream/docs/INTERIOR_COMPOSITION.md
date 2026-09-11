@@ -70,4 +70,6 @@ rug: 对齐 hearth_talk / dining / counter 前
 ## Related
 
 - Research: RPG Maker Clumpings / Interior mapping · Emily Henderson living rules · NKBA kitchen triangle · Smart objects  
-- Code: `interior_profiles.gd`, `interior_craft.gd`
+- Code: `interior_profiles.gd`, `interior_craft.gd`  
+- **Territory (区界/体量):** [`INTERIOR_TERRITORY.md`](./INTERIOR_TERRITORY.md) — rails / enclosures / grain stacks after clusters  
+

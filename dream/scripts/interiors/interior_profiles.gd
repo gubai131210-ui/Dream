@@ -22,6 +22,7 @@ const P_STOOL := DIR_INTERIOR_PROP + "/stool_00.png"
 const P_STOOL_TEA := DIR_INTERIOR_PROP + "/stool_tea_00.png"
 const P_STOOL_BAR := DIR_INTERIOR_PROP + "/stool_bar_00.png"
 const P_HAY := DIR_INTERIOR_PROP + "/hay_00.png"
+const P_HAY_STACK := DIR_INTERIOR_PROP + "/hay_stack_00.png"
 const P_TROUGH := DIR_INTERIOR_PROP + "/trough_00.png"
 const P_NEST := DIR_INTERIOR_PROP + "/nest_00.png"
 const P_TOOL_RACK := DIR_INTERIOR_PROP + "/tool_rack_00.png"
@@ -37,6 +38,10 @@ const P_HERBS := DIR_INTERIOR_PROP + "/herbs_00.png"
 const P_BED_S := DIR_INTERIOR_PROP + "/bed_single_00.png"
 const P_BED_D := DIR_INTERIOR_PROP + "/bed_double_00.png"
 const P_ROCKING := DIR_INTERIOR_PROP + "/rocking_00.png"
+const P_STALL_RAIL := DIR_INTERIOR_PROP + "/stall_rail_00.png"
+const P_STALL_RAIL_V := DIR_INTERIOR_PROP + "/stall_rail_v_00.png"
+const P_PEN_FENCE := DIR_INTERIOR_PROP + "/pen_fence_00.png"
+const P_GRAIN_STACK := DIR_INTERIOR_PROP + "/grain_stack_00.png"
 const P_BARREL := DIR_OUTDOOR_PROP + "/barrel_1.png"
 const P_BARREL_KEG := DIR_OUTDOOR_PROP + "/barrel_0.png"
 const P_CRATE0 := DIR_OUTDOOR_PROP + "/crate_0.png"
@@ -168,9 +173,10 @@ static func _all() -> Dictionary:
 			"clusters": [
 				_cluster("mudroom", 5, 13, [
 					_m(P_TOOL_RACK, 0, -2, "工具架", "门厅西墙锄镰架。", 0.95),
-					_m(P_SACK0, 1, 1, "粮袋", "贴架粮袋。", PROP),
-					_m(P_SACK1, 3, 1, "种子袋", "贴粮袋种子。", PROP),
-					_m(P_BARREL, 2, 2, "水桶", "门厅取水。", PROP),
+					_m(P_GRAIN_STACK, 2, 0, "粮垛", "门厅存粮垛（体量锚）。", 0.75),
+					_m(P_SACK0, 4, 1, "粮袋", "贴垛粮袋。", PROP),
+					_m(P_SACK1, 3, 2, "种子袋", "贴粮袋种子。", 0.85),
+					_m(P_BARREL, 1, 2, "水桶", "门厅取水。", PROP),
 				]),
 				_cluster("dining", 14, 7, [
 					_m(P_TABLE_DINING, 0, 0, "饭桌", "农家大饭桌（cozy_dining）。", 0.95),
@@ -217,9 +223,12 @@ static func _all() -> Dictionary:
 					_m(P_NOTICE, -3, -1, "货单", "壁挂货单。", 0.5),
 				]),
 				_cluster("cargo", 25, 7, [
-					_m(P_CRATE0, 0, -2, "货箱", "东墙货箱堆。", PROP),
-					_m(P_CRATE1, 2, 0, "货箱", "精品货箱。", PROP),
-					_m(P_CRATE0, 0, 2, "货箱", "待发货。", PROP),
+					_m(P_CRATE0, 0, -2, "货箱", "东墙货箱底垛。", PROP),
+					_m(P_CRATE1, 1, -3, "货箱", "叠高精品箱。", 0.85),
+					_m(P_CRATE0, 2, -1, "货箱", "侧垛货箱。", PROP),
+					_m(P_CRATE1, 0, 0, "货箱", "中层待发。", 0.9),
+					_m(P_CRATE0, 2, 1, "货箱", "前脚货箱。", 0.85),
+					_m(P_CRATE1, 0, 2, "货箱", "底层待发。", PROP),
 					_m(P_SHELF, 3, -2, "货架", "样品货架。", 0.5),
 				]),
 				_cluster("sleep", 22, 13, [
@@ -283,7 +292,7 @@ static func _all() -> Dictionary:
 		# ── C03 谷仓：西栏 · 东栏 · 中央饲料过道 ──
 		"c03_barn": {
 			"title": "谷仓内部",
-			"hint": "谷仓 · 中央通道 + 两侧畜栏",
+			"hint": "谷仓 · 中央通道 + 两侧畜栏隔栏 + 北粮垛",
 			"return_path": FARM,
 			"room_w": 36,
 			"room_h": 22,
@@ -295,22 +304,30 @@ static func _all() -> Dictionary:
 			"window": false,
 			"clusters": [
 				_cluster("stall_w", 6, 8, [
-					_m(P_HAY, -1, -2, "干草堆", "西栏干草。", 0.7),
-					_m(P_HAY, -1, 2, "干草捆", "西栏叠草。", 0.65),
+					_m(P_HAY_STACK, -1, -2, "干草垛", "西栏后墙高草垛。", 0.75),
+					_m(P_HAY, 0, 1, "干草捆", "西栏脚边草捆。", 0.65),
 					_m(P_TROUGH, 2, 0, "食槽", "朝过道的西食槽。", 0.65),
 				]),
 				_cluster("stall_e", 29, 8, [
-					_m(P_HAY, 1, -2, "干草堆", "东栏干草。", 0.7),
+					_m(P_HAY_STACK, 1, -2, "干草垛", "东栏后墙高草垛。", 0.75),
 					_m(P_TROUGH, -2, 1, "水槽", "朝过道的东饮水槽。", 0.65),
 					_m(P_CRATE0, 1, 3, "农具箱", "东角农具。", PROP),
 					_m(P_TOOL_RACK, 3, -3, "耙叉架", "墙上农具。", 0.55),
 				]),
 				_cluster("aisle_feed", 18, 11, [
+					_m(P_GRAIN_STACK, 0, -4, "粮垛", "北端存粮高垛（体量锚）。", 0.85),
 					_m(P_SACK0, -2, 0, "饲料袋", "通道饲料。", PROP),
-					_m(P_SACK1, 0, 1, "饲料袋", "叠放饲料。", PROP),
-					_m(P_BARREL, 2, 1, "水桶", "通道备用饮水。", PROP),
-					_m(P_LAMP_INDOOR, 0, -3, "吊灯", "通道暖灯。", PROP),
+					_m(P_SACK1, 1, 1, "饲料袋", "贴垛饲料。", PROP),
+					_m(P_BARREL, 3, 1, "水桶", "通道备用饮水。", PROP),
+					_m(P_LAMP_INDOOR, 0, -1, "吊灯", "通道暖灯。", PROP),
 				]),
+			],
+			# Aisle-facing stall rails — territory boundary, not scatter props.
+			"rails": [
+				{"axis": "v", "tx": 11, "a0": 5, "a1": 16, "step": 2, "prop": P_STALL_RAIL_V, "scale": 0.7, "title": "西畜栏隔栏", "desc": "西 stall 朝过道隔栏。"},
+				{"axis": "v", "tx": 24, "a0": 5, "a1": 16, "step": 2, "prop": P_STALL_RAIL_V, "scale": 0.7, "title": "东畜栏隔栏", "desc": "东 stall 朝过道隔栏。"},
+				{"axis": "h", "ty": 5, "a0": 4, "a1": 10, "step": 2, "prop": P_STALL_RAIL, "scale": 0.65, "title": "西栏北档", "desc": "西栏北端横档。"},
+				{"axis": "h", "ty": 5, "a0": 25, "a1": 31, "step": 2, "prop": P_STALL_RAIL, "scale": 0.65, "title": "东栏北档", "desc": "东栏北端横档。"},
 			],
 			"fx": [],
 			"ambient": [
@@ -327,10 +344,10 @@ static func _all() -> Dictionary:
 				"via_clusters": ["stall_w", "aisle_feed", "stall_e"],
 			},
 		},
-		# ── C03 鸡舍：西巢 · 中饲 · 东栖 ──
+		# ── C03 鸡舍：西巢 · 中饲 · 东栖 · 低围栏笔 ──
 		"c03_coop": {
 			"title": "鸡舍内部",
-			"hint": "鸡舍 · 巢箱与栖木，鸡只啄食",
+			"hint": "鸡舍 · 围栏笔内巢箱/食槽/栖木",
 			"return_path": FARM,
 			"room_w": 20,
 			"room_h": 14,
@@ -341,20 +358,31 @@ static func _all() -> Dictionary:
 			"rug": null,
 			"window": true,
 			"clusters": [
-				_cluster("nests", 3, 6, [
+				_cluster("nests", 4, 6, [
 					_m(P_NEST, 0, -2, "巢箱", "西墙产蛋巢。", 0.65),
 					_m(P_NEST, 0, 0, "巢箱", "中层巢箱。", 0.65),
 					_m(P_NEST, 0, 2, "巢箱", "底层巢箱。", 0.6),
 				]),
-				_cluster("feed", 10, 7, [
-					_m(P_TROUGH, 0, 0, "食槽", "中央食槽。", 0.55),
-					_m(P_SACK0, 3, 1, "鸡食", "贴槽鸡食袋。", PROP),
-					_m(P_BARREL, 3, 3, "水桶", "贴食饮水桶。", PROP),
-					_m(P_LAMP_INDOOR, 0, -3, "小灯", "鸡舍小灯。", PROP),
+				_cluster("feed", 10, 6, [
+					_m(P_TROUGH, 0, 0, "食槽", "笔内食槽。", 0.55),
+					_m(P_SACK0, 2, 1, "鸡食", "贴槽鸡食袋。", PROP),
+					_m(P_BARREL, 2, 2, "水桶", "贴食饮水桶。", PROP),
+					_m(P_LAMP_INDOOR, 0, -2, "小灯", "鸡舍小灯。", PROP),
 				]),
 				_cluster("roost", 15, 5, [
 					_m(P_ROOST, 0, 0, "栖木", "东侧栖木。", 0.7),
 				]),
+			],
+			# Low pen around work clusters; south gate aligns with door aisle.
+			"enclosures": [
+				{
+					"rect": [2, 3, 17, 10],
+					"prop": P_PEN_FENCE,
+					"scale": 0.62,
+					"title": "鸡栏",
+					"desc": "低围栏把鸡关在笔内。",
+					"gaps": [[8, 10], [9, 10], [10, 10], [11, 10]],
+				},
 			],
 			"fx": [],
 			"ambient": [

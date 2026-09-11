@@ -55,6 +55,7 @@ func assemble(root: Node2D, override_profile: String = "") -> void:
 	_paint_rug(foundation)
 
 	_spawn_furniture(world)
+	_spawn_territory(world)
 	_spawn_fx(world)
 	_spawn_ambient(world)
 	_spawn_local_lights(world)
@@ -234,6 +235,74 @@ func _spawn_prop(parent: Node2D, path: String, pos: Vector2, scale_f: float, tit
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	spr.z_index = 2
 	hs.get_node("Visual").add_child(spr)
+
+
+## Territory grammar (INTERIOR_TERRITORY.md): enclosure rings + aisle rails.
+## Profiles may declare:
+##   enclosures: [{rect:[x0,y0,x1,y1], prop, scale?, title, desc, gaps:[[tx,ty],...]}]
+##   rails: [{axis:"v"|"h", tx|ty, a0, a1, prop, scale?, title, desc, step?}]
+func _spawn_territory(parent: Node2D) -> void:
+	for enc in _profile.get("enclosures", []):
+		_spawn_enclosure_ring(parent, enc)
+	for rail in _profile.get("rails", []):
+		_spawn_rail_line(parent, rail)
+
+
+func _spawn_enclosure_ring(parent: Node2D, enc: Dictionary) -> void:
+	var rect: Array = enc.get("rect", [])
+	if rect.size() < 4:
+		return
+	var x0 := int(rect[0])
+	var y0 := int(rect[1])
+	var x1 := int(rect[2])
+	var y1 := int(rect[3])
+	var path := str(enc.get("prop", ""))
+	var scale_f := float(enc.get("scale", 0.7))
+	var title := str(enc.get("title", "围栏"))
+	var desc := str(enc.get("desc", ""))
+	var gap_set: Dictionary = {}
+	for g in enc.get("gaps", []):
+		if g is Array and g.size() >= 2:
+			gap_set["%d,%d" % [int(g[0]), int(g[1])]] = true
+	var cells: Array[Vector2i] = []
+	for tx in range(x0, x1 + 1):
+		cells.append(Vector2i(tx, y0))
+		cells.append(Vector2i(tx, y1))
+	for ty in range(y0 + 1, y1):
+		cells.append(Vector2i(x0, ty))
+		cells.append(Vector2i(x1, ty))
+	for cell in cells:
+		var key := "%d,%d" % [cell.x, cell.y]
+		if gap_set.has(key):
+			continue
+		_spawn_prop(parent, path, _tile_center(cell.x, cell.y), scale_f, title, desc)
+
+
+func _spawn_rail_line(parent: Node2D, rail: Dictionary) -> void:
+	var axis := str(rail.get("axis", "v"))
+	var path := str(rail.get("prop", ""))
+	var scale_f := float(rail.get("scale", 0.65))
+	var title := str(rail.get("title", "隔栏"))
+	var desc := str(rail.get("desc", ""))
+	var step := maxi(1, int(rail.get("step", 2)))
+	var a0 := int(rail.get("a0", 0))
+	var a1 := int(rail.get("a1", 0))
+	if a1 < a0:
+		var tmp := a0
+		a0 = a1
+		a1 = tmp
+	if axis == "h":
+		var ty := int(rail.get("ty", 0))
+		var tx := a0
+		while tx <= a1:
+			_spawn_prop(parent, path, _tile_center(tx, ty), scale_f, title, desc)
+			tx += step
+	else:
+		var tx := int(rail.get("tx", 0))
+		var ty := a0
+		while ty <= a1:
+			_spawn_prop(parent, path, _tile_center(tx, ty), scale_f, title, desc)
+			ty += step
 
 
 func _spawn_fx(parent: Node2D) -> void:
