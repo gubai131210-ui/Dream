@@ -298,3 +298,8 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(ysort, "→河流", SceneRouter.RIVER_PATH, Vector2(200, 820), Vector2(96, 56))
 	craft.make_portal(ysort, "→深林", SceneRouter.FOREST_DEEP_PATH, Vector2(80, 480), Vector2(96, 56))
 	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 920), Vector2(96, 48))
+	# C26 — west overlook spur (behind / beside curtain); append-only, no silhouette wipe.
+	craft.make_portal(
+		ysort, "进入瀑后洞窟", SceneRouter.C26_WATERFALL_CAVE_PATH,
+		craft.tile_center(11, 12), Vector2(100, 56)
+	)

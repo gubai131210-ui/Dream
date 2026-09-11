@@ -27,6 +27,7 @@ func assemble(root: Node2D) -> void:
 	_spawn_trees(ysort)
 	_spawn_actors(ysort)
 	craft.spawn_water_overlay(ysort)
+	_spawn_fishing_spots(ysort)
 	_spawn_portals(ysort)
 
 
@@ -97,8 +98,6 @@ func _spawn_props(ysort: Node2D) -> void:
 		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(980, 460), "title": "码头桶", "desc": "系缆用空桶。", "scale": 0.5},
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(360, 700), "title": "渔获箱", "desc": "湖岸临时货箱。", "scale": 0.55},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(640, 780), "title": "湖灯", "desc": "南岸小径灯。", "scale": 0.55},
-		{"path": "res://assets/sprites/props/rock_01.png", "pos": Vector2(280, 520), "title": "", "desc": "", "scale": 0.4},
-		{"path": "res://assets/sprites/props/rock_04.png", "pos": Vector2(900, 640), "title": "", "desc": "", "scale": 0.38},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):
@@ -130,7 +129,7 @@ func _spawn_trees(ysort: Node2D) -> void:
 		var rad := deg_to_rad(float(a))
 		ideals.append(Vector2(640 + cos(rad) * 460, 480 + sin(rad) * 320))
 	for i in ideals.size():
-		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
+		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % (i % 6)
 		craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 5, false)
 
 
@@ -143,6 +142,39 @@ func _spawn_actors(ysort: Node2D) -> void:
 		ysort, "farmer", "垂钓客", "在东码头附近踱步。",
 		[Vector2(980, 420), Vector2(1040, 480), Vector2(980, 540), Vector2(940, 480)],
 	)
+
+
+func _spawn_fishing_spots(ysort: Node2D) -> void:
+	## Fish-E append-only: shore / dock cast points.
+	var spots := [
+		{
+			"spot_id": "east_dock",
+			"pos": Vector2(1000, 480),
+			"title": "东码头钓点",
+			"desc": "湖东系缆处，鲈鱼出没。",
+		},
+		{
+			"spot_id": "south_shore",
+			"pos": Vector2(640, 760),
+			"title": "南岸钓点",
+			"desc": "开阔湖面，偶遇锦鲤。",
+		},
+	]
+	for s in spots:
+		var pos: Vector2 = s["pos"]
+		var cleared := craft.find_clear_near(pos, 1, 1, 6, true)
+		if cleared != Vector2.ZERO:
+			pos = cleared
+		var t := craft.world_to_tile(pos)
+		if craft.is_water(t.x, t.y):
+			continue
+		craft.add_contact_shadow(ysort, pos, Vector2(14, 5))
+		FishingSpot.spawn(ysort, pos, Vector2(56, 48), {
+			"site_id": "lake",
+			"spot_id": s["spot_id"],
+			"title": s["title"],
+			"desc": s["desc"],
+		})
 
 
 func _spawn_portals(ysort: Node2D) -> void:

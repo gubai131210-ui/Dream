@@ -183,7 +183,7 @@ func _spawn_trees(ysort: Node2D) -> void:
 		var trail := _trail_cx(float(t0.y))
 		if absf(float(t0.x) - trail) < 2.4 and t0.y >= 2 and t0.y <= 27:
 			continue
-		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
+		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % (i % 6)
 		var spr := craft.spawn_tree(ysort, path, ideal, zone, 1, 1, 4, false, 0, false)
 		if spr == null:
 			continue
@@ -234,4 +234,13 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(
 		ysort, "→总览", SceneRouter.HUB_PATH,
 		Vector2(640, 40), Vector2(96, 48)
+	)
+	# C27 — bend dirt pockets only (append-only; keep canopy / trail silhouette).
+	craft.make_portal(
+		ysort, "进入猎人隐所", SceneRouter.C27_FOREST_HIDE_A_PATH,
+		craft.tile_center(12, 10), Vector2(100, 56)
+	)
+	craft.make_portal(
+		ysort, "进入蘑菇窝棚", SceneRouter.C27_FOREST_HIDE_B_PATH,
+		craft.tile_center(22, 18), Vector2(100, 56)
 	)

@@ -10,11 +10,11 @@
 | Team | Package | Own (create/edit) | Portal host (append only) | Done when |
 | --- | --- | --- | --- | --- |
 | **Stall** | C05 | `scripts/market/**`, `docs/STALL_C05.md`, market stall assets | `market_street_dressing/controller` stall-only | **DONE** — 6 态同槽 `MarketStall`；六摊初始打散；点击循环 |
-| **Fish** | C18–C22 | `scripts/fishing/**`, `docs/FISH_E.md`, fishing FX/sprites | `river_assembler`, `lake_assembler` (spot markers) | Cast→bite→catch at ≥2 sites; ≥2 rods |
-| **Mine** | C17 | `scenes/interiors/c17_mine/**`, mine scripts/docs | `hill_farm_assembler` mouth portal | Enter mine floor + return |
-| **Well** | C14+C15 | `c14_well/**`, `c15_basement/**`, docs | Residential well → portal; one home basement stair | Well bottom + basement + returns |
-| **Lighthouse** | C12 | `c12_lighthouse/**` (3 floors), docs | `lighthouse_assembler` door → interior | 3 walkable layers + return |
-| **Forest** | C26+C27 | `c26_waterfall_cave/**`, `c27_*` secrets, docs | `waterfall_assembler`, `forest_deep_assembler` | Cave + ≥2 forest secrets |
+| **Fish** | C18–C22 | `scripts/fishing/**`, `docs/FISH_E.md` | `river` / `lake` spots | **DONE** (code) — 见 [`FISH_E.md`](./FISH_E.md) |
+| **Mine** | C17 | `c17_mine` + `docs/MINE_C17.md` | `hill_farm` mouth | **DONE** (code) — 见 [`MINE_C17.md`](./MINE_C17.md) |
+| **Well** | C14+C15 | profiles + `docs/WELL_C14C15.md` | residential well + C01 stair | **DONE** (code) — 见 [`WELL_C14C15.md`](./WELL_C14C15.md) |
+| **Lighthouse** | C12 | `c12_lighthouse` + `docs/LIGHTHOUSE_C12.md` | lighthouse door | **DONE** (code) — 见 [`LIGHTHOUSE_C12.md`](./LIGHTHOUSE_C12.md) |
+| **Forest** | C26+C27 | caves/hides + `docs/FOREST_SECRET_C26C27.md` | waterfall + forest_deep | **DONE** (code) — 见 [`FOREST_SECRET_C26C27.md`](./FOREST_SECRET_C26C27.md) |
 | **Env** | C56–C57/H | `scripts/env/**`, `docs/ENV_H.md` | Thin hook on `village_square` TopBar | **DONE** — night + 晴/雨/雾；见 [`ENV_H.md`](./ENV_H.md) |
 
 **Shared (Lead only / append-only):** `scripts/core/scene_router.gd` constants (pre-seeded), `tools/gen_interior_scenes.py` room list, `docs/PHASE5.md` status table.

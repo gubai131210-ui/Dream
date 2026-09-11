@@ -38,7 +38,7 @@ theme_override_constants/separation = 10
 [node name="Hint" type="Label" parent="UI/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "室内"
+text = "矿洞 · 入口层"
 
 [node name="BackOutside" type="Button" parent="UI/TopBar"]
 layout_mode = 2

@@ -179,3 +179,16 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(ysort, "→农田", SceneRouter.FARMLAND_PATH, Vector2(80, 480), Vector2(96, 56))
 	craft.make_portal(ysort, "→湖泊", SceneRouter.LAKE_PATH, Vector2(1200, 560), Vector2(96, 56))
 	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))
+	# C17 mine mouth — NW hillside cut (append-only; no layout rewrite).
+	var mine_mouth := Vector2(180, 200)
+	var rock_path := "res://assets/sprites/props/rock_02.png"
+	if ResourceLoader.exists(rock_path):
+		craft.add_contact_shadow(ysort, mine_mouth, Vector2(28, 10))
+		var rock := craft.spawn_sprite(ysort, rock_path, mine_mouth)
+		rock.scale = Vector2(0.7, 0.7)
+	craft.make_hotspot(
+		ysort, "矿洞口", "山坡切入的矿洞入口，通向入口层。", mine_mouth, Vector2(80, 64)
+	)
+	craft.make_portal(
+		ysort, "进入矿洞", SceneRouter.C17_MINE_PATH, mine_mouth + Vector2(0, 12), Vector2(96, 52)
+	)
