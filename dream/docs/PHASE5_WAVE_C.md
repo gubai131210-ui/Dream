@@ -9,14 +9,14 @@
 
 | Team | Package | Own (edit only) | Portal host (Lead-seeded) | Done when |
 | --- | --- | --- | --- | --- |
-| **Mill** | C13 | `c13_mill` + `docs/MILL_C13.md` | Farmland 磨坊 door | ≥1 磨坊内 (齿轮/磨盘/面粉簇) |
-| **Caves** | C16 | `c16_cave_entry` + `c16_cave_mid` + `docs/CAVES_C16.md` | Hill farm 普通洞口 | 入口层+中层；层间 portal |
-| **LakeIsle** | C24 | `c24_lake_island` + `docs/LAKE_ISLAND_C24.md` | Lake 登岛 | ≥1 可达岛场景 |
-| **RiverHide** | C25 | `c25_river_hide` + `docs/RIVER_HIDE_C25.md` | River 芦苇岔 | ≥1 隐藏岔路 |
-| **GiantTree** | C28 | `c28_giant_tree` + `docs/GIANT_TREE_C28.md` | Forest deep 巨树洞 | ≥1 树洞厅 |
-| **Ruins** | C29 | `c29_ruins` + `docs/RUINS_C29.md` | Forest deep 遗迹门 | ≥1 主殿 |
-| **Cemetery** | C30 | `c30_cemetery` + `docs/CEMETERY_C30.md` | Square 教堂旁墓园 | 墓区+1穴簇 |
-| **Sewer** | C31 | `c31_sewer` + `docs/SEWER_C31.md` | Residential 院井 ↓下水道 | ≥1 段管道 (+可选黑市 NPC) |
+| **Mill** | C13 | `c13_mill` + `docs/MILL_C13.md` | Farmland 磨坊 door | **DONE** — 见 [MILL_C13.md](./MILL_C13.md) |
+| **Caves** | C16 | `c16_cave_entry` + `c16_cave_mid` + `docs/CAVES_C16.md` | Hill farm 普通洞口 | **DONE** — 见 [CAVES_C16.md](./CAVES_C16.md) |
+| **LakeIsle** | C24 | `c24_lake_island` + `docs/LAKE_ISLAND_C24.md` | Lake 登岛 | **DONE** — 见 [LAKE_ISLAND_C24.md](./LAKE_ISLAND_C24.md) |
+| **RiverHide** | C25 | `c25_river_hide` + `docs/RIVER_HIDE_C25.md` | River 芦苇岔 | **DONE** — 见 [RIVER_HIDE_C25.md](./RIVER_HIDE_C25.md) |
+| **GiantTree** | C28 | `c28_giant_tree` + `docs/GIANT_TREE_C28.md` | Forest deep 巨树洞 | **DONE** — 见 [GIANT_TREE_C28.md](./GIANT_TREE_C28.md) |
+| **Ruins** | C29 | `c29_ruins` + `docs/RUINS_C29.md` | Forest deep 遗迹门 | **DONE** — 见 [RUINS_C29.md](./RUINS_C29.md) |
+| **Cemetery** | C30 | `c30_cemetery` + `docs/CEMETERY_C30.md` | Square 教堂旁墓园 | **DONE** — 见 [CEMETERY_C30.md](./CEMETERY_C30.md) |
+| **Sewer** | C31 | `c31_sewer` + `docs/SEWER_C31.md` | Residential 院井 ↓下水道 | **DONE** — 见 [SEWER_C31.md](./SEWER_C31.md) |
 
 **Shared (Lead only):** `scene_router.gd`, `gen_interior_scenes.py` (`--only-new`), outdoor assembler portal appends, stub profiles, this MD, `PHASE5.md`.
 
