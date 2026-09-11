@@ -1,6 +1,6 @@
 # Phase 5 Wave B — Civic interiors (C06–C11)
 
-**Status:** IN PROGRESS 2026-09-11  
+**Status:** DONE (code) 2026-09-11 — user Godot QA next  
 **User lock:** Expand public-service interiors. **Do not polish C01–C04** (Wave E deferred).  
 **Locks:** [`PHASE5.md`](./PHASE5.md), [`INTERIOR_LIBRARY.md`](./INTERIOR_LIBRARY.md), [`INTERIOR_FOUNDATION.md`](./INTERIOR_FOUNDATION.md), [`INTERIOR_COMPOSITION.md`](./INTERIOR_COMPOSITION.md), [`SCALE.md`](./SCALE.md)  
 **Skills (mandatory):** `realistic-scene-craft` (outdoor portal host only), `interior-territory-craft` (if enclosure/mass needed), `painting-asset-craft` (new props only), `interior-visual-qa` (desk PASS before claiming DONE)
@@ -9,12 +9,12 @@
 
 | Team | Package | Own (create/edit) | Portal host (Lead-seeded; teams do NOT edit) | Done when |
 | --- | --- | --- | --- | --- |
-| **TownHall** | C06 | **only** `c06_town_hall` block in `interior_profiles.gd` + `docs/TOWN_HALL_C06.md` + optional unique props | Square 村公所 door — already seeded | 大厅+办公室 ≥2 clusters; enter/return |
-| **School** | C07 | **only** `c07_school` + `docs/SCHOOL_C07.md` + optional props | Square 学校 | ≥1 教室 (+可选办公角) |
-| **Clinic** | C08 | **only** `c08_clinic` + `docs/CLINIC_C08.md` + optional props | Square 医馆 | 前台+诊室 |
-| **Library** | C09 | **only** `c09_library` + `docs/LIBRARY_C09.md` + optional props | Square 图书馆 | 大厅+可搜书架簇 |
-| **Church** | C10 | **only** `c10_church` + `docs/CHURCH_C10.md` + optional props | Square 教堂 | 主礼堂 (祭坛+座席) |
-| **StationInt** | C11 | **only** `c11_station` + `docs/STATION_C11.md` + optional props | A11 车站主楼门 — seeded | 候车厅+站长室 |
+| **TownHall** | C06 | **only** `c06_town_hall` block in `interior_profiles.gd` + `docs/TOWN_HALL_C06.md` + optional unique props | Square 村公所 door — already seeded | **DONE** — 见 [`TOWN_HALL_C06.md`](./TOWN_HALL_C06.md) |
+| **School** | C07 | **only** `c07_school` + `docs/SCHOOL_C07.md` + optional props | Square 学校 | **DONE** — 见 [`SCHOOL_C07.md`](./SCHOOL_C07.md) |
+| **Clinic** | C08 | **only** `c08_clinic` + `docs/CLINIC_C08.md` + optional props | Square 医馆 | **DONE** — 见 [`CLINIC_C08.md`](./CLINIC_C08.md) |
+| **Library** | C09 | **only** `c09_library` + `docs/LIBRARY_C09.md` + optional props | Square 图书馆 | **DONE** — 见 [`LIBRARY_C09.md`](./LIBRARY_C09.md) |
+| **Church** | C10 | **only** `c10_church` + `docs/CHURCH_C10.md` + optional props | Square 教堂 | **DONE** — 见 [`CHURCH_C10.md`](./CHURCH_C10.md) |
+| **StationInt** | C11 | **only** `c11_station` + `docs/STATION_C11.md` + optional props | A11 车站主楼门 — seeded | **DONE** — 见 [`STATION_C11.md`](./STATION_C11.md) |
 
 **Shared (Lead only):** `scene_router.gd` constants, `tools/gen_interior_scenes.py`, `village_square_assembler.gd` civic titles+portals, `station_assembler.gd` enter portal, stub profiles, this MD, `PHASE5.md` table.
 
