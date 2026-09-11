@@ -457,14 +457,14 @@ func _spawn_portals(ysort: Node2D) -> void:
 	# West / north edges -> village square.
 	craft.make_portal(
 		ysort,
-		"âå¹¿åº",
+		"→广场",
 		SceneRouter.SQUARE_PATH,
 		Vector2(40, 500),
 		Vector2(72, 56)
 	)
 	craft.make_portal(
 		ysort,
-		"âå¹¿åº",
+		"→广场",
 		SceneRouter.SQUARE_PATH,
 		Vector2(640, 40),
 		Vector2(96, 48)
@@ -472,15 +472,23 @@ func _spawn_portals(ysort: Node2D) -> void:
 	# South / east -> farm home (SceneRouter.FARM_HOME_PATH).
 	craft.make_portal(
 		ysort,
-		"âååº",
+		"→农场",
 		SceneRouter.FARM_HOME_PATH,
 		Vector2(640, 900),
 		Vector2(96, 48)
 	)
 	craft.make_portal(
 		ysort,
-		"âååº",
+		"→农场",
 		SceneRouter.FARM_HOME_PATH,
 		Vector2(1220, 500),
 		Vector2(72, 56)
+	)
+	# Wave E: backyard annex north of west yard props.
+	craft.make_portal(
+		ysort,
+		"进入后院",
+		SceneRouter.C49_BACKYARD_PATH,
+		Vector2(400, 260),
+		Vector2(100, 52)
 	)

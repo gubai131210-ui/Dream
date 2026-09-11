@@ -63,6 +63,12 @@ const C38_WORKSHOP_PATH := "res://scenes/interiors/c38_workshop/c38_workshop.tsc
 const C39_PROCESSING_PATH := "res://scenes/interiors/c39_processing/c39_processing.tscn"
 const C51_APIARY_PATH := "res://scenes/interiors/c51_apiary/c51_apiary.tscn"
 const C52_ORCHARD_STORE_PATH := "res://scenes/interiors/c52_orchard_store/c52_orchard_store.tscn"
+## Phase 5 Wave E vertical / yard expand
+const C46_SECOND_FLOOR_PATH := "res://scenes/interiors/c46_second_floor/c46_second_floor.tscn"
+const C47_ATTIC_PATH := "res://scenes/interiors/c47_attic/c47_attic.tscn"
+const C48_ROOF_PATH := "res://scenes/interiors/c48_roof/c48_roof.tscn"
+const C49_BACKYARD_PATH := "res://scenes/interiors/c49_backyard/c49_backyard.tscn"
+const C50_FARM_CELLAR_PATH := "res://scenes/interiors/c50_farm_cellar/c50_farm_cellar.tscn"
 
 
 func go_hub() -> void:

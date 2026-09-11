@@ -51,6 +51,12 @@ ROOMS = [
     ("c39_processing", "c39_processing", "C39ProcessingInterior"),
     ("c51_apiary", "c51_apiary", "C51ApiaryInterior"),
     ("c52_orchard_store", "c52_orchard_store", "C52OrchardStoreInterior"),
+    # Wave E vertical / yard expand
+    ("c46_second_floor", "c46_second_floor", "C46SecondFloorInterior"),
+    ("c47_attic", "c47_attic", "C47AtticInterior"),
+    ("c48_roof", "c48_roof", "C48RoofInterior"),
+    ("c49_backyard", "c49_backyard", "C49BackyardInterior"),
+    ("c50_farm_cellar", "c50_farm_cellar", "C50FarmCellarInterior"),
 ]
 
 TEMPLATE = """[gd_scene load_steps=6 format=3]

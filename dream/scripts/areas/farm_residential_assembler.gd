@@ -386,3 +386,7 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(
 		ysort, "进入果仓", SceneRouter.C52_ORCHARD_STORE_PATH, Vector2(200, 560), Vector2(100, 52)
 	)
+	# Wave E: farm production cellar west of farmhouse door lane.
+	craft.make_portal(
+		ysort, "进入地窖", SceneRouter.C50_FARM_CELLAR_PATH, Vector2(560, 400), Vector2(100, 52)
+	)
