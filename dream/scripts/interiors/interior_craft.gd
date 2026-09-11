@@ -239,8 +239,10 @@ func _spawn_prop(parent: Node2D, path: String, pos: Vector2, scale_f: float, tit
 
 ## Territory grammar (INTERIOR_TERRITORY.md): enclosure rings + aisle rails.
 ## Profiles may declare:
-##   enclosures: [{rect:[x0,y0,x1,y1], prop, scale?, title, desc, gaps:[[tx,ty],...]}]
+##   enclosures: [{rect:[x0,y0,x1,y1], prop_h, prop_v, prop?, scale?, title, desc, gaps:[[tx,ty],...]}]
+##     prop_h = front view (N/S edges); prop_v = side view (E/W) — SAME fence family.
 ##   rails: [{axis:"v"|"h", tx|ty, a0, a1, prop, scale?, title, desc, step?}]
+## Fence segments are 32px-wide tiles; default step=1 and scale=1.0 for seamless runs.
 func _spawn_territory(parent: Node2D) -> void:
 	for enc in _profile.get("enclosures", []):
 		_spawn_enclosure_ring(parent, enc)
@@ -256,35 +258,39 @@ func _spawn_enclosure_ring(parent: Node2D, enc: Dictionary) -> void:
 	var y0 := int(rect[1])
 	var x1 := int(rect[2])
 	var y1 := int(rect[3])
-	var path := str(enc.get("prop", ""))
-	var scale_f := float(enc.get("scale", 0.7))
+	var prop_fallback := str(enc.get("prop", ""))
+	var prop_h := str(enc.get("prop_h", prop_fallback))
+	var prop_v := str(enc.get("prop_v", prop_fallback))
+	var scale_f := float(enc.get("scale", 1.0))
 	var title := str(enc.get("title", "围栏"))
 	var desc := str(enc.get("desc", ""))
 	var gap_set: Dictionary = {}
 	for g in enc.get("gaps", []):
 		if g is Array and g.size() >= 2:
 			gap_set["%d,%d" % [int(g[0]), int(g[1])]] = true
-	var cells: Array[Vector2i] = []
+	# North / south — front view (rails along X)
 	for tx in range(x0, x1 + 1):
-		cells.append(Vector2i(tx, y0))
-		cells.append(Vector2i(tx, y1))
+		for ty in [y0, y1]:
+			var key := "%d,%d" % [tx, ty]
+			if gap_set.has(key):
+				continue
+			_spawn_fence_segment(parent, prop_h, tx, ty, scale_f, title, desc)
+	# East / west — side view (same fence, foreshortened); skip corners (already on N/S)
 	for ty in range(y0 + 1, y1):
-		cells.append(Vector2i(x0, ty))
-		cells.append(Vector2i(x1, ty))
-	for cell in cells:
-		var key := "%d,%d" % [cell.x, cell.y]
-		if gap_set.has(key):
-			continue
-		_spawn_prop(parent, path, _tile_center(cell.x, cell.y), scale_f, title, desc)
+		for tx in [x0, x1]:
+			var key2 := "%d,%d" % [tx, ty]
+			if gap_set.has(key2):
+				continue
+			_spawn_fence_segment(parent, prop_v, tx, ty, scale_f, title, desc)
 
 
 func _spawn_rail_line(parent: Node2D, rail: Dictionary) -> void:
 	var axis := str(rail.get("axis", "v"))
 	var path := str(rail.get("prop", ""))
-	var scale_f := float(rail.get("scale", 0.65))
+	var scale_f := float(rail.get("scale", 1.0))
 	var title := str(rail.get("title", "隔栏"))
 	var desc := str(rail.get("desc", ""))
-	var step := maxi(1, int(rail.get("step", 2)))
+	var step := maxi(1, int(rail.get("step", 1)))
 	var a0 := int(rail.get("a0", 0))
 	var a1 := int(rail.get("a1", 0))
 	if a1 < a0:
@@ -295,14 +301,35 @@ func _spawn_rail_line(parent: Node2D, rail: Dictionary) -> void:
 		var ty := int(rail.get("ty", 0))
 		var tx := a0
 		while tx <= a1:
-			_spawn_prop(parent, path, _tile_center(tx, ty), scale_f, title, desc)
+			_spawn_fence_segment(parent, path, tx, ty, scale_f, title, desc)
 			tx += step
 	else:
-		var tx := int(rail.get("tx", 0))
-		var ty := a0
-		while ty <= a1:
-			_spawn_prop(parent, path, _tile_center(tx, ty), scale_f, title, desc)
-			ty += step
+		var tx2 := int(rail.get("tx", 0))
+		var ty2 := a0
+		while ty2 <= a1:
+			_spawn_fence_segment(parent, path, tx2, ty2, scale_f, title, desc)
+			ty2 += step
+
+
+func _spawn_fence_segment(parent: Node2D, path: String, tx: int, ty: int, scale_f: float, title: String, desc: String) -> void:
+	## Feet-anchored fence tile (32px art → 1 world tile) so H/V runs seal without gaps.
+	if not ResourceLoader.exists(path):
+		push_warning("InteriorCraft: missing fence %s" % path)
+		return
+	var tex := load(path) as Texture2D
+	if tex == null:
+		return
+	var pos := _tile_center(tx, ty)
+	var hs := _make_hotspot(parent, title, desc, pos, Vector2(36, 40))
+	var spr := Sprite2D.new()
+	spr.texture = tex
+	spr.centered = true
+	# Sit on tile foot: center lifted by half scaled height so bottom ≈ ground.
+	spr.position = Vector2(0, -float(tex.get_height()) * scale_f * 0.5 + 4.0)
+	spr.scale = Vector2(scale_f, scale_f)
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	spr.z_index = 3
+	hs.get_node("Visual").add_child(spr)
 
 
 func _spawn_fx(parent: Node2D) -> void:

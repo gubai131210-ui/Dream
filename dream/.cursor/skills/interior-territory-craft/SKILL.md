@@ -44,16 +44,16 @@ Territory checklist:
 3. Coop needs a **pen enclosure** with south `gaps`; chickens spawn inside.
 4. Storage needs **height or repetition** (`grain_stack` / stacked crates), not two flat sacks.
 5. Doors enter **real scenes**; InfoPanel does not replace territory grammar.
-6. Generate matching wood props via `tools/gen_interior_territory_props.py` (or same-sheet family) — no ColorRect-only interiors for signature rails.
+6. Generate matching wood props via `tools/gen_interior_territory_props.py` — **H/V are two views of one fence**; 32px tiles; step=1; enclosure uses `prop_h`+`prop_v`.
 
 ## Schema (craft)
 
 ```text
-rails: [{axis, tx|ty, a0, a1, step?, prop, scale?, title, desc}]
-enclosures: [{rect:[x0,y0,x1,y1], prop, gaps:[[tx,ty],...], ...}]
+rails: [{axis, tx|ty, a0, a1, step?:1, prop, scale?:1, title, desc}]
+enclosures: [{rect:[x0,y0,x1,y1], prop_h, prop_v, gaps:[[tx,ty],...], scale?:1, ...}]
 ```
 
-Implemented in `scripts/interiors/interior_craft.gd` → `_spawn_territory`.
+Implemented in `scripts/interiors/interior_craft.gd` → `_spawn_territory` / `_spawn_fence_segment`.
 
 ## 禁止偷懒
 
@@ -62,6 +62,8 @@ Implemented in `scripts/interiors/interior_craft.gd` → `_spawn_territory`.
 - 禁止两袋粮当粮仓  
 - 禁止围栏堵门  
 - 禁止只写 MD 不改 profile/craft  
+- 禁止正视/侧视两套设计  
+- 禁止 step>1 栏间留缝  
 
 ## Related skills
 

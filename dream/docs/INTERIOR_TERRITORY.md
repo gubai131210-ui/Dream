@@ -27,16 +27,16 @@
 
 ```text
 rails: [
-  { axis: "v"|"h", tx|ty, a0, a1, step?, prop, scale?, title, desc }
+  { axis: "v"|"h", tx|ty, a0, a1, step?:1, prop, scale?:1, title, desc }
 ]
 enclosures: [
-  { rect:[x0,y0,x1,y1], prop, scale?, title, desc, gaps:[[tx,ty],...] }
+  { rect:[x0,y0,x1,y1], prop_h, prop_v, scale?:1, title, desc, gaps:[[tx,ty],...] }
 ]
 ```
 
-- `rails`：畜栏朝过道的隔栏线（谷仓）  
-- `enclosures`：闭合低栏 + `gaps` 南门开口（鸡舍）  
-- Craft：`InteriorCraft._spawn_territory` 在家具后展开  
+- `rails`：畜栏朝过道的隔栏线（谷仓）；`axis=h`→正视，`axis=v`→侧视  
+- `enclosures`：南北 `prop_h`、东西 `prop_v`；`gaps` 南门开口  
+- Craft：`InteriorCraft._spawn_territory` / `_spawn_fence_segment`  
 
 ## Wave B 房间清单
 
@@ -58,6 +58,19 @@ enclosures: [
 
 生成：`tools/gen_interior_territory_props.py`
 
+## Fence family lock
+
+| Rule | Why |
+| --- | --- |
+| **H / V = 同一栅栏两视角** | 正视（rails along X）与侧视（foresorten）共享柱粗、横档数、木色 |
+| **32px 瓦片段 + step=1 + scale=1** | 段间接缝；禁止 step=2 留洞 |
+| **enclosure 用 `prop_h` + `prop_v`** | 南北正视、东西侧视；禁止四边同一张图 |
+| **只有 `gaps` 允许开口** | 南门通道；别处禁止视觉空隙 |
+
+Stall = 三档高栏；Pen = 两档低栏；同家族不同高度。
+
+生成：`tools/gen_interior_territory_props.py`（含 `_diag_fence_h_seamless.png`）
+
 ## 禁止偷懒
 
 - 禁止只用干草/食槽**语义暗示**畜栏、却不画隔栏  
@@ -66,6 +79,8 @@ enclosures: [
 - 禁止为填空在通廊撒箱  
 - 禁止把边界物做成挡死南门（鸡栏必须 `gaps` 对齐门轴）  
 - 禁止只改文案/hint、不改 `rails`/`enclosures`/mass 道具  
+- 禁止正视/侧视做成两套不同栅栏设计  
+- 禁止 step>1 或 scale<1 造成栏间空洞  
 
 ## Related
 

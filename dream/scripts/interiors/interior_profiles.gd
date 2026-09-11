@@ -41,6 +41,7 @@ const P_ROCKING := DIR_INTERIOR_PROP + "/rocking_00.png"
 const P_STALL_RAIL := DIR_INTERIOR_PROP + "/stall_rail_00.png"
 const P_STALL_RAIL_V := DIR_INTERIOR_PROP + "/stall_rail_v_00.png"
 const P_PEN_FENCE := DIR_INTERIOR_PROP + "/pen_fence_00.png"
+const P_PEN_FENCE_V := DIR_INTERIOR_PROP + "/pen_fence_v_00.png"
 const P_GRAIN_STACK := DIR_INTERIOR_PROP + "/grain_stack_00.png"
 const P_BARREL := DIR_OUTDOOR_PROP + "/barrel_1.png"
 const P_BARREL_KEG := DIR_OUTDOOR_PROP + "/barrel_0.png"
@@ -322,12 +323,14 @@ static func _all() -> Dictionary:
 					_m(P_LAMP_INDOOR, 0, -1, "吊灯", "通道暖灯。", PROP),
 				]),
 			],
-			# Aisle-facing stall rails — territory boundary, not scatter props.
+			# Seamless same-family fence: H = front, V = side; step 1 = no gaps.
 			"rails": [
-				{"axis": "v", "tx": 11, "a0": 5, "a1": 16, "step": 2, "prop": P_STALL_RAIL_V, "scale": 0.7, "title": "西畜栏隔栏", "desc": "西 stall 朝过道隔栏。"},
-				{"axis": "v", "tx": 24, "a0": 5, "a1": 16, "step": 2, "prop": P_STALL_RAIL_V, "scale": 0.7, "title": "东畜栏隔栏", "desc": "东 stall 朝过道隔栏。"},
-				{"axis": "h", "ty": 5, "a0": 4, "a1": 10, "step": 2, "prop": P_STALL_RAIL, "scale": 0.65, "title": "西栏北档", "desc": "西栏北端横档。"},
-				{"axis": "h", "ty": 5, "a0": 25, "a1": 31, "step": 2, "prop": P_STALL_RAIL, "scale": 0.65, "title": "东栏北档", "desc": "东栏北端横档。"},
+				{"axis": "v", "tx": 11, "a0": 5, "a1": 16, "step": 1, "prop": P_STALL_RAIL_V, "scale": 1.0, "title": "西畜栏隔栏", "desc": "西 stall 朝过道隔栏（侧视）。"},
+				{"axis": "v", "tx": 24, "a0": 5, "a1": 16, "step": 1, "prop": P_STALL_RAIL_V, "scale": 1.0, "title": "东畜栏隔栏", "desc": "东 stall 朝过道隔栏（侧视）。"},
+				{"axis": "h", "ty": 5, "a0": 4, "a1": 10, "step": 1, "prop": P_STALL_RAIL, "scale": 1.0, "title": "西栏北档", "desc": "西栏北端横档（正视）。"},
+				{"axis": "h", "ty": 5, "a0": 25, "a1": 31, "step": 1, "prop": P_STALL_RAIL, "scale": 1.0, "title": "东栏北档", "desc": "东栏北端横档（正视）。"},
+				{"axis": "h", "ty": 16, "a0": 4, "a1": 10, "step": 1, "prop": P_STALL_RAIL, "scale": 1.0, "title": "西栏南档", "desc": "西栏南端横档（正视）。"},
+				{"axis": "h", "ty": 16, "a0": 25, "a1": 31, "step": 1, "prop": P_STALL_RAIL, "scale": 1.0, "title": "东栏南档", "desc": "东栏南端横档（正视）。"},
 			],
 			"fx": [],
 			"ambient": [
@@ -377,10 +380,11 @@ static func _all() -> Dictionary:
 			"enclosures": [
 				{
 					"rect": [2, 3, 17, 10],
-					"prop": P_PEN_FENCE,
-					"scale": 0.62,
+					"prop_h": P_PEN_FENCE,
+					"prop_v": P_PEN_FENCE_V,
+					"scale": 1.0,
 					"title": "鸡栏",
-					"desc": "低围栏把鸡关在笔内。",
+					"desc": "同一低栏的正视/侧视无缝围合。",
 					"gaps": [[8, 10], [9, 10], [10, 10], [11, 10]],
 				},
 			],
