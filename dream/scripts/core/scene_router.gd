@@ -19,6 +19,17 @@ const HILL_FARM_PATH := "res://scenes/areas/hill_farm/hill_farm.tscn"
 const LAKE_PATH := "res://scenes/areas/lake/lake.tscn"
 const LIGHTHOUSE_PATH := "res://scenes/areas/lighthouse/lighthouse.tscn"
 const LAKE_HOUSE_PATH := "res://scenes/areas/lake_house/lake_house.tscn"
+## Phase 5 Wave A interiors
+const C01_HOME_PATH := "res://scenes/interiors/c01_home/c01_home.tscn"
+const C02_ELDER_PATH := "res://scenes/interiors/c02_elder/c02_elder.tscn"
+const C02_FARMER_PATH := "res://scenes/interiors/c02_farmer/c02_farmer.tscn"
+const C02_MERCHANT_PATH := "res://scenes/interiors/c02_merchant/c02_merchant.tscn"
+const C02_BLACKSMITH_HOME_PATH := "res://scenes/interiors/c02_blacksmith_home/c02_blacksmith_home.tscn"
+const C03_BARN_PATH := "res://scenes/interiors/c03_barn/c03_barn.tscn"
+const C03_COOP_PATH := "res://scenes/interiors/c03_coop/c03_coop.tscn"
+const C04_GROCERY_PATH := "res://scenes/interiors/c04_grocery/c04_grocery.tscn"
+const C04_SMITH_PATH := "res://scenes/interiors/c04_smith/c04_smith.tscn"
+const C04_TAVERN_PATH := "res://scenes/interiors/c04_tavern/c04_tavern.tscn"
 
 
 func go_hub() -> void:
@@ -83,6 +94,10 @@ func go_lighthouse() -> void:
 
 func go_lake_house() -> void:
 	get_tree().change_scene_to_file(LAKE_HOUSE_PATH)
+
+
+func go_c01_home() -> void:
+	get_tree().change_scene_to_file(C01_HOME_PATH)
 
 
 static func change_to(tree: SceneTree, path: String) -> void:

@@ -1,6 +1,6 @@
 # Interior foundation (C-layer)
 
-**Status:** ACTIVE — C01 Wave A  
+**Status:** ACTIVE — Wave A living/shop/farm (C01–C04)  
 **Date:** 2026-09-11  
 **Locks:** `SCALE.md` (`BASE_TILE=32`), `INTERIOR_LIBRARY.md`, `PHASE5.md`, outdoor cottage palette
 
@@ -36,16 +36,34 @@ Not “too few furniture.” Foundation was wrong:
 
 Reference mood plates (not runtime TileMap): `c01_room_backdrop_v2.png`, `c01_room_reference_cozy.png`.
 
-## Assembler pass (`InteriorCraft`)
+## Assembler pass (`InteriorCraft` + profiles)
+
+Profiles live in `scripts/interiors/interior_profiles.gd`.  
+Scenes are thin shells (`InteriorRoomController` + `Assembler` with `profile_id`); regenerate via `tools/gen_interior_scenes.py`.
 
 1. Floor fill (32 grid)  
 2. North wall + side posts + doorstep  
-3. Window + local light shaft  
+3. Window + local light shaft (optional per profile)  
 4. Entry rug  
 5. Furniture from **outdoor** props at scale **0.55**  
 6. `CanvasModulate` mild + `PointLight2D` at lamp & window  
-7. PatrolActor on aisle  
-8. Return portal at south door  
+7. PatrolActor on aisle (when profile has `actor`)  
+8. Return portal at south door → `return_path`
+
+### Silhouette rules (research + project)
+
+- Interior luma: walls lighter than floor (avoid “pit” invert) — Verdant / RPG Maker interior mapping consensus.  
+- Circulation aisle before dense props; shops = counter axis; barns = stall rows; homes = 入口→起居→床.  
+- Future: Blob/autotile wall masks welcome; Wave A uses modular 32 tiles without 47-mask yet.
+
+## Wave A room map
+
+| profile_id | Outdoor enter | Return district |
+|---|---|---|
+| `c01_home` | 住宅区 `building_00` | village_residential |
+| `c02_elder` / `farmer` / `merchant` / `blacksmith_home` | 住宅区南排四宅 | village_residential |
+| `c03_barn` / `c03_coop` | 农场住宅 谷仓/鸡舍 | farm_residential |
+| `c04_grocery` / `smith` / `tavern` | 商业街三店 | market_street |
 
 ## 禁止偷懒
 
@@ -54,4 +72,6 @@ Reference mood plates (not runtime TileMap): `c01_room_backdrop_v2.png`, `c01_ro
 - 禁止只堆家具不建墙体结构  
 - 禁止室内家具默认 scale>0.6 与室外脱节  
 - 禁止门只有 InfoPanel  
-- 禁止未过 foundation QA 就开 C02+ 空壳  
+- 禁止未过 foundation QA 就开空壳室内  
+- 禁止家/店/仓复制同一 profile 改名  
+- 禁止 `barrel_0` 当通用立桶（酒馆酒桶除外）  

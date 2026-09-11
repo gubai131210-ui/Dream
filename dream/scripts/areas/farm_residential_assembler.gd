@@ -167,22 +167,22 @@ func _spawn_buildings(ysort: Node2D) -> void:
 			"path": "res://assets/sprites/buildings/building_02.png",
 			"pos": Vector2(640, 352),
 			"hw": 2, "hh": 1,
-			"title": "åè",
-			"desc": "åèå®æ´è½å¨é¢è½å´æ åï¼é¨æåå¯¹åè·¯ã",
+			"title": "农舍",
+			"desc": "农舍完整落在院落围栏内：门朝南对土路。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_04.png",
 			"pos": Vector2(280, 352),
 			"hw": 2, "hh": 1,
-			"title": "é¸¡è",
-			"desc": "è¥¿åé¸¡èï¼æ´æ å¨å´æ åä¾§ã",
+			"title": "鸡舍",
+			"desc": "西北鸡舍，整栋在围栏内侧。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
 			"pos": Vector2(980, 352),
 			"hw": 2, "hh": 1,
-			"title": "è°·ä»",
-			"desc": "ä¸åè°·ä»ï¼æ´æ å¨å´æ åä¾§ã",
+			"title": "谷仓",
+			"desc": "东北谷仓，整栋在围栏内侧。",
 		},
 	]
 	for s in specs:
@@ -207,6 +207,11 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos + Vector2(0, 24), Vector2(120, 80))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
+		# Phase 5 Wave A: barn + coop door portals (door/foot anchor).
+		if s["path"] == "res://assets/sprites/buildings/building_01.png":
+			craft.make_portal(ysort, "进入谷仓", SceneRouter.C03_BARN_PATH, pos + Vector2(0, 26), Vector2(88, 48))
+		elif s["path"] == "res://assets/sprites/buildings/building_04.png":
+			craft.make_portal(ysort, "进入鸡舍", SceneRouter.C03_COOP_PATH, pos + Vector2(0, 26), Vector2(88, 48))
 
 
 func _spawn_props(ysort: Node2D) -> void:
@@ -370,7 +375,7 @@ func _spawn_one_critter(ysort: Node2D, species: String, ideal: Vector2) -> void:
 
 
 func _spawn_portals(ysort: Node2D) -> void:
-	craft.make_portal(ysort, "âä½å®åº", SceneRouter.RESIDENTIAL_PATH, Vector2(80, 480), Vector2(96, 56))
-	craft.make_portal(ysort, "âå¹¿åº", SceneRouter.SQUARE_PATH, Vector2(1200, 480), Vector2(96, 56))
-	craft.make_portal(ysort, "âåç°", SceneRouter.FARMLAND_PATH, Vector2(640, 900), Vector2(96, 56))
-	craft.make_portal(ysort, "âæ»è§", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))
+	craft.make_portal(ysort, "→住宅区", SceneRouter.RESIDENTIAL_PATH, Vector2(80, 480), Vector2(96, 56))
+	craft.make_portal(ysort, "→广场", SceneRouter.SQUARE_PATH, Vector2(1200, 480), Vector2(96, 56))
+	craft.make_portal(ysort, "→农田", SceneRouter.FARMLAND_PATH, Vector2(640, 900), Vector2(96, 56))
+	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))

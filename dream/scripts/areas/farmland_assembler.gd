@@ -232,7 +232,7 @@ func _paint_bridge_band(ty0: int, ty1: int) -> void:
 	if width < 3:
 		hi = mini(MAP_W - 1, lo + 2)
 	elif width > 5:
-		var mid: int = int((lo + hi) / 2)
+		var mid: int = floori(float(lo + hi) / 2.0)
 		lo = mid - 2
 		hi = mid + 2
 	for ty in [ty0, ty1]:
@@ -497,6 +497,6 @@ func _spawn_one_critter(ysort: Node2D, species: String, ideal: Vector2) -> void:
 
 
 func _spawn_portals(ysort: Node2D) -> void:
-	craft.make_portal(ysort, "âååºä½å®", SceneRouter.FARM_HOME_PATH, Vector2(80, 480), Vector2(96, 56))
-	craft.make_portal(ysort, "âå¹¿åº", SceneRouter.SQUARE_PATH, Vector2(1200, 480), Vector2(96, 56))
-	craft.make_portal(ysort, "âæ»è§", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))
+	craft.make_portal(ysort, "→农场住宅", SceneRouter.FARM_HOME_PATH, Vector2(80, 480), Vector2(96, 56))
+	craft.make_portal(ysort, "→广场", SceneRouter.SQUARE_PATH, Vector2(1200, 480), Vector2(96, 56))
+	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))

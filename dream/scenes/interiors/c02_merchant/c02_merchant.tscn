@@ -5,14 +5,14 @@
 [ext_resource type="Script" path="res://scripts/core/camera_controller.gd" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/ui/info_panel.tscn" id="4"]
 
-[node name="C01HomeInterior" type="Node2D"]
+[node name="C02MerchantInterior" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1")
-profile_id = "c01_home"
+profile_id = "c02_merchant"
 
 [node name="Assembler" type="Node" parent="."]
 script = ExtResource("2")
-profile_id = "c01_home"
+profile_id = "c02_merchant"
 
 [node name="InteriorWorld" type="Node2D" parent="."]
 y_sort_enabled = true

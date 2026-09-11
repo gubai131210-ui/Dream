@@ -1,24 +1,36 @@
 class_name InteriorCraft
 extends Node
 
-## Interior foundation-first assembler (PHASE5 / PROP_ORIENTATION / SCALE).
-## Pass order: floor → walls/door/window → rug → furniture (outdoor props) → local warm lights → actor → portal.
-## 32px grid. No checkerboard ColorRect floors. No full-room orange wash.
+## Profile-driven interior assembler (PHASE5 / INTERIOR_FOUNDATION / SCALE).
+## Pass: floor → walls/door/window → rug → props → local lights → actor → portal.
+## 32px grid. No checkerboard floors. No full-room orange wash.
 
 const TILE := 32
-const ORIGIN := Vector2i(4, 4) ## top-left of playable room in tiles
-const ROOM_W := 32 ## tiles
-const ROOM_H := 20 ## tiles
-## Circulation: south door → center aisle clear of furniture.
-const DOOR_TX0 := 14
-const DOOR_TX1 := 17
-const WALL_THICK := 2 ## north wall depth in tiles (upper plaster + lower wainscot)
-
+const ORIGIN := Vector2i(4, 4)
+const WALL_THICK := 2
 const TILE_DIR := "res://assets/sprites/interior/tiles"
 const PROP_SCALE := 0.55
 
+@export var profile_id: String = "c01_home"
 
-func assemble(root: Node2D) -> void:
+var _profile: Dictionary = {}
+var _room_w: int = 32
+var _room_h: int = 20
+var _door_tx0: int = 14
+var _door_tx1: int = 17
+
+
+func assemble(root: Node2D, override_profile: String = "") -> void:
+	var pid := override_profile if not override_profile.is_empty() else profile_id
+	if root.has_meta("profile_id"):
+		pid = str(root.get_meta("profile_id"))
+	_profile = InteriorProfiles.get_profile(pid)
+	profile_id = pid
+	_room_w = int(_profile.get("room_w", 32))
+	_room_h = int(_profile.get("room_h", 20))
+	_door_tx0 = int(_profile.get("door_tx0", 14))
+	_door_tx1 = int(_profile.get("door_tx1", 17))
+
 	var world := root.get_node_or_null("InteriorWorld") as Node2D
 	if world == null:
 		world = Node2D.new()
@@ -43,14 +55,15 @@ func assemble(root: Node2D) -> void:
 	_spawn_local_lights(world)
 	_spawn_actor(world)
 	_spawn_return_portal(world)
+	_apply_topbar_hint(root)
 
 
 func room_rect() -> Rect2:
 	return Rect2(
 		float(ORIGIN.x * TILE),
 		float(ORIGIN.y * TILE),
-		float(ROOM_W * TILE),
-		float(ROOM_H * TILE),
+		float(_room_w * TILE),
+		float(_room_h * TILE),
 	)
 
 
@@ -71,90 +84,85 @@ func _spawn_tile(parent: Node2D, path: String, tx: int, ty: int, z: int = 0) -> 
 
 
 func _paint_floor(parent: Node2D) -> void:
-	for ty in range(WALL_THICK, ROOM_H):
-		for tx in range(ROOM_W):
+	for ty in range(WALL_THICK, _room_h):
+		for tx in range(_room_w):
 			var path := "%s/floor_%02d.png" % [TILE_DIR, (tx + ty * 3) % 4]
 			_spawn_tile(parent, path, tx, ty, -5)
 
 
 func _paint_walls(parent: Node2D) -> void:
-	# North wall: upper plaster (ty0) + lower wainscot (ty1).
-	for tx in range(ROOM_W):
+	for tx in range(_room_w):
 		_spawn_tile(parent, "%s/wall_upper_%02d.png" % [TILE_DIR, tx % 4], tx, 0, -2)
 		_spawn_tile(parent, "%s/wall_lower_%02d.png" % [TILE_DIR, tx % 4], tx, 1, -1)
-	# Side posts / pillars at corners and mid.
-	for tx in [0, 10, 21, ROOM_W - 1]:
+	for tx in [0, maxi(1, _room_w / 3), maxi(2, (_room_w * 2) / 3), _room_w - 1]:
 		_spawn_tile(parent, "%s/pillar_00.png" % TILE_DIR, tx, 0, 0)
 		_spawn_tile(parent, "%s/pillar_00.png" % TILE_DIR, tx, 1, 0)
-	# East / west thin wall columns down the room edges (wainscot feel).
-	for ty in range(WALL_THICK, ROOM_H):
+	for ty in range(WALL_THICK, _room_h):
 		_spawn_tile(parent, "%s/wall_lower_%02d.png" % [TILE_DIR, ty % 4], 0, ty, -1)
-		_spawn_tile(parent, "%s/wall_lower_%02d.png" % [TILE_DIR, (ty + 1) % 4], ROOM_W - 1, ty, -1)
+		_spawn_tile(parent, "%s/wall_lower_%02d.png" % [TILE_DIR, (ty + 1) % 4], _room_w - 1, ty, -1)
 
 
 func _paint_door_and_window(parent: Node2D) -> void:
-	# South doorway: clear floor already; stone steps + posts.
-	for tx in range(DOOR_TX0, DOOR_TX1 + 1):
-		_spawn_tile(parent, "%s/doorstep_00.png" % TILE_DIR, tx, ROOM_H - 1, 1)
-	_spawn_tile(parent, "%s/pillar_00.png" % TILE_DIR, DOOR_TX0 - 1, ROOM_H - 1, 2)
-	_spawn_tile(parent, "%s/pillar_00.png" % TILE_DIR, DOOR_TX1 + 1, ROOM_H - 1, 2)
+	for tx in range(_door_tx0, _door_tx1 + 1):
+		_spawn_tile(parent, "%s/doorstep_00.png" % TILE_DIR, tx, _room_h - 1, 1)
+	_spawn_tile(parent, "%s/pillar_00.png" % TILE_DIR, _door_tx0 - 1, _room_h - 1, 2)
+	_spawn_tile(parent, "%s/pillar_00.png" % TILE_DIR, _door_tx1 + 1, _room_h - 1, 2)
 	var door_frame := "%s/door_frame_00.png" % TILE_DIR
 	if ResourceLoader.exists(door_frame):
-		for tx in [DOOR_TX0 - 1, DOOR_TX1 + 1]:
+		for tx in [_door_tx0 - 1, _door_tx1 + 1]:
 			var spr := Sprite2D.new()
 			spr.texture = load(door_frame) as Texture2D
 			spr.centered = true
-			spr.position = _tile_center(tx, ROOM_H - 2)
+			spr.position = _tile_center(tx, _room_h - 2)
 			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			spr.z_index = 2
 			parent.add_child(spr)
-	# North window over center wall.
-	var win_path := "%s/window_00.png" % TILE_DIR
-	if ResourceLoader.exists(win_path):
-		var spr := Sprite2D.new()
-		spr.texture = load(win_path) as Texture2D
-		spr.centered = true
-		spr.position = _tile_center(15, 0) + Vector2(16, 16)
-		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		spr.z_index = 3
-		parent.add_child(spr)
-	# Soft painted window shaft (local, not full-room orange).
-	var shaft := Polygon2D.new()
-	shaft.name = "WindowLightShaft"
-	shaft.color = Color(1.0, 0.92, 0.65, 0.14)
-	shaft.polygon = PackedVector2Array([
-		_tile_center(13, 2) + Vector2(-20, -10),
-		_tile_center(18, 2) + Vector2(20, -10),
-		_tile_center(19, 8) + Vector2(10, 0),
-		_tile_center(12, 8) + Vector2(-10, 0),
-	])
-	shaft.z_index = -3
-	parent.add_child(shaft)
+	if bool(_profile.get("window", true)):
+		var win_path := "%s/window_00.png" % TILE_DIR
+		if ResourceLoader.exists(win_path):
+			var spr := Sprite2D.new()
+			spr.texture = load(win_path) as Texture2D
+			spr.centered = true
+			spr.position = _tile_center(int(_room_w / 2), 0) + Vector2(16, 16)
+			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			spr.z_index = 3
+			parent.add_child(spr)
+		var mid := int(_room_w / 2)
+		var shaft := Polygon2D.new()
+		shaft.name = "WindowLightShaft"
+		shaft.color = Color(1.0, 0.92, 0.65, 0.12)
+		shaft.polygon = PackedVector2Array([
+			_tile_center(mid - 2, 2) + Vector2(-16, -8),
+			_tile_center(mid + 2, 2) + Vector2(16, -8),
+			_tile_center(mid + 3, 7) + Vector2(8, 0),
+			_tile_center(mid - 3, 7) + Vector2(-8, 0),
+		])
+		shaft.z_index = -3
+		parent.add_child(shaft)
 
 
 func _paint_rug(parent: Node2D) -> void:
-	# Entry rug on circulation (south of center).
-	var ox := 14
-	var oy := 12
+	var rug: Dictionary = _profile.get("rug", {"ox": 14, "oy": 12})
+	var ox: int = int(rug.get("ox", 14))
+	var oy: int = int(rug.get("oy", 12))
 	for qy in range(2):
 		for qx in range(2):
 			_spawn_tile(parent, "%s/rug_%d_%d.png" % [TILE_DIR, qy, qx], ox + qx, oy + qy, 0)
 
 
-func _spawn_zone_labels(_parent: Node2D) -> void:
-	pass
-
-
 func _spawn_furniture(parent: Node2D) -> void:
-	# Zones: window dining (N) → storage (E) → sleep (SE). Keep center aisle + door clear.
-	_spawn_prop(parent, "res://assets/sprites/props/bench_0.png", _tile_center(10, 6), PROP_SCALE, "木桌", "北窗下的用餐木桌。")
-	_spawn_prop(parent, "res://assets/sprites/props/bench_1.png", _tile_center(10, 8), PROP_SCALE, "长椅", "桌旁歇脚长椅。")
-	_spawn_prop(parent, "res://assets/sprites/props/crate_0.png", _tile_center(27, 7), PROP_SCALE, "储物箱", "东墙储物木箱。")
-	_spawn_prop(parent, "res://assets/sprites/props/crate_1.png", _tile_center(27, 9), PROP_SCALE, "木箱", "叠放的日用木箱。")
-	_spawn_prop(parent, "res://assets/sprites/props/barrel_1.png", _tile_center(25, 11), PROP_SCALE, "木桶", "竖放储水木桶。")
-	_spawn_prop(parent, "res://assets/sprites/props/lamp_0.png", _tile_center(28, 6), PROP_SCALE, "壁灯", "东墙暖色壁灯。")
-	_spawn_prop(parent, "res://assets/sprites/props/sack_0.png", _tile_center(6, 15), PROP_SCALE, "粮袋", "门厅旁粮袋。")
-	_spawn_bed(parent, _tile_center(25, 15))
+	var props: Array = _profile.get("props", [])
+	for p in props:
+		var path: String = str(p.get("path", ""))
+		var scale_f: float = float(p.get("scale", PROP_SCALE))
+		_spawn_prop(
+			parent,
+			path,
+			_tile_center(int(p.get("tx", 0)), int(p.get("ty", 0))),
+			scale_f,
+			str(p.get("title", "物件")),
+			str(p.get("desc", "")),
+		)
 
 
 func _spawn_prop(parent: Node2D, path: String, pos: Vector2, scale_f: float, title: String, desc: String) -> void:
@@ -181,23 +189,21 @@ func _spawn_prop(parent: Node2D, path: String, pos: Vector2, scale_f: float, tit
 	hs.get_node("Visual").add_child(spr)
 
 
-func _spawn_bed(parent: Node2D, pos: Vector2) -> void:
-	var path := "%s/bed_00.png" % TILE_DIR
-	if ResourceLoader.exists(path):
-		_spawn_prop(parent, path, pos, 1.0, "床铺", "休息区床铺，床脚留出通行。")
-		return
-	# Fallback: crate + sack silhouette if bed tile missing.
-	_spawn_prop(parent, "res://assets/sprites/props/crate_0.png", pos, PROP_SCALE, "床铺", "临时床位（待床铺素材）。")
-
-
 func _spawn_local_lights(parent: Node2D) -> void:
-	# Mild CanvasModulate so PointLight2D reads; keep warm, not full orange.
 	var mod := CanvasModulate.new()
 	mod.name = "InteriorModulate"
-	mod.color = Color(0.82, 0.78, 0.72, 1.0)
+	mod.color = _profile.get("modulate", Color(0.82, 0.78, 0.72, 1.0))
 	parent.add_child(mod)
-	_add_point_light(parent, _tile_center(28, 6) + Vector2(0, -20), Color(1.0, 0.85, 0.55), 1.15, 2.2)
-	_add_point_light(parent, _tile_center(15, 2) + Vector2(0, 24), Color(1.0, 0.94, 0.75), 0.75, 2.8)
+	var lights: Array = _profile.get("lights", [])
+	for L in lights:
+		var pos := _tile_center(int(L.get("tx", 0)), int(L.get("ty", 0))) + Vector2(0, float(L.get("oy", 0)))
+		_add_point_light(
+			parent,
+			pos,
+			L.get("color", Color(1.0, 0.85, 0.55)),
+			float(L.get("energy", 1.0)),
+			float(L.get("scale", 2.0)),
+		)
 
 
 func _add_point_light(parent: Node2D, pos: Vector2, color: Color, energy: float, tex_scale: float) -> void:
@@ -226,27 +232,23 @@ func _radial_light_texture() -> GradientTexture2D:
 
 
 func _spawn_actor(parent: Node2D) -> void:
+	var a: Dictionary = _profile.get("actor", {})
+	if a.is_empty():
+		return
+	var route: Array[Vector2] = []
+	for pt in a.get("route", []):
+		route.append(_tile_center(int(pt[0]), int(pt[1])))
+	if route.size() < 2:
+		return
 	var actor := PatrolActor.new()
 	parent.add_child(actor)
-	# Stay on open aisle: south of table, west of storage, north of bed.
-	actor.setup(
-		"farmer",
-		"屋主",
-		"在室内整理桌面与储物箱。",
-		[
-			_tile_center(12, 10),
-			_tile_center(18, 10),
-			_tile_center(18, 14),
-			_tile_center(12, 14),
-		],
-		null,
-	)
+	actor.setup(str(a.get("id", "farmer")), str(a.get("title", "居民")), str(a.get("desc", "")), route, null)
 
 
 func _spawn_return_portal(parent: Node2D) -> void:
 	var portal := Area2D.new()
-	portal.name = "Portal_ReturnResidential"
-	portal.position = _tile_center(int((DOOR_TX0 + DOOR_TX1) * 0.5), ROOM_H - 1) + Vector2(0, 28)
+	portal.name = "Portal_Return"
+	portal.position = _tile_center(int((_door_tx0 + _door_tx1) * 0.5), _room_h - 1) + Vector2(0, 28)
 	portal.input_pickable = true
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
@@ -259,7 +261,7 @@ func _spawn_return_portal(parent: Node2D) -> void:
 	marker.position = Vector2(0, -18)
 	portal.add_child(marker)
 	var label := Label.new()
-	label.text = "← 返回住宅区"
+	label.text = "← 返回"
 	label.position = Vector2(-64, -44)
 	label.size = Vector2(128, 24)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -269,8 +271,14 @@ func _spawn_return_portal(parent: Node2D) -> void:
 	label.add_theme_constant_override("shadow_offset_y", 1)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	portal.add_child(label)
-	portal.set_meta("scene_path", SceneRouter.RESIDENTIAL_PATH)
+	portal.set_meta("scene_path", str(_profile.get("return_path", SceneRouter.RESIDENTIAL_PATH)))
 	parent.add_child(portal)
+
+
+func _apply_topbar_hint(root: Node2D) -> void:
+	var hint := root.get_node_or_null("UI/TopBar/Hint") as Label
+	if hint:
+		hint.text = str(_profile.get("hint", _profile.get("title", "室内")))
 
 
 func _make_hotspot(parent: Node2D, title: String, desc: String, pos: Vector2, size: Vector2) -> InteractableHotspot:

@@ -40,7 +40,6 @@ func assemble(root: Node2D) -> void:
 	_spawn_buildings(ysort)
 	_spawn_props(ysort)
 	_spawn_trees(ysort)
-	_spawn_se_pond_rock(ysort)
 	_spawn_actors(ysort)
 	_spawn_portals(ysort)
 	craft.spawn_water_overlay(ysort)
@@ -150,56 +149,56 @@ func _paint_door_spur_masks() -> void:
 
 
 func _house_slots() -> Array:
-	# South-facing cottages NORTH of their door lane Ã¢ÂÂ foot Y leaves full sprite inside PLAY_ZONE.
+	# South-facing cottages NORTH of their door lane — foot Y leaves full sprite inside PLAY_ZONE.
 	return [
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
 			"pos": Vector2(288, 520),
 			"hw": 2, "hh": 1,
-			"title": "è¥¿å··æ°å±",
-			"desc": "ä¸»å··åä¾§ä½å®ï¼æ´æ å¨ä½å®åºåï¼é¨æåã",
+			"title": "西巷民居",
+			"desc": "主巷北侧住宅：整栋在住宅区内，门朝南。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_03.png",
 			"pos": Vector2(544, 520),
 			"hw": 2, "hh": 1,
-			"title": "ä¸­å··æ°å±",
-			"desc": "ä¸»å··ä¸­æ®µåä¾§å®é¢ã",
+			"title": "中巷民居",
+			"desc": "主巷中段北侧宅院。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_04.png",
 			"pos": Vector2(800, 520),
 			"hw": 2, "hh": 1,
-			"title": "ä¸å··æ°å±",
-			"desc": "ä¸»å··ä¸æ®µåä¾§å°å±ã",
+			"title": "东巷民居",
+			"desc": "主巷东段北侧小屋。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
 			"pos": Vector2(1000, 520),
 			"hw": 2, "hh": 1,
-			"title": "ä¸è§å®",
-			"desc": "ä¸æ®µä½å®ï¼æ´æ å¨åºåã",
+			"title": "东角宅",
+			"desc": "东段住宅，整栋在区内。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_00.png",
 			"pos": Vector2(400, 280),
 			"hw": 2, "hh": 1,
-			"title": "åæè¥¿å®",
-			"desc": "åå··åä¾§ä½å®ï¼å±é¡¶ä¸ç©¿åºå°å¾ä¸æ²¿ã",
+			"title": "北排西宅",
+			"desc": "北巷北侧住宅：屋顶不穿出地图上沿。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
 			"pos": Vector2(656, 280),
 			"hw": 2, "hh": 1,
-			"title": "åæä¸­å®",
-			"desc": "åå··ä¸­æ®µå®é¢ã",
+			"title": "北排中宅",
+			"desc": "北巷中段宅院。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_03.png",
 			"pos": Vector2(912, 280),
 			"hw": 2, "hh": 1,
-			"title": "åæä¸å®",
-			"desc": "åå··ä¸ç«¯ä½å®ã",
+			"title": "北排东宅",
+			"desc": "北巷东端住宅。",
 		},
 	]
 
@@ -225,6 +224,37 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos + Vector2(0, 20), Vector2(100, 72))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
+		# Phase 5 Wave A: door/foot portals — C01 player home + four distinct C02 villager templates.
+		var home := _home_portal_for(str(s["path"]), s["pos"] as Vector2)
+		if not home.is_empty():
+			craft.make_portal(
+				ysort,
+				str(home["title"]),
+				str(home["scene"]),
+				pos + Vector2(0, 26),
+				Vector2(88, 48)
+			)
+
+
+## Map cottage path+slot pos → interior portal (title + SceneRouter path).
+## C01 stays on north-row west building_00; south-row houses get one C02 each.
+func _home_portal_for(building_path: String, slot_pos: Vector2) -> Dictionary:
+	# Player home (keep).
+	if building_path == "res://assets/sprites/buildings/building_00.png" and slot_pos == Vector2(400, 280):
+		return {"title": "进入住宅", "scene": SceneRouter.C01_HOME_PATH}
+	# Merchant — west main-street cottage (square approach).
+	if building_path == "res://assets/sprites/buildings/building_02.png" and slot_pos == Vector2(288, 520):
+		return {"title": "进入商贾宅", "scene": SceneRouter.C02_MERCHANT_PATH}
+	# Elder — mid main-street larger roof.
+	if building_path == "res://assets/sprites/buildings/building_03.png" and slot_pos == Vector2(544, 520):
+		return {"title": "进入老人宅", "scene": SceneRouter.C02_ELDER_PATH}
+	# Farmer — east main-street toward farm portal.
+	if building_path == "res://assets/sprites/buildings/building_04.png" and slot_pos == Vector2(800, 520):
+		return {"title": "进入农家宅", "scene": SceneRouter.C02_FARMER_PATH}
+	# Blacksmith home — east-corner cottage.
+	if building_path == "res://assets/sprites/buildings/building_01.png" and slot_pos == Vector2(1000, 520):
+		return {"title": "进入铁匠宅", "scene": SceneRouter.C02_BLACKSMITH_HOME_PATH}
+	return {}
 
 
 func _spawn_props(ysort: Node2D) -> void:
@@ -368,8 +398,8 @@ func _spawn_se_pond_rock(ysort: Node2D) -> void:
 			continue
 		var rock_rect := Rect2(pos - rock_size * 0.5, rock_size)
 		var hits := false
-		for tr in tree_rects:
-			if rock_rect.intersects(tr):
+		for tree_rect in tree_rects:
+			if rock_rect.intersects(tree_rect):
 				hits = true
 				break
 		if hits:

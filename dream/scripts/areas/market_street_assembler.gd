@@ -229,28 +229,35 @@ func _paint_dirt_approaches() -> void:
 
 func _spawn_buildings(ysort: Node2D) -> void:
 	# South-facing shops: north of street + one east flank. Full AABB ⊆ play rect.
+	# Phase 5 Wave A: three distinct C04 shop interiors (door-foot portals only).
 	var zone := craft.map_play_rect(1.5)
 	var specs := [
 		{
 			"path": "res://assets/sprites/buildings/building_00.png",
 			"pos": Vector2(672, 296),  # ~tx 21, ty 9 — north of street mid
 			"hw": 2, "hh": 1,
-			"title": "市集主铺",
-			"desc": "商业街北侧主商铺：整栋在区内，门脸朝南对 cobble 街面。",
+			"title": "杂货店",
+			"desc": "商业街北侧杂货店：门脸朝南对 cobble 街面。",
+			"enter_title": "进入杂货店",
+			"interior": SceneRouter.C04_GROCERY_PATH,
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
 			"pos": Vector2(896, 296),  # ~tx 28, ty 9 — north-east flank
 			"hw": 2, "hh": 1,
-			"title": "东侧商铺",
-			"desc": "北排东商铺，门脸朝南对街。",
+			"title": "铁匠铺",
+			"desc": "北排东铁匠铺，门脸朝南对街。",
+			"enter_title": "进入铁匠铺",
+			"interior": SceneRouter.C04_SMITH_PATH,
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
 			"pos": Vector2(1088, 400),  # ~tx 34, ty 12 — east of street, south-facing
 			"hw": 2, "hh": 1,
-			"title": "街角店",
-			"desc": "商业街东翼街角店，整栋在 play zone 内。",
+			"title": "酒馆",
+			"desc": "商业街东翼街角酒馆，整栋在 play zone 内。",
+			"enter_title": "进入酒馆",
+			"interior": SceneRouter.C04_TAVERN_PATH,
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_04.png",
@@ -280,6 +287,15 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos + Vector2(0, 24), Vector2(120, 80))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
+		# Enter portal only at door feet — silhouette stays street-facing.
+		if s.has("interior"):
+			craft.make_portal(
+				ysort,
+				str(s["enter_title"]),
+				str(s["interior"]),
+				pos + Vector2(0, 26),
+				Vector2(88, 48)
+			)
 
 
 func _spawn_trees(ysort: Node2D) -> void:
@@ -298,7 +314,7 @@ func _spawn_trees(ysort: Node2D) -> void:
 		Vector2(240, 760), Vector2(1040, 100),
 	]
 	for i in ideals.size():
-		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
+		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % (i % 6)
 		var spr := craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 8, false)
 		if spr == null:
 			continue

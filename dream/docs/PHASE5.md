@@ -1,16 +1,24 @@
-# Dream Phase 5 — Interior & special areas (draft)
+# Dream Phase 5 — Interior & special areas
 
-**Status:** IN PROGRESS — Wave A kickoff: Systems-Interior + C01 vertical slice
-**Depends on:** Outdoor A-class scenes shell ([`PHASE4B.md`](PHASE4B.md) A05–A07, A12–A15 DONE), Phase 4 exit, [`INTERIOR_LIBRARY.md`](INTERIOR_LIBRARY.md), [`ASSET_TAXONOMY.md`](ASSET_TAXONOMY.md), `BUILDING_PLACEMENT.md`, `NPC_ANIM.md`
+**Status:** IN PROGRESS — Wave A **living / shop / farm package DONE** (C01–C04 wired)  
+**Depends on:** Outdoor A-class scenes shell ([`PHASE4B.md`](PHASE4B.md) A05–A07, A12–A15 DONE), Phase 4 exit, [`INTERIOR_LIBRARY.md`](INTERIOR_LIBRARY.md), [`ASSET_TAXONOMY.md`](ASSET_TAXONOMY.md), `BUILDING_PLACEMENT.md`, `NPC_ANIM.md`, [`INTERIOR_FOUNDATION.md`](INTERIOR_FOUNDATION.md)
 
 Phase 5 打开世界 **第二/三层**：可进入室内、地下入口、钓鱼最小闭环、昼夜天气壳。  
 **不**一次实现 C01–C62 全表。
 
 ### Current Wave A checkpoint
 
-- `InteriorCraft` builds C01 on a **32px foundation** (floor / wall / door / window / rug tiles) — see [`INTERIOR_FOUNDATION.md`](INTERIOR_FOUNDATION.md).
-- Furniture reuses outdoor wood props at scale **0.55**; warm light is **local** `PointLight2D` (not full-room orange).
-- Remaining Wave A packages stay gated behind this slice's visual QA; extend the same foundation API instead of one-off controllers.
+| Package | Status | Notes |
+| --- | --- | --- |
+| Systems-Interior | DONE | `InteriorProfiles` + profile-driven `InteriorCraft` + `InteriorRoomController`; `tools/gen_interior_scenes.py` |
+| Home C01+C02 | DONE | 主角宅 + 老人/农家/商贾/铁匠宅；住宅区南排门户 |
+| FarmBuild C03 | DONE | 谷仓 + 鸡舍；农场住宅区门户 |
+| Shop C04 | DONE | 杂货/铁匠铺/酒馆；商业街门户 |
+| Stall-C05 … Env-H | PENDING | 下一阶段再开；勿抢做 |
+
+- Foundation: 32px floor / wall / door / window / rug — see [`INTERIOR_FOUNDATION.md`](INTERIOR_FOUNDATION.md).
+- Furniture: outdoor wood props @ scale **0.55**; warm light = local `PointLight2D` (not full-room orange).
+- Silhouettes: home (bed + living) ≠ shop (counter aisle) ≠ barn/coop (stalls / nests).
 
 ## Start gate
 
@@ -55,6 +63,9 @@ C06–C11 全套公服、C16 全洞穴族、C23 潜水、C31 下水道、C36 全
 - 禁止 UI 一个「更多」弹层塞全部室内入口  
 - 禁止复制室外 assembler 改名交差  
 - 禁止室内用棋盘格/平色块地板或整屋橙色洗色冒充温馨（必须先过 `INTERIOR_FOUNDATION.md`）  
+- 禁止家/店/仓同一轮廓（须不同 room 尺寸与家具分区）  
+- 禁止 `barrel_0` 当通用立桶（仅酒馆酒桶等特例）  
+- 禁止未做 C01–C04 进出 QA 就开 Stall/Fish/Mine  
 
 ## Acceptance (Wave A)
 
@@ -65,8 +76,11 @@ C06–C11 全套公服、C16 全洞穴族、C23 潜水、C31 下水道、C36 全
 5. 用户本地 Godot 测（中文路径）  
 6. Commit；有 remote 则 push  
 
+**Partial acceptance (this checkpoint):** C01–C04 enter/exit + foundation profiles — **met**. Items 2–4 still open.
+
 ## Related
 
 - [`INTERIOR_LIBRARY.md`](INTERIOR_LIBRARY.md)  
+- [`INTERIOR_FOUNDATION.md`](INTERIOR_FOUNDATION.md)  
 - [`ASSET_TAXONOMY.md`](ASSET_TAXONOMY.md)  
 - [`PHASE4.md`](PHASE4.md)  
