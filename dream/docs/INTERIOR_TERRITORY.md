@@ -3,7 +3,8 @@
 **Status:** ACTIVE — Wave B 空间可读性  
 **Date:** 2026-09-11  
 **Locks:** [`INTERIOR_COMPOSITION.md`](./INTERIOR_COMPOSITION.md), [`INTERIOR_ROOM_BRIEFS.md`](./INTERIOR_ROOM_BRIEFS.md)  
-**Skill:** [`.cursor/skills/interior-territory-craft/SKILL.md`](../.cursor/skills/interior-territory-craft/SKILL.md)
+**Skill:** [`.cursor/skills/interior-territory-craft/SKILL.md`](../.cursor/skills/interior-territory-craft/SKILL.md)  
+**Acceptance (after every change):** [`.cursor/skills/interior-visual-qa/SKILL.md`](../.cursor/skills/interior-visual-qa/SKILL.md)  
 
 ## 问题诊断
 

@@ -72,5 +72,6 @@ enclosures: [{
 
 ## Related skills
 
+- `.cursor/skills/interior-visual-qa/` — **mandatory post-change acceptance** (screenshots, splice, scene-fit, escalate to metrics/joiners)
 - `.cursor/skills/realistic-scene-craft/` — outdoor farm fences / build zones  
 - `.cursor/skills/painting-asset-craft/` — new pixel props if procedural gen is insufficient  
