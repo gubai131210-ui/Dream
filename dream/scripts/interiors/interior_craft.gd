@@ -68,6 +68,7 @@ func assemble(root: Node2D, override_profile: String = "", profile_override: Dic
 	_spawn_local_lights(world)
 	_spawn_actor(world)
 	_spawn_return_portal(world)
+	_spawn_extra_portals(world)
 	_apply_topbar_hint(root)
 
 
@@ -541,6 +542,48 @@ func _spawn_return_portal(parent: Node2D) -> void:
 	portal.add_child(label)
 	portal.set_meta("scene_path", str(_profile.get("return_path", SceneRouter.RESIDENTIAL_PATH)))
 	parent.add_child(portal)
+
+
+func _spawn_extra_portals(parent: Node2D) -> void:
+	## Append-only: profile may list extra_portals [{tx, ty, label, path}] for stairs / side exits.
+	var extras: Array = _profile.get("extra_portals", [])
+	if extras.is_empty():
+		return
+	for i in extras.size():
+		var ep: Dictionary = extras[i]
+		var path := str(ep.get("path", ""))
+		if path.is_empty():
+			continue
+		var tx := int(ep.get("tx", int((_door_tx0 + _door_tx1) * 0.5)))
+		var ty := int(ep.get("ty", _room_h - 2))
+		var label := str(ep.get("label", "→"))
+		var portal := Area2D.new()
+		portal.name = "Portal_Extra_%d" % i
+		portal.position = _tile_center(tx, ty)
+		portal.input_pickable = true
+		var shape := CollisionShape2D.new()
+		var rect := RectangleShape2D.new()
+		rect.size = Vector2(96, 48)
+		shape.shape = rect
+		portal.add_child(shape)
+		var marker := Polygon2D.new()
+		marker.color = Color(0.55, 0.78, 0.95, 0.8)
+		marker.polygon = PackedVector2Array([Vector2(0, -8), Vector2(10, 0), Vector2(0, 8), Vector2(-10, 0)])
+		marker.position = Vector2(0, -16)
+		portal.add_child(marker)
+		var lbl := Label.new()
+		lbl.text = label
+		lbl.position = Vector2(-56, -40)
+		lbl.size = Vector2(112, 24)
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.add_theme_color_override("font_color", Color("#dcefff"))
+		lbl.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.75))
+		lbl.add_theme_constant_override("shadow_offset_x", 1)
+		lbl.add_theme_constant_override("shadow_offset_y", 1)
+		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		portal.add_child(lbl)
+		portal.set_meta("scene_path", path)
+		parent.add_child(portal)
 
 
 func _apply_topbar_hint(root: Node2D) -> void:

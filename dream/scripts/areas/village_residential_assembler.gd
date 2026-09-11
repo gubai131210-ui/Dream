@@ -258,7 +258,7 @@ func _home_portal_for(building_path: String, slot_pos: Vector2) -> Dictionary:
 
 
 func _spawn_props(ysort: Node2D) -> void:
-	# NE stone pocket well / fountain (civic on path ok).
+	# NE stone pocket well — enterable C14 well bottom (Wave A2 Well team).
 	var well_path := "res://assets/sprites/props/well_0.png"
 	if ResourceLoader.exists(well_path):
 		var well_pos := Vector2(1184, 176)
@@ -266,9 +266,14 @@ func _spawn_props(ysort: Node2D) -> void:
 			craft.add_contact_shadow(ysort, well_pos, Vector2(20, 8))
 			var wspr := craft.spawn_sprite(ysort, well_path, well_pos)
 			wspr.scale = Vector2(0.55, 0.55)
-			var whs := craft.make_hotspot(ysort, "ç³äº", "ä½å®åºä¸åç³æ¿æ°´äºã", well_pos, Vector2(64, 48))
-			wspr.reparent(whs.get_node("Visual"))
-			wspr.position = Vector2.ZERO
+			# Portal (scene_path) — not InfoPanel-only.
+			craft.make_portal(
+				ysort,
+				"↓井底",
+				SceneRouter.C14_WELL_PATH,
+				well_pos + Vector2(0, 14),
+				Vector2(72, 48)
+			)
 
 	var yard_props := [
 		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(250, 300), "title": "æ¨æ¡¶", "desc": "è¥¿å®é¢è½æ¨æ¡¶ã", "hw": 1, "hh": 1},
