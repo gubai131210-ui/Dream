@@ -15,13 +15,17 @@
 | **Well** | C14+C15 | `c14_well/**`, `c15_basement/**`, docs | Residential well → portal; one home basement stair | Well bottom + basement + returns |
 | **Lighthouse** | C12 | `c12_lighthouse/**` (3 floors), docs | `lighthouse_assembler` door → interior | 3 walkable layers + return |
 | **Forest** | C26+C27 | `c26_waterfall_cave/**`, `c27_*` secrets, docs | `waterfall_assembler`, `forest_deep_assembler` | Cave + ≥2 forest secrets |
-| **Env** | C56–C57/H | `scripts/env/**`, `docs/ENV_H.md` | Thin hook on `village_square` or Hub TopBar | Night **or** ≥1 weather toggle |
+| **Env** | C56–C57/H | `scripts/env/**`, `docs/ENV_H.md` | Thin hook on `village_square` TopBar | **DONE** — night + 晴/雨/雾；见 [`ENV_H.md`](./ENV_H.md) |
 
 **Shared (Lead only / append-only):** `scripts/core/scene_router.gd` constants (pre-seeded), `tools/gen_interior_scenes.py` room list, `docs/PHASE5.md` status table.
 
 ### Stall (C05) — DONE
 
 A10 six alcove stalls spawn with spread states (`open/locked/sold_out/setup/closed/empty`). Click cycles `MarketStall` through all six visuals on the **same** `position`; B09 body PNGs + goods ≤0.5. See [`STALL_C05.md`](./STALL_C05.md).
+
+### Env-H (C56–C57) — DONE
+
+Village square mounts `DayNightWeather` (scene-local). TopBar **白天/夜间** · **晴/雨/雾**; keys **N** / **R**. See [`ENV_H.md`](./ENV_H.md).
 
 ## SceneRouter paths (pre-seeded)
 
