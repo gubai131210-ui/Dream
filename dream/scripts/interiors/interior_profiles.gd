@@ -4,7 +4,7 @@ extends RefCounted
 ## Room profiles — differentiated by INTERIOR_ROOM_BRIEFS.md.
 ## Specialty props under assets/sprites/interior/props/; floors via floor= plank|straw|stone|dark.
 
-const PROP := 0.55
+const PROP := 0.9
 const DIR_INTERIOR_PROP := "res://assets/sprites/interior/props"
 const DIR_OUTDOOR_PROP := "res://assets/sprites/props"
 
@@ -13,9 +13,11 @@ const P_FORGE := DIR_INTERIOR_PROP + "/forge_00.png"
 const P_ANVIL := DIR_INTERIOR_PROP + "/anvil_00.png"
 const P_STOVE := DIR_INTERIOR_PROP + "/stove_00.png"
 const P_SHELF := DIR_INTERIOR_PROP + "/shelf_00.png"
+const P_SHELF_GROCERY := DIR_INTERIOR_PROP + "/shelf_grocery_00.png"
 const P_COUNTER := DIR_INTERIOR_PROP + "/counter_00.png"
 const P_BAR := DIR_INTERIOR_PROP + "/bar_00.png"
 const P_TABLE_R := DIR_INTERIOR_PROP + "/table_round_00.png"
+const P_TABLE_DINING := DIR_INTERIOR_PROP + "/table_dining_00.png"
 const P_STOOL := DIR_INTERIOR_PROP + "/stool_00.png"
 const P_HAY := DIR_INTERIOR_PROP + "/hay_00.png"
 const P_TROUGH := DIR_INTERIOR_PROP + "/trough_00.png"
@@ -27,14 +29,12 @@ const P_LEDGER := DIR_INTERIOR_PROP + "/ledger_00.png"
 const P_BASKET := DIR_INTERIOR_PROP + "/basket_00.png"
 const P_NOTICE := DIR_INTERIOR_PROP + "/notice_00.png"
 const P_MUG_SHELF := DIR_INTERIOR_PROP + "/mug_shelf_00.png"
-const P_CAULDRON := DIR_INTERIOR_PROP + "/cauldron_00.png"
 const P_ROOST := DIR_INTERIOR_PROP + "/roost_00.png"
 const P_COIN := DIR_INTERIOR_PROP + "/coin_chest_00.png"
 const P_HERBS := DIR_INTERIOR_PROP + "/herbs_00.png"
 const P_BED_S := DIR_INTERIOR_PROP + "/bed_single_00.png"
 const P_BED_D := DIR_INTERIOR_PROP + "/bed_double_00.png"
 const P_ROCKING := DIR_INTERIOR_PROP + "/rocking_00.png"
-const P_BENCH0 := DIR_OUTDOOR_PROP + "/bench_0.png"
 const P_BARREL := DIR_OUTDOOR_PROP + "/barrel_1.png"
 const P_BARREL_KEG := DIR_OUTDOOR_PROP + "/barrel_0.png"
 const P_CRATE0 := DIR_OUTDOOR_PROP + "/crate_0.png"
@@ -72,16 +72,15 @@ static func _all() -> Dictionary:
 			"rug": {"ox": 15, "oy": 14},
 			"window": true,
 			"props": [
-				{"path": P_FIREPLACE, "tx": 16, "ty": 4, "scale": 0.7, "title": "壁炉", "desc": "起居区壁炉，暖光锚点。"},
-				{"path": P_CAULDRON, "tx": 16, "ty": 5, "scale": 0.5, "title": "吊锅", "desc": "壁炉上炖锅。"},
-				{"path": P_STOVE, "tx": 5, "ty": 6, "scale": 0.65, "title": "灶台", "desc": "西侧厨房灶台。"},
-				{"path": P_SHELF, "tx": 3, "ty": 6, "scale": 0.55, "title": "厨架", "desc": "调料与碗碟架。"},
-				{"path": P_BENCH0, "tx": 12, "ty": 8, "title": "饭桌", "desc": "中轴旁用餐桌。"},
-				{"path": P_STOOL, "tx": 11, "ty": 9, "scale": 0.5, "title": "凳", "desc": "饭桌旁矮凳。"},
-				{"path": P_STOOL, "tx": 14, "ty": 9, "scale": 0.5, "title": "凳", "desc": "饭桌旁矮凳。"},
-				{"path": P_HERBS, "tx": 7, "ty": 4, "scale": 0.5, "title": "干草药", "desc": "北墙晾挂草药。"},
-				{"path": P_DRESSER, "tx": 28, "ty": 6, "scale": 0.6, "title": "衣柜", "desc": "东墙衣柜。"},
-				{"path": P_BED_D, "tx": 28, "ty": 14, "scale": 0.7, "title": "双人床", "desc": "东南休息区。"},
+				{"path": P_FIREPLACE, "tx": 16, "ty": 4, "scale": 1.0, "title": "壁炉", "desc": "起居区壁炉，暖光锚点。"},
+				{"path": P_STOVE, "tx": 5, "ty": 6, "scale": 0.95, "title": "灶台", "desc": "西侧厨房灶台。"},
+				{"path": P_SHELF, "tx": 3, "ty": 6, "scale": 0.9, "title": "厨架", "desc": "调料与碗碟架。"},
+				{"path": P_TABLE_DINING, "tx": 12, "ty": 8, "scale": 0.95, "title": "饭桌", "desc": "中轴旁用餐桌。"},
+				{"path": P_STOOL, "tx": 11, "ty": 9, "scale": 0.75, "title": "凳", "desc": "饭桌旁矮凳。"},
+				{"path": P_STOOL, "tx": 14, "ty": 9, "scale": 0.75, "title": "凳", "desc": "饭桌旁矮凳。"},
+				{"path": P_HERBS, "tx": 7, "ty": 4, "scale": 0.8, "title": "干草药", "desc": "北墙晾挂草药。"},
+				{"path": P_DRESSER, "tx": 28, "ty": 6, "scale": 0.95, "title": "衣柜", "desc": "东墙衣柜。"},
+				{"path": P_BED_D, "tx": 28, "ty": 14, "scale": 1.05, "title": "双人床", "desc": "东南休息区。"},
 				{"path": P_LAMP0, "tx": 29, "ty": 5, "title": "壁灯", "desc": "床区壁灯。"},
 				{"path": P_BARREL, "tx": 6, "ty": 16, "title": "水桶", "desc": "门厅储水桶。"},
 			],
@@ -143,14 +142,14 @@ static func _all() -> Dictionary:
 			"rug": {"ox": 13, "oy": 12},
 			"window": true,
 			"props": [
-				{"path": P_TOOL_RACK, "tx": 4, "ty": 6, "scale": 0.65, "title": "工具架", "desc": "西墙锄镰架。"},
+				{"path": P_TOOL_RACK, "tx": 4, "ty": 6, "scale": 0.95, "title": "工具架", "desc": "西墙锄镰架。"},
 				{"path": P_SACK0, "tx": 6, "ty": 14, "title": "粮袋", "desc": "门厅粮袋。"},
 				{"path": P_SACK1, "tx": 8, "ty": 15, "title": "种子袋", "desc": "待播种子。"},
-				{"path": P_BENCH0, "tx": 14, "ty": 7, "title": "饭桌", "desc": "农家大饭桌。"},
-				{"path": P_STOOL, "tx": 12, "ty": 8, "scale": 0.5, "title": "凳", "desc": "饭桌凳。"},
-				{"path": P_STOOL, "tx": 16, "ty": 8, "scale": 0.5, "title": "凳", "desc": "饭桌凳。"},
+				{"path": P_TABLE_DINING, "tx": 14, "ty": 7, "scale": 0.95, "title": "饭桌", "desc": "农家大饭桌。"},
+				{"path": P_STOOL, "tx": 12, "ty": 8, "scale": 0.75, "title": "凳", "desc": "饭桌凳。"},
+				{"path": P_STOOL, "tx": 16, "ty": 8, "scale": 0.75, "title": "凳", "desc": "饭桌凳。"},
 				{"path": P_CRATE1, "tx": 24, "ty": 7, "title": "工具箱", "desc": "备用农具箱。"},
-				{"path": P_BED_D, "tx": 24, "ty": 13, "scale": 0.65, "title": "床铺", "desc": "夫妻床。"},
+				{"path": P_BED_D, "tx": 24, "ty": 13, "scale": 1.0, "title": "床铺", "desc": "夫妻床。"},
 				{"path": P_LAMP0, "tx": 25, "ty": 5, "title": "壁灯", "desc": "暖黄壁灯。"},
 				{"path": P_BARREL, "tx": 10, "ty": 14, "title": "水桶", "desc": "门边取水。"},
 			],
@@ -214,12 +213,12 @@ static func _all() -> Dictionary:
 			"rug": {"ox": 12, "oy": 11},
 			"window": true,
 			"props": [
-				{"path": P_TOOL_RACK, "tx": 5, "ty": 5, "scale": 0.6, "title": "家用工具架", "desc": "下班带回的锤钳。"},
-				{"path": P_BENCH0, "tx": 10, "ty": 7, "title": "厚桌", "desc": "耐用木桌。"},
-				{"path": P_ANVIL, "tx": 6, "ty": 8, "scale": 0.5, "title": "小砧", "desc": "家用小砧（非铺内锻炉）。"},
+				{"path": P_TOOL_RACK, "tx": 5, "ty": 5, "scale": 0.9, "title": "家用工具架", "desc": "下班带回的锤钳。"},
+				{"path": P_TABLE_DINING, "tx": 10, "ty": 7, "scale": 0.95, "title": "厚桌", "desc": "耐用木桌。"},
+				{"path": P_ANVIL, "tx": 6, "ty": 8, "scale": 0.75, "title": "小砧", "desc": "家用小砧（非铺内锻炉）。"},
 				{"path": P_BARREL, "tx": 8, "ty": 10, "title": "淬火桶", "desc": "家用淬火水桶。"},
 				{"path": P_CRATE1, "tx": 22, "ty": 6, "title": "零件箱", "desc": "铁钉零件。"},
-				{"path": P_BED_S, "tx": 20, "ty": 12, "scale": 0.65, "title": "床铺", "desc": "铁匠床铺。"},
+				{"path": P_BED_S, "tx": 20, "ty": 12, "scale": 1.0, "title": "床铺", "desc": "铁匠床铺。"},
 				{"path": P_LAMP0, "tx": 21, "ty": 5, "title": "壁灯", "desc": "偏橙暖灯。"},
 			],
 			"fx": [],
@@ -325,16 +324,16 @@ static func _all() -> Dictionary:
 			"rug": {"ox": 13, "oy": 13},
 			"window": true,
 			"props": [
-				{"path": P_SHELF, "tx": 4, "ty": 5, "scale": 0.7, "title": "西货架", "desc": "日杂货架。"},
-				{"path": P_SHELF, "tx": 4, "ty": 9, "scale": 0.65, "title": "西货架", "desc": "罐装货架。"},
-				{"path": P_SHELF, "tx": 25, "ty": 5, "scale": 0.7, "title": "东货架", "desc": "干货架。"},
-				{"path": P_SHELF, "tx": 25, "ty": 9, "scale": 0.65, "title": "东货架", "desc": "盐糖架。"},
-				{"path": P_COUNTER, "tx": 14, "ty": 8, "scale": 0.75, "title": "柜台", "desc": "南向收银台（顾客在南）。"},
-				{"path": P_BASKET, "tx": 10, "ty": 10, "scale": 0.55, "title": "菜筐", "desc": "新鲜蔬果筐。"},
-				{"path": P_BASKET, "tx": 18, "ty": 10, "scale": 0.55, "title": "菜筐", "desc": "根茎菜筐。"},
+				{"path": P_SHELF_GROCERY, "tx": 4, "ty": 5, "scale": 1.0, "title": "西货架", "desc": "日杂货架。"},
+				{"path": P_SHELF, "tx": 4, "ty": 9, "scale": 0.95, "title": "西货架", "desc": "罐装货架。"},
+				{"path": P_SHELF_GROCERY, "tx": 25, "ty": 5, "scale": 1.0, "title": "东货架", "desc": "干货架。"},
+				{"path": P_SHELF, "tx": 25, "ty": 9, "scale": 0.95, "title": "东货架", "desc": "盐糖架。"},
+				{"path": P_COUNTER, "tx": 14, "ty": 8, "scale": 1.05, "title": "柜台", "desc": "南向收银台（顾客在南）。"},
+				{"path": P_BASKET, "tx": 10, "ty": 10, "scale": 0.85, "title": "菜筐", "desc": "新鲜蔬果筐。"},
+				{"path": P_BASKET, "tx": 18, "ty": 10, "scale": 0.85, "title": "菜筐", "desc": "根茎菜筐。"},
 				{"path": P_SACK0, "tx": 22, "ty": 12, "title": "米袋", "desc": "米粮袋。"},
 				{"path": P_BARREL, "tx": 7, "ty": 12, "title": "油桶", "desc": "食用油桶。"},
-				{"path": P_NOTICE, "tx": 16, "ty": 5, "scale": 0.5, "title": "告示板", "desc": "今日价目。"},
+				{"path": P_NOTICE, "tx": 16, "ty": 5, "scale": 0.85, "title": "告示板", "desc": "今日价目。"},
 				{"path": P_LAMP0, "tx": 15, "ty": 4, "title": "店灯", "desc": "柜台顶灯。"},
 			],
 			"fx": [],
@@ -362,13 +361,13 @@ static func _all() -> Dictionary:
 			"rug": null,
 			"window": false,
 			"props": [
-				{"path": P_FORGE, "tx": 8, "ty": 4, "scale": 0.75, "title": "锻炉", "desc": "北侧锻炉。"},
-				{"path": P_ANVIL, "tx": 7, "ty": 8, "scale": 0.7, "title": "铁砧", "desc": "西侧锻打砧。"},
+				{"path": P_FORGE, "tx": 8, "ty": 4, "scale": 1.05, "title": "锻炉", "desc": "北侧锻炉。"},
+				{"path": P_ANVIL, "tx": 7, "ty": 8, "scale": 0.95, "title": "铁砧", "desc": "西侧锻打砧。"},
 				{"path": P_BARREL, "tx": 10, "ty": 9, "title": "淬火桶", "desc": "淬火水桶。"},
-				{"path": P_TOOL_RACK, "tx": 4, "ty": 5, "scale": 0.65, "title": "工具墙", "desc": "锤钳挂架。"},
+				{"path": P_TOOL_RACK, "tx": 4, "ty": 5, "scale": 0.95, "title": "工具墙", "desc": "锤钳挂架。"},
 				{"path": P_CRATE1, "tx": 22, "ty": 6, "title": "成品箱", "desc": "待售铁器。"},
 				{"path": P_CRATE0, "tx": 22, "ty": 9, "title": "废料箱", "desc": "铁屑箱。"},
-				{"path": P_BENCH0, "tx": 16, "ty": 13, "title": "候坐", "desc": "顾客等候长椅。"},
+				{"path": P_TABLE_DINING, "tx": 16, "ty": 13, "scale": 0.9, "title": "候坐", "desc": "顾客等候桌椅。"},
 				{"path": P_LAMP0, "tx": 20, "ty": 5, "title": "壁灯", "desc": "铺内壁灯。"},
 			],
 			"fx": [{"kind": "forge", "tx": 8, "ty": 5, "oy": -10}],

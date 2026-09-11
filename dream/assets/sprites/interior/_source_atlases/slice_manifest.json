@@ -1,0 +1,38 @@
+{
+  "home": [
+    "fireplace_00",
+    "stove_00",
+    "bed_double_00",
+    "bed_single_00",
+    "dresser_00",
+    "table_round_00",
+    "stool_00",
+    "stool_01",
+    "rocking_00",
+    "shelf_00",
+    "herbs_00",
+    "extra_11",
+    "extra_12"
+  ],
+  "work": [
+    "forge_00",
+    "anvil_00",
+    "tool_rack_00",
+    "counter_00",
+    "bar_00",
+    "shelf_shop_00",
+    "basket_00",
+    "notice_00",
+    "table_pub_00",
+    "stool_bar_00",
+    "mug_shelf_00",
+    "hay_00",
+    "nest_00",
+    "trough_00",
+    "ledger_00",
+    "coin_chest_00",
+    "medicine_00",
+    "roost_00",
+    "extra_18"
+  ]
+}

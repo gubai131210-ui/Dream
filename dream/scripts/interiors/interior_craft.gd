@@ -10,7 +10,7 @@ const ORIGIN := Vector2i(4, 4)
 const WALL_THICK := 2
 const TILE_DIR := "res://assets/sprites/interior/tiles"
 const FX_DIR := "res://assets/sprites/interior/fx"
-const PROP_SCALE := 0.55
+const PROP_SCALE := 0.9
 
 @export var profile_id: String = "c01_home"
 

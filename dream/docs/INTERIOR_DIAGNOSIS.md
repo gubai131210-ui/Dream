@@ -1,13 +1,24 @@
 # Interior ugliness — root cause diagnosis
 
-**Status:** DIAGNOSED 2026-09-11  
+**Status:** ART REBUILD IN PROGRESS — painted atlases sliced; QA gate PASS 2026-09-11  
 **Symptom:** “还是很丑” after Wave A specialty props + differentiated layouts  
 **Feedback loop:** `python dream/tools/qa_interior_prop_quality.py` (unique colors / edge / size)
 
-## Verdict
+## Current fix status
+
+| Step | Status |
+| --- | --- |
+| Generate furniture atlases (home + work) matching outdoor refs | DONE |
+| rembg BiRefNet + island slice + normalize h=64 | DONE |
+| Strip grass from outdoor bench → `table_dining_00` | DONE |
+| Cozy wall/window/rug refresh | DONE (walls still soft — may need second pass) |
+| Drop indoor grassy `bench_0` from profiles | DONE |
+| `qa_interior_prop_quality.py` | **PASS** (~2388 colors, edge ~16) |
+
+## Verdict (original)
 
 **Not a layout bug.** Profiles and room silhouettes are now different enough.  
-**The art layer is still placeholder-grade**, so rooms read as “programmer boxes on wood grid” next to the painted outdoor world.
+**The art layer was placeholder-grade** (PIL rectangles). That layer is being replaced by painted atlas props.
 
 | Layer | Status | Why it fails the eye |
 | --- | --- | --- |
