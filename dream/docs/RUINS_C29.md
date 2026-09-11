@@ -92,6 +92,13 @@ Blockers: none (desk); user confirms Godot enter/exit + cool light feel
 - [x] `RUINS_C29.md` written
 - [ ] User Godot enter/exit QA from deep-forest portal
 
+## User test (请自行在 Godot 测)
+
+1. `forest_deep` → 遗迹残垣 「进入遗迹」  
+2. 南门 / TopBar 返回深林  
+3. 中轴 11–14 通廊可走；残祭台南清理箱、遗物箱西侧可站交互  
+4. 遗迹学者在残祭 ↔ 侧藏之间走动；冷蓝灰光非酒馆暖橙  
+
 ## Acceptance
 
 1. Deep forest 遗迹 portal enters C29; TopBar/south door returns to `forest_deep`  
