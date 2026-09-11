@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cc347d62d1a07"
-path="res://.godot/imported/wood_pile_00.png-5155af3eeda5144c3d10207f9b53a538.ctex"
+uid="uid://c0cng3gmniped"
+path="res://.godot/imported/bath_pool_00.png-e702880ce77243b07a803ec500d7960c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/interior/props/wood_pile_00.png"
-dest_files=["res://.godot/imported/wood_pile_00.png-5155af3eeda5144c3d10207f9b53a538.ctex"]
+source_file="res://assets/sprites/interior/props/bath_pool_00.png"
+dest_files=["res://.godot/imported/bath_pool_00.png-e702880ce77243b07a803ec500d7960c.ctex"]
 
 [params]
 

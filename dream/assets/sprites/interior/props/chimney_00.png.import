@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c48chimney00roof"
-path="res://.godot/imported/chimney_00.png-c48roofchimney00.ctex"
+uid="uid://b5dhxdggjcua8"
+path="res://.godot/imported/chimney_00.png-ff6d8d12711fa5a1d549de956e096a9f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/chimney_00.png"
-dest_files=["res://.godot/imported/chimney_00.png-c48roofchimney00.ctex"]
+dest_files=["res://.godot/imported/chimney_00.png-ff6d8d12711fa5a1d549de956e096a9f.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cc347d62d1a07"
-path="res://.godot/imported/wood_pile_00.png-5155af3eeda5144c3d10207f9b53a538.ctex"
+uid="uid://dmer3u3sox48f"
+path="res://.godot/imported/soak_pool_00.png-9d55fd61b56549b01e16c5f0cc758602.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/interior/props/wood_pile_00.png"
-dest_files=["res://.godot/imported/wood_pile_00.png-5155af3eeda5144c3d10207f9b53a538.ctex"]
+source_file="res://assets/sprites/interior/props/soak_pool_00.png"
+dest_files=["res://.godot/imported/soak_pool_00.png-9d55fd61b56549b01e16c5f0cc758602.ctex"]
 
 [params]
 

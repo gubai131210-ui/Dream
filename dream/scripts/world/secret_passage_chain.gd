@@ -93,3 +93,9 @@ func setup(host: Node2D, links: Array) -> void:
 		)
 		WorldSpawnUtil.wire_portal_click(portal, host.get_tree())
 		portal.set_meta("secret_chain", true)
+		var captured_label := label
+		var captured_path := to_path
+		portal.input_event.connect(func(_vp: Node, event: InputEvent, _si: int) -> void:
+			if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+				portal_used.emit(captured_label, captured_path)
+		)

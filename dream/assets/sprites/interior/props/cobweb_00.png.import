@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c47cobweb00"
-path="res://.godot/imported/cobweb_00.png-c47atticcobweb00.ctex"
-metadata={{
+uid="uid://dywsq2njrw1lk"
+path="res://.godot/imported/cobweb_00.png-2bbc855e785708e03c9d11f736a6bfd7.ctex"
+metadata={
 "vram_texture": false
-}}
+}
 
 [deps]
 
 source_file="res://assets/sprites/interior/props/cobweb_00.png"
-dest_files=["res://.godot/imported/cobweb_00.png-c47atticcobweb00.ctex"]
+dest_files=["res://.godot/imported/cobweb_00.png-2bbc855e785708e03c9d11f736a6bfd7.ctex"]
 
 [params]
 

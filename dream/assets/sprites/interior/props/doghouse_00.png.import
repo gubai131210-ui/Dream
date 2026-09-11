@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c49doghouse00"
-path="res://.godot/imported/doghouse_00.png-c49backyarddoghouse00.ctex"
-metadata={{
+uid="uid://ekewh0y7cehi"
+path="res://.godot/imported/doghouse_00.png-add889e5d337254992e9261310c1d31a.ctex"
+metadata={
 "vram_texture": false
-}}
+}
 
 [deps]
 
 source_file="res://assets/sprites/interior/props/doghouse_00.png"
-dest_files=["res://.godot/imported/doghouse_00.png-c49backyarddoghouse00.ctex"]
+dest_files=["res://.godot/imported/doghouse_00.png-add889e5d337254992e9261310c1d31a.ctex"]
 
 [params]
 

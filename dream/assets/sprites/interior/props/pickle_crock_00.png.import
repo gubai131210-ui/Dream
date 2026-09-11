@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c50picklecrock00"
-path="res://.godot/imported/pickle_crock_00.png-c50farmcellarpicklecrock00.ctex"
-metadata={{
+uid="uid://day2kqt7rm620"
+path="res://.godot/imported/pickle_crock_00.png-4d704477631a6c38f0e0da14acb00d5b.ctex"
+metadata={
 "vram_texture": false
-}}
+}
 
 [deps]
 
 source_file="res://assets/sprites/interior/props/pickle_crock_00.png"
-dest_files=["res://.godot/imported/pickle_crock_00.png-c50farmcellarpicklecrock00.ctex"]
+dest_files=["res://.godot/imported/pickle_crock_00.png-4d704477631a6c38f0e0da14acb00d5b.ctex"]
 
 [params]
 

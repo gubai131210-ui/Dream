@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c47trunkold00"
-path="res://.godot/imported/trunk_old_00.png-c47attictrunkold00.ctex"
-metadata={{
+uid="uid://cbh36uufbv3yr"
+path="res://.godot/imported/trunk_old_00.png-8e80ede3f4f873621d6aac45dbade05e.ctex"
+metadata={
 "vram_texture": false
-}}
+}
 
 [deps]
 
 source_file="res://assets/sprites/interior/props/trunk_old_00.png"
-dest_files=["res://.godot/imported/trunk_old_00.png-c47attictrunkold00.ctex"]
+dest_files=["res://.godot/imported/trunk_old_00.png-8e80ede3f4f873621d6aac45dbade05e.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c50winerack00"
-path="res://.godot/imported/wine_rack_00.png-c50farmcellarwinerack00.ctex"
-metadata={{
+uid="uid://ca8v8twkevyx2"
+path="res://.godot/imported/wine_rack_00.png-98ce1a032107bfa1c6fc212402b1440a.ctex"
+metadata={
 "vram_texture": false
-}}
+}
 
 [deps]
 
 source_file="res://assets/sprites/interior/props/wine_rack_00.png"
-dest_files=["res://.godot/imported/wine_rack_00.png-c50farmcellarwinerack00.ctex"]
+dest_files=["res://.godot/imported/wine_rack_00.png-98ce1a032107bfa1c6fc212402b1440a.ctex"]
 
 [params]
 

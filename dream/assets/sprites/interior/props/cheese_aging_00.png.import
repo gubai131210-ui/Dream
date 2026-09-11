@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c50cheeseaging00"
-path="res://.godot/imported/cheese_aging_00.png-c50farmcellarcheeseaging00.ctex"
-metadata={{
+uid="uid://b85v8myfbv5p0"
+path="res://.godot/imported/cheese_aging_00.png-fa76678e1e2b3abbfdd0eafdbfb1fb90.ctex"
+metadata={
 "vram_texture": false
-}}
+}
 
 [deps]
 
 source_file="res://assets/sprites/interior/props/cheese_aging_00.png"
-dest_files=["res://.godot/imported/cheese_aging_00.png-c50farmcellarcheeseaging00.ctex"]
+dest_files=["res://.godot/imported/cheese_aging_00.png-fa76678e1e2b3abbfdd0eafdbfb1fb90.ctex"]
 
 [params]
 

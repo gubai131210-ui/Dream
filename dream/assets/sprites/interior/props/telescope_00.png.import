@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c48telescope00roof"
-path="res://.godot/imported/telescope_00.png-c48rooftelescope00.ctex"
+uid="uid://dkliqscd1jye8"
+path="res://.godot/imported/telescope_00.png-ff7bf79702f9fb95013190b2abd59b90.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/telescope_00.png"
-dest_files=["res://.godot/imported/telescope_00.png-c48rooftelescope00.ctex"]
+dest_files=["res://.godot/imported/telescope_00.png-ff7bf79702f9fb95013190b2abd59b90.ctex"]
 
 [params]
 

@@ -85,11 +85,41 @@ func _tile_center(tx: int, ty: int) -> Vector2:
 	return Vector2((ORIGIN.x + tx) * TILE + TILE * 0.5, (ORIGIN.y + ty) * TILE + TILE * 0.5)
 
 
+## Load a texture without spamming errors when `.import` points at a missing `.ctex`
+## (common after hand-authored sidecars). Falls back to raw PNG via ImageTexture.
+func _load_texture(path: String) -> Texture2D:
+	if path.is_empty():
+		return null
+	var abs_path := ProjectSettings.globalize_path(path)
+	var import_path := abs_path + ".import"
+	var can_use_import := false
+	if FileAccess.file_exists(import_path):
+		var cfg := ConfigFile.new()
+		if cfg.load(import_path) == OK:
+			var dest_var: Variant = cfg.get_value("remap", "path", "")
+			var dest := str(dest_var)
+			if not dest.is_empty():
+				can_use_import = FileAccess.file_exists(ProjectSettings.globalize_path(dest))
+	if can_use_import:
+		var imported := load(path) as Texture2D
+		if imported != null:
+			return imported
+	if not FileAccess.file_exists(abs_path):
+		push_warning("InteriorCraft: missing texture %s" % path)
+		return null
+	var img := Image.load_from_file(abs_path)
+	if img == null:
+		push_warning("InteriorCraft: raw load failed %s" % path)
+		return null
+	return ImageTexture.create_from_image(img)
+
+
 func _spawn_tile(parent: Node2D, path: String, tx: int, ty: int, z: int = 0) -> void:
-	if not ResourceLoader.exists(path):
+	var tex := _load_texture(path)
+	if tex == null:
 		return
 	var spr := Sprite2D.new()
-	spr.texture = load(path) as Texture2D
+	spr.texture = tex
 	spr.centered = true
 	spr.position = _tile_center(tx, ty)
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -120,7 +150,9 @@ func _paint_walls(parent: Node2D) -> void:
 	for tx in range(_room_w):
 		_spawn_tile(parent, "%s/wall_upper_%02d.png" % [TILE_DIR, tx % 4], tx, 0, -2)
 		_spawn_tile(parent, "%s/wall_lower_%02d.png" % [TILE_DIR, tx % 4], tx, 1, -1)
-	for tx in [0, maxi(1, _room_w / 3), maxi(2, (_room_w * 2) / 3), _room_w - 1]:
+	var third := int(floor(float(_room_w) / 3.0))
+	var two_thirds := int(floor(float(_room_w) * 2.0 / 3.0))
+	for tx in [0, maxi(1, third), maxi(2, two_thirds), _room_w - 1]:
 		_spawn_tile(parent, "%s/pillar_00.png" % TILE_DIR, tx, 0, 0)
 		_spawn_tile(parent, "%s/pillar_00.png" % TILE_DIR, tx, 1, 0)
 	for ty in range(WALL_THICK, _room_h):
@@ -135,18 +167,17 @@ func _paint_door_and_window(parent: Node2D) -> void:
 	_spawn_tile(parent, "%s/pillar_00.png" % TILE_DIR, _door_tx1 + 1, _room_h - 1, 2)
 	# door_frame is required exit kit (not optional garnish) — always spawn both sides.
 	var door_frame := "%s/door_frame_00.png" % TILE_DIR
-	if not ResourceLoader.exists(door_frame):
+	var door_frame_tex := _load_texture(door_frame)
+	if door_frame_tex == null:
 		push_warning(
 			"InteriorCraft: REQUIRED door kit missing: %s — exit must have door_frame on both door tiles"
 			% door_frame
 		)
 	for tx in [_door_tx0 - 1, _door_tx1 + 1]:
-		var frame_tex := load(door_frame) as Texture2D
-		if frame_tex == null:
-			push_warning("InteriorCraft: door_frame load failed for tile tx=%d path=%s" % [tx, door_frame])
+		if door_frame_tex == null:
 			continue
 		var spr := Sprite2D.new()
-		spr.texture = frame_tex
+		spr.texture = door_frame_tex
 		spr.centered = true
 		spr.position = _tile_center(tx, _room_h - 2)
 		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -154,15 +185,16 @@ func _paint_door_and_window(parent: Node2D) -> void:
 		parent.add_child(spr)
 	if bool(_profile.get("window", true)):
 		var win_path := "%s/window_00.png" % TILE_DIR
-		if ResourceLoader.exists(win_path):
+		var win_tex := _load_texture(win_path)
+		if win_tex != null:
 			var spr := Sprite2D.new()
-			spr.texture = load(win_path) as Texture2D
+			spr.texture = win_tex
 			spr.centered = true
-			spr.position = _tile_center(int(_room_w / 2), 0) + Vector2(16, 16)
+			spr.position = _tile_center(int(_room_w / 2.0), 0) + Vector2(16, 16)
 			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			spr.z_index = 3
 			parent.add_child(spr)
-		var mid := int(_room_w / 2)
+		var mid := int(_room_w / 2.0)
 		var shaft := Polygon2D.new()
 		shaft.name = "WindowLightShaft"
 		shaft.color = Color(1.0, 0.92, 0.65, 0.12)
@@ -230,10 +262,7 @@ func _cluster_anchor(cluster_id: String) -> Vector2i:
 	return Vector2i(-1, -1)
 
 func _spawn_prop(parent: Node2D, path: String, pos: Vector2, scale_f: float, title: String, desc: String) -> void:
-	if not ResourceLoader.exists(path):
-		push_warning("InteriorCraft: missing prop %s" % path)
-		return
-	var tex := load(path) as Texture2D
+	var tex := _load_texture(path)
 	if tex == null:
 		return
 	var hs := _make_hotspot(parent, title, desc, pos, Vector2(56, 48))
@@ -352,10 +381,7 @@ func _spawn_rail_line(parent: Node2D, rail: Dictionary) -> void:
 
 func _spawn_fence_segment(parent: Node2D, path: String, tx: int, ty: int, scale_f: float, title: String, desc: String) -> void:
 	## Feet-anchored fence tile (32px art → 1 world tile) so H/V runs seal without gaps.
-	if not ResourceLoader.exists(path):
-		push_warning("InteriorCraft: missing fence %s" % path)
-		return
-	var tex := load(path) as Texture2D
+	var tex := _load_texture(path)
 	if tex == null:
 		return
 	var pos := _tile_center(tx, ty)
@@ -397,9 +423,10 @@ func _spawn_anim_fx(parent: Node2D, prefix: String, pos: Vector2, fps: float) ->
 	var n := 0
 	for i in range(4):
 		var path := "%s/%s_%02d.png" % [FX_DIR, prefix, i]
-		if not ResourceLoader.exists(path):
+		var frame_tex := _load_texture(path)
+		if frame_tex == null:
 			continue
-		frames.add_frame("loop", load(path) as Texture2D)
+		frames.add_frame("loop", frame_tex)
 		n += 1
 	if n == 0:
 		return
