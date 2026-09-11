@@ -1350,66 +1350,118 @@ static func _all() -> Dictionary:
 			],
 			"actor": {},
 		},
+		# ── C16 洞穴入口层：西洞口乱石营 · 东下探井口（门轴 11–14 中廊；≠矿洞）──
 		"c16_cave_entry": {
 			"title": "洞穴入口层",
-			"hint": "洞穴 · 入口层（占位）",
+			"hint": "洞穴 · 石质入口 / 下探井口",
 			"return_path": HILL,
-			"room_w": 24,
-			"room_h": 16,
-			"door_tx0": 10,
-			"door_tx1": 13,
+			"room_w": 26,
+			"room_h": 17,
+			"door_tx0": 11,
+			"door_tx1": 14,
 			"floor": "stone",
-			"modulate": Color(0.55, 0.52, 0.50, 1.0),
+			"modulate": Color(0.58, 0.54, 0.50, 1.0),
 			"rug": null,
 			"window": false,
 			"clusters": [
-				_cluster("mouth", 8, 8, [
-					_m(P_CRATE0, 0, 0, "探险箱", "入口补给。", 0.75),
-					_m(P_LAMP_FARM, 2, -1, "洞口灯", "入口照明。", PROP),
+				# West vestibule rubble — approach from corridor east of rocks.
+				_cluster("mouth", 5, 9, [
+					_m(P_ROCK0, 0, 0, "洞口乱石", "入口西壁塌落乱石。", 0.7),
+					_m(P_ROCK2, -2, 1, "苔石", "带苔的洞口石。", 0.55),
+					_m(P_ROCK3, 1, 2, "碎石堆", "刚滚落的碎石（南可站）。", 0.5),
+					_m(P_CRATE0, 2, 0, "探险箱", "入口补给木箱。", 0.8),
+					_m(P_SACK0, 3, 1, "行囊", "探洞人行囊。", 0.65),
+					_m(P_LAMP_FARM, 2, -2, "洞口灯", "钉在乱石旁的入口油灯。", PROP),
 				]),
-				_cluster("descent", 16, 7, [
-					_m(P_NOTICE, 0, 0, "下探标记", "通向中层。", 0.7),
-					_m(P_CRATE1, 2, 2, "绳索箱", "下探绳索。", 0.7),
+				# NW camp — secondary rest / gear (west of door axis).
+				_cluster("camp", 6, 5, [
+					_m(P_HAY, 0, 0, "干草铺", "入口临时卧铺。", 0.7),
+					_m(P_TOOL_RACK, -1, -1, "探洞架", "绳钩与短镐架。", 0.65),
+					_m(P_CRATE1, 2, 1, "补给箱", "干粮与火绒箱。", 0.75),
+					_m(P_BARREL, 2, -1, "饮水桶", "营边饮水。", PROP),
+					_m(P_LAMP_FARM, 1, -2, "营灯", "卧铺侧营灯。", PROP),
+				]),
+				# East descent shaft — extra_portal south of notice for clear approach.
+				_cluster("descent", 18, 7, [
+					_m(P_NOTICE, 0, 0, "下探标记", "通向水晶中层的井口标记。", 0.7),
+					_m(P_ROCK1, -2, 1, "井口岩", "下探口西缘承台石。", 0.55),
+					_m(P_ROCK0, 1, 2, "阶缘石", "井口南缘碎岩。", 0.5),
+					_m(P_CRATE1, 2, 1, "绳索箱", "下探绳索与铁钉。", 0.75),
+					_m(P_BARREL, -1, 2, "压绳桶", "固定主绳的重桶（南站位）。", PROP),
+					_m(P_BASKET, 2, -1, "绳钩筐", "备用钩环筐。", 0.7),
 				]),
 			],
 			"extra_portals": [
-				{"tx": 16, "ty": 9, "label": "↓中层", "path": "res://scenes/interiors/c16_cave_mid/c16_cave_mid.tscn"},
+				{"tx": 18, "ty": 10, "label": "↓中层", "path": "res://scenes/interiors/c16_cave_mid/c16_cave_mid.tscn"},
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 12, "ty": 5, "oy": -6, "color": Color(0.9, 0.85, 0.7), "energy": 0.7, "scale": 1.8},
+				{"tx": 6, "ty": 7, "oy": -10, "color": Color(1.0, 0.88, 0.62), "energy": 0.85, "scale": 2.0},
+				{"tx": 18, "ty": 6, "oy": -8, "color": Color(0.95, 0.82, 0.55), "energy": 0.75, "scale": 1.8},
 			],
-			"actor": {},
+			"actor": {
+				"id": "farmer",
+				"title": "探洞人",
+				"desc": "在洞口乱石与下探井口之间来回。",
+				"via_clusters": ["mouth", "camp", "descent"],
+				"via_stands": {"mouth": [3, 0], "camp": [0, 2], "descent": [0, 3]},
+			},
 		},
+		# ── C16 洞穴中层：西晶簇台 · 东渗水池（门轴 9–12；冷光；回入口层）──
 		"c16_cave_mid": {
 			"title": "洞穴中层",
-			"hint": "洞穴 · 水晶中层（占位）",
+			"hint": "洞穴 · 水晶厅 / 渗水池",
 			"return_path": "res://scenes/interiors/c16_cave_entry/c16_cave_entry.tscn",
 			"room_w": 22,
 			"room_h": 15,
 			"door_tx0": 9,
 			"door_tx1": 12,
 			"floor": "stone",
-			"modulate": Color(0.48, 0.52, 0.62, 1.0),
+			"modulate": Color(0.42, 0.50, 0.62, 1.0),
 			"rug": null,
 			"window": false,
 			"clusters": [
-				_cluster("crystal", 8, 6, [
-					_m(P_COIN, 0, 0, "晶簇箱", "水晶矿箱占位。", 0.7),
-					_m(P_LAMP_INDOOR, 2, -1, "晶光灯", "冷光。", PROP),
+				# West crystal plinth — primary silhouette (≠ entry rubble camp).
+				_cluster("crystal", 6, 6, [
+					_m(P_COIN, 0, 0, "晶簇箱", "嵌在晶台上的晶簇收藏箱。", 0.85),
+					_m(P_ROCK3, -2, 1, "晶簇岩", "西侧粗晶簇岩。", 0.65),
+					_m(P_ROCK1, 2, 1, "晶脉石", "东侧露出晶脉。", 0.55),
+					_m(P_ROCK2, 0, 2, "碎晶堆", "台前碎晶（南可交互）。", 0.5),
+					_m(P_CRATE0, 2, -1, "晶样箱", "已采晶样木箱。", 0.7),
+					_m(P_LAMP_INDOOR, 1, -2, "晶龛灯", "壁龛冷白光。", PROP),
 				]),
-				_cluster("pool", 15, 8, [
-					_m(P_BARREL, 0, 0, "积水桶", "地下渗水。", 0.65),
-					_m(P_CRATE0, 2, 1, "样本箱", "晶矿样本。", 0.7),
+				# East seep pool — cool wet mass.
+				_cluster("glow_pool", 16, 8, [
+					_m(P_BARREL, 0, 0, "渗水桶", "接洞顶渗水。", 0.75),
+					_m(P_BARREL_KEG, 2, 0, "积水桶", "池缘积水桶。", 0.7),
+					_m(P_ROCK2, -1, 2, "湿岩", "池缘湿苔岩。", 0.5),
+					_m(P_ROCK0, 1, 2, "池缘石", "东池缘承台。", 0.48),
+					_m(P_SACK1, 2, 1, "湿麻袋", "潮气浸透的旧袋。", 0.55),
+					_m(P_LAMP_INDOOR, -1, -1, "池边冷灯", "渗水池冷光。", PROP),
+				]),
+				# North sample bench — secondary, compact.
+				_cluster("sample", 15, 4, [
+					_m(P_CRATE1, 0, 0, "样本箱", "待鉴定晶矿样本。", 0.75),
+					_m(P_BASKET, 2, 1, "拣晶筐", "手拣碎晶筐。", 0.7),
+					_m(P_TOOL_RACK, 1, -2, "取样架", "凿刀与布袋架。", 0.65),
+					_m(P_NOTICE, -1, -1, "晶脉告示", "中层晶脉安全告示。", 0.65),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 8, "ty": 4, "oy": -8, "color": Color(0.7, 0.85, 1.0), "energy": 0.85, "scale": 1.9},
+				{"tx": 6, "ty": 4, "oy": -12, "color": Color(0.65, 0.88, 1.0), "energy": 1.05, "scale": 2.3},
+				{"tx": 16, "ty": 6, "oy": -10, "color": Color(0.55, 0.82, 1.0), "energy": 0.95, "scale": 2.0},
+				{"tx": 11, "ty": 3, "oy": -6, "color": Color(0.7, 0.9, 1.0), "energy": 0.55, "scale": 1.5},
 			],
-			"actor": {},
+			"actor": {
+				"id": "farmer",
+				"title": "晶脉探工",
+				"desc": "在晶簇台与渗水池之间取样。",
+				"via_clusters": ["crystal", "sample", "glow_pool"],
+				"via_stands": {"crystal": [0, 3], "sample": [0, 2], "glow_pool": [-2, 1]},
+			},
 		},
 		"c24_lake_island": {
 			"title": "湖心岛",
