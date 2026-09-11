@@ -19,6 +19,8 @@ const P_BAR := DIR_INTERIOR_PROP + "/bar_00.png"
 const P_TABLE_R := DIR_INTERIOR_PROP + "/table_round_00.png"
 const P_TABLE_DINING := DIR_INTERIOR_PROP + "/table_dining_00.png"
 const P_STOOL := DIR_INTERIOR_PROP + "/stool_00.png"
+const P_STOOL_TEA := DIR_INTERIOR_PROP + "/stool_tea_00.png"
+const P_STOOL_BAR := DIR_INTERIOR_PROP + "/stool_bar_00.png"
 const P_HAY := DIR_INTERIOR_PROP + "/hay_00.png"
 const P_TROUGH := DIR_INTERIOR_PROP + "/trough_00.png"
 const P_NEST := DIR_INTERIOR_PROP + "/nest_00.png"
@@ -88,10 +90,10 @@ static func _all() -> Dictionary:
 				]),
 				_cluster("hearth_talk", 16, 6, [
 					_m(P_FIREPLACE, 0, -1, "壁炉", "北墙起居壁炉。", 1.0),
-					_m(P_TABLE_DINING, 0, 2, "饭桌", "炉前用餐/闲谈桌。", 0.95),
-					_m(P_STOOL, -2, 2, "凳", "桌西矮凳。", 0.75),
-					_m(P_STOOL, 2, 2, "凳", "桌东矮凳。", 0.75),
-					_m(P_STOOL, 0, 3, "凳", "桌南矮凳。", 0.75),
+					_m(P_TABLE_DINING, 0, 2, "饭桌", "炉前用餐/闲谈桌（cozy_dining 成套）。", 0.95),
+					_m(P_STOOL, -2, 2, "凳", "桌西矮凳（同 sheet）。", 0.85),
+					_m(P_STOOL, 2, 2, "凳", "桌东矮凳（同 sheet）。", 0.85),
+					_m(P_STOOL, 0, 3, "凳", "桌南矮凳（同 sheet）。", 0.85),
 				]),
 				_cluster("sleep", 28, 13, [
 					_m(P_BED_D, 0, 1, "双人床", "东南私密睡区。", 1.05),
@@ -128,7 +130,8 @@ static func _all() -> Dictionary:
 			"clusters": [
 				_cluster("tea", 8, 6, [
 					_m(P_ROCKING, -1, 0, "摇椅", "窗边摇椅（交谈锚）。", 0.65),
-					_m(P_TABLE_R, 1, 1, "茶几", "膝前小圆茶几。", 0.5),
+					_m(P_TABLE_R, 1, 1, "茶几", "膝前小圆茶几（cozy_tea 成套）。", 0.55),
+					_m(P_STOOL_TEA, 2, 2, "矮凳", "茶几配套矮凳（同 sheet）。", 0.7),
 					_m(P_HERBS, -3, -2, "干花", "茶区旁干花。", 0.45),
 				]),
 				_cluster("sleep", 20, 10, [
@@ -170,10 +173,10 @@ static func _all() -> Dictionary:
 					_m(P_BARREL, 2, 2, "水桶", "门厅取水。", PROP),
 				]),
 				_cluster("dining", 14, 7, [
-					_m(P_TABLE_DINING, 0, 0, "饭桌", "农家大饭桌。", 0.95),
-					_m(P_STOOL, -2, 1, "凳", "饭桌西凳。", 0.75),
-					_m(P_STOOL, 2, 1, "凳", "饭桌东凳。", 0.75),
-					_m(P_STOOL, 0, 2, "凳", "饭桌南凳。", 0.75),
+					_m(P_TABLE_DINING, 0, 0, "饭桌", "农家大饭桌（cozy_dining）。", 0.95),
+					_m(P_STOOL, -2, 1, "凳", "饭桌西凳（同 sheet）。", 0.85),
+					_m(P_STOOL, 2, 1, "凳", "饭桌东凳（同 sheet）。", 0.85),
+					_m(P_STOOL, 0, 2, "凳", "饭桌南凳（同 sheet）。", 0.85),
 				]),
 				_cluster("sleep", 24, 12, [
 					_m(P_BED_D, 0, 1, "床铺", "夫妻床。", 1.0),
@@ -255,9 +258,9 @@ static func _all() -> Dictionary:
 					_m(P_BARREL, 2, 2, "淬火桶", "贴砧淬火水桶。", PROP),
 				]),
 				_cluster("living", 12, 8, [
-					_m(P_TABLE_DINING, 0, 0, "厚桌", "耐用木桌。", 0.95),
-					_m(P_STOOL, -2, 1, "凳", "桌旁凳。", 0.75),
-					_m(P_STOOL, 2, 1, "凳", "桌旁凳。", 0.75),
+					_m(P_TABLE_DINING, 0, 0, "厚桌", "耐用木桌（cozy_dining）。", 0.95),
+					_m(P_STOOL, -2, 1, "凳", "桌旁凳（同 sheet）。", 0.85),
+					_m(P_STOOL, 2, 1, "凳", "桌旁凳（同 sheet）。", 0.85),
 				]),
 				_cluster("sleep", 21, 11, [
 					_m(P_BED_S, 0, 1, "床铺", "铁匠床铺。", 1.0),
@@ -439,9 +442,9 @@ static func _all() -> Dictionary:
 					_m(P_LAMP_INDOOR, 2, -2, "壁灯", "工作区壁灯。", PROP),
 				]),
 				_cluster("wait", 16, 13, [
-					_m(P_TABLE_DINING, 0, 0, "候坐", "顾客等候桌。", 0.9),
-					_m(P_STOOL, -2, 1, "凳", "候坐凳。", 0.75),
-					_m(P_STOOL, 2, 1, "凳", "候坐凳。", 0.75),
+					_m(P_TABLE_DINING, 0, 0, "候坐", "顾客等候桌（cozy_dining）。", 0.9),
+					_m(P_STOOL, -2, 1, "凳", "候坐凳（同 sheet）。", 0.85),
+					_m(P_STOOL, 2, 1, "凳", "候坐凳（同 sheet）。", 0.85),
 				]),
 			],
 			"fx": [{"kind": "forge", "tx": 8, "ty": 5, "oy": -10}],
@@ -476,24 +479,24 @@ static func _all() -> Dictionary:
 					_m(P_BARREL, -1, 3, "存酒", "吧后竖放存酒。", PROP),
 					_m(P_MUG_SHELF, 0, -3, "杯架", "吧上墙杯架。", 0.6),
 					_m(P_LAMP_INDOOR, 2, -3, "酒馆灯", "吧台暖灯。", PROP),
-					_m(P_STOOL, 3, 1, "吧凳", "吧前高凳。", 0.5),
-					_m(P_STOOL, 3, 3, "吧凳", "吧前高凳。", 0.5),
+					_m(P_STOOL_BAR, 3, 1, "吧凳", "吧前高凳（同家族木色）。", 0.8),
+					_m(P_STOOL_BAR, 3, 3, "吧凳", "吧前高凳（同家族木色）。", 0.8),
 				]),
 				_cluster("party_a", 16, 8, [
-					_m(P_TABLE_R, 0, 0, "圆桌", "中央雅座。", 0.65),
-					_m(P_STOOL, -2, 1, "高凳", "围桌凳。", 0.5),
-					_m(P_STOOL, 2, 1, "高凳", "围桌凳。", 0.5),
-					_m(P_STOOL, 0, 2, "高凳", "南侧围桌凳。", 0.5),
+					_m(P_TABLE_R, 0, 0, "圆桌", "中央雅座（cozy_tea）。", 0.7),
+					_m(P_STOOL_TEA, -2, 1, "矮凳", "围桌配套凳。", 0.75),
+					_m(P_STOOL_TEA, 2, 1, "矮凳", "围桌配套凳。", 0.75),
+					_m(P_STOOL_TEA, 0, 2, "矮凳", "南侧围桌凳。", 0.75),
 					_m(P_NOTICE, -3, -3, "告示", "座席旁规矩牌。", 0.5),
 				]),
 				_cluster("party_b", 22, 8, [
-					_m(P_TABLE_R, 0, 0, "圆桌", "邻桌雅座。", 0.65),
-					_m(P_STOOL, -1, 1, "高凳", "邻桌凳。", 0.5),
-					_m(P_STOOL, 2, 1, "高凳", "邻桌凳。", 0.5),
+					_m(P_TABLE_R, 0, 0, "圆桌", "邻桌雅座（cozy_tea）。", 0.7),
+					_m(P_STOOL_TEA, -1, 1, "矮凳", "邻桌配套凳。", 0.75),
+					_m(P_STOOL_TEA, 2, 1, "矮凳", "邻桌配套凳。", 0.75),
 				]),
 				_cluster("hearth", 28, 6, [
 					_m(P_FIREPLACE, 0, 0, "壁炉", "东墙壁炉。", 0.7),
-					_m(P_STOOL, -2, 2, "凳", "炉前烤火凳。", 0.5),
+					_m(P_STOOL, -2, 2, "凳", "炉前烤火矮凳（同家族）。", 0.8),
 					_m(P_CRATE0, 2, 2, "酒窖箱", "炉旁存货。", PROP),
 				]),
 			],
