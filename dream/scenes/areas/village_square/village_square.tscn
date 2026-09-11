@@ -54,7 +54,7 @@ theme_override_constants/separation = 10
 [node name="Hint" type="Label" parent="UI/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "村庄广场示例 — WASD/中键拖拽，滚轮缩放，点击热点，G 开关网格"
+text = "村庄广场 — WASD/中键拖拽，滚轮缩放；G 网格；N 昼夜；R 天气"
 
 [node name="BackHub" type="Button" parent="UI/TopBar"]
 layout_mode = 2
@@ -75,3 +75,7 @@ text = "农场"
 [node name="ToMarket" type="Button" parent="UI/TopBar"]
 layout_mode = 2
 text = "商业街"
+
+[node name="ToStation" type="Button" parent="UI/TopBar"]
+layout_mode = 2
+text = "→车站"

@@ -9,6 +9,7 @@ extends Node2D
 @onready var btn_residential: Button = $UI/TopBar/ToResidential
 @onready var btn_farm: Button = $UI/TopBar/ToFarm
 @onready var btn_market: Button = $UI/TopBar/ToMarket
+@onready var btn_station: Button = $UI/TopBar/ToStation
 @onready var grid_overlay: Node2D = $DebugGrid
 
 
@@ -24,6 +25,8 @@ func _ready() -> void:
 		btn_farm.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.FARM_HOME_PATH))
 	if btn_market:
 		btn_market.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.MARKET_PATH))
+	if btn_station:
+		btn_station.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.STATION_PATH))
 	for child in ysort_root.get_children():
 		_wire_hotspots(child)
 	_wire_portals(ysort_root)
@@ -35,6 +38,9 @@ func _ready() -> void:
 	camera.max_zoom = 3.0
 	if grid_overlay:
 		grid_overlay.visible = false
+	# Env-H: night grade + weather overlay (TopBar + N/R). Scene-local Node, not Autoload.
+	var top_bar := get_node_or_null("UI/TopBar") as Control
+	DayNightWeather.attach_to(self, top_bar)
 
 
 func _wire_portals(node: Node) -> void:
