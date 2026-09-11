@@ -41,8 +41,8 @@ Blockers: …
 | 3 | **Scene-fit** | Function **and** product OK (WAVE_C lamps). 功能对 ≠ 产品对. |
 | 4 | **Territory** | **boundary → mass → count**. Coop/barn enclosure+corners; shops have stock mass. |
 | 5 | **Composition** | One cluster = one verb; anchor+satellites (|d|≤3); face/align; rug under talk/dine; `actor.route` ≥2 anchors; animals at related clusters. |
-| 6 | **Ensemble** | Whole room = **one intentional composition**: clear primary anchor, secondary zones, readable **negative space**. Not wall-ring dump, not even scatter, not “filled until busy”. Hierarchy: eye hits hearth/counter/pen first. |
-| 7 | **Interact-ready** | Layout can absorb player + NPCs + future hotspots **without re-gutting**: ≥1 approach tile at each use-point (bed/counter/chest/shelf/forge/nest); staff vs customer sides kept; patrol lane free; prompt air above targets; density leaves headroom for 1 player + ≥1 NPC side-by-side on main path. |
+| 6 | **Ensemble** | One intentional room: primary anchor + secondary zones + **≥30% open floor** (not wall-ring / even scatter / busy-fill). Eye hits hearth/counter/pen first in 3s. “放下了” alone = FAIL. |
+| 7 | **Interact-ready** | Absorb player+NPC+hotspots without re-gut: **≥1 free approach tile** at each use-point (bed/counter/chest/shelf/forge/nest); staff≠customer side; patrol lane free; **≥2-tile** main path for side-by-side; ~16px clear above targets for prompts. |
 
 ### Art
 
