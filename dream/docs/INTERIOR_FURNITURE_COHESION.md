@@ -3,7 +3,7 @@
 **Status:** SHIPPED v1 — cozy dining / tea / bar-stool family installed  
 **Date:** 2026-09-11  
 **Problem:** 单件资产各自合格，但桌/凳/吧台像不同游戏拼贴（木色、腿粗、透视、描边不一致）。  
-**Related:** [`INTERIOR_COMPOSITION.md`](./INTERIOR_COMPOSITION.md), [`INTERIOR_ASSET_AUDIT.md`](./INTERIOR_ASSET_AUDIT.md)
+**Related:** [`INTERIOR_COMPOSITION.md`](./INTERIOR_COMPOSITION.md), [`INTERIOR_ASSET_AUDIT.md`](./INTERIOR_ASSET_AUDIT.md), research [`research/INTERIOR_FURNITURE_COHESION.md`](./research/INTERIOR_FURNITURE_COHESION.md)
 
 ## User intent (locked)
 
