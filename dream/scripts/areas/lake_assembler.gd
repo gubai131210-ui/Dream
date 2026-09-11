@@ -192,3 +192,8 @@ func _spawn_portals(ysort: Node2D) -> void:
 		rspr.scale = Vector2(0.55, 0.55)
 	craft.make_hotspot(ysort, "登岛渡口", "南岸小舟可渡湖心岛。", isle, Vector2(72, 56))
 	craft.make_portal(ysort, "登湖心岛", SceneRouter.C24_LAKE_ISLAND_PATH, isle + Vector2(0, 14), Vector2(100, 52))
+	# Wave F transit / dive
+	craft.make_portal(ysort, "进入水族馆", SceneRouter.C41_AQUARIUM_PATH, Vector2(420, 480), Vector2(100, 52))
+	craft.make_portal(ysort, "进入渔码头", SceneRouter.C34_DOCK_FISH_PATH, Vector2(280, 620), Vector2(100, 52))
+	craft.make_portal(ysort, "半沉船", SceneRouter.C35_BOAT_WRECK_PATH, Vector2(900, 640), Vector2(100, 52))
+	craft.make_portal(ysort, "↓潜水", SceneRouter.C23_UNDERWATER_PATH, Vector2(640, 700), Vector2(100, 52))

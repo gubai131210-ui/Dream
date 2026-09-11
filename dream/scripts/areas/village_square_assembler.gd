@@ -604,6 +604,9 @@ func _spawn_buildings(ysort: Node2D) -> void:
 	craft.make_portal(
 		ysort, "进入墓园", SceneRouter.C30_CEMETERY_PATH, grave + Vector2(0, 14), Vector2(100, 52)
 	)
+	# Wave F civic tour
+	craft.make_portal(ysort, "进入博物馆", SceneRouter.C40_MUSEUM_PATH, Vector2(220, 280), Vector2(100, 52))
+	craft.make_portal(ysort, "进入浴场", SceneRouter.C43_BATHHOUSE_PATH, Vector2(1080, 280), Vector2(100, 52))
 
 
 func _spawn_props(ysort: Node2D) -> void:

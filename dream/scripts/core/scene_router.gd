@@ -70,6 +70,20 @@ const C48_ROOF_PATH := "res://scenes/interiors/c48_roof/c48_roof.tscn"
 const C49_BACKYARD_PATH := "res://scenes/interiors/c49_backyard/c49_backyard.tscn"
 const C50_FARM_CELLAR_PATH := "res://scenes/interiors/c50_farm_cellar/c50_farm_cellar.tscn"
 
+## Phase 5 Wave F civic / transit / dive
+const C40_MUSEUM_PATH := "res://scenes/interiors/c40_museum/c40_museum.tscn"
+const C41_AQUARIUM_PATH := "res://scenes/interiors/c41_aquarium/c41_aquarium.tscn"
+const C42_HOTSPRING_PATH := "res://scenes/interiors/c42_hotspring/c42_hotspring.tscn"
+const C43_BATHHOUSE_PATH := "res://scenes/interiors/c43_bathhouse/c43_bathhouse.tscn"
+const C44_INN_PATH := "res://scenes/interiors/c44_inn/c44_inn.tscn"
+const C45_TAVERN_UP_PATH := "res://scenes/interiors/c45_tavern_up/c45_tavern_up.tscn"
+const C34_DOCK_FISH_PATH := "res://scenes/interiors/c34_dock_fish/c34_dock_fish.tscn"
+const C34_DOCK_TRADE_PATH := "res://scenes/interiors/c34_dock_trade/c34_dock_trade.tscn"
+const C35_BOAT_DOCKED_PATH := "res://scenes/interiors/c35_boat_docked/c35_boat_docked.tscn"
+const C35_BOAT_WRECK_PATH := "res://scenes/interiors/c35_boat_wreck/c35_boat_wreck.tscn"
+const C36_TRAIN_CAR_PATH := "res://scenes/interiors/c36_train_car/c36_train_car.tscn"
+const C23_UNDERWATER_PATH := "res://scenes/interiors/c23_underwater/c23_underwater.tscn"
+
 
 func go_hub() -> void:
 	get_tree().change_scene_to_file(HUB_PATH)

@@ -242,3 +242,5 @@ func _spawn_actors(ysort: Node2D) -> void:
 func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(ysort, "→湖泊", SceneRouter.LAKE_PATH, Vector2(80, 520), Vector2(96, 56))
 	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))
+	# Wave F trade dock
+	craft.make_portal(ysort, "进入商码头", SceneRouter.C34_DOCK_TRADE_PATH, Vector2(360, 700), Vector2(100, 52))

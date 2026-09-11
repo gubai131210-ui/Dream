@@ -57,6 +57,19 @@ ROOMS = [
     ("c48_roof", "c48_roof", "C48RoofInterior"),
     ("c49_backyard", "c49_backyard", "C49BackyardInterior"),
     ("c50_farm_cellar", "c50_farm_cellar", "C50FarmCellarInterior"),
+    # Wave F civic / transit / dive
+    ("c40_museum", "c40_museum", "C40MuseumInterior"),
+    ("c41_aquarium", "c41_aquarium", "C41AquariumInterior"),
+    ("c42_hotspring", "c42_hotspring", "C42HotspringInterior"),
+    ("c43_bathhouse", "c43_bathhouse", "C43BathhouseInterior"),
+    ("c44_inn", "c44_inn", "C44InnInterior"),
+    ("c45_tavern_up", "c45_tavern_up", "C45TavernUpInterior"),
+    ("c34_dock_fish", "c34_dock_fish", "C34DockFishInterior"),
+    ("c34_dock_trade", "c34_dock_trade", "C34DockTradeInterior"),
+    ("c35_boat_docked", "c35_boat_docked", "C35BoatDockedInterior"),
+    ("c35_boat_wreck", "c35_boat_wreck", "C35BoatWreckInterior"),
+    ("c36_train_car", "c36_train_car", "C36TrainCarInterior"),
+    ("c23_underwater", "c23_underwater", "C23UnderwaterInterior"),
 ]
 
 TEMPLATE = """[gd_scene load_steps=6 format=3]

@@ -71,3 +71,5 @@ func _wire_hotspots(node: Node) -> void:
 
 func _on_hotspot(hotspot: InteractableHotspot) -> void:
 	info.show_info(hotspot.title, hotspot.description)
+
+# Wave F WorldSys/NpcRing: attach SeasonalDecor + interact kits (team).

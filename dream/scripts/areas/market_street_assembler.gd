@@ -336,3 +336,5 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(
 		ysort, "进入工坊", SceneRouter.C38_WORKSHOP_PATH, Vector2(980, 320), Vector2(88, 48)
 	)
+	# Wave F
+	craft.make_portal(ysort, "进入旅馆", SceneRouter.C44_INN_PATH, Vector2(200, 400), Vector2(100, 52))

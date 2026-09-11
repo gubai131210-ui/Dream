@@ -204,3 +204,5 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(
 		ysort, "进入洞穴", SceneRouter.C16_CAVE_ENTRY_PATH, cave_mouth + Vector2(0, 12), Vector2(96, 52)
 	)
+	# Wave F
+	craft.make_portal(ysort, "进入温泉", SceneRouter.C42_HOTSPRING_PATH, Vector2(640, 360), Vector2(100, 52))
