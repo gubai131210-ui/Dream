@@ -1441,34 +1441,63 @@ static func _all() -> Dictionary:
 			],
 			"actor": {},
 		},
+		# ── C25 河流隐藏：西芦苇口 · 北跳石隐径 · 东小船窖（门轴 9–12 南门通廊清空）──
 		"c25_river_hide": {
 			"title": "芦苇岔路",
-			"hint": "河流隐藏 · 芦苇口（占位）",
+			"hint": "河流隐藏 · 芦苇口 / 跳石隐径 / 小船窖",
 			"return_path": RIV,
-			"room_w": 18,
-			"room_h": 13,
-			"door_tx0": 7,
-			"door_tx1": 10,
+			"room_w": 22,
+			"room_h": 14,
+			"door_tx0": 9,
+			"door_tx1": 12,
 			"floor": "straw",
-			"modulate": Color(0.62, 0.72, 0.58, 1.0),
+			"modulate": Color(0.58, 0.70, 0.54, 1.0),
 			"rug": null,
 			"window": false,
 			"clusters": [
-				_cluster("reed", 6, 6, [
-					_m(P_BASKET, 0, 0, "苇篮", "采苇篮。", 0.7),
-					_m(P_SACK0, 2, 1, "湿袋", "岸边湿袋。", 0.55),
+				# West reed mouth — dense damp bank; leave south approach at (0,2).
+				_cluster("reed", 4, 7, [
+					_m(P_HAY, 0, 0, "芦苇丛", "西岸芦苇丛掩口（主锚）。", 0.9),
+					_m(P_HERBS, -2, -1, "湿苇梢", "潮气打湿的苇梢。", 0.55),
+					_m(P_HAY, 2, -1, "侧苇丛", "口缘侧苇。", 0.75),
+					_m(P_BASKET, 2, 1, "采苇篮", "割苇篮（南站位可交互）。", 0.75),
+					_m(P_SACK0, 0, 2, "湿袋", "岸边湿麻袋。", 0.55),
+					_m(P_LAMP_FARM, -1, -2, "苇口灯", "隐径入口微光。", PROP),
 				]),
-				_cluster("skiff", 12, 7, [
-					_m(P_CRATE0, 0, 0, "小船箱", "藏船补给。", 0.7),
-					_m(P_LAMP_FARM, 1, -2, "岔路灯", "隐径微光。", PROP),
+				# North stepping / fallen-log path — secret fork in ≤3s.
+				_cluster("stepping", 11, 4, [
+					_m(P_ROCK0, 0, 0, "跳石", "岔路中段跳石。", 0.5),
+					_m(P_ROCK2, -2, 1, "倒木脚石", "半没水的倒木脚石。", 0.45),
+					_m(P_ROCK1, 2, 1, "踏脚石", "东向踏脚。", 0.48),
+					_m(P_ROCK3, 0, -2, "北岸石", "隐径继续向北。", 0.42),
+					_m(P_NOTICE, -1, -1, "隐径记号", "芦苇后的岔路记号。", 0.5),
+				]),
+				# East skiff cache — boat supply mass + hidden coin + bamboo rod.
+				_cluster("skiff", 17, 8, [
+					_m(P_CRATE0, 0, 0, "小船箱", "藏船补给主箱（南站位）。", 0.85),
+					_m(P_CRATE1, 2, 0, "船舱箱", "船舷侧箱。", 0.75),
+					_m(P_BARREL, -2, 1, "压舱桶", "系岸压舱桶。", 0.7),
+					_m(P_COIN, 0, -2, "船底窖", "船底藏匿小箱。", 0.7),
+					_m(P_ROD_BAMBOO, 2, -2, "竹钓竿", "靠船的竹钓竿。", 0.65),
+					_m(P_SACK1, 1, 2, "网袋", "湿渔网袋。", 0.55),
+					_m(P_BASKET, -2, -1, "饵料篮", "船边饵料篮。", 0.6),
+					_m(P_LAMP_FARM, -1, -2, "船窖灯", "小船窖微光。", PROP),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 9, "ty": 4, "oy": -6, "color": Color(0.85, 1.0, 0.75), "energy": 0.65, "scale": 1.6},
+				{"tx": 5, "ty": 6, "oy": -8, "color": Color(0.8, 1.0, 0.7), "energy": 0.6, "scale": 1.6},
+				{"tx": 11, "ty": 4, "oy": -6, "color": Color(0.85, 1.0, 0.78), "energy": 0.55, "scale": 1.4},
+				{"tx": 17, "ty": 7, "oy": -10, "color": Color(0.9, 0.95, 0.7), "energy": 0.75, "scale": 1.8},
 			],
-			"actor": {},
+			"actor": {
+				"id": "farmer",
+				"title": "苇岸渔人",
+				"desc": "在芦苇口与小船窖之间整理网具。",
+				"via_clusters": ["reed", "skiff"],
+				"via_stands": {"reed": [0, 2], "skiff": [0, 2]},
+			},
 		},
 		# ── C28 巨树洞：北树洞厅（根桌聚会）· 西攀梯 · 东南根系窖 · 中轴南门通廊 ──
 		# ≠ C27 猎人隐所：无卧铺/猎具；暖木调 + 挑高厅，读作树心空洞而非营地。
