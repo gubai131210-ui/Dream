@@ -225,17 +225,8 @@ Wave D proximity cue (no dialogue trees / no TopBar-only hint):
 
 **Craft note:** `_spawn_actor` default stand = `anchor+(0,2)`; profiles may override with `via_stands`. Feet formula unified; `door_frame` required.
 
-## Post-layout checklist (agent estimate — confirm in Godot)
+## Post-layout checklist (profile estimate — **Godot Visual QA pending**)
 
-| Profile | Ensemble | Interact-ready | Corridor |
-| --- | --- | --- | --- |
-| `c01_home` | PASS | PASS | PASS |
-| `c02_elder` | PASS | PASS | PASS |
-| `c02_farmer` | PASS | PASS | PASS |
-| `c02_merchant` | PASS | PASS | PASS |
-| `c02_blacksmith_home` | PASS | PASS | PASS |
-| `c03_barn` | PASS | PASS | PASS |
-| `c03_coop` | SOFT→PASS | PASS | PASS |
-| `c04_grocery` | PASS | PASS | PASS |
-| `c04_smith` | PASS | PASS | PASS |
-| `c04_tavern` | PASS | PASS | PASS |
+| Profile | Ensemble | Interact-ready | Corridor | Note |
+| --- | --- | --- | --- | --- |
+| all Wave A | pending shot | pending shot | pending shot | Metrics script PASS; user confirms Ensemble/Interact in-engine |
