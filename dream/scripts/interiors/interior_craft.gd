@@ -11,6 +11,10 @@ const WALL_THICK := 2
 const TILE_DIR := "res://assets/sprites/interior/tiles"
 const FX_DIR := "res://assets/sprites/interior/fx"
 const PROP_SCALE := 0.9
+## Feet origin for Y-sort: hotspot sits at tile ground contact; sprite offset lifts so
+## the sprite bottom rests near ground (same contract for furniture + fence segments).
+## Formula: offset_y = -tex_height * scale * 0.5 + PROP_FOOT_NUDGE
+const PROP_FOOT_NUDGE := 4.0
 
 @export var profile_id: String = "c01_home"
 
@@ -125,16 +129,25 @@ func _paint_door_and_window(parent: Node2D) -> void:
 		_spawn_tile(parent, "%s/doorstep_00.png" % TILE_DIR, tx, _room_h - 1, 1)
 	_spawn_tile(parent, "%s/pillar_00.png" % TILE_DIR, _door_tx0 - 1, _room_h - 1, 2)
 	_spawn_tile(parent, "%s/pillar_00.png" % TILE_DIR, _door_tx1 + 1, _room_h - 1, 2)
+	# door_frame is required exit kit (not optional garnish) — always spawn both sides.
 	var door_frame := "%s/door_frame_00.png" % TILE_DIR
-	if ResourceLoader.exists(door_frame):
-		for tx in [_door_tx0 - 1, _door_tx1 + 1]:
-			var spr := Sprite2D.new()
-			spr.texture = load(door_frame) as Texture2D
-			spr.centered = true
-			spr.position = _tile_center(tx, _room_h - 2)
-			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			spr.z_index = 2
-			parent.add_child(spr)
+	if not ResourceLoader.exists(door_frame):
+		push_warning(
+			"InteriorCraft: REQUIRED door kit missing: %s — exit must have door_frame on both door tiles"
+			% door_frame
+		)
+	for tx in [_door_tx0 - 1, _door_tx1 + 1]:
+		var frame_tex := load(door_frame) as Texture2D
+		if frame_tex == null:
+			push_warning("InteriorCraft: door_frame load failed for tile tx=%d path=%s" % [tx, door_frame])
+			continue
+		var spr := Sprite2D.new()
+		spr.texture = frame_tex
+		spr.centered = true
+		spr.position = _tile_center(tx, _room_h - 2)
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		spr.z_index = 2
+		parent.add_child(spr)
 	if bool(_profile.get("window", true)):
 		var win_path := "%s/window_00.png" % TILE_DIR
 		if ResourceLoader.exists(win_path):
@@ -230,10 +243,10 @@ func _spawn_prop(parent: Node2D, path: String, pos: Vector2, scale_f: float, tit
 	hs.get_node("Visual").add_child(shadow)
 	var spr := Sprite2D.new()
 	spr.texture = tex
-	spr.position = Vector2(0, -float(tex.get_height()) * scale_f * 0.35)
+	spr.centered = true
+	spr.position = _feet_sprite_offset(float(tex.get_height()), scale_f)
 	spr.scale = Vector2(scale_f, scale_f)
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	spr.z_index = 2
 	hs.get_node("Visual").add_child(spr)
 
 
@@ -346,11 +359,9 @@ func _spawn_fence_segment(parent: Node2D, path: String, tx: int, ty: int, scale_
 	var spr := Sprite2D.new()
 	spr.texture = tex
 	spr.centered = true
-	# Sit on tile foot: center lifted by half scaled height so bottom ≈ ground.
-	spr.position = Vector2(0, -float(tex.get_height()) * scale_f * 0.5 + 4.0)
+	spr.position = _feet_sprite_offset(float(tex.get_height()), scale_f)
 	spr.scale = Vector2(scale_f, scale_f)
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	spr.z_index = 3
 	hs.get_node("Visual").add_child(spr)
 
 
@@ -399,6 +410,9 @@ func _spawn_anim_fx(parent: Node2D, prefix: String, pos: Vector2, fps: float) ->
 
 
 func _spawn_local_lights(parent: Node2D) -> void:
+	## Diegetic lights only: every PointLight here is anchored to profile lights[]
+	## (hearth / lamp / forge tiles). FX fire/forge may add matching source lights;
+	## do not flood unbound room-wide lights.
 	var mod := CanvasModulate.new()
 	mod.name = "InteriorModulate"
 	mod.color = _profile.get("modulate", Color(0.82, 0.78, 0.72, 1.0))
@@ -413,6 +427,11 @@ func _spawn_local_lights(parent: Node2D) -> void:
 			float(L.get("energy", 1.0)),
 			float(L.get("scale", 2.0)),
 		)
+
+
+func _feet_sprite_offset(tex_height: float, scale_f: float) -> Vector2:
+	## Shared feet contract: centered sprite, bottom ≈ ground at hotspot.
+	return Vector2(0.0, -tex_height * scale_f * 0.5 + PROP_FOOT_NUDGE)
 
 
 func _add_point_light(parent: Node2D, pos: Vector2, color: Color, energy: float, tex_scale: float) -> void:
@@ -467,11 +486,20 @@ func _spawn_actor(parent: Node2D) -> void:
 	var route: Array[Vector2] = []
 	# Prefer named cluster anchors so NPCs visit work stations (smart-object style).
 	var via: Array = a.get("via_clusters", [])
+	var stands: Dictionary = a.get("via_stands", {})
 	if not via.is_empty():
 		for cid in via:
 			var anch := _cluster_anchor(str(cid))
-			if anch.x >= 0:
-				route.append(_tile_center(anch.x, anch.y + 1))
+			if anch.x < 0:
+				continue
+			var stand_dx := 0
+			var stand_dy := 2  # default: south of anchor (approach tile, not on prop at 0,0)
+			if stands.has(cid):
+				var s: Array = stands[cid]
+				if s.size() >= 2:
+					stand_dx = int(s[0])
+					stand_dy = int(s[1])
+			route.append(_tile_center(anch.x + stand_dx, anch.y + stand_dy))
 	if route.size() < 2:
 		for pt in a.get("route", []):
 			route.append(_tile_center(int(pt[0]), int(pt[1])))
@@ -519,11 +547,16 @@ func _apply_topbar_hint(root: Node2D) -> void:
 
 
 func _make_hotspot(parent: Node2D, title: String, desc: String, pos: Vector2, size: Vector2) -> InteractableHotspot:
+	## Collision doubles as mouse pick + CharacterBody2D/"player" proximity (Wave D prompt).
 	var hs := InteractableHotspot.new()
 	hs.name = title.replace(" ", "")
 	hs.title = title
 	hs.description = desc
 	hs.position = pos
+	hs.monitoring = true
+	hs.monitorable = true
+	hs.collision_layer = 1
+	hs.collision_mask = 1
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
 	rect.size = size

@@ -2,6 +2,7 @@ class_name InteriorRoomController
 extends Node2D
 
 ## Generic interior controller. Set `profile_id` (or meta) to pick InteriorProfiles entry.
+## Wave D: each frame picks the nearest player-near InteractableHotspot and shows a world "互动" cue.
 
 @export var profile_id: String = "c01_home"
 
@@ -10,6 +11,9 @@ extends Node2D
 @onready var world: Node2D = $InteriorWorld
 @onready var btn_outside: Button = $UI/TopBar/BackOutside
 @onready var btn_hub: Button = $UI/TopBar/BackHub
+
+var _hotspots: Array[InteractableHotspot] = []
+var _prompt_active: InteractableHotspot = null
 
 
 func _ready() -> void:
@@ -22,6 +26,7 @@ func _ready() -> void:
 	var ret_path := str(prof.get("return_path", SceneRouter.RESIDENTIAL_PATH))
 	btn_outside.pressed.connect(func(): SceneRouter.change_to(get_tree(), ret_path))
 	btn_hub.pressed.connect(func(): SceneRouter.change_to(get_tree(), SceneRouter.HUB_PATH))
+	_hotspots.clear()
 	_wire_hotspots(world)
 	_wire_portals(world)
 	var rr: Rect2 = assembler.room_rect() if assembler else Rect2(0, 0, 1280, 960)
@@ -32,9 +37,15 @@ func _ready() -> void:
 	camera.max_zoom = 2.0
 
 
+func _process(_delta: float) -> void:
+	_update_nearest_proximity_prompt()
+
+
 func _wire_hotspots(node: Node) -> void:
 	if node is InteractableHotspot:
-		(node as InteractableHotspot).activated.connect(_on_hotspot)
+		var hs := node as InteractableHotspot
+		hs.activated.connect(_on_hotspot)
+		_hotspots.append(hs)
 	for child in node.get_children():
 		_wire_hotspots(child)
 
@@ -52,3 +63,62 @@ func _wire_portals(node: Node) -> void:
 
 func _on_hotspot(hotspot: InteractableHotspot) -> void:
 	info.show_info(hotspot.title, hotspot.description)
+
+
+func _find_player_body() -> Node2D:
+	var grouped := get_tree().get_nodes_in_group("player")
+	for n in grouped:
+		if n is Node2D and is_instance_valid(n):
+			return n as Node2D
+	if world == null:
+		return null
+	return _find_character_body(world)
+
+
+func _find_character_body(node: Node) -> CharacterBody2D:
+	if node is CharacterBody2D:
+		return node as CharacterBody2D
+	for child in node.get_children():
+		var found := _find_character_body(child)
+		if found:
+			return found
+	return null
+
+
+func _update_nearest_proximity_prompt() -> void:
+	var player := _find_player_body()
+	var has_player_body := player != null
+	var anchor: Vector2
+	if has_player_body:
+		anchor = player.global_position
+	elif camera:
+		anchor = camera.global_position
+	else:
+		anchor = global_position
+
+	var best: InteractableHotspot = null
+	var best_dist := INF
+
+	for hs in _hotspots:
+		if not is_instance_valid(hs):
+			continue
+		var candidate := false
+		if has_player_body:
+			candidate = hs.has_player_overlap()
+		else:
+			# No walkable player yet: camera pan acts as temporary proximity probe.
+			candidate = hs.is_point_in_reach(anchor)
+		if not candidate:
+			continue
+		var d := hs.global_position.distance_squared_to(anchor)
+		if d < best_dist:
+			best_dist = d
+			best = hs
+
+	if _prompt_active == best:
+		return
+	if _prompt_active and is_instance_valid(_prompt_active):
+		_prompt_active.set_proximity_prompt_shown(false)
+	_prompt_active = best
+	if _prompt_active:
+		_prompt_active.set_proximity_prompt_shown(true)
