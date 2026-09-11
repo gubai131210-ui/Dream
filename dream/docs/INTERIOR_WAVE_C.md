@@ -2,7 +2,7 @@
 
 **Status:** SHIPPED 2026-09-11  
 **Locks:** [`INTERIOR_TERRITORY.md`](./INTERIOR_TERRITORY.md), [`INTERIOR_COMPOSITION.md`](./INTERIOR_COMPOSITION.md), [`.cursor/skills/interior-territory-craft/SKILL.md`](../.cursor/skills/interior-territory-craft/SKILL.md)  
-**Post-change QA:** [`.cursor/skills/interior-visual-qa/SKILL.md`](../.cursor/skills/interior-visual-qa/SKILL.md) — Place/Art/Assembly/Meta 全闸（区界·构成·Y-sort·通廊·工艺·成套·接线）  
+**Post-change QA:** [`.cursor/skills/interior-visual-qa/SKILL.md`](../.cursor/skills/interior-visual-qa/SKILL.md) — Place/Art/Assembly/Meta（含 **整体感 Ensemble**、**交互/人物承接 Interact-ready**）  
 
 ## Goal
 
