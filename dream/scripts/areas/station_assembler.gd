@@ -359,7 +359,7 @@ func _spawn_trees(ysort: Node2D) -> void:
 		# Keep platform / track band clear of trees.
 		if t0.y >= PLATFORM_TY0 - 1 and t0.y <= TRACK_TY1 + 1 and t0.x >= TRACK_TX0 and t0.x <= TRACK_TX1:
 			continue
-		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
+		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % (i % 6)
 		var spr := craft.spawn_tree(ysort, path, ideal, zone, 1, 1, 6, false, 0, false)
 		if spr == null:
 			continue
@@ -426,3 +426,11 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(ysort, "→广场", SceneRouter.SQUARE_PATH, Vector2(80, 480), Vector2(96, 56))
 	craft.make_portal(ysort, "→商业街", SceneRouter.MARKET_PATH, Vector2(1200, 480), Vector2(96, 56))
 	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))
+	# Wave B C11: station house south door → interior waiting hall.
+	craft.make_portal(
+		ysort,
+		"进入车站",
+		SceneRouter.C11_STATION_INT_PATH,
+		Vector2(640, 320),
+		Vector2(120, 56)
+	)

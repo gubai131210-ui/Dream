@@ -66,6 +66,8 @@ const P_STALL_CORNER_SE := DIR_INTERIOR_PROP + "/stall_corner_se_00.png"
 const RES := "res://scenes/areas/village_residential/village_residential.tscn"
 const FARM := "res://scenes/areas/farm_residential/farm_residential.tscn"
 const MKT := "res://scenes/areas/market_street/market_street.tscn"
+const SQ := "res://scenes/areas/village_square/village_square.tscn"
+const STN := "res://scenes/areas/station/station.tscn"
 
 
 static func get_profile(profile_id: String) -> Dictionary:
@@ -937,6 +939,199 @@ static func _all() -> Dictionary:
 			"lights": [
 				{"tx": 4, "ty": 3, "oy": -8, "color": Color(0.85, 1.0, 0.65), "energy": 0.6, "scale": 1.5},
 				{"tx": 13, "ty": 3, "oy": -8, "color": Color(0.9, 1.0, 0.7), "energy": 0.65, "scale": 1.6},
+			],
+			"actor": {},
+		},
+		# ── Wave B stubs (teams enrich ONLY their key; do not polish C01–C04) ──
+		"c06_town_hall": {
+			"title": "村公所",
+			"hint": "村公所 · 大厅 / 镇长室（占位）",
+			"return_path": SQ,
+			"room_w": 26,
+			"room_h": 18,
+			"door_tx0": 11,
+			"door_tx1": 14,
+			"floor": "plank",
+			"modulate": Color(0.88, 0.86, 0.80, 1.0),
+			"rug": {"ox": 11, "oy": 12},
+			"window": true,
+			"clusters": [
+				_cluster("hall", 8, 8, [
+					_m(P_NOTICE, 0, 0, "公告板", "村务公告。", 0.85),
+					_m(P_TABLE_DINING, 2, 2, "会议桌", "议事长桌占位。", 0.9),
+					_m(P_STOOL, 0, 3, "旁听凳", "旁听席。", 0.55),
+				]),
+				_cluster("office", 18, 7, [
+					_m(P_LEDGER, 0, 0, "案牍", "镇长文书。", 0.75),
+					_m(P_COUNTER, 0, 2, "办公柜", "档案柜占位。", 0.95),
+					_m(P_LAMP_INDOOR, 1, -1, "公所灯", "办公台灯。", PROP),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 13, "ty": 6, "oy": -10, "color": Color(1.0, 0.95, 0.8), "energy": 1.0, "scale": 2.2},
+			],
+			"actor": {},
+		},
+		"c07_school": {
+			"title": "学校",
+			"hint": "学校 · 教室（占位）",
+			"return_path": SQ,
+			"room_w": 24,
+			"room_h": 16,
+			"door_tx0": 10,
+			"door_tx1": 13,
+			"floor": "plank",
+			"modulate": Color(0.90, 0.89, 0.84, 1.0),
+			"rug": null,
+			"window": true,
+			"clusters": [
+				_cluster("blackboard", 12, 4, [
+					_m(P_NOTICE, 0, 0, "黑板", "教室黑板占位。", 0.9),
+					_m(P_LAMP_INDOOR, 2, 0, "教室灯", "北壁灯。", PROP),
+				]),
+				_cluster("desks", 10, 9, [
+					_m(P_TABLE_DINING, 0, 0, "课桌", "前排课桌。", 0.85),
+					_m(P_STOOL, -2, 1, "凳", "课凳。", 0.5),
+					_m(P_STOOL, 2, 1, "凳", "课凳。", 0.5),
+					_m(P_TABLE_DINING, 0, 3, "课桌", "后排课桌。", 0.85),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 12, "ty": 5, "oy": -8, "color": Color(1.0, 0.98, 0.9), "energy": 0.95, "scale": 2.0},
+			],
+			"actor": {},
+		},
+		"c08_clinic": {
+			"title": "医馆",
+			"hint": "医馆 · 前台 / 诊室（占位）",
+			"return_path": SQ,
+			"room_w": 22,
+			"room_h": 15,
+			"door_tx0": 9,
+			"door_tx1": 12,
+			"floor": "plank",
+			"modulate": Color(0.86, 0.90, 0.88, 1.0),
+			"rug": {"ox": 9, "oy": 10},
+			"window": true,
+			"clusters": [
+				_cluster("front", 8, 7, [
+					_m(P_COUNTER, 0, 1, "前台", "挂号柜台。", 1.0),
+					_m(P_STOOL, 0, 3, "候诊凳", "候诊座位。", 0.55),
+					_m(P_LAMP_SHOP, 1, -1, "医馆灯", "前台灯。", PROP),
+				]),
+				_cluster("exam", 16, 6, [
+					_m(P_BED_S, 0, 0, "诊床", "检查床。", 0.85),
+					_m(P_MEDICINE, 2, 1, "药柜", "草药柜。", 0.75),
+					_m(P_HERBS, 2, -1, "药草", "晾挂药草。", 0.6),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 11, "ty": 5, "oy": -8, "color": Color(0.95, 1.0, 0.95), "energy": 0.9, "scale": 1.9},
+			],
+			"actor": {},
+		},
+		"c09_library": {
+			"title": "图书馆",
+			"hint": "图书馆 · 大厅 / 书架（占位）",
+			"return_path": SQ,
+			"room_w": 28,
+			"room_h": 17,
+			"door_tx0": 12,
+			"door_tx1": 15,
+			"floor": "plank",
+			"modulate": Color(0.84, 0.82, 0.78, 1.0),
+			"rug": {"ox": 12, "oy": 11},
+			"window": true,
+			"clusters": [
+				_cluster("stacks_w", 6, 7, [
+					_m(P_SHELF, 0, 0, "西书架", "文学架。", 0.95),
+					_m(P_SHELF, 0, 2, "西书架", "史地架。", 0.9),
+					_m(P_SACK0, 2, 1, "书捆", "待上架书捆。", 0.55),
+				]),
+				_cluster("stacks_e", 21, 7, [
+					_m(P_SHELF, 0, 0, "东书架", "自然架。", 0.95),
+					_m(P_SHELF, 0, 2, "东书架", "档案架。", 0.9),
+					_m(P_LEDGER, -2, 1, "索引册", "馆藏索引。", 0.7),
+				]),
+				_cluster("desk", 14, 8, [
+					_m(P_COUNTER, 0, 0, "借阅台", "中岛借阅台。", 1.0),
+					_m(P_LAMP_INDOOR, 1, -2, "阅览灯", "台灯。", PROP),
+					_m(P_STOOL_TEA, 0, 2, "阅览凳", "短坐阅览。", 0.55),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 14, "ty": 5, "oy": -10, "color": Color(1.0, 0.94, 0.82), "energy": 1.05, "scale": 2.3},
+			],
+			"actor": {},
+		},
+		"c10_church": {
+			"title": "教堂",
+			"hint": "教堂 · 主礼堂（占位）",
+			"return_path": SQ,
+			"room_w": 24,
+			"room_h": 20,
+			"door_tx0": 10,
+			"door_tx1": 13,
+			"floor": "stone",
+			"modulate": Color(0.82, 0.84, 0.88, 1.0),
+			"rug": {"ox": 10, "oy": 14},
+			"window": true,
+			"clusters": [
+				_cluster("altar", 12, 5, [
+					_m(P_TABLE_DINING, 0, 0, "祭坛", "北向祭坛桌。", 0.95),
+					_m(P_NOTICE, 0, -2, "彩窗", "北壁彩窗占位。", 0.8),
+					_m(P_LAMP_INDOOR, 2, 0, "圣灯", "祭坛侧灯。", PROP),
+				]),
+				_cluster("pews", 10, 11, [
+					_m(P_TABLE_DINING, 0, 0, "长椅", "西排座席占位。", 0.8),
+					_m(P_TABLE_DINING, 4, 0, "长椅", "东排座席占位。", 0.8),
+					_m(P_STOOL, 2, 2, "跪凳", "中廊跪凳。", 0.5),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 12, "ty": 6, "oy": -12, "color": Color(0.95, 0.95, 1.0), "energy": 1.1, "scale": 2.4},
+			],
+			"actor": {},
+		},
+		"c11_station": {
+			"title": "车站内部",
+			"hint": "车站 · 候车厅 / 站长室（占位）",
+			"return_path": STN,
+			"room_w": 30,
+			"room_h": 16,
+			"door_tx0": 13,
+			"door_tx1": 16,
+			"floor": "plank",
+			"modulate": Color(0.86, 0.84, 0.80, 1.0),
+			"rug": null,
+			"window": true,
+			"clusters": [
+				_cluster("waiting", 10, 8, [
+					_m(P_TABLE_DINING, 0, 0, "候车长椅", "西候车座。", 0.85),
+					_m(P_TABLE_DINING, 4, 0, "候车长椅", "东候车座。", 0.85),
+					_m(P_NOTICE, 2, -2, "时刻表", "班次告示。", 0.8),
+					_m(P_LAMP_SHOP, 2, -3, "站厅灯", "候车厅灯。", PROP),
+				]),
+				_cluster("master", 22, 7, [
+					_m(P_COUNTER, 0, 1, "售票窗", "站长/售票柜台。", 1.0),
+					_m(P_LEDGER, 0, -1, "行车簿", "站长日志。", 0.7),
+					_m(P_CRATE0, 2, 2, "货运箱", "小件货运。", 0.75),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 15, "ty": 5, "oy": -8, "color": Color(1.0, 0.96, 0.85), "energy": 1.0, "scale": 2.2},
 			],
 			"actor": {},
 		},

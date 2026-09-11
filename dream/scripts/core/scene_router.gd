@@ -38,6 +38,13 @@ const C17_MINE_PATH := "res://scenes/interiors/c17_mine/c17_mine.tscn"
 const C26_WATERFALL_CAVE_PATH := "res://scenes/interiors/c26_waterfall_cave/c26_waterfall_cave.tscn"
 const C27_FOREST_HIDE_A_PATH := "res://scenes/interiors/c27_forest_hide_a/c27_forest_hide_a.tscn"
 const C27_FOREST_HIDE_B_PATH := "res://scenes/interiors/c27_forest_hide_b/c27_forest_hide_b.tscn"
+## Phase 5 Wave B civic interiors (C06–C11)
+const C06_TOWN_HALL_PATH := "res://scenes/interiors/c06_town_hall/c06_town_hall.tscn"
+const C07_SCHOOL_PATH := "res://scenes/interiors/c07_school/c07_school.tscn"
+const C08_CLINIC_PATH := "res://scenes/interiors/c08_clinic/c08_clinic.tscn"
+const C09_LIBRARY_PATH := "res://scenes/interiors/c09_library/c09_library.tscn"
+const C10_CHURCH_PATH := "res://scenes/interiors/c10_church/c10_church.tscn"
+const C11_STATION_INT_PATH := "res://scenes/interiors/c11_station/c11_station.tscn"
 
 
 func go_hub() -> void:

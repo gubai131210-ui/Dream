@@ -14,7 +14,8 @@ Phase 5 打开世界 **第二/三层**：可进入室内、地下入口、钓鱼
 | Home C01+C02 | DONE | 主角宅 + 老人/农家/商贾/铁匠宅；住宅区南排门户 |
 | FarmBuild C03 | DONE | 谷仓 + 鸡舍；农场住宅区门户 |
 | Shop C04 | DONE | 杂货/铁匠铺/酒馆；商业街门户 |
-| Stall-C05 … Env-H | **Wave A2 IN PROGRESS** | 并行开余下包；**延期** C01–C04 室内抛光。见 [`PHASE5_WAVE_A2.md`](PHASE5_WAVE_A2.md) |
+| Stall-C05 … Env-H | **Wave A2 DONE (code)** | 见 [`PHASE5_WAVE_A2.md`](PHASE5_WAVE_A2.md)；用户 Godot QA 进行中 |
+| Civic C06–C11 | **Wave B IN PROGRESS** | 公服室内并行；见 [`PHASE5_WAVE_B.md`](PHASE5_WAVE_B.md)。**延期** C01–C04 抛光 |
 
 - Foundation: 32px floor / wall / door / window / rug — see [`INTERIOR_FOUNDATION.md`](INTERIOR_FOUNDATION.md).
 - Furniture: outdoor wood props @ scale **0.55**; warm light = local `PointLight2D` (not full-room orange).

@@ -26,6 +26,13 @@ ROOMS = [
     ("c26_waterfall_cave", "c26_waterfall_cave", "C26WaterfallCaveInterior"),
     ("c27_forest_hide_a", "c27_forest_hide_a", "C27ForestHideAInterior"),
     ("c27_forest_hide_b", "c27_forest_hide_b", "C27ForestHideBInterior"),
+    # Wave B civic
+    ("c06_town_hall", "c06_town_hall", "C06TownHallInterior"),
+    ("c07_school", "c07_school", "C07SchoolInterior"),
+    ("c08_clinic", "c08_clinic", "C08ClinicInterior"),
+    ("c09_library", "c09_library", "C09LibraryInterior"),
+    ("c10_church", "c10_church", "C10ChurchInterior"),
+    ("c11_station", "c11_station", "C11StationInterior"),
 ]
 
 TEMPLATE = """[gd_scene load_steps=6 format=3]
@@ -81,10 +88,16 @@ text = "世界总览"
 
 
 def main() -> None:
+    import sys
+
+    only_new = "--only-new" in sys.argv
     for folder, profile, node in ROOMS:
         d = SCENES / folder
         d.mkdir(parents=True, exist_ok=True)
         path = d / f"{folder}.tscn"
+        if only_new and path.exists():
+            print("skip existing", path.relative_to(ROOT))
+            continue
         path.write_text(TEMPLATE.format(node=node, profile=profile), encoding="utf-8")
         print("wrote", path.relative_to(ROOT))
 

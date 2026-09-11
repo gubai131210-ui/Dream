@@ -512,6 +512,7 @@ func _spawn_buildings(ysort: Node2D) -> void:
 			craft.path_mask[y][x] = _is_path_tile(x, y)
 			craft.dirt_mask[y][x] = _is_dirt_tile(x, y)
 	var zone := craft.map_play_rect(1.5)
+	# Wave B: civic titles on north row (school/clinic/library remapped from old cottages).
 	var specs := [
 		{
 			"path": "res://assets/sprites/buildings/building_00.png",
@@ -519,6 +520,8 @@ func _spawn_buildings(ysort: Node2D) -> void:
 			"hw": 2, "hh": 1,
 			"title": "村公所",
 			"desc": "广场北侧主建筑：整栋在场景内，门脸朝南。",
+			"enter_title": "进入村公所",
+			"enter_scene": SceneRouter.C06_TOWN_HALL_PATH,
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
@@ -526,27 +529,35 @@ func _spawn_buildings(ysort: Node2D) -> void:
 			"hw": 2, "hh": 1,
 			"title": "教堂",
 			"desc": "广场东北公共建筑，整栋在区内。",
+			"enter_title": "进入教堂",
+			"enter_scene": SceneRouter.C10_CHURCH_PATH,
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
 			"pos": Vector2(320, 280),
 			"hw": 2, "hh": 1,
-			"title": "西侧住宅",
-			"desc": "河东岸西北民居；整栋在陆地上。",
+			"title": "学校",
+			"desc": "广场西北学校：门脸朝南，可进入教室。",
+			"enter_title": "进入学校",
+			"enter_scene": SceneRouter.C07_SCHOOL_PATH,
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_03.png",
 			"pos": Vector2(1080, 300),
 			"hw": 2, "hh": 1,
-			"title": "东侧住宅",
-			"desc": "东北民居，门脸朝南。",
+			"title": "图书馆",
+			"desc": "广场东侧图书馆，门脸朝南。",
+			"enter_title": "进入图书馆",
+			"enter_scene": SceneRouter.C09_LIBRARY_PATH,
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_04.png",
 			"pos": Vector2(440, 280),
 			"hw": 2, "hh": 1,
-			"title": "北侧小屋",
-			"desc": "村公所旁附属小屋。",
+			"title": "医馆",
+			"desc": "村公所西侧医馆，门脸朝南。",
+			"enter_title": "进入医馆",
+			"enter_scene": SceneRouter.C08_CLINIC_PATH,
 		},
 	]
 	for s in specs:
@@ -573,6 +584,15 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		var hs := _make_hotspot(ysort, s["title"], s["desc"], pos + Vector2(0, 24), Vector2(120, 80))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
+		# Wave B: enterable civic interiors (scene_path portals — not InfoPanel-only).
+		if s.has("enter_scene"):
+			craft.make_portal(
+				ysort,
+				str(s["enter_title"]),
+				str(s["enter_scene"]),
+				pos + Vector2(0, 28),
+				Vector2(100, 52)
+			)
 
 
 func _spawn_props(ysort: Node2D) -> void:
@@ -595,7 +615,6 @@ func _spawn_props(ysort: Node2D) -> void:
 		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(560, 540), "title": "长椅", "desc": "面向水井的长椅。", "on_path_ok": true, "hw": 1, "hh": 1},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(720, 540), "title": "路灯", "desc": "广场路灯。", "on_path_ok": true, "hw": 1, "hh": 1},
 		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(360, 300), "title": "麻袋", "desc": "屋前草地麻袋。", "on_path_ok": false, "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/rock_00.png", "pos": Vector2(200, 520), "title": "河石", "desc": "西岸路边石。", "on_path_ok": false, "hw": 1, "hh": 1},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):
@@ -668,7 +687,7 @@ func _spawn_trees(ysort: Node2D) -> void:
 		Vector2(200, 300),
 	]
 	for i in ideals.size():
-		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
+		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % (i % 6)
 		var spr := craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 8, false)
 		if spr == null:
 			continue
