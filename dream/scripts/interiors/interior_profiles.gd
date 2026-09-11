@@ -55,6 +55,13 @@ const P_SACK0 := DIR_OUTDOOR_PROP + "/sack_0.png"
 const P_SACK1 := DIR_OUTDOOR_PROP + "/sack_1.png"
 const P_LAMP_INDOOR := DIR_INTERIOR_PROP + "/lamp_indoor_00.png"
 const P_LAMP_FARM := DIR_INTERIOR_PROP + "/lamp_farm_00.png"
+const P_LAMP_SHOP := DIR_INTERIOR_PROP + "/lamp_shop_00.png"
+const P_LAMP_SMITH := DIR_INTERIOR_PROP + "/lamp_smith_00.png"
+const P_LAMP_TAVERN := DIR_INTERIOR_PROP + "/lamp_tavern_00.png"
+const P_STALL_CORNER_NW := DIR_INTERIOR_PROP + "/stall_corner_nw_00.png"
+const P_STALL_CORNER_NE := DIR_INTERIOR_PROP + "/stall_corner_ne_00.png"
+const P_STALL_CORNER_SW := DIR_INTERIOR_PROP + "/stall_corner_sw_00.png"
+const P_STALL_CORNER_SE := DIR_INTERIOR_PROP + "/stall_corner_se_00.png"
 
 const RES := "res://scenes/areas/village_residential/village_residential.tscn"
 const FARM := "res://scenes/areas/farm_residential/farm_residential.tscn"
@@ -96,8 +103,10 @@ static func _all() -> Dictionary:
 				_cluster("kitchen", 5, 7, [
 					_m(P_STOVE, 0, 0, "灶台", "西厨灶台（工作三角锚）。", 0.95),
 					_m(P_SHELF, -2, 0, "厨架", "调料碗碟贴灶。", 0.9),
+					_m(P_SHELF, -2, 2, "储物架", "灶下储物（体量）。", 0.85),
 					_m(P_HERBS, 2, -2, "干草药", "灶旁北墙晾挂。", 0.8),
 					_m(P_BARREL, 1, 2, "水桶", "灶前取水（三角第三点）。", PROP),
+					_m(P_SACK0, 3, 2, "米袋", "厨角存粮小袋。", 0.75),
 				]),
 				_cluster("hearth_talk", 16, 6, [
 					_m(P_FIREPLACE, 0, -1, "壁炉", "北墙起居壁炉。", 1.0),
@@ -328,15 +337,40 @@ static func _all() -> Dictionary:
 					_m(P_LAMP_FARM, 0, -1, "仓灯", "过道铁壳油灯（农场灯，非家用台灯）。", PROP),
 				]),
 			],
-			# Seamless same-family fence: H = front, V = side; step 1 = no gaps.
-			"rails": [
-				{"axis": "v", "tx": 11, "a0": 5, "a1": 16, "step": 1, "prop": P_STALL_RAIL_V, "scale": 1.0, "title": "西畜栏隔栏", "desc": "西 stall 朝过道隔栏（侧视）。"},
-				{"axis": "v", "tx": 24, "a0": 5, "a1": 16, "step": 1, "prop": P_STALL_RAIL_V, "scale": 1.0, "title": "东畜栏隔栏", "desc": "东 stall 朝过道隔栏（侧视）。"},
-				{"axis": "h", "ty": 5, "a0": 4, "a1": 10, "step": 1, "prop": P_STALL_RAIL, "scale": 1.0, "title": "西栏北档", "desc": "西栏北端横档（正视）。"},
-				{"axis": "h", "ty": 5, "a0": 25, "a1": 31, "step": 1, "prop": P_STALL_RAIL, "scale": 1.0, "title": "东栏北档", "desc": "东栏北端横档（正视）。"},
-				{"axis": "h", "ty": 16, "a0": 4, "a1": 10, "step": 1, "prop": P_STALL_RAIL, "scale": 1.0, "title": "西栏南档", "desc": "西栏南端横档（正视）。"},
-				{"axis": "h", "ty": 16, "a0": 25, "a1": 31, "step": 1, "prop": P_STALL_RAIL, "scale": 1.0, "title": "东栏南档", "desc": "东栏南端横档（正视）。"},
+			# Stall pens as enclosures (corners + rails); aisle-facing gaps for trough access.
+			"enclosures": [
+				{
+					"rect": [4, 5, 11, 16],
+					"prop_h": P_STALL_RAIL,
+					"prop_v": P_STALL_RAIL_V,
+					"corners": {
+						"nw": P_STALL_CORNER_NW,
+						"ne": P_STALL_CORNER_NE,
+						"sw": P_STALL_CORNER_SW,
+						"se": P_STALL_CORNER_SE,
+					},
+					"scale": 1.0,
+					"title": "西畜栏",
+					"desc": "西 stall 密板条围合（同套正/侧/角）。",
+					"gaps": [[11, 7], [11, 8], [11, 9], [11, 10]],
+				},
+				{
+					"rect": [24, 5, 31, 16],
+					"prop_h": P_STALL_RAIL,
+					"prop_v": P_STALL_RAIL_V,
+					"corners": {
+						"nw": P_STALL_CORNER_NW,
+						"ne": P_STALL_CORNER_NE,
+						"sw": P_STALL_CORNER_SW,
+						"se": P_STALL_CORNER_SE,
+					},
+					"scale": 1.0,
+					"title": "东畜栏",
+					"desc": "东 stall 密板条围合（同套正/侧/角）。",
+					"gaps": [[24, 7], [24, 8], [24, 9], [24, 10]],
+				},
 			],
+			"rails": [],
 			"fx": [],
 			"ambient": [
 				{"species": "sheep", "cluster": "stall_w", "dx": 1, "dy": 1},
@@ -437,19 +471,24 @@ static func _all() -> Dictionary:
 				_cluster("shelf_w", 4, 7, [
 					_m(P_SHELF_GROCERY, 0, -2, "西货架", "日杂货架。", 1.0),
 					_m(P_SHELF, 0, 1, "西货架", "罐装货架。", 0.95),
+					_m(P_SHELF, 0, 3, "西货架", "下层货架（体量）。", 0.9),
 					_m(P_BARREL, 2, 2, "油桶", "西架脚油桶。", PROP),
+					_m(P_CRATE0, 2, 4, "货箱", "架脚存货箱。", 0.8),
 				]),
 				_cluster("shelf_e", 25, 7, [
 					_m(P_SHELF_GROCERY, 0, -2, "东货架", "干货架。", 1.0),
 					_m(P_SHELF, 0, 1, "东货架", "盐糖架。", 0.95),
-					_m(P_SACK0, -2, 2, "米袋", "东架脚米粮。", PROP),
+					_m(P_GRAIN_STACK, -2, 1, "米垛", "东架脚米粮垛（体量）。", 0.7),
+					_m(P_SACK0, -3, 3, "米袋", "贴垛米袋。", PROP),
+					_m(P_SACK1, -1, 3, "糖袋", "贴垛糖袋。", 0.85),
 				]),
 				_cluster("counter", 14, 9, [
 					_m(P_COUNTER, 0, 0, "柜台", "南向收银台（顾客在南、店主在北）。", 1.05),
 					_m(P_BASKET, -2, 2, "菜筐", "柜前蔬果筐。", 0.85),
 					_m(P_BASKET, 2, 2, "菜筐", "柜前根茎筐。", 0.85),
+					_m(P_BASKET, 0, 3, "果筐", "柜前果筐。", 0.8),
 					_m(P_NOTICE, 2, -2, "告示板", "柜上价目。", 0.85),
-					_m(P_LAMP_INDOOR, 1, -3, "店灯", "柜台顶灯。", PROP),
+					_m(P_LAMP_SHOP, 1, -3, "店灯", "柜台吊罩店灯（非家用台灯）。", PROP),
 				]),
 			],
 			"fx": [],
@@ -487,7 +526,8 @@ static func _all() -> Dictionary:
 					_m(P_BARREL, 2, 1, "淬火桶", "贴砧淬火。", PROP),
 					_m(P_CRATE1, 3, -1, "成品箱", "砧旁待售铁器。", PROP),
 					_m(P_CRATE0, 3, 1, "废料箱", "贴成品废料。", PROP),
-					_m(P_LAMP_INDOOR, 2, -2, "壁灯", "工作区壁灯。", PROP),
+					_m(P_CRATE0, 4, 2, "废料箱", "叠放废铁（体量）。", 0.8),
+					_m(P_LAMP_SMITH, 2, -2, "工坊壁灯", "锻工铁壁灯（非家用台灯）。", PROP),
 				]),
 				_cluster("wait", 16, 13, [
 					_m(P_TABLE_DINING, 0, 0, "候坐", "顾客等候桌（cozy_dining）。", 0.9),
@@ -525,8 +565,9 @@ static func _all() -> Dictionary:
 					_m(P_BAR, 1, 0, "吧台", "西侧长吧台。", 0.75),
 					_m(P_BARREL_KEG, -1, 1, "酒桶", "吧后横放取酒桶。", 0.6),
 					_m(P_BARREL, -1, 3, "存酒", "吧后竖放存酒。", PROP),
+					_m(P_BARREL, -2, 2, "存酒", "吧后叠放酒桶（体量）。", 0.85),
 					_m(P_MUG_SHELF, 0, -3, "杯架", "吧上墙杯架。", 0.6),
-					_m(P_LAMP_INDOOR, 2, -3, "酒馆灯", "吧台暖灯。", PROP),
+					_m(P_LAMP_TAVERN, 2, -3, "酒馆烛灯", "吧台烛灯（非家用台灯）。", PROP),
 					_m(P_STOOL_BAR, 3, 1, "吧凳", "吧前高凳（同家族木色）。", 0.8),
 					_m(P_STOOL_BAR, 3, 3, "吧凳", "吧前高凳（同家族木色）。", 0.8),
 				]),
@@ -535,17 +576,20 @@ static func _all() -> Dictionary:
 					_m(P_STOOL_TEA, -2, 1, "矮凳", "围桌配套凳。", 0.75),
 					_m(P_STOOL_TEA, 2, 1, "矮凳", "围桌配套凳。", 0.75),
 					_m(P_STOOL_TEA, 0, 2, "矮凳", "南侧围桌凳。", 0.75),
+					_m(P_LAMP_TAVERN, -3, -2, "座席烛灯", "雅座烛灯。", 0.75),
 					_m(P_NOTICE, -3, -3, "告示", "座席旁规矩牌。", 0.5),
 				]),
 				_cluster("party_b", 22, 8, [
 					_m(P_TABLE_R, 0, 0, "圆桌", "邻桌雅座（cozy_tea）。", 0.7),
 					_m(P_STOOL_TEA, -1, 1, "矮凳", "邻桌配套凳。", 0.75),
 					_m(P_STOOL_TEA, 2, 1, "矮凳", "邻桌配套凳。", 0.75),
+					_m(P_CRATE0, 3, 0, "酒箱", "邻桌旁酒箱。", 0.7),
 				]),
 				_cluster("hearth", 28, 6, [
 					_m(P_FIREPLACE, 0, 0, "壁炉", "东墙壁炉。", 0.7),
 					_m(P_STOOL, -2, 2, "凳", "炉前烤火矮凳（同家族）。", 0.8),
 					_m(P_CRATE0, 2, 2, "酒窖箱", "炉旁存货。", PROP),
+					_m(P_CRATE1, 3, 1, "酒窖箱", "叠放酒窖箱（体量）。", 0.8),
 				]),
 			],
 			"fx": [{"kind": "fire", "tx": 28, "ty": 6, "oy": -16}],

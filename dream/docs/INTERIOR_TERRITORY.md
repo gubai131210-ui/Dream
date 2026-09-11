@@ -46,10 +46,12 @@ enclosures: [
 
 | profile | Boundary | Mass |
 | --- | --- | --- |
-| `c03_barn` | 东西 `rails` 划 stall / aisle | 北 `grain_stack` + 栏后 `hay_stack` |
+| `c03_barn` | 左右 stall enclosure + 四角（过道 gaps） | 北 `grain_stack` + 栏后 `hay_stack` |
 | `c03_coop` | 满间笔 + 四角 + 南 gaps | 巢/槽/栖木铺开 |
 | `c02_farmer` | — | 门厅 `grain_stack` |
 | `c02_merchant` | — | `cargo` 货箱叠高偏移 |
+| `c04_grocery` | — | 货架层 + 米垛 |
+| `c04_smith` / `c04_tavern` | — | 废料/酒桶叠 |
 
 ## 资产
 
@@ -68,11 +70,13 @@ enclosures: [
 
 | 场景 | 灯 | 禁止 |
 | --- | --- | --- |
-| 住宅 / 老人宅 / 商贾 | `lamp_indoor_00` 家用台灯/壁灯 | 铁壳仓灯 |
+| 住宅 / 老人宅 / 商贾 / 铁匠宅 | `lamp_indoor_00` 家用台灯/壁灯 | 铁壳仓灯 / 锻工灯 |
 | 鸡舍 / 谷仓 | `lamp_farm_00` 铁壳吊油灯 | 布罩家用台灯 |
-| 铁匠 / 酒馆 | 后续 `lamp_smith` / `lamp_tavern` | 直接塞家用灯 |
+| 杂货店 | `lamp_shop_00` 吊罩店灯 | 家用台灯 |
+| 铁匠铺 | `lamp_smith_00` 锻工铁壁灯 | 家用台灯 |
+| 酒馆 | `lamp_tavern_00` 烛灯 | 家用台灯 |
 
-规则：功能对 ≠ 产品对。需要时 **自画变体**（`tools/install_scene_fit_props.py` / GenerateImage），写入 `INTERIOR_TERRITORY` 与 skill。
+规则：功能对 ≠ 产品对。需要时 **自画变体**（`install_scene_fit_*.py` / GenerateImage）。全房间铺开见 [`INTERIOR_WAVE_C.md`](./INTERIOR_WAVE_C.md)。
 
 ## Fence family lock
 

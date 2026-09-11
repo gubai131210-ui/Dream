@@ -44,9 +44,10 @@ Territory checklist:
 3. Coop needs a **pen enclosure** with south `gaps` + **4 corner sprites**; chickens spawn inside.
 4. Storage needs **height or repetition**.
 5. Doors enter **real scenes**; InfoPanel does not replace territory grammar.
-6. **Scene-fit variants:** same function ≠ same product. Coop/barn use `lamp_farm_00`, never household `lamp_indoor_00`. Draw new variants when missing.
-7. Fence H/V/corners = one board family; overwrite old `*_v` when style changes.
+6. **Scene-fit variants:** same function ≠ same product. Use lamp matrix in `INTERIOR_TERRITORY` / `INTERIOR_WAVE_C` — never hang `lamp_indoor_00` in farm/shop/smith/tavern.
+7. Fence H/V/corners = one board family; barn stalls use **enclosures with corners**, not line-only rails.
 8. Always re-cover fence PNGs when changing style so Godot does not mix old V with new H.
+9. When rolling rules to other rooms, update `INTERIOR_WAVE_C.md` checklist.
 
 ## Schema (craft)
 
@@ -64,8 +65,9 @@ enclosures: [{
 - 禁止无围栏鸡圈 / 小笔四周空地  
 - 禁止正视侧视两套设计 / 旧 V 残留  
 - 禁止无四角拐角硬拼 / 对角斜条糊弄转角  
-- 禁止家用台灯进鸡舍谷仓  
+- 禁止家用台灯进鸡舍谷仓杂货铁匠酒馆  
 - 禁止功能同类就跨场景复用同一 PNG  
+- 禁止谷仓只有直线隔栏、无四角 enclosure  
 - 禁止只写 MD 不改 profile/craft  
 
 ## Related skills
