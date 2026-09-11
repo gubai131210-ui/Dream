@@ -26,6 +26,16 @@ LAMP_MATRIX = {
 	"lamp_tavern_00.png": "tavern",
 }
 
+# Spot-check craft + outdoor bleed (furniture/FX bases; fences use visual multi-view gate)
+CRAFT_SPOT = [
+	"table_dining_00.png",
+	"stool_00.png",
+	"fireplace_00.png",
+	"lamp_indoor_00.png",
+	"lamp_farm_00.png",
+]
+CRAFT_MIN_Q16 = 24  # flat PIL specialty was ~4; painted outdoor-class >> this
+
 FAMILIES = {
 	"pen": [
 		"pen_fence_00.png",
@@ -77,6 +87,12 @@ def stats(path: Path) -> dict:
 	out["palette_mean"] = [round(float(x), 1) for x in pix.mean(axis=0)]
 	out["palette_std"] = [round(float(x), 1) for x in pix.std(axis=0)]
 	out["opaque_px"] = int(opaque.sum())
+	# Quantized unique colors (craft density proxy; flat PIL ≈ few)
+	q = (pix // 16).astype(np.int16)
+	out["unique_q16"] = int(len({(int(r), int(g), int(b)) for r, g, b in q}))
+	# Green dominance hint (outdoor grass bleed)
+	mean = pix.mean(axis=0)
+	out["warn_green_bleed"] = bool(mean[1] > mean[0] + 18 and mean[1] > mean[2] + 12)
 	return out
 
 
@@ -125,8 +141,24 @@ def main() -> None:
 	report = {
 		"lamps": {n: (PROP / n).exists() for n in LAMP_MATRIX},
 		"families": [family_report(k, v) for k, v in FAMILIES.items()],
+		"craft_spot": [],
 		"dining_stool_vs_table": None,
 	}
+	for name in CRAFT_SPOT:
+		p = PROP / name
+		if not p.exists():
+			report["craft_spot"].append({"file": name, "exists": False, "warn_flat": True})
+			continue
+		s = stats(p)
+		uq = s.get("unique_q16", 0)
+		report["craft_spot"].append(
+			{
+				"file": name,
+				"unique_q16": uq,
+				"warn_flat": uq < CRAFT_MIN_Q16,
+				"warn_green_bleed": s.get("warn_green_bleed", False),
+			}
+		)
 	td, st = PROP / "table_dining_00.png", PROP / "stool_00.png"
 	if td.exists() and st.exists():
 		ht = stats(td).get("bbox_wh", [0, 0])[1]
@@ -154,6 +186,13 @@ def main() -> None:
 				fails.append(f"{fam['family']} palette_dist high ({fam['palette_dist_01']})")
 			if fam.get("warn_height_span"):
 				fails.append(f"{fam['family']} height_span large ({fam['height_span']})")
+		for c in report["craft_spot"]:
+			if not c.get("exists", True):
+				fails.append(f"missing craft spot {c['file']}")
+			elif c.get("warn_flat"):
+				fails.append(f"flat craft {c['file']} unique_q16={c.get('unique_q16')}")
+			elif c.get("warn_green_bleed"):
+				fails.append(f"green bleed? {c['file']}")
 		dst = report.get("dining_stool_vs_table") or {}
 		if dst and not dst.get("ok_stool_shorter", True):
 			fails.append("stool taller than dining table bbox")
