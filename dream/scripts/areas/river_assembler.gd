@@ -178,3 +178,7 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(ysort, "→瀑布", SceneRouter.WATERFALL_PATH, Vector2(640, 60), Vector2(96, 56))
 	craft.make_portal(ysort, "→湖泊", SceneRouter.LAKE_PATH, Vector2(1200, 480), Vector2(96, 56))
 	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 900), Vector2(96, 48))
+	# Wave C C25 — west-bank reed fork (append-only).
+	var reed := Vector2(220, 380)
+	craft.make_hotspot(ysort, "芦苇岔口", "西岸芦苇掩映的隐藏岔路。", reed, Vector2(72, 56))
+	craft.make_portal(ysort, "进入芦苇岔", SceneRouter.C25_RIVER_HIDE_PATH, reed + Vector2(0, 12), Vector2(100, 52))

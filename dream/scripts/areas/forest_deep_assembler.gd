@@ -244,3 +244,16 @@ func _spawn_portals(ysort: Node2D) -> void:
 		ysort, "进入蘑菇窝棚", SceneRouter.C27_FOREST_HIDE_B_PATH,
 		craft.tile_center(22, 18), Vector2(100, 56)
 	)
+	# Wave C C28 / C29 — append-only landmarks on dirt pockets.
+	var giant := craft.tile_center(16, 14)
+	craft.make_hotspot(ysort, "巨树", "深林巨木，树干有洞口。", giant, Vector2(88, 72))
+	craft.make_portal(
+		ysort, "进入巨树洞", SceneRouter.C28_GIANT_TREE_PATH,
+		giant + Vector2(0, 16), Vector2(100, 56)
+	)
+	var ruins := craft.tile_center(28, 12)
+	craft.make_hotspot(ysort, "遗迹残垣", "林间石砌遗迹门洞。", ruins, Vector2(88, 64))
+	craft.make_portal(
+		ysort, "进入遗迹", SceneRouter.C29_RUINS_PATH,
+		ruins + Vector2(0, 14), Vector2(100, 56)
+	)

@@ -69,6 +69,11 @@ const FARM := "res://scenes/areas/farm_residential/farm_residential.tscn"
 const MKT := "res://scenes/areas/market_street/market_street.tscn"
 const SQ := "res://scenes/areas/village_square/village_square.tscn"
 const STN := "res://scenes/areas/station/station.tscn"
+const FLD := "res://scenes/areas/farmland/farmland.tscn"
+const LAKE := "res://scenes/areas/lake/lake.tscn"
+const RIV := "res://scenes/areas/river/river.tscn"
+const FDEEP := "res://scenes/areas/forest_deep/forest_deep.tscn"
+const HILL := "res://scenes/areas/hill_farm/hill_farm.tscn"
 
 
 static func get_profile(profile_id: String) -> Dictionary:
@@ -1302,5 +1307,280 @@ static func _all() -> Dictionary:
 					"freight": [-2, 1],
 				},
 			},
+		},
+		# ── Wave C stubs (teams enrich ONLY their keys) ──
+		"c13_mill": {
+			"title": "磨坊",
+			"hint": "磨坊 · 磨盘 / 面粉（占位）",
+			"return_path": FLD,
+			"room_w": 20,
+			"room_h": 14,
+			"door_tx0": 8,
+			"door_tx1": 11,
+			"floor": "plank",
+			"modulate": Color(0.88, 0.84, 0.76, 1.0),
+			"rug": null,
+			"window": true,
+			"clusters": [
+				_cluster("millstone", 10, 6, [
+					_m(P_TABLE_DINING, 0, 0, "磨盘", "中央磨盘占位。", 1.0),
+					_m(P_TOOL_RACK, -3, 0, "齿轮架", "传动齿轮架占位。", 0.7),
+					_m(P_LAMP_FARM, 2, -2, "磨坊灯", "工作灯。", PROP),
+				]),
+				_cluster("flour", 15, 8, [
+					_m(P_GRAIN_STACK, 0, 0, "面粉垛", "袋装面粉体量。", 0.75),
+					_m(P_SACK0, 2, 1, "面袋", "待运面袋。", 0.6),
+					_m(P_SACK1, -1, 2, "麸皮袋", "麸皮袋。", 0.55),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 10, "ty": 4, "oy": -8, "color": Color(1.0, 0.95, 0.8), "energy": 0.95, "scale": 2.0},
+			],
+			"actor": {},
+		},
+		"c16_cave_entry": {
+			"title": "洞穴入口层",
+			"hint": "洞穴 · 入口层（占位）",
+			"return_path": HILL,
+			"room_w": 24,
+			"room_h": 16,
+			"door_tx0": 10,
+			"door_tx1": 13,
+			"floor": "stone",
+			"modulate": Color(0.55, 0.52, 0.50, 1.0),
+			"rug": null,
+			"window": false,
+			"clusters": [
+				_cluster("mouth", 8, 8, [
+					_m(P_CRATE0, 0, 0, "探险箱", "入口补给。", 0.75),
+					_m(P_LAMP_FARM, 2, -1, "洞口灯", "入口照明。", PROP),
+				]),
+				_cluster("descent", 16, 7, [
+					_m(P_NOTICE, 0, 0, "下探标记", "通向中层。", 0.7),
+					_m(P_CRATE1, 2, 2, "绳索箱", "下探绳索。", 0.7),
+				]),
+			],
+			"extra_portals": [
+				{"tx": 16, "ty": 9, "label": "↓中层", "path": "res://scenes/interiors/c16_cave_mid/c16_cave_mid.tscn"},
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 12, "ty": 5, "oy": -6, "color": Color(0.9, 0.85, 0.7), "energy": 0.7, "scale": 1.8},
+			],
+			"actor": {},
+		},
+		"c16_cave_mid": {
+			"title": "洞穴中层",
+			"hint": "洞穴 · 水晶中层（占位）",
+			"return_path": "res://scenes/interiors/c16_cave_entry/c16_cave_entry.tscn",
+			"room_w": 22,
+			"room_h": 15,
+			"door_tx0": 9,
+			"door_tx1": 12,
+			"floor": "stone",
+			"modulate": Color(0.48, 0.52, 0.62, 1.0),
+			"rug": null,
+			"window": false,
+			"clusters": [
+				_cluster("crystal", 8, 6, [
+					_m(P_COIN, 0, 0, "晶簇箱", "水晶矿箱占位。", 0.7),
+					_m(P_LAMP_INDOOR, 2, -1, "晶光灯", "冷光。", PROP),
+				]),
+				_cluster("pool", 15, 8, [
+					_m(P_BARREL, 0, 0, "积水桶", "地下渗水。", 0.65),
+					_m(P_CRATE0, 2, 1, "样本箱", "晶矿样本。", 0.7),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 8, "ty": 4, "oy": -8, "color": Color(0.7, 0.85, 1.0), "energy": 0.85, "scale": 1.9},
+			],
+			"actor": {},
+		},
+		"c24_lake_island": {
+			"title": "湖心岛",
+			"hint": "湖心岛 · 野餐 / 废墟角（占位）",
+			"return_path": LAKE,
+			"room_w": 22,
+			"room_h": 16,
+			"door_tx0": 9,
+			"door_tx1": 12,
+			"floor": "straw",
+			"modulate": Color(0.78, 0.86, 0.80, 1.0),
+			"rug": {"ox": 9, "oy": 10},
+			"window": false,
+			"clusters": [
+				_cluster("picnic", 8, 8, [
+					_m(P_TABLE_DINING, 0, 0, "野餐毯桌", "岛上野餐。", 0.85),
+					_m(P_BASKET, 2, 1, "食篮", "野餐篮。", 0.7),
+					_m(P_STOOL, -2, 1, "矮凳", "坐席。", 0.5),
+				]),
+				_cluster("ruin_corner", 16, 6, [
+					_m(P_CRATE1, 0, 0, "废墟箱", "岛角旧箱。", 0.7),
+					_m(P_COIN, 2, 1, "小宝箱", "神秘小箱。", 0.65),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 11, "ty": 5, "oy": -6, "color": Color(1.0, 0.98, 0.9), "energy": 0.8, "scale": 1.8},
+			],
+			"actor": {},
+		},
+		"c25_river_hide": {
+			"title": "芦苇岔路",
+			"hint": "河流隐藏 · 芦苇口（占位）",
+			"return_path": RIV,
+			"room_w": 18,
+			"room_h": 13,
+			"door_tx0": 7,
+			"door_tx1": 10,
+			"floor": "straw",
+			"modulate": Color(0.62, 0.72, 0.58, 1.0),
+			"rug": null,
+			"window": false,
+			"clusters": [
+				_cluster("reed", 6, 6, [
+					_m(P_BASKET, 0, 0, "苇篮", "采苇篮。", 0.7),
+					_m(P_SACK0, 2, 1, "湿袋", "岸边湿袋。", 0.55),
+				]),
+				_cluster("skiff", 12, 7, [
+					_m(P_CRATE0, 0, 0, "小船箱", "藏船补给。", 0.7),
+					_m(P_LAMP_FARM, 1, -2, "岔路灯", "隐径微光。", PROP),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 9, "ty": 4, "oy": -6, "color": Color(0.85, 1.0, 0.75), "energy": 0.65, "scale": 1.6},
+			],
+			"actor": {},
+		},
+		"c28_giant_tree": {
+			"title": "巨树洞",
+			"hint": "巨树内部 · 树洞厅（占位）",
+			"return_path": FDEEP,
+			"room_w": 20,
+			"room_h": 18,
+			"door_tx0": 8,
+			"door_tx1": 11,
+			"floor": "straw",
+			"modulate": Color(0.50, 0.42, 0.34, 1.0),
+			"rug": null,
+			"window": false,
+			"clusters": [
+				_cluster("hall", 10, 8, [
+					_m(P_TABLE_DINING, 0, 0, "根桌", "树根桌。", 0.85),
+					_m(P_LAMP_FARM, 2, -2, "树洞灯", "洞厅灯。", PROP),
+					_m(P_STOOL, -2, 1, "木墩", "坐墩。", 0.5),
+				]),
+				_cluster("roots", 14, 12, [
+					_m(P_CRATE0, 0, 0, "根窖箱", "根系储物。", 0.7),
+					_m(P_HERBS, 2, -1, "苔藓", "洞壁苔藓。", 0.55),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 10, "ty": 5, "oy": -8, "color": Color(1.0, 0.85, 0.55), "energy": 0.75, "scale": 1.9},
+			],
+			"actor": {},
+		},
+		"c29_ruins": {
+			"title": "遗迹主殿",
+			"hint": "遗迹 · 主殿（占位）",
+			"return_path": FDEEP,
+			"room_w": 26,
+			"room_h": 18,
+			"door_tx0": 11,
+			"door_tx1": 14,
+			"floor": "stone",
+			"modulate": Color(0.70, 0.68, 0.66, 1.0),
+			"rug": {"ox": 11, "oy": 12},
+			"window": false,
+			"clusters": [
+				_cluster("nave", 13, 7, [
+					_m(P_TABLE_DINING, 0, 0, "祭台残座", "主殿残祭台。", 0.9),
+					_m(P_NOTICE, 0, -2, "碑刻", "残碑。", 0.75),
+					_m(P_LAMP_INDOOR, 2, 0, "残灯", "冷光。", PROP),
+				]),
+				_cluster("cache", 20, 10, [
+					_m(P_COIN, 0, 0, "遗物箱", "殿侧宝箱。", 0.7),
+					_m(P_CRATE1, 2, 1, "碎石箱", "清理碎石。", 0.65),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 13, "ty": 5, "oy": -10, "color": Color(0.9, 0.92, 1.0), "energy": 0.9, "scale": 2.1},
+			],
+			"actor": {},
+		},
+		"c30_cemetery": {
+			"title": "墓园",
+			"hint": "墓园 · 墓区 / 墓穴（占位）",
+			"return_path": SQ,
+			"room_w": 24,
+			"room_h": 16,
+			"door_tx0": 10,
+			"door_tx1": 13,
+			"floor": "stone",
+			"modulate": Color(0.62, 0.64, 0.68, 1.0),
+			"rug": null,
+			"window": false,
+			"clusters": [
+				_cluster("graves", 8, 8, [
+					_m(P_NOTICE, 0, 0, "墓碑", "西排墓碑。", 0.8),
+					_m(P_NOTICE, 3, 1, "墓碑", "中排墓碑。", 0.75),
+					_m(P_CRATE0, 1, 3, "供品箱", "祭扫供品。", 0.6),
+				]),
+				_cluster("crypt", 17, 7, [
+					_m(P_TABLE_DINING, 0, 0, "墓穴石台", "地下穴入口石台。", 0.85),
+					_m(P_COIN, 2, 1, "随葬箱", "穴内小箱。", 0.65),
+					_m(P_LAMP_INDOOR, 0, -2, "穴灯", "冷灯。", PROP),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 12, "ty": 5, "oy": -8, "color": Color(0.75, 0.8, 0.95), "energy": 0.7, "scale": 1.8},
+			],
+			"actor": {},
+		},
+		"c31_sewer": {
+			"title": "下水道",
+			"hint": "下水道 · 管道段（占位）",
+			"return_path": RES,
+			"room_w": 28,
+			"room_h": 12,
+			"door_tx0": 12,
+			"door_tx1": 15,
+			"floor": "stone",
+			"modulate": Color(0.45, 0.48, 0.46, 1.0),
+			"rug": null,
+			"window": false,
+			"clusters": [
+				_cluster("pipe", 8, 6, [
+					_m(P_BARREL, 0, 0, "排污桶", "管道旁桶。", 0.7),
+					_m(P_CRATE0, 2, 1, "闸门箱", "检修箱。", 0.7),
+					_m(P_LAMP_FARM, 1, -2, "隧灯", "管道灯。", PROP),
+				]),
+				_cluster("black_market", 20, 6, [
+					_m(P_COUNTER, 0, 0, "黑市摊", "管道黑市占位。", 0.95),
+					_m(P_COIN, 2, 1, "赃箱", "黑市小箱。", 0.65),
+					_m(P_NOTICE, -2, -1, "暗语牌", "接头暗号。", 0.7),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 8, "ty": 4, "oy": -6, "color": Color(0.7, 0.9, 0.75), "energy": 0.6, "scale": 1.5},
+				{"tx": 20, "ty": 4, "oy": -6, "color": Color(1.0, 0.85, 0.6), "energy": 0.7, "scale": 1.6},
+			],
+			"actor": {},
 		},
 	}

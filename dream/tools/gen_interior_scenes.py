@@ -33,6 +33,16 @@ ROOMS = [
     ("c09_library", "c09_library", "C09LibraryInterior"),
     ("c10_church", "c10_church", "C10ChurchInterior"),
     ("c11_station", "c11_station", "C11StationInterior"),
+    # Wave C explore / underground
+    ("c13_mill", "c13_mill", "C13MillInterior"),
+    ("c16_cave_entry", "c16_cave_entry", "C16CaveEntryInterior"),
+    ("c16_cave_mid", "c16_cave_mid", "C16CaveMidInterior"),
+    ("c24_lake_island", "c24_lake_island", "C24LakeIslandInterior"),
+    ("c25_river_hide", "c25_river_hide", "C25RiverHideInterior"),
+    ("c28_giant_tree", "c28_giant_tree", "C28GiantTreeInterior"),
+    ("c29_ruins", "c29_ruins", "C29RuinsInterior"),
+    ("c30_cemetery", "c30_cemetery", "C30CemeteryInterior"),
+    ("c31_sewer", "c31_sewer", "C31SewerInterior"),
 ]
 
 TEMPLATE = """[gd_scene load_steps=6 format=3]

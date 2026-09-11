@@ -593,6 +593,17 @@ func _spawn_buildings(ysort: Node2D) -> void:
 				pos + Vector2(0, 28),
 				Vector2(100, 52)
 			)
+	# Wave C C30 — cemetery pocket south of church (append-only).
+	var grave := Vector2(1000, 360)
+	_add_contact_shadow(ysort, grave, Vector2(20, 8))
+	var rock_g := "res://assets/sprites/props/rock_02.png"
+	if ResourceLoader.exists(rock_g):
+		var gspr := _spawn_sprite(ysort, rock_g, grave)
+		gspr.scale = Vector2(0.5, 0.5)
+	_make_hotspot(ysort, "教堂墓园", "教堂南侧墓区，可下墓穴。", grave, Vector2(96, 64))
+	craft.make_portal(
+		ysort, "进入墓园", SceneRouter.C30_CEMETERY_PATH, grave + Vector2(0, 14), Vector2(100, 52)
+	)
 
 
 func _spawn_props(ysort: Node2D) -> void:

@@ -45,6 +45,16 @@ const C08_CLINIC_PATH := "res://scenes/interiors/c08_clinic/c08_clinic.tscn"
 const C09_LIBRARY_PATH := "res://scenes/interiors/c09_library/c09_library.tscn"
 const C10_CHURCH_PATH := "res://scenes/interiors/c10_church/c10_church.tscn"
 const C11_STATION_INT_PATH := "res://scenes/interiors/c11_station/c11_station.tscn"
+## Phase 5 Wave C explore / underground
+const C13_MILL_PATH := "res://scenes/interiors/c13_mill/c13_mill.tscn"
+const C16_CAVE_ENTRY_PATH := "res://scenes/interiors/c16_cave_entry/c16_cave_entry.tscn"
+const C16_CAVE_MID_PATH := "res://scenes/interiors/c16_cave_mid/c16_cave_mid.tscn"
+const C24_LAKE_ISLAND_PATH := "res://scenes/interiors/c24_lake_island/c24_lake_island.tscn"
+const C25_RIVER_HIDE_PATH := "res://scenes/interiors/c25_river_hide/c25_river_hide.tscn"
+const C28_GIANT_TREE_PATH := "res://scenes/interiors/c28_giant_tree/c28_giant_tree.tscn"
+const C29_RUINS_PATH := "res://scenes/interiors/c29_ruins/c29_ruins.tscn"
+const C30_CEMETERY_PATH := "res://scenes/interiors/c30_cemetery/c30_cemetery.tscn"
+const C31_SEWER_PATH := "res://scenes/interiors/c31_sewer/c31_sewer.tscn"
 
 
 func go_hub() -> void:

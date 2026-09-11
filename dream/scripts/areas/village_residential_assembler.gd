@@ -282,7 +282,7 @@ func _spawn_props(ysort: Node2D) -> void:
 		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(360, 200), "title": "é¿æ¤", "desc": "åå··ææ­èé¿æ¤ã", "hw": 1, "hh": 1},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(620, 480), "title": "è·¯ç¯", "desc": "ä¸»å··è·¯ç¯ã", "hw": 1, "hh": 1, "allow_path": true},
 		{"path": "res://assets/sprites/props/lamp_1.png", "pos": Vector2(880, 480), "title": "è·¯ç¯", "desc": "ä¸»å··ä¸æ®µè·¯ç¯ã", "hw": 1, "hh": 1, "allow_path": true},
-		{"path": "res://assets/sprites/props/well_1.png", "pos": Vector2(480, 280), "title": "é¢äº", "desc": "å®é¢å°äºã", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/well_1.png", "pos": Vector2(480, 280), "title": "院井", "desc": "宅院小井；可通下水道。", "hw": 1, "hh": 1, "sewer": true},
 	]
 	for s in yard_props:
 		if not ResourceLoader.exists(s["path"]):
@@ -306,6 +306,15 @@ func _spawn_props(ysort: Node2D) -> void:
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(44, 44))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
+		# Wave C C31 — yard well → sewer (distinct from NE C14 well).
+		if bool(s.get("sewer", false)):
+			craft.make_portal(
+				ysort,
+				"↓下水道",
+				SceneRouter.C31_SEWER_PATH,
+				pos + Vector2(0, 14),
+				Vector2(72, 48)
+			)
 
 	_spawn_fence_props(ysort)
 

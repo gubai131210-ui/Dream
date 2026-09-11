@@ -241,21 +241,24 @@ func _paint_bridge_band(ty0: int, ty1: int) -> void:
 
 
 func _spawn_buildings(ysort: Node2D) -> void:
-	# Foot Y â¥ ~352: tall sheets clear FARM_BUILD_ZONE top (same lock as A02).
+	# Foot Y ≥ ~352: tall sheets clear FARM_BUILD_ZONE top (same lock as A02).
+	# Wave C: east shed = 磨坊 (enterable C13).
 	var specs := [
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
 			"pos": Vector2(560, 400),
 			"hw": 2, "hh": 1,
-			"title": "åå·æ£",
-			"desc": "åç°ä¸­å¿å·¥å·æ£ï¼é¨æåå¯¹åè·¯æ¢çº½ã",
+			"title": "农具棚",
+			"desc": "农田中心工具棚：门朝南对土路枢纽。",
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
 			"pos": Vector2(720, 400),
 			"hw": 2, "hh": 1,
-			"title": "ä»å¨æ£",
-			"desc": "æ¢çº½ä¸ä¾§ä»å¨æ£ï¼é£è½¦å ä½ï¼ï¼æ´æ å¨å´æ åä¾§ã",
+			"title": "磨坊",
+			"desc": "枢纽东侧磨坊（风车占位），整栋在围栏内侧。",
+			"enter_title": "进入磨坊",
+			"enter_scene": SceneRouter.C13_MILL_PATH,
 		},
 	]
 	for s in specs:
@@ -279,6 +282,14 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos + Vector2(0, 24), Vector2(120, 80))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
+		if s.has("enter_scene"):
+			craft.make_portal(
+				ysort,
+				str(s["enter_title"]),
+				str(s["enter_scene"]),
+				pos + Vector2(0, 28),
+				Vector2(100, 52)
+			)
 
 
 func _spawn_crop_visuals(ysort: Node2D) -> void:
