@@ -34,6 +34,8 @@ func _ready() -> void:
 	camera.max_zoom = 3.0
 	if grid_overlay:
 		grid_overlay.visible = false
+	# Wave F WorldSys — C61 island chest site (near lake isle ferry).
+	HiddenChests.attach_site(self, "island")
 
 
 func _wire_portals(node: Node) -> void:

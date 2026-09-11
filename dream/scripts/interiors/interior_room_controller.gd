@@ -35,6 +35,9 @@ func _ready() -> void:
 	camera.zoom = Vector2.ONE
 	camera.min_zoom = 1.0
 	camera.max_zoom = 2.0
+	# Wave F WorldSys C62 — append-only secret chain hop (e.g. c16_cave_entry → waterfall).
+	# Portal click is wired inside SecretPassageChain (avoid double _wire_portals).
+	SecretPassageChain.try_attach_interior(self)
 
 
 func _process(_delta: float) -> void:

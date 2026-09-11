@@ -31,6 +31,9 @@ func _ready() -> void:
 	camera.max_zoom = 3.0
 	if grid_overlay:
 		grid_overlay.visible = false
+	# Wave F WorldSys — C61 waterfall chest + C62 waterfall→lake secret portal.
+	HiddenChests.attach_site(self, "waterfall")
+	SecretPassageChain.attach_for_host(self, "waterfall")
 
 
 func _wire_portals(node: Node) -> void:
