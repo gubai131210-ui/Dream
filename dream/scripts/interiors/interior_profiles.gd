@@ -1480,8 +1480,6 @@ static func _all() -> Dictionary:
 				"via_stands": {"crystal": [0, 3], "sample": [0, 2], "glow_pool": [-2, 1]},
 			},
 		},
-		# ── C24 湖心岛：西野餐开敞 · 东北废墟角宝箱 · 南门 10–13 中廊清空 ──
-		# Silhouette: open straw meadow (green dirt wash) ≠ C13 mill plank/gear ≠ C16 dark stone cave.
 		"c24_lake_island": {
 			"title": "湖心岛",
 			"hint": "湖心岛 · 野餐 / 废墟角",
@@ -1491,51 +1489,39 @@ static func _all() -> Dictionary:
 			"door_tx0": 10,
 			"door_tx1": 13,
 			"floor": "straw",
-			# Soft meadow wash (straw + dirt-green); not mill warm plank / cave cool stone.
 			"modulate": Color(0.72, 0.82, 0.68, 1.0),
-			# Rug under picnic talk/dine (west of door corridor 10–13).
-			"rug": {"ox": 5, "oy": 9},
+			"rug": {"ox": 6, "oy": 10},
 			"window": false,
 			"clusters": [
-				# Verb: 野餐 — west clearing; round table + facing stools; leave tx≥9 clear of door aisle.
 				_cluster("picnic", 6, 8, [
-					_m(P_TABLE_R, 0, 0, "野餐圆桌", "西侧开敞野餐桌（主锚）。", 0.9),
-					_m(P_STOOL, -2, 1, "矮凳", "桌西坐席（面对圆桌）。", 0.55),
-					_m(P_STOOL, 2, 1, "矮凳", "桌东坐席（不堵中廊）。", 0.55),
-					_m(P_STOOL, 0, 2, "矮凳", "桌南坐席（南站位可交互）。", 0.55),
-					_m(P_BASKET, 2, -1, "食篮", "圆桌北侧野餐篮。", 0.75),
-					_m(P_BASKET, -2, -1, "果篮", "圆桌西北果篮。", 0.7),
-					_m(P_SACK0, -1, 2, "粮袋", "野餐旁干粮。", 0.55),
-					_m(P_LAMP_FARM, 1, -2, "岛灯", "野餐区户外灯（非家用台灯）。", PROP),
+					_m(P_TABLE_R, 0, 0, "野餐圆桌", "西侧野餐圆桌（社交锚）。", 0.9),
+					_m(P_STOOL, -2, 1, "矮凳", "桌西坐凳。", 0.55),
+					_m(P_STOOL, 2, 1, "矮凳", "桌东坐凳。", 0.55),
+					_m(P_STOOL, 0, 3, "矮凳", "桌南坐凳（南可站）。", 0.55),
+					_m(P_BASKET, -2, -1, "食篮", "野餐食篮。", 0.7),
+					_m(P_BASKET, 2, -1, "果篮", "野果篮。", 0.65),
+					_m(P_LAMP_FARM, 1, -2, "岛灯", "野餐区日光感灯。", PROP),
 				]),
-				# Verb: 探秘 — NE ruin corner; chest is interact target; rocks/crates read as ruin mass.
 				_cluster("ruin_corner", 18, 5, [
-					_m(P_COIN, 0, 0, "岛角宝箱", "废墟角神秘宝箱（主锚）。", 0.8),
-					_m(P_ROCK0, -2, 0, "残石堆", "废墟残石。", 0.7),
-					_m(P_ROCK1, 2, -1, "苔石", "岛角苔石。", 0.65),
-					_m(P_CRATE1, 2, 1, "旧木箱", "残垣旁旧箱。", 0.7),
-					_m(P_CRATE0, -2, 2, "碎箱", "半埋碎箱。", 0.65),
-					_m(P_NOTICE, 0, -2, "残碑告示", "风化残碑/告示。", 0.7),
-					_m(P_HERBS, 1, 2, "蔓草", "废墟角蔓生草药。", 0.55),
-					_m(P_BARREL, -1, -1, "锈桶", "岛角锈蚀桶。", 0.6),
+					_m(P_COIN, 0, 0, "宝箱", "废墟角神秘小箱。", 0.75),
+					_m(P_ROCK2, -2, 1, "残垣石", "岛角残垣。", 0.6),
+					_m(P_ROCK0, 2, 1, "残垣石", "箱东残石。", 0.55),
+					_m(P_CRATE1, 0, 2, "旧箱", "废墟旧木箱。", 0.7),
+					_m(P_LAMP_FARM, 2, -1, "废墟灯", "废墟角微光。", PROP),
 				]),
 			],
 			"fx": [],
-			"ambient": [{"species": "cat", "cluster": "picnic", "dx": 3, "dy": 2}],
+			"ambient": [],
 			"lights": [
-				{"tx": 6, "ty": 7, "oy": -8, "color": Color(0.95, 1.0, 0.88), "energy": 0.85, "scale": 2.0},
-				{"tx": 18, "ty": 4, "oy": -10, "color": Color(0.88, 0.94, 1.0), "energy": 0.7, "scale": 1.8},
-				{"tx": 12, "ty": 9, "oy": -6, "color": Color(0.92, 0.98, 0.9), "energy": 0.45, "scale": 2.2},
+				{"tx": 6, "ty": 5, "oy": -8, "color": Color(1.0, 0.98, 0.88), "energy": 0.9, "scale": 2.0},
+				{"tx": 18, "ty": 3, "oy": -6, "color": Color(0.95, 0.96, 0.9), "energy": 0.7, "scale": 1.6},
 			],
 			"actor": {
 				"id": "elder_woman",
 				"title": "岛上访客",
-				"desc": "在野餐地与废墟角之间踱步。",
+				"desc": "在野餐圆桌与废墟宝箱之间踱步。",
 				"via_clusters": ["picnic", "ruin_corner"],
-				"via_stands": {
-					"picnic": [0, 3],
-					"ruin_corner": [0, 2],
-				},
+				"via_stands": {"picnic": [0, 2], "ruin_corner": [-2, 2]},
 			},
 		},
 		# ── C25 河流隐藏：西芦苇口 · 北跳石隐径 · 东小船窖（门轴 9–12 南门通廊清空）──

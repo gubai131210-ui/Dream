@@ -1,6 +1,6 @@
 # Phase 5 Wave C — Explore / underground (C13, C16, C24–C25, C28–C31)
 
-**Status:** IN PROGRESS 2026-09-11  
+**Status:** DONE (code) 2026-09-11 — user Godot QA next  
 **User lock:** Expand explore + underground. **Do not polish C01–C04 / Wave A2 / Wave B civic** unless broken portals.  
 **Locks:** [`PHASE5.md`](./PHASE5.md), [`INTERIOR_LIBRARY.md`](./INTERIOR_LIBRARY.md), [`INTERIOR_FOUNDATION.md`](./INTERIOR_FOUNDATION.md), [`INTERIOR_COMPOSITION.md`](./INTERIOR_COMPOSITION.md), [`SCALE.md`](./SCALE.md)  
 **Skills:** `realistic-scene-craft` (outdoor portal host — Lead only), `interior-territory-craft`, `painting-asset-craft` (new props), `interior-visual-qa` (desk PASS)
