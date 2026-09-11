@@ -4,7 +4,7 @@ extends RefCounted
 ## C53 work rings + C54 life states — catalog + host-scoped waypoint resolution.
 ## Mount via NpcRoutineDemo thin hooks (square / market / farmland). Do not rewrite assemblers.
 
-const WORK_RING_IDS := ["sow", "smith", "stall", "fish", "cook"]
+const WORK_RING_IDS := ["sow", "smith", "stall", "cook"]
 const LIFE_STATE_IDS := ["eat", "sleep", "read", "laundry", "idle_sit"]
 
 ## Host keys used by NpcRoutineDemo.attach_to(..., host_key).
