@@ -14,6 +14,11 @@
 
 **结论：先 remap（优先）+ 只重生缺口，再开 Stall-C05。**
 
+## QA spot-check
+
+[Cross-check asset audit](f8c3e2f6-54fd-486e-8d70-ec3034978381): **PASS** — 抽检 `nest` / `hay` / `trough` / `counter` / `dresser` 均确认「文件名≠画面」。  
+**实现约束：** 不可「只改文件名不改 profiles」——多数 `P_*` 会断路径；须 **路径守恒换位（swap/cycle）+ 更新 title/desc**，孤儿（`stool_bar`→`nest`、`table_pub`→`trough`）同名落地可自愈。
+
 ## Critical mismatches (used in profiles)
 
 | Filename (code uses) | Title in profile | Actual visual | Severity |
