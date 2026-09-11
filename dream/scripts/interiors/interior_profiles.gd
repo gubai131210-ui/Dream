@@ -48,6 +48,16 @@ const P_PEN_CORNER_SW := DIR_INTERIOR_PROP + "/pen_corner_sw_00.png"
 const P_PEN_CORNER_SE := DIR_INTERIOR_PROP + "/pen_corner_se_00.png"
 const P_GRAIN_STACK := DIR_INTERIOR_PROP + "/grain_stack_00.png"
 const P_PEW := DIR_INTERIOR_PROP + "/pew_00.png"
+const P_MILLSTONE := DIR_INTERIOR_PROP + "/millstone_00.png"
+const P_MILL_GEAR := DIR_INTERIOR_PROP + "/mill_gear_00.png"
+const P_HEADSTONE_0 := DIR_INTERIOR_PROP + "/headstone_00.png"
+const P_HEADSTONE_1 := DIR_INTERIOR_PROP + "/headstone_01.png"
+const P_CRYPT_DOOR := DIR_INTERIOR_PROP + "/crypt_door_00.png"
+const P_ROCK0 := DIR_OUTDOOR_PROP + "/rock_00.png"
+const P_ROCK1 := DIR_OUTDOOR_PROP + "/rock_01.png"
+const P_ROCK2 := DIR_OUTDOOR_PROP + "/rock_02.png"
+const P_ROCK3 := DIR_OUTDOOR_PROP + "/rock_03.png"
+const P_ROD_BAMBOO := "res://assets/sprites/fishing/rod_bamboo_00.png"
 const P_BARREL := DIR_OUTDOOR_PROP + "/barrel_1.png"
 const P_BARREL_KEG := DIR_OUTDOOR_PROP + "/barrel_0.png"
 const P_CRATE0 := DIR_OUTDOOR_PROP + "/crate_0.png"
@@ -1582,36 +1592,83 @@ static func _all() -> Dictionary:
 			],
 			"actor": {},
 		},
+		# ── C31 下水道：西长管段 · 中闸阀 · 东黑市摊（门轴 14–17 南廊清空；≠矿洞 C17）──
 		"c31_sewer": {
 			"title": "下水道",
-			"hint": "下水道 · 管道段（占位）",
+			"hint": "下水道 · 管道段 / 黑市摊",
 			"return_path": RES,
-			"room_w": 28,
-			"room_h": 12,
-			"door_tx0": 12,
-			"door_tx1": 15,
+			"room_w": 32,
+			"room_h": 11,
+			"door_tx0": 14,
+			"door_tx1": 17,
 			"floor": "stone",
-			"modulate": Color(0.45, 0.48, 0.46, 1.0),
+			"modulate": Color(0.40, 0.48, 0.46, 1.0),
 			"rug": null,
 			"window": false,
 			"clusters": [
-				_cluster("pipe", 8, 6, [
-					_m(P_BARREL, 0, 0, "排污桶", "管道旁桶。", 0.7),
-					_m(P_CRATE0, 2, 1, "闸门箱", "检修箱。", 0.7),
-					_m(P_LAMP_FARM, 1, -2, "隧灯", "管道灯。", PROP),
+				# West horizontal pipe run — barrels read as pipe mass along corridor.
+				_cluster("pipe_run", 6, 4, [
+					_m(P_BARREL, 0, 0, "主管段", "西廊排污主管段。", 0.75),
+					_m(P_BARREL, 2, 0, "接管段", "水平接管。", 0.72),
+					_m(P_BARREL_KEG, 4, 0, "支管段", "横置支管。", 0.7),
+					_m(P_CRATE0, 1, 1, "闸门箱", "管旁闸阀检修箱。", 0.7),
+					_m(P_CRATE1, 3, 1, "法兰箱", "管件法兰箱。", 0.65),
+					_m(P_TOOL_RACK, -1, 0, "管钳架", "管钳与扳手架。", 0.65),
+					_m(P_SACK0, 0, 2, "堵漏沙袋", "管脚堵漏沙袋（不占门轴）。", 0.55),
+					_m(P_LAMP_FARM, 2, -1, "隧灯", "管道检修灯。", PROP),
 				]),
-				_cluster("black_market", 20, 6, [
-					_m(P_COUNTER, 0, 0, "黑市摊", "管道黑市占位。", 0.95),
-					_m(P_COIN, 2, 1, "赃箱", "黑市小箱。", 0.65),
-					_m(P_NOTICE, -2, -1, "暗语牌", "接头暗号。", 0.7),
+				# Mid junction north of door aisle — keeps south 14–17 clear.
+				_cluster("junction", 15, 3, [
+					_m(P_CRATE0, 0, 0, "总阀箱", "中段总阀检修箱。", 0.7),
+					_m(P_BARREL, -2, 0, "溢流桶", "闸阀旁溢流桶。", 0.65),
+					_m(P_NOTICE, 2, 0, "管网图", "下水支管走向图。", 0.7),
+					_m(P_LAMP_FARM, 1, -1, "阀灯", "闸阀区检修灯。", PROP),
+				]),
+				# East black-market booth — customer approach from west aisle.
+				_cluster("black_market", 25, 5, [
+					_m(P_COUNTER, 0, 0, "黑市摊", "管道东端黑市柜台（客西主东）。", 1.0),
+					_m(P_STOOL_BAR, 1, 0, "摊主凳", "柜台东侧摊主位。", 0.75),
+					_m(P_SHELF_GROCERY, 2, -1, "暗货架", "违禁货架体量。", 0.9),
+					_m(P_SHELF, 2, 1, "暗货架", "下层暗货。", 0.85),
+					_m(P_COIN, 0, -2, "赃箱", "柜台后赃物箱。", 0.7),
+					_m(P_CRATE1, 1, 2, "走私箱", "摊脚走私木箱。", 0.75),
+					_m(P_BASKET, -1, 1, "黑货筐", "柜西客侧旁筐（不挡站位）。", 0.7),
+					_m(P_NOTICE, -2, -1, "暗语牌", "接头暗号牌。", 0.7),
+					_m(P_LAMP_TAVERN, 0, -1, "摊烛", "黑市烛灯（非家用台灯）。", PROP),
 				]),
 			],
+			# Stall booth boundary; west gaps open to pipe corridor.
+			"enclosures": [
+				{
+					"rect": [22, 2, 30, 8],
+					"prop_h": P_STALL_RAIL,
+					"prop_v": P_STALL_RAIL_V,
+					"corners": {
+						"nw": P_STALL_CORNER_NW,
+						"ne": P_STALL_CORNER_NE,
+						"sw": P_STALL_CORNER_SW,
+						"se": P_STALL_CORNER_SE,
+					},
+					"scale": 1.0,
+					"title": "黑市摊位",
+					"desc": "东端管道黑市围栏摊位（西向开口）。",
+					"gaps": [[22, 4], [22, 5], [22, 6]],
+				},
+			],
+			"rails": [],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 8, "ty": 4, "oy": -6, "color": Color(0.7, 0.9, 0.75), "energy": 0.6, "scale": 1.5},
-				{"tx": 20, "ty": 4, "oy": -6, "color": Color(1.0, 0.85, 0.6), "energy": 0.7, "scale": 1.6},
+				{"tx": 6, "ty": 3, "oy": -8, "color": Color(0.55, 0.85, 0.7), "energy": 0.65, "scale": 1.7},
+				{"tx": 15, "ty": 2, "oy": -6, "color": Color(0.6, 0.88, 0.75), "energy": 0.55, "scale": 1.5},
+				{"tx": 25, "ty": 4, "oy": -8, "color": Color(1.0, 0.78, 0.45), "energy": 0.85, "scale": 1.8},
 			],
-			"actor": {},
+			"actor": {
+				"id": "merchant",
+				"title": "黑市摊主",
+				"desc": "在管段检修点与东端黑市摊之间游走接头。",
+				"via_clusters": ["pipe_run", "junction", "black_market"],
+				"via_stands": {"pipe_run": [1, 2], "junction": [0, 2], "black_market": [-2, 1]},
+			},
 		},
 	}
