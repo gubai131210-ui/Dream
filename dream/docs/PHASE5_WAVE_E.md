@@ -77,7 +77,7 @@ C50_FARM_CELLAR_PATH → c50_farm_cellar
 - [x] Package MDs + desk QA PASS  
 - [x] Vertical stairs + outdoor portals pickable; returns work (code-wired; user Godot QA pending)  
 - [x] Mark teams DONE in this table  
-- [ ] Commit + push `origin/master`  
+- [x] Commit + push `origin/master`  
 - [ ] User Godot QA note  
 
 | Team | Status |

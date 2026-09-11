@@ -2268,7 +2268,7 @@ static func _all() -> Dictionary:
 				},
 			},
 		},
-		# ── Wave E stubs (enrich per-key only; remove 「占位」) ──
+		# ── Wave E enriched (C46–C50; desk QA PASS) ──
 		# ── C46 二楼：西卧室睡区 · 东阳台眺望（门轴 9–12；楼梯回 C01）──
 		"c46_second_floor": {
 			"title": "建筑二楼",
