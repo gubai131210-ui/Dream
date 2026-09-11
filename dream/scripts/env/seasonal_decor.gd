@@ -8,7 +8,7 @@ const NODE_NAME := "SeasonalDecor"
 
 enum Season { SPRING, SUMMER, AUTUMN, WINTER }
 
-const SEASON_LABELS := ["春花", "夏海", "秋收", "冬雪"]
+const SEASON_LABELS: Array[String] = ["春花", "夏海", "秋收", "冬雪"]
 
 signal season_changed(season: int)
 
@@ -250,7 +250,7 @@ func _apply_veil_and_particles() -> void:
 
 
 func _refresh_button_labels() -> void:
-	var label := SEASON_LABELS[_season]
+	var label: String = SEASON_LABELS[_season]
 	if _btn_season:
 		_btn_season.text = label
 		_btn_season.tooltip_text = "循环季节 (S)：春花→夏海→秋收→冬雪"
