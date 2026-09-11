@@ -275,6 +275,7 @@ static func _all() -> Dictionary:
 				"title": "商人",
 				"desc": "清点账本与货箱。",
 				"via_clusters": ["ledger", "cargo"],
+				"via_stands": {"ledger": [0, 2], "cargo": [-2, 1]},
 			},
 		},
 		# ── C02 铁匠宅：家用工具角 · 厚桌起居 · 床（非工坊） ──
