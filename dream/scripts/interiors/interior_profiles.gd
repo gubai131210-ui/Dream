@@ -1665,36 +1665,57 @@ static func _all() -> Dictionary:
 				"via_stands": {"nave": [0, 3], "cache": [-2, 0]},
 			},
 		},
+		# ── C30 墓园：西墓区碑列 · 中轴南门通廊 · 东穴门体量（≠ C10 礼堂中轴座席）──
 		"c30_cemetery": {
 			"title": "墓园",
-			"hint": "墓园 · 墓区 / 墓穴（占位）",
+			"hint": "墓园 · 墓区 / 墓穴",
 			"return_path": SQ,
-			"room_w": 24,
-			"room_h": 16,
-			"door_tx0": 10,
-			"door_tx1": 13,
+			"room_w": 26,
+			"room_h": 18,
+			"door_tx0": 11,
+			"door_tx1": 14,
 			"floor": "stone",
-			"modulate": Color(0.62, 0.64, 0.68, 1.0),
+			# Cool blue-grey dusk (not tavern warm orange).
+			"modulate": Color(0.56, 0.58, 0.66, 1.0),
 			"rug": null,
 			"window": false,
 			"clusters": [
-				_cluster("graves", 8, 8, [
-					_m(P_NOTICE, 0, 0, "墓碑", "西排墓碑。", 0.8),
-					_m(P_NOTICE, 3, 1, "墓碑", "中排墓碑。", 0.75),
-					_m(P_CRATE0, 1, 3, "供品箱", "祭扫供品。", 0.6),
+				# Verb: 祭扫 — west headstone rows; offerings south for approach stands.
+				_cluster("graves", 6, 8, [
+					_m(P_HEADSTONE_0, 0, -1, "墓碑", "西排北侧平顶碑。", 0.85),
+					_m(P_HEADSTONE_1, 2, -1, "墓碑", "西排北侧圆顶碑。", 0.85),
+					_m(P_HEADSTONE_0, 0, 1, "墓碑", "西排南侧平顶碑。", 0.8),
+					_m(P_HEADSTONE_1, 2, 1, "墓碑", "西排南侧圆顶碑。", 0.8),
+					_m(P_BASKET, 1, 3, "祭品篮", "碑前祭扫花果篮（南站位可交互）。", 0.6),
+					_m(P_CRATE0, -1, 3, "供品箱", "祭扫供品木箱。", 0.55),
+					_m(P_CRATE1, 3, 2, "纸钱箱", "纸钱与香烛箱。", 0.55),
+					_m(P_LAMP_INDOOR, 3, -2, "墓灯", "西墓区冷蓝墓灯。", PROP),
 				]),
-				_cluster("crypt", 17, 7, [
-					_m(P_TABLE_DINING, 0, 0, "墓穴石台", "地下穴入口石台。", 0.85),
-					_m(P_COIN, 2, 1, "随葬箱", "穴内小箱。", 0.65),
-					_m(P_LAMP_INDOOR, 0, -2, "穴灯", "冷灯。", PROP),
+				# Verb: 入穴 — east crypt door mass + rock perimeter + coin south.
+				_cluster("crypt", 19, 7, [
+					_m(P_CRYPT_DOOR, 0, 0, "穴门", "石砌拱门铁栅穴口（东侧主锚）。", 1.05),
+					_m(P_ROCK2, -2, -1, "围石", "穴门西北围石体量。", 0.75),
+					_m(P_ROCK1, 2, -1, "围石", "穴门东北围石体量。", 0.75),
+					_m(P_ROCK0, -2, 1, "围石", "穴门西南围石。", 0.7),
+					_m(P_ROCK3, 2, 1, "围石", "穴门东南围石。", 0.7),
+					_m(P_COIN, 0, 2, "随葬箱", "穴门南随葬小箱（南站位可开）。", 0.65),
+					_m(P_LAMP_INDOOR, 1, -2, "穴灯", "穴门顶冷灯。", PROP),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 12, "ty": 5, "oy": -8, "color": Color(0.75, 0.8, 0.95), "energy": 0.7, "scale": 1.8},
+				{"tx": 6, "ty": 6, "oy": -10, "color": Color(0.72, 0.76, 1.0), "energy": 0.75, "scale": 1.9},
+				{"tx": 12, "ty": 5, "oy": -8, "color": Color(0.70, 0.74, 1.0), "energy": 0.55, "scale": 1.6},
+				{"tx": 19, "ty": 5, "oy": -12, "color": Color(0.68, 0.72, 1.0), "energy": 0.9, "scale": 2.2},
 			],
-			"actor": {},
+			"actor": {
+				"id": "elder_woman",
+				"title": "守墓人",
+				"desc": "在西墓区碑列与东穴门之间踱步巡视。",
+				"via_clusters": ["graves", "crypt"],
+				"via_stands": {"graves": [1, 4], "crypt": [0, 3]},
+			},
 		},
 		# ── C31 下水道：西长管段 · 中闸阀 · 东黑市摊（门轴 14–17 南廊清空；≠矿洞 C17）──
 		"c31_sewer": {
