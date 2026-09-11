@@ -34,6 +34,9 @@ func _ready() -> void:
 	camera.max_zoom = 3.0
 	if grid_overlay:
 		grid_overlay.visible = false
+	# Wave F NpcRing C53/C54: stall/smith/cook rings + life states (TopBar + K/L).
+	var top_bar := get_node_or_null("UI/TopBar") as Control
+	NpcRoutineDemo.attach_to(self, top_bar, NpcRoutineRings.HOST_MARKET)
 
 
 func _wire_portals(node: Node) -> void:

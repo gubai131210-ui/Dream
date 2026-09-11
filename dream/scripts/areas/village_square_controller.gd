@@ -41,6 +41,14 @@ func _ready() -> void:
 	# Env-H: night grade + weather overlay (TopBar + N/R). Scene-local Node, not Autoload.
 	var top_bar := get_node_or_null("UI/TopBar") as Control
 	DayNightWeather.attach_to(self, top_bar)
+	# Wave F NpcRing C53/C54: work rings + life states (TopBar + K/L).
+	NpcRoutineDemo.attach_to(self, top_bar, NpcRoutineRings.HOST_SQUARE)
+	# Wave F WorldSys — C55 season + C58–C61 plaza mounts (Env-H thin attach).
+	SeasonalDecor.attach_to(self, top_bar)
+	WorldInteractKit.attach_to(self, top_bar)
+	BreakablesKit.attach_to(self, top_bar)
+	ProgressGates.attach_to(self, top_bar)
+	HiddenChests.attach_site(self, "well", top_bar)
 
 
 func _wire_portals(node: Node) -> void:
@@ -71,5 +79,3 @@ func _wire_hotspots(node: Node) -> void:
 
 func _on_hotspot(hotspot: InteractableHotspot) -> void:
 	info.show_info(hotspot.title, hotspot.description)
-
-# Wave F WorldSys/NpcRing: attach SeasonalDecor + interact kits (team).

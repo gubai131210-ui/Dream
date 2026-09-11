@@ -229,9 +229,13 @@ static func _all() -> Dictionary:
 			"actor": {
 				"id": "elder_woman",
 				"title": "老妇人",
-				"desc": "在茶几与床铺间缓步。",
+				# C54 life: tea=read/idle_sit, sleep=sleep (NpcRing additive stands).
+				"desc": "在摇椅阅读闲坐，再到床区歇息。",
 				"via_clusters": ["tea", "sleep"],
-				"via_stands": {"tea": [0, 2], "sleep": [2, 1]},
+				"via_stands": {
+					"tea": [0, 2],  # read / idle_sit stand south of rocking
+					"sleep": [2, 1],
+				},
 			},
 		},
 		# ── C02 农家宅：门厅工具粮袋 · 中餐 · 东睡 ──
@@ -277,11 +281,12 @@ static func _all() -> Dictionary:
 			"actor": {
 				"id": "farmer",
 				"title": "农夫",
-				"desc": "进屋整理粮袋再坐饭桌。",
+				# C54 life: dining=eat, sleep=sleep; mudroom=入户整理 (NpcRing additive).
+				"desc": "整理门厅粮袋后坐饭桌用餐，再到东房歇息。",
 				"via_clusters": ["mudroom", "dining", "sleep"],
 				"via_stands": {
 					"mudroom": [0, -1],
-					"dining": [0, 3],
+					"dining": [0, 3],  # eat stand south of dining table
 					"sleep": [0, 3],
 				},
 			},
