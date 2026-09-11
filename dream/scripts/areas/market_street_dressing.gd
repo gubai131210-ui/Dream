@@ -44,7 +44,7 @@ func _spawn_market_stalls(ysort: Node2D) -> void:
 			"id": "n_e",
 			"pos": Vector2(976, 416),
 			"title": "百货摊",
-			"desc": "北街东凹口百货摊（售罄用空箱）。",
+			"desc": "北街东凹口百货摊（售罄态只留空箱、无桶）。",
 			"crate": "res://assets/sprites/props/B11-02_crates_boxes_00.png",
 			"barrel": "res://assets/sprites/props/B11-01_barrels_03.png",
 			"body": "res://assets/sprites/market/stall_open_cream_00.png",

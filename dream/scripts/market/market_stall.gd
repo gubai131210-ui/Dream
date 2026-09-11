@@ -92,15 +92,16 @@ func apply_state(next: State) -> void:
 			_add_awning(0.55, 4)
 			_add_goods(true, false)
 		State.OPEN:
+			# Body PNG or procedural awning — goods always beside (MARKET_POLISH ≤0.5).
 			if not _try_body_sprite(0.55):
 				_add_poles()
 				_add_awning(1.0, 6)
-				_add_goods(true, true)
+			_add_goods(true, true)
 		State.SOLD_OUT:
-			if not _try_body_sprite(0.45):
+			if not _try_body_sprite(0.45, false, Color(0.78, 0.78, 0.82, 1.0)):
 				_add_poles()
 				_add_awning(0.75, 6, true)
-				_add_goods(true, false)
+			_add_goods(true, false)
 			_add_chip("售罄", Color(0.92, 0.35, 0.28, 0.95))
 		State.CLOSED:
 			if not _try_body_sprite(0.4, true):
@@ -111,7 +112,7 @@ func apply_state(next: State) -> void:
 	set_meta("stall_state", state_name())
 
 
-func _try_body_sprite(scale_f: float, prefer_drape: bool = false) -> bool:
+func _try_body_sprite(scale_f: float, prefer_drape: bool = false, modulate: Color = Color.WHITE) -> bool:
 	var path := body_path
 	if prefer_drape:
 		path = "res://assets/sprites/market/awning_drape_cream_00.png"
@@ -121,6 +122,7 @@ func _try_body_sprite(scale_f: float, prefer_drape: bool = false) -> bool:
 	spr.texture = load(path) as Texture2D
 	spr.position = Vector2(0, -8)
 	spr.scale = Vector2(scale_f, scale_f)
+	spr.modulate = modulate
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	spr.z_index = 2
 	_layer.add_child(spr)
@@ -236,11 +238,13 @@ func _add_chip(text: String, color: Color) -> void:
 
 
 func _add_goods(with_crate: bool, with_barrel: bool) -> void:
+	# MARKET_POLISH: goods scale ≤0.5, beside/under awning — never in front of face.
+	const GOODS_SCALE := 0.48
 	if with_crate and ResourceLoader.exists(crate_path):
 		var spr := Sprite2D.new()
 		spr.texture = load(crate_path) as Texture2D
 		spr.position = Vector2(-20, -2)
-		spr.scale = Vector2(0.48, 0.48)
+		spr.scale = Vector2(GOODS_SCALE, GOODS_SCALE)
 		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		spr.z_index = 3
 		_layer.add_child(spr)

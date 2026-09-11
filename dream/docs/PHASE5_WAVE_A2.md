@@ -9,7 +9,7 @@
 
 | Team | Package | Own (create/edit) | Portal host (append only) | Done when |
 | --- | --- | --- | --- | --- |
-| **Stall** | C05 | `scripts/market/**`, `docs/STALL_C05.md`, market stall assets | `market_street_dressing/controller` stall-only | ≥3 states demo; mark DONE |
+| **Stall** | C05 | `scripts/market/**`, `docs/STALL_C05.md`, market stall assets | `market_street_dressing/controller` stall-only | **DONE** — 6 态同槽 `MarketStall`；六摊初始打散；点击循环 |
 | **Fish** | C18–C22 | `scripts/fishing/**`, `docs/FISH_E.md`, fishing FX/sprites | `river_assembler`, `lake_assembler` (spot markers) | Cast→bite→catch at ≥2 sites; ≥2 rods |
 | **Mine** | C17 | `scenes/interiors/c17_mine/**`, mine scripts/docs | `hill_farm_assembler` mouth portal | Enter mine floor + return |
 | **Well** | C14+C15 | `c14_well/**`, `c15_basement/**`, docs | Residential well → portal; one home basement stair | Well bottom + basement + returns |
@@ -18,6 +18,10 @@
 | **Env** | C56–C57/H | `scripts/env/**`, `docs/ENV_H.md` | Thin hook on `village_square` or Hub TopBar | Night **or** ≥1 weather toggle |
 
 **Shared (Lead only / append-only):** `scripts/core/scene_router.gd` constants (pre-seeded), `tools/gen_interior_scenes.py` room list, `docs/PHASE5.md` status table.
+
+### Stall (C05) — DONE
+
+A10 six alcove stalls spawn with spread states (`open/locked/sold_out/setup/closed/empty`). Click cycles `MarketStall` through all six visuals on the **same** `position`; B09 body PNGs + goods ≤0.5. See [`STALL_C05.md`](./STALL_C05.md).
 
 ## SceneRouter paths (pre-seeded)
 

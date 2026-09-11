@@ -36,7 +36,7 @@ Phase 5 打开世界 **第二/三层**：可进入室内、地下入口、钓鱼
 | Home-C01C02 | 主角宅 + ≥4 村民模板 | C01, C02 | 可进入；升级档数据钩子；禁止单模板 |
 | Shop-C04 | 杂货/铁匠/酒馆 | C04 | 三店可进可出 |
 | FarmBuild-C03 | 谷仓 + 鸡舍 | C03 | 两内部 |
-| Stall-C05 | 市集摊位状态机 | C05 | 6 态同槽位 |
+| Stall-C05 | 市集摊位状态机 | C05 | **DONE** — 6 态同槽位（A10 可演示） |
 | Fish-E | 钓鱼地点+动作+2 竿 | C18–C22 | 最小可钓闭环 |
 | Mine-C17 | 矿洞入口层 | C17 | 可进入一层 |
 | Well-C14C15 | 井底 + 一地下室 | C14, C15 | 井/梯返回 |
@@ -76,7 +76,7 @@ C06–C11 全套公服、C16 全洞穴族、C23 潜水、C31 下水道、C36 全
 5. 用户本地 Godot 测（中文路径）  
 6. Commit；有 remote 则 push  
 
-**Partial acceptance (this checkpoint):** C01–C04 enter/exit + foundation profiles — **met**. Items 2–4 still open.
+**Partial acceptance (this checkpoint):** C01–C04 enter/exit + foundation profiles — **met**. Item 2 (C05 ≥3 stall states) — **met**. Items 3–4 still open.
 
 ## Related
 

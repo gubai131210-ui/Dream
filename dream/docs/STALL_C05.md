@@ -1,6 +1,6 @@
 # Stall C05 — market stall state machine
 
-**Status:** IN PROGRESS  
+**Status:** DONE  
 **Date:** 2026-09-11  
 **Locks:** [`PHASE5.md`](PHASE5.md), [`INTERIOR_LIBRARY.md`](INTERIOR_LIBRARY.md), [`MARKET_POLISH.md`](MARKET_POLISH.md), [`PROP_ORIENTATION.md`](PROP_ORIENTATION.md)  
 **Research:** [`research/STALL_C05_RESEARCH.md`](research/STALL_C05_RESEARCH.md) (agent), Nerupa open/closed stall variants, Stardew festival slot occupancy
@@ -11,7 +11,7 @@ Same alcove slot cycles through **6 states** without moving world position:
 
 `empty | locked | setup | open | sold_out | closed`
 
-Acceptance: ≥3 states demonstrable on A10 (`PHASE5` item 2).
+Acceptance: ≥3 states demonstrable on A10 (`PHASE5` item 2) — **met**.
 
 ## Visual grammar (same slot)
 
@@ -20,11 +20,11 @@ Acceptance: ≥3 states demonstrable on A10 (`PHASE5` item 2).
 | `empty` | none / faint pole stubs | none | ground bay only |
 | `locked` | none | none | boarded panel + lock cue |
 | `setup` | half / low opacity stripes | 1 crate mid-place | poles up |
-| `open` | full striped awning | crate + barrel beside (not in front) | hotspot 营业 |
-| `sold_out` | full but dull | empty crate only | 「售罄」chip |
-| `closed` | collapsed cloth strip | none | poles remain |
+| `open` | full striped awning **or** B09 body PNG | crate + barrel beside (not in front) | hotspot 营业 |
+| `sold_out` | full but dull (body modulate) | empty crate only | 「售罄」chip |
+| `closed` | collapsed cloth / drape PNG | none | poles remain |
 
-Goods scale ≤0.50; never block awning face (`MARKET_POLISH`).
+Goods scale ≤0.50; never block awning face (`MARKET_POLISH`). Body PNG no longer suppresses goods on open/sold_out.
 
 ## Code ownership
 
@@ -45,7 +45,7 @@ Goods scale ≤0.50; never block awning face (`MARKET_POLISH`).
 | B09 切片 | 四柱摊 | `sprites/market/stall_open_*` | **DONE** OPEN/CLOSED 可用 |
 | 程序化 ColorRect 棚 | 兜底 | 非 PNG | locked/setup/empty 仍可用 |
 
-详见 [`MARKET_STALL_ASSET_AUDIT.md`](MARKET_STALL_ASSET_AUDIT.md)。[QA Stall-C05](e4ac8b0f-78b3-4e0a-8b09-b50def9b6585): **PASS**。
+详见 [`MARKET_STALL_ASSET_AUDIT.md`](MARKET_STALL_ASSET_AUDIT.md)。[QA Stall-C05](e4ac8b0f-78b3-4e0a-8b09-b50def9b6585): **PASS**.
 
 ## 禁止偷懒
 
@@ -56,7 +56,7 @@ Goods scale ≤0.50; never block awning face (`MARKET_POLISH`).
 - 禁止只改 InfoPanel 文案、视觉不换  
 - 禁止复制室内 `InteriorCraft` 当室外摊  
 
-## Demo
+## Demo (verified in code)
 
-- 六摊初始态打散（至少含 open / locked / sold_out）  
-- 点击摊位：InfoPanel 显示状态 + **循环下一态**  
+- 六摊初始态打散：`open / locked / sold_out / setup / closed / empty`（含 open、locked、sold_out）  
+- 点击摊位：InfoPanel 显示状态 + **`MarketStall.cycle_next()`** 循环六态；`position` 不变  
