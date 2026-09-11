@@ -63,4 +63,7 @@ func _wire_hotspots(node: Node) -> void:
 
 
 func _on_hotspot(hotspot: InteractableHotspot) -> void:
+	if hotspot is FishingSpot:
+		info.show_info(hotspot.title, hotspot.description)
+		return
 	info.show_info(hotspot.title, hotspot.description)

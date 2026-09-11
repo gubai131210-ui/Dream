@@ -6,7 +6,7 @@ extends CanvasLayer
 
 signal finished(result: Dictionary)
 
-enum Phase { CAST, WAIT, BITE, REEL, RESULT, MISS }
+enum Phase { READY, CAST, WAIT, BITE, REEL, RESULT, MISS }
 
 var site_id: String = "river"
 var rod_id: String = FishingCatalog.ROD_BAMBOO
@@ -39,8 +39,14 @@ func begin(p_spot: FishingSpot, p_site_id: String, p_rod_id: String) -> void:
 	FishingCatalog.current_rod_id = rod_id
 	_busy = true
 	_caught = {}
-	_set_phase(Phase.CAST)
-	_run_cast()
+	_set_phase(Phase.READY)
+	var rod := FishingCatalog.rod_by_id(rod_id)
+	_body.text = "地点：%s\n装备：%s — %s\n可先换竿，再点「抛竿」。" % [
+		FishingCatalog.site_label(site_id),
+		str(rod.get("name", "?")),
+		str(rod.get("desc", "")),
+	]
+	_progress.value = 0.0
 
 
 func _build_ui() -> void:
@@ -118,13 +124,13 @@ func _refresh_rod_button() -> void:
 
 
 func _on_cycle_rod() -> void:
-	if _phase != Phase.CAST and _phase != Phase.RESULT and _phase != Phase.MISS:
+	if _phase != Phase.READY and _phase != Phase.RESULT and _phase != Phase.MISS:
 		return
 	var rod := FishingCatalog.cycle_rod()
 	rod_id = str(rod["id"])
 	_refresh_rod_button()
-	if _phase == Phase.CAST:
-		_body.text = "地点：%s\n装备：%s — %s\n准备抛竿…" % [
+	if _phase == Phase.READY:
+		_body.text = "地点：%s\n装备：%s — %s\n可先换竿，再点「抛竿」。" % [
 			FishingCatalog.site_label(site_id),
 			str(rod.get("name", "?")),
 			str(rod.get("desc", "")),
@@ -134,11 +140,18 @@ func _on_cycle_rod() -> void:
 func _set_phase(p: Phase) -> void:
 	_phase = p
 	match p:
+		Phase.READY:
+			_title.text = "准备钓鱼"
+			_btn_action.disabled = false
+			_btn_action.text = "抛竿"
+			_btn_rod.disabled = false
+			_btn_close.disabled = false
+			_btn_close.text = "关闭"
 		Phase.CAST:
 			_title.text = "抛竿"
 			_btn_action.disabled = true
-			_btn_rod.disabled = false
-			_btn_close.disabled = false
+			_btn_rod.disabled = true
+			_btn_close.disabled = true
 		Phase.WAIT:
 			_title.text = "等待咬钩"
 			_btn_action.disabled = true
@@ -170,6 +183,7 @@ func _set_phase(p: Phase) -> void:
 
 
 func _run_cast() -> void:
+	_set_phase(Phase.CAST)
 	var rod := FishingCatalog.rod_by_id(rod_id)
 	_body.text = "地点：%s\n装备：%s\n抛竿入水…" % [
 		FishingCatalog.site_label(site_id),
@@ -213,6 +227,9 @@ func _run_bite() -> void:
 
 
 func _on_action() -> void:
+	if _phase == Phase.READY:
+		_run_cast()
+		return
 	if _phase != Phase.BITE:
 		return
 	_run_reel()
@@ -293,8 +310,8 @@ func _animate_progress(duration: float) -> void:
 
 
 func _close() -> void:
-	# Abort allowed on CAST / RESULT / MISS only — not mid wait/bite/reel.
-	if _phase == Phase.WAIT or _phase == Phase.BITE or _phase == Phase.REEL:
+	# Abort allowed on READY / RESULT / MISS only — not mid cast/wait/bite/reel.
+	if _phase == Phase.CAST or _phase == Phase.WAIT or _phase == Phase.BITE or _phase == Phase.REEL:
 		return
 	if spot:
 		spot.clear_session()
