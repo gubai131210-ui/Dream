@@ -47,6 +47,7 @@ const P_PEN_CORNER_NE := DIR_INTERIOR_PROP + "/pen_corner_ne_00.png"
 const P_PEN_CORNER_SW := DIR_INTERIOR_PROP + "/pen_corner_sw_00.png"
 const P_PEN_CORNER_SE := DIR_INTERIOR_PROP + "/pen_corner_se_00.png"
 const P_GRAIN_STACK := DIR_INTERIOR_PROP + "/grain_stack_00.png"
+const P_PEW := DIR_INTERIOR_PROP + "/pew_00.png"
 const P_BARREL := DIR_OUTDOOR_PROP + "/barrel_1.png"
 const P_BARREL_KEG := DIR_OUTDOOR_PROP + "/barrel_0.png"
 const P_CRATE0 := DIR_OUTDOOR_PROP + "/crate_0.png"
@@ -943,98 +944,176 @@ static func _all() -> Dictionary:
 			"actor": {},
 		},
 		# ── Wave B stubs (teams enrich ONLY their key; do not polish C01–C04) ──
+		# ── C06 村公所：西大厅（公告+议事）· 东办公室（案牍+档案体量）· 中轴南门通廊 ──
 		"c06_town_hall": {
 			"title": "村公所",
-			"hint": "村公所 · 大厅 / 镇长室（占位）",
+			"hint": "村公所 · 大厅议事 / 镇长办公室",
 			"return_path": SQ,
 			"room_w": 26,
-			"room_h": 18,
+			"room_h": 19,
 			"door_tx0": 11,
 			"door_tx1": 14,
 			"floor": "plank",
-			"modulate": Color(0.88, 0.86, 0.80, 1.0),
-			"rug": {"ox": 11, "oy": 12},
+			"modulate": Color(0.86, 0.85, 0.81, 1.0),
+			# Rug under hall visitor stop south of meeting table (not empty floor).
+			"rug": {"ox": 7, "oy": 12},
 			"window": true,
 			"clusters": [
-				_cluster("hall", 8, 8, [
-					_m(P_NOTICE, 0, 0, "公告板", "村务公告。", 0.85),
-					_m(P_TABLE_DINING, 2, 2, "会议桌", "议事长桌占位。", 0.9),
-					_m(P_STOOL, 0, 3, "旁听凳", "旁听席。", 0.55),
+				# Public hall — notice + meeting seating; east stools stop before door aisle (tx11–14).
+				_cluster("hall", 7, 9, [
+					_m(P_NOTICE, -1, -4, "公告板", "村务与告示栏（南侧留读位）。", 0.85),
+					_m(P_TABLE_DINING, 0, 0, "会议桌", "议事长桌。", 0.9),
+					_m(P_STOOL, -2, 0, "议事凳", "西席（对桌）。", 0.55),
+					_m(P_STOOL, 2, 0, "议事凳", "东席（对桌，不侵中轴通廊）。", 0.55),
+					_m(P_STOOL, 0, 2, "旁听凳", "南向旁听席。", 0.55),
+					_m(P_STOOL_TEA, 0, -2, "主位凳", "北向主议席。", 0.55),
+					_m(P_LAMP_INDOOR, -3, -3, "大厅灯", "公告侧台灯。", PROP),
 				]),
-				_cluster("office", 18, 7, [
-					_m(P_LEDGER, 0, 0, "案牍", "镇长文书。", 0.75),
-					_m(P_COUNTER, 0, 2, "办公柜", "档案柜占位。", 0.95),
-					_m(P_LAMP_INDOOR, 1, -1, "公所灯", "办公台灯。", PROP),
+				# Mayor office — staff north of counter, visitors south; shelf/crate archive mass east.
+				_cluster("office", 19, 7, [
+					_m(P_COUNTER, 0, 1, "办证柜", "访客侧办证柜台（职员在北、访客在南）。", 1.0),
+					_m(P_LEDGER, 0, -1, "镇长案", "柜台后文书案。", 0.7),
+					_m(P_STOOL, 0, 0, "职员凳", "柜台后职员位。", 0.5),
+					_m(P_DRESSER, -1, -2, "档案柜", "镇务抽屉柜（职员侧）。", 0.8),
+					_m(P_SHELF, 2, -2, "卷宗架", "归档书架。", 0.9),
+					_m(P_SHELF, 2, 0, "卷宗架", "旧档架（体量）。", 0.85),
+					_m(P_CRATE0, 3, -1, "档箱", "待整档箱。", 0.75),
+					_m(P_CRATE1, 3, 1, "档箱", "密封档箱。", 0.7),
+					_m(P_LAMP_INDOOR, 1, -1, "办公灯", "案侧台灯。", PROP),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 13, "ty": 6, "oy": -10, "color": Color(1.0, 0.95, 0.8), "energy": 1.0, "scale": 2.2},
+				{"tx": 6, "ty": 6, "oy": -12, "color": Color(1.0, 0.96, 0.86), "energy": 0.95, "scale": 1.8},
+				{"tx": 19, "ty": 5, "oy": -10, "color": Color(1.0, 0.94, 0.8), "energy": 1.0, "scale": 1.7},
+				{"tx": 13, "ty": 3, "oy": -8, "color": Color(0.92, 0.95, 1.0), "energy": 0.5, "scale": 1.4},
 			],
-			"actor": {},
+			"actor": {
+				"id": "mayor",
+				"title": "镇长",
+				"desc": "在办公室批文，偶尔到大厅看公告议事。",
+				"via_clusters": ["office", "hall"],
+				"via_stands": {"office": [0, 0], "hall": [0, 3]},
+			},
 		},
+		# ── C07 学校：北黑板 + 中轴通廊两侧课桌阵列 + 东教材角（≠村公所议事/医馆诊床）──
 		"c07_school": {
 			"title": "学校",
-			"hint": "学校 · 教室（占位）",
+			"hint": "学校 · 北黑板教室 / 课桌阵列 / 教材角",
 			"return_path": SQ,
-			"room_w": 24,
-			"room_h": 16,
-			"door_tx0": 10,
-			"door_tx1": 13,
+			"room_w": 28,
+			"room_h": 18,
+			"door_tx0": 12,
+			"door_tx1": 15,
 			"floor": "plank",
-			"modulate": Color(0.90, 0.89, 0.84, 1.0),
-			"rug": null,
+			"modulate": Color(0.91, 0.90, 0.86, 1.0),
+			# Rug under front aisle (between desk columns) — gather / lesson stop.
+			"rug": {"ox": 12, "oy": 9},
 			"window": true,
 			"clusters": [
-				_cluster("blackboard", 12, 4, [
-					_m(P_NOTICE, 0, 0, "黑板", "教室黑板占位。", 0.9),
-					_m(P_LAMP_INDOOR, 2, 0, "教室灯", "北壁灯。", PROP),
+				# North wall: board + flanking lamps + west-offset lectern (aisle 12–15 clear).
+				_cluster("blackboard", 14, 3, [
+					_m(P_NOTICE, 0, 0, "黑板", "北壁黑板（授课锚）。", 1.05),
+					_m(P_LAMP_INDOOR, -4, 0, "西壁灯", "黑板西侧教室灯。", PROP),
+					_m(P_LAMP_INDOOR, 4, 0, "东壁灯", "黑板东侧教室灯。", PROP),
+					_m(P_TABLE_DINING, -4, 2, "讲台", "偏西讲台（让出中轴通廊）。", 0.8),
+					_m(P_STOOL, -4, 3, "教凳", "讲台南教凳（面向课桌）。", 0.5),
+					_m(P_LEDGER, -3, 1, "教案", "讲台旁教案册。", 0.65),
 				]),
-				_cluster("desks", 10, 9, [
-					_m(P_TABLE_DINING, 0, 0, "课桌", "前排课桌。", 0.85),
-					_m(P_STOOL, -2, 1, "凳", "课凳。", 0.5),
-					_m(P_STOOL, 2, 1, "凳", "课凳。", 0.5),
-					_m(P_TABLE_DINING, 0, 3, "课桌", "后排课桌。", 0.85),
+				# Two columns × three rows facing north; stools south of desks; aisle 12–15 open.
+				_cluster("desks", 6, 7, [
+					_m(P_TABLE_DINING, 0, 0, "前排课桌", "西列前排（面北黑板）。", 0.72),
+					_m(P_STOOL, 0, 2, "课凳", "西列前排课凳（南向站位可交互）。", 0.48),
+					_m(P_TABLE_DINING, 14, 0, "前排课桌", "东列前排（面北黑板）。", 0.72),
+					_m(P_STOOL, 14, 2, "课凳", "东列前排课凳（南向站位可交互）。", 0.48),
+					_m(P_TABLE_DINING, 0, 3, "中排课桌", "西列中排。", 0.72),
+					_m(P_STOOL, 0, 5, "课凳", "西列中排课凳。", 0.48),
+					_m(P_TABLE_DINING, 14, 3, "中排课桌", "东列中排。", 0.72),
+					_m(P_STOOL, 14, 5, "课凳", "东列中排课凳。", 0.48),
+					_m(P_TABLE_DINING, 0, 6, "后排课桌", "西列后排（南门带空出）。", 0.72),
+					_m(P_STOOL, 0, 8, "课凳", "西列后排课凳。", 0.48),
+					_m(P_TABLE_DINING, 14, 6, "后排课桌", "东列后排（南门带空出）。", 0.72),
+					_m(P_STOOL, 14, 8, "课凳", "东列后排课凳。", 0.48),
+				]),
+				# East book corner — secondary zone, not a second classroom.
+				_cluster("books", 23, 5, [
+					_m(P_SHELF, 0, 0, "教材架", "东墙教材/读物架。", 0.9),
+					_m(P_LEDGER, 1, 1, "课本", "架旁课本册。", 0.65),
+					_m(P_BASKET, 0, 2, "练习筐", "练习册筐贴架。", 0.55),
+					_m(P_STOOL_TEA, 2, 2, "阅览凳", "教材角矮凳（西侧留站位）。", 0.5),
+					_m(P_LAMP_INDOOR, 1, -1, "角灯", "教材角壁灯。", PROP),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 12, "ty": 5, "oy": -8, "color": Color(1.0, 0.98, 0.9), "energy": 0.95, "scale": 2.0},
+				{"tx": 14, "ty": 4, "oy": -10, "color": Color(1.0, 0.98, 0.92), "energy": 1.05, "scale": 2.2},
+				{"tx": 14, "ty": 10, "oy": -6, "color": Color(1.0, 0.96, 0.88), "energy": 0.75, "scale": 1.8},
+				{"tx": 23, "ty": 5, "oy": -8, "color": Color(1.0, 0.94, 0.85), "energy": 0.7, "scale": 1.5},
 			],
-			"actor": {},
+			"actor": {
+				"id": "elder_woman",
+				"title": "老师",
+				"desc": "在黑板前授课，偶尔巡视课桌与教材角。",
+				"via_clusters": ["blackboard", "desks", "books"],
+				"via_stands": {
+					"blackboard": [0, 2],
+					"desks": [6, 2],
+					"books": [-2, 1],
+				},
+			},
 		},
+		# ── C08 医馆：西前台候诊 · 东诊床+药柜体量（≠杂货双架菜筐）──
 		"c08_clinic": {
 			"title": "医馆",
-			"hint": "医馆 · 前台 / 诊室（占位）",
+			"hint": "医馆 · 西前台候诊 / 东诊室药柜",
 			"return_path": SQ,
-			"room_w": 22,
-			"room_h": 15,
-			"door_tx0": 9,
-			"door_tx1": 12,
+			"room_w": 26,
+			"room_h": 17,
+			"door_tx0": 11,
+			"door_tx1": 14,
 			"floor": "plank",
-			"modulate": Color(0.86, 0.90, 0.88, 1.0),
-			"rug": {"ox": 9, "oy": 10},
+			# Soft cool clinical wash (not grocery warm cream / smith orange).
+			"modulate": Color(0.82, 0.90, 0.92, 1.0),
+			# Rug under waiting stop south of counter (west of door band 11–14).
+			"rug": {"ox": 6, "oy": 11},
 			"window": true,
 			"clusters": [
-				_cluster("front", 8, 7, [
-					_m(P_COUNTER, 0, 1, "前台", "挂号柜台。", 1.0),
-					_m(P_STOOL, 0, 3, "候诊凳", "候诊座位。", 0.55),
-					_m(P_LAMP_SHOP, 1, -1, "医馆灯", "前台灯。", PROP),
+				# Staff north of counter; patients approach dy=2; stools further south.
+				_cluster("front", 7, 7, [
+					_m(P_COUNTER, 0, 1, "前台", "挂号柜台（患者在南、医师在北）。", 1.0),
+					_m(P_LEDGER, -1, 0, "挂号簿", "柜北侧挂号名册。", 0.7),
+					_m(P_NOTICE, -2, -1, "诊费告示", "西壁挂号须知。", 0.75),
+					_m(P_LAMP_SHOP, 1, -2, "医馆店灯", "前台吊罩店灯（非锻工/酒馆灯）。", PROP),
+					_m(P_STOOL, -2, 3, "候诊凳", "西候诊矮凳（同 sheet）。", 0.55),
+					_m(P_STOOL, 1, 3, "候诊凳", "东候诊矮凳（同 sheet；中轴留站位）。", 0.55),
 				]),
-				_cluster("exam", 16, 6, [
-					_m(P_BED_S, 0, 0, "诊床", "检查床。", 0.85),
-					_m(P_MEDICINE, 2, 1, "药柜", "草药柜。", 0.75),
-					_m(P_HERBS, 2, -1, "药草", "晾挂药草。", 0.6),
+				# Exam bed west approach free; jar shelves + medicine chests + herbs = pharmacy mass.
+				_cluster("exam", 19, 6, [
+					_m(P_BED_S, 0, 1, "诊床", "检查/卧诊单人床。", 0.9),
+					_m(P_SHELF, 2, -1, "药罐架", "诊室东壁药罐柜（体量上层）。", 0.95),
+					_m(P_SHELF, 2, 1, "药罐架", "诊室东壁药罐柜（体量下层）。", 0.9),
+					_m(P_MEDICINE, 3, 0, "药箱", "架脚急救药箱。", 0.75),
+					_m(P_MEDICINE, 3, 2, "药箱", "叠放草药箱（体量）。", 0.7),
+					_m(P_HERBS, 0, -2, "晾挂药草", "诊床北壁干药草。", 0.65),
+					_m(P_HERBS, 2, -2, "晾挂药草", "药架上晾挂药草。", 0.6),
+					_m(P_LAMP_INDOOR, -1, -1, "诊室灯", "诊床侧柔和壁灯。", PROP),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 11, "ty": 5, "oy": -8, "color": Color(0.95, 1.0, 0.95), "energy": 0.9, "scale": 1.9},
+				{"tx": 8, "ty": 5, "oy": -10, "color": Color(0.92, 1.0, 0.98), "energy": 0.95, "scale": 2.0},
+				{"tx": 19, "ty": 5, "oy": -12, "color": Color(0.95, 1.0, 0.96), "energy": 0.9, "scale": 1.9},
 			],
-			"actor": {},
+			"actor": {
+				"id": "merchant",
+				"title": "医师",
+				"desc": "在前台挂号与诊床间往来。",
+				"via_clusters": ["front", "exam"],
+				"via_stands": {"front": [0, 0], "exam": [-2, 1]},
+			},
 		},
 		# ── C09 图书馆：西/东平行书脊体量 · 中廊借阅台 · 南门通廊 ──
 		"c09_library": {
@@ -1100,67 +1179,128 @@ static func _all() -> Dictionary:
 				},
 			},
 		},
+		# ── C10 教堂主礼堂：北祭坛 · 中轴通廊 · 东西座席（轴向 nave ≠ 教室/议事桌）──
+		# Door aisle 12–15 (≥2) clear south→altar; pews stay west (tx≤10) / east (tx≥17).
 		"c10_church": {
 			"title": "教堂",
-			"hint": "教堂 · 主礼堂（占位）",
+			"hint": "教堂 · 主礼堂（祭坛 + 座席）",
 			"return_path": SQ,
-			"room_w": 24,
-			"room_h": 20,
-			"door_tx0": 10,
-			"door_tx1": 13,
+			"room_w": 26,
+			"room_h": 22,
+			"door_tx0": 12,
+			"door_tx1": 15,
 			"floor": "stone",
-			"modulate": Color(0.82, 0.84, 0.88, 1.0),
-			"rug": {"ox": 10, "oy": 14},
+			# Cool stone wash (not tavern warm orange).
+			"modulate": Color(0.78, 0.81, 0.88, 1.0),
+			# Rug under altar approach (north of mid-nave, on axis).
+			"rug": {"ox": 12, "oy": 7},
 			"window": true,
 			"clusters": [
-				_cluster("altar", 12, 5, [
-					_m(P_TABLE_DINING, 0, 0, "祭坛", "北向祭坛桌。", 0.95),
-					_m(P_NOTICE, 0, -2, "彩窗", "北壁彩窗占位。", 0.8),
-					_m(P_LAMP_INDOOR, 2, 0, "圣灯", "祭坛侧灯。", PROP),
+				# Verb: 祭礼 — north sanctuary; clergy south of altar facing nave.
+				_cluster("altar", 13, 4, [
+					_m(P_COUNTER, 0, 0, "祭坛", "北向长祭坛（礼堂主锚）。", 1.0),
+					_m(P_NOTICE, 0, -2, "经文牌", "北壁经文/彩窗下告示。", 0.8),
+					_m(P_LEDGER, -2, 0, "经书", "祭坛西侧经书。", 0.65),
+					_m(P_LAMP_INDOOR, 2, -1, "圣灯", "祭坛东侧圣灯。", PROP),
+					_m(P_LAMP_INDOOR, -2, -1, "圣灯", "祭坛西侧圣灯。", 0.85),
+					_m(P_STOOL, 0, 2, "跪凳", "祭坛前跪凳（南站位可交互）。", 0.5),
 				]),
-				_cluster("pews", 10, 11, [
-					_m(P_TABLE_DINING, 0, 0, "长椅", "西排座席占位。", 0.8),
-					_m(P_TABLE_DINING, 4, 0, "长椅", "东排座席占位。", 0.8),
-					_m(P_STOOL, 2, 2, "跪凳", "中廊跪凳。", 0.5),
+				# Verb: 西座席 — three rows facing north; aisle-side stands free.
+				_cluster("pews_w", 7, 10, [
+					_m(P_PEW, 0, 0, "长椅", "西排前座席。", 0.75),
+					_m(P_PEW, 0, 3, "长椅", "西排中座席。", 0.75),
+					_m(P_PEW, 0, 6, "长椅", "西排后座席。", 0.75),
+					_m(P_STOOL, 2, 1, "边凳", "西排靠廊短坐（不堵中轴）。", 0.5),
+				]),
+				# Verb: 东座席 — mirror bank; keep dx clear of door band 12–15.
+				_cluster("pews_e", 19, 10, [
+					_m(P_PEW, 0, 0, "长椅", "东排前座席。", 0.75),
+					_m(P_PEW, 0, 3, "长椅", "东排中座席。", 0.75),
+					_m(P_PEW, 0, 6, "长椅", "东排后座席。", 0.75),
+					_m(P_STOOL, -2, 1, "边凳", "东排靠廊短坐（不堵中轴）。", 0.5),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 12, "ty": 6, "oy": -12, "color": Color(0.95, 0.95, 1.0), "energy": 1.1, "scale": 2.4},
+				{"tx": 13, "ty": 4, "oy": -14, "color": Color(0.86, 0.90, 1.0), "energy": 1.15, "scale": 2.6},
+				{"tx": 7, "ty": 11, "oy": -8, "color": Color(0.80, 0.86, 0.98), "energy": 0.5, "scale": 1.7},
+				{"tx": 19, "ty": 11, "oy": -8, "color": Color(0.80, 0.86, 0.98), "energy": 0.5, "scale": 1.7},
 			],
-			"actor": {},
+			"actor": {
+				"id": "elder_woman",
+				"title": "司礼",
+				"desc": "在祭坛与东西座席间巡视。",
+				"via_clusters": ["altar", "pews_w", "pews_e"],
+				"via_stands": {
+					"altar": [0, 3],
+					"pews_w": [2, 2],
+					"pews_e": [-2, 2],
+				},
+			},
 		},
+		# ── C11 车站内部：西宽候车厅 · 中轴南门通廊 · 东售票/站长 + 货运体量 ──
+		# Silhouette: long horizontal (30×16) ≠ C10 church tall nave (24×20).
+		# Door aisle 13–16 clear south→north; benches stay west (tx≤12), ticket/freight east (tx≥20).
 		"c11_station": {
 			"title": "车站内部",
-			"hint": "车站 · 候车厅 / 站长室（占位）",
+			"hint": "车站 · 候车厅 / 售票站长室",
 			"return_path": STN,
 			"room_w": 30,
 			"room_h": 16,
 			"door_tx0": 13,
 			"door_tx1": 16,
 			"floor": "plank",
-			"modulate": Color(0.86, 0.84, 0.80, 1.0),
-			"rug": null,
+			"modulate": Color(0.85, 0.83, 0.79, 1.0),
+			# Rug under waiting seats (west of door corridor 13–16).
+			"rug": {"ox": 7, "oy": 9},
 			"window": true,
 			"clusters": [
-				_cluster("waiting", 10, 8, [
-					_m(P_TABLE_DINING, 0, 0, "候车长椅", "西候车座。", 0.85),
-					_m(P_TABLE_DINING, 4, 0, "候车长椅", "东候车座。", 0.85),
-					_m(P_NOTICE, 2, -2, "时刻表", "班次告示。", 0.8),
-					_m(P_LAMP_SHOP, 2, -3, "站厅灯", "候车厅灯。", PROP),
+				# Verb: 候车 — long bench rows + timetable (table_dining = bench proxy).
+				_cluster("waiting", 6, 7, [
+					_m(P_TABLE_DINING, 0, 0, "候车长椅", "北排西座（候车）。", 0.85),
+					_m(P_TABLE_DINING, 3, 0, "候车长椅", "北排中座（候车）。", 0.85),
+					_m(P_TABLE_DINING, 6, 0, "候车长椅", "北排东座（贴通廊西缘）。", 0.85),
+					_m(P_TABLE_DINING, 0, 3, "候车长椅", "南排西座（候车）。", 0.85),
+					_m(P_TABLE_DINING, 3, 3, "候车长椅", "南排中座（候车）。", 0.85),
+					_m(P_NOTICE, 3, -3, "时刻表", "班次与站台告示。", 0.85),
+					_m(P_LAMP_SHOP, 5, -2, "站厅灯", "候车厅壁灯。", PROP),
+					_m(P_STOOL, -2, 1, "边座", "长椅端头短坐。", 0.55),
 				]),
-				_cluster("master", 22, 7, [
-					_m(P_COUNTER, 0, 1, "售票窗", "站长/售票柜台。", 1.0),
-					_m(P_LEDGER, 0, -1, "行车簿", "站长日志。", 0.7),
-					_m(P_CRATE0, 2, 2, "货运箱", "小件货运。", 0.75),
+				# Verb: 售票 — counter faces south (passenger); staff/ledger north.
+				_cluster("ticket", 22, 6, [
+					_m(P_COUNTER, 0, 1, "售票窗", "站长/售票柜台（客南主北）。", 1.0),
+					_m(P_LEDGER, -1, -1, "行车簿", "站长日志与班次簿。", 0.7),
+					_m(P_LAMP_SHOP, 2, -1, "票窗灯", "售票台灯。", PROP),
+					_m(P_COIN, 2, 1, "票箱", "零钱与票根匣。", 0.55),
+					_m(P_NOTICE, 1, -3, "票价牌", "票价与托运须知。", 0.7),
+				]),
+				# Verb: 货运体量 — crate mass east of ticket (not in door aisle).
+				_cluster("freight", 25, 9, [
+					_m(P_CRATE0, 0, -2, "货运箱", "到站货箱底垛。", PROP),
+					_m(P_CRATE1, 2, -2, "货运箱", "叠高托运箱。", 0.85),
+					_m(P_CRATE0, 1, 0, "货运箱", "中层待发件。", 0.9),
+					_m(P_CRATE1, 0, 1, "货运箱", "前脚小件货。", 0.8),
+					_m(P_SACK0, 2, 1, "邮包", "袋装托运。", 0.65),
+					_m(P_BARREL, 3, 0, "油桶", "站务补给桶。", 0.75),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 15, "ty": 5, "oy": -8, "color": Color(1.0, 0.96, 0.85), "energy": 1.0, "scale": 2.2},
+				{"tx": 9, "ty": 4, "oy": -10, "color": Color(1.0, 0.96, 0.86), "energy": 1.0, "scale": 2.2},
+				{"tx": 22, "ty": 4, "oy": -8, "color": Color(1.0, 0.94, 0.82), "energy": 0.95, "scale": 1.9},
 			],
-			"actor": {},
+			"actor": {
+				"id": "station_master",
+				"title": "站长",
+				"desc": "在候车厅与售票窗之间巡视，偶尔清点货箱。",
+				"via_clusters": ["waiting", "ticket", "freight"],
+				"via_stands": {
+					"waiting": [2, 2],
+					"ticket": [0, 0],
+					"freight": [-2, 1],
+				},
+			},
 		},
 	}
