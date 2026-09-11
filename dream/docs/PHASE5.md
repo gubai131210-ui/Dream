@@ -14,7 +14,7 @@ Phase 5 打开世界 **第二/三层**：可进入室内、地下入口、钓鱼
 | Home C01+C02 | DONE | 主角宅 + 老人/农家/商贾/铁匠宅；住宅区南排门户 |
 | FarmBuild C03 | DONE | 谷仓 + 鸡舍；农场住宅区门户 |
 | Shop C04 | DONE | 杂货/铁匠铺/酒馆；商业街门户 |
-| Stall-C05 … Env-H | PENDING | 资产 remap+缺口重生已落地（见 [`INTERIOR_ASSET_AUDIT.md`](INTERIOR_ASSET_AUDIT.md)）；**用户 Godot 抽检 C01–C04 真像通过后**再开 C05 |
+| Stall-C05 … Env-H | **C05 IN PROGRESS** | 市集摊位 6 态同槽机 + 路灯名实修复；见 [`STALL_C05.md`](STALL_C05.md) / [`MARKET_STALL_ASSET_AUDIT.md`](MARKET_STALL_ASSET_AUDIT.md)。Fish…Env-H 仍 PENDING |
 
 - Foundation: 32px floor / wall / door / window / rug — see [`INTERIOR_FOUNDATION.md`](INTERIOR_FOUNDATION.md).
 - Furniture: outdoor wood props @ scale **0.55**; warm light = local `PointLight2D` (not full-room orange).

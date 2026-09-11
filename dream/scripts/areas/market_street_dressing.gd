@@ -14,9 +14,10 @@ func spawn_all(ysort: Node2D) -> void:
 
 
 func _spawn_market_stalls(ysort: Node2D) -> void:
-	# Alcove-aligned stalls along the E–W street (see assembler path pockets).
+	# Alcove-aligned stalls; initial states spread so ≥3 C05 states visible at once.
 	var stalls := [
 		{
+			"id": "n_w",
 			"pos": Vector2(496, 416),
 			"title": "蔬果摊",
 			"desc": "北街西凹口蔬果摊：小货箱靠棚侧，不挡门脸。",
@@ -24,17 +25,21 @@ func _spawn_market_stalls(ysort: Node2D) -> void:
 			"barrel": "res://assets/sprites/props/B11-01_barrels_03.png",
 			"stripe_a": Color(0.85, 0.2, 0.2, 0.92),
 			"stripe_b": Color(0.95, 0.95, 0.92, 0.92),
+			"state": "open",
 		},
 		{
+			"id": "n_m",
 			"pos": Vector2(752, 416),
 			"title": "双联摊",
-			"desc": "北街中凹口双联摊：蓝白棚，货在棚后侧。",
+			"desc": "北街中凹口双联摊：蓝白棚。",
 			"crate": "res://assets/sprites/props/B11-02_crates_boxes_00.png",
 			"barrel": "res://assets/sprites/props/B11-01_barrels_00.png",
 			"stripe_a": Color(0.2, 0.45, 0.85, 0.92),
 			"stripe_b": Color(0.95, 0.95, 0.92, 0.92),
+			"state": "locked",
 		},
 		{
+			"id": "n_e",
 			"pos": Vector2(976, 416),
 			"title": "百货摊",
 			"desc": "北街东凹口百货摊。",
@@ -42,17 +47,21 @@ func _spawn_market_stalls(ysort: Node2D) -> void:
 			"barrel": "res://assets/sprites/props/B11-01_barrels_03.png",
 			"stripe_a": Color(0.85, 0.2, 0.2, 0.92),
 			"stripe_b": Color(0.95, 0.95, 0.92, 0.92),
+			"state": "sold_out",
 		},
 		{
+			"id": "s_w",
 			"pos": Vector2(576, 608),
 			"title": "南口蔬摊",
 			"desc": "南凹口蔬摊，面向主街。",
 			"crate": "res://assets/sprites/props/crate_1.png",
-			"barrel": "res://assets/sprites/props/barrel_0.png",
+			"barrel": "res://assets/sprites/props/barrel_1.png",
 			"stripe_a": Color(0.2, 0.55, 0.35, 0.92),
 			"stripe_b": Color(0.95, 0.95, 0.9, 0.92),
+			"state": "setup",
 		},
 		{
+			"id": "s_m",
 			"pos": Vector2(832, 608),
 			"title": "南口杂货",
 			"desc": "南中凹口杂货摊。",
@@ -60,15 +69,18 @@ func _spawn_market_stalls(ysort: Node2D) -> void:
 			"barrel": "res://assets/sprites/props/B11-01_barrels_00.png",
 			"stripe_a": Color(0.75, 0.45, 0.15, 0.92),
 			"stripe_b": Color(0.95, 0.92, 0.85, 0.92),
+			"state": "closed",
 		},
 		{
+			"id": "s_e",
 			"pos": Vector2(944, 608),
 			"title": "灯下小摊",
-			"desc": "东南凹口小摊。",
+			"desc": "东南凹口小摊（横酒桶 specialty）。",
 			"crate": "res://assets/sprites/props/crate_1.png",
 			"barrel": "res://assets/sprites/props/barrel_0.png",
 			"stripe_a": Color(0.55, 0.25, 0.65, 0.92),
 			"stripe_b": Color(0.95, 0.95, 0.92, 0.92),
+			"state": "empty",
 		},
 	]
 	for s in stalls:
@@ -76,44 +88,14 @@ func _spawn_market_stalls(ysort: Node2D) -> void:
 		var t := craft.world_to_tile(pos)
 		if craft.is_water(t.x, t.y):
 			continue
-		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(96, 72))
-		var visual: Node2D = hs.get_node("Visual")
+		var stall := MarketStall.spawn(ysort, pos, Vector2(96, 72), s)
+		var visual: Node2D = stall.get_node("Visual")
 		craft.add_contact_shadow(visual, Vector2(0, 8), Vector2(30, 10))
-		_add_awning(visual, s["stripe_a"], s["stripe_b"])
-		# Goods: scale down, beside / slightly behind awning (negative Y), never in front.
-		if ResourceLoader.exists(s["crate"]):
-			var c := craft.spawn_sprite(visual, s["crate"], Vector2(-22, -4))
-			c.scale = Vector2(0.48, 0.48)
-			c.z_index = 1
-		if ResourceLoader.exists(s["barrel"]):
-			var b := craft.spawn_sprite(visual, s["barrel"], Vector2(24, -2))
-			b.scale = Vector2(0.45, 0.45)
-			b.z_index = 1
 
 
-func _add_awning(parent: Node2D, color_a: Color, color_b: Color) -> void:
-	var awning := Node2D.new()
-	awning.name = "Awning"
-	awning.position = Vector2(-36, -32)
-	parent.add_child(awning)
-	var stripe_w := 12.0
-	var h := 20.0
-	for i in range(6):
-		var strip := ColorRect.new()
-		strip.size = Vector2(stripe_w, h)
-		strip.position = Vector2(float(i) * stripe_w, 0)
-		strip.color = color_a if i % 2 == 0 else color_b
-		awning.add_child(strip)
-	var pole_l := ColorRect.new()
-	pole_l.size = Vector2(3, 28)
-	pole_l.position = Vector2(2, 16)
-	pole_l.color = Color(0.35, 0.22, 0.12, 0.9)
-	awning.add_child(pole_l)
-	var pole_r := ColorRect.new()
-	pole_r.size = Vector2(3, 28)
-	pole_r.position = Vector2(67, 16)
-	pole_r.color = Color(0.35, 0.22, 0.12, 0.9)
-	awning.add_child(pole_r)
+func _add_awning(_parent: Node2D, _color_a: Color, _color_b: Color) -> void:
+	# Legacy helper removed — awnings live inside MarketStall state layers.
+	pass
 
 
 func _spawn_zone_benches_and_props(ysort: Node2D) -> void:
@@ -129,10 +111,12 @@ func _spawn_zone_benches_and_props(ysort: Node2D) -> void:
 		# North shop door dirt → bench_0 only.
 		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(448, 360), "title": "铺前条凳", "desc": "货栈门前条凳（铺前款）。", "on_path": false},
 		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(672, 360), "title": "铺前条凳", "desc": "主铺门前条凳（铺前款）。", "on_path": false},
-		# Lamps at street corners.
+		# Real lamp posts only — lamp_1/lamp_2 are flower pot / planter (see MARKET_STALL_ASSET_AUDIT.md).
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(400, 464), "title": "西街灯", "desc": "商业街西段路灯。", "on_path": true},
-		{"path": "res://assets/sprites/props/lamp_1.png", "pos": Vector2(1040, 464), "title": "东街灯", "desc": "商业街东段路灯。", "on_path": true},
-		{"path": "res://assets/sprites/props/lamp_2.png", "pos": Vector2(640, 608), "title": "南口灯", "desc": "南土路入口路灯。", "on_path": true},
+		{"path": "res://assets/sprites/props/B11-08_pots_lamps_03.png", "pos": Vector2(1040, 464), "title": "东街灯", "desc": "商业街东段弯臂路灯。", "on_path": true},
+		{"path": "res://assets/sprites/props/B11-08_pots_lamps_06.png", "pos": Vector2(640, 608), "title": "南口灯", "desc": "南土路入口铁杆路灯。", "on_path": true},
+		# Decorative planter (was mislabeled as lamp_2) — not a light.
+		{"path": "res://assets/sprites/props/lamp_2.png", "pos": Vector2(1080, 520), "title": "街角花箱", "desc": "东街花箱装饰（非路灯）。", "on_path": true, "scale": 0.5},
 		# Loose sack off stall sightline (shop side only), scaled down.
 		{"path": "res://assets/sprites/props/sack_1.png", "pos": Vector2(400, 340), "title": "货栈麻袋", "desc": "西货栈旁麻袋，不挡摊面。", "on_path": false, "scale": 0.55},
 	]

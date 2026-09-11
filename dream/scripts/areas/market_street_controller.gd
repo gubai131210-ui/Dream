@@ -8,6 +8,7 @@ extends Node2D
 @onready var btn_conn: Button = $UI/TopBar/BackConnections
 @onready var btn_square: Button = $UI/TopBar/ToSquare
 @onready var btn_residential: Button = $UI/TopBar/ToResidential
+@onready var btn_station: Button = $UI/TopBar/ToStation
 @onready var grid_overlay: Node2D = $DebugGrid
 
 
@@ -21,6 +22,8 @@ func _ready() -> void:
 		btn_square.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.SQUARE_PATH))
 	if btn_residential:
 		btn_residential.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.RESIDENTIAL_PATH))
+	if btn_station:
+		btn_station.pressed.connect(func(): get_tree().change_scene_to_file(SceneRouter.STATION_PATH))
 	for child in ysort_root.get_children():
 		_wire_hotspots(child)
 		_wire_portals(child)
@@ -60,4 +63,6 @@ func _wire_hotspots(node: Node) -> void:
 
 
 func _on_hotspot(hotspot: InteractableHotspot) -> void:
+	if hotspot is MarketStall:
+		(hotspot as MarketStall).cycle_next()
 	info.show_info(hotspot.title, hotspot.description)
