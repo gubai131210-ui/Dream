@@ -90,7 +90,7 @@ From outdoor `building_00`:
 3. **Slice `c01_room_reference_cozy.png` into real wall/door/window tiles** (rows already labeled) instead of regenerating weak cream stripes  
 4. **Per-room furniture from painted islands**, same facing lock as outdoor props  
 5. Gate CI/tool: `qa_interior_prop_quality.py` must **fail** if unique colors &lt; 40 or edge &lt; 12 for any gameplay prop  
-6. Only then re-place by `INTERIOR_ROOM_BRIEFS` zones  
+6. Only then re-place by `INTERIOR_ROOM_BRIEFS` zones + [`INTERIOR_COMPOSITION.md`](INTERIOR_COMPOSITION.md) clusters  
 
 ## 禁止偷懒（本诊断）
 
@@ -100,6 +100,6 @@ From outdoor `building_00`:
 - 禁止无视已有 `c01_room_reference_cozy` 参考条去另写劣质墙砖  
 - 禁止无质量闸就批量生成「新素材」交差  
 
-## Next step
+## Status (2026-09-11)
 
-Await user OK to start **art rebuild pass** (sheet → cut → profiles rewire), not another profile-only tweak.
+Art rebuild + composition pass landed: painted props QA-gated; profiles use `clusters` / `via_clusters`. Remaining feedback is visual polish in Godot playtest.

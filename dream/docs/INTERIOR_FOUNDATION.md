@@ -73,7 +73,8 @@ Scenes are thin shells (`InteriorRoomController` + `Assembler` with `profile_id`
 
 Specialty props: `assets/sprites/interior/props/` via `tools/make_interior_specialty.py`.
 
-> **2026-09-11 diagnosis:** those specialty PNGs are **PIL placeholders** (avg ~4 unique colors vs outdoor ~1000). Layout differentiation does not fix ugliness — see [`INTERIOR_DIAGNOSIS.md`](INTERIOR_DIAGNOSIS.md). Gate: `tools/qa_interior_prop_quality.py`.
+> **Art:** painted props + QA gate — see [`INTERIOR_DIAGNOSIS.md`](INTERIOR_DIAGNOSIS.md).  
+> **Layout:** functional clusters (anchor + satellites, NPC via workstations) — see [`INTERIOR_COMPOSITION.md`](INTERIOR_COMPOSITION.md). Profile schema uses `clusters` / `via_clusters` (legacy `props` fallback only).
 
 ## 禁止偷懒
 

@@ -172,19 +172,44 @@ func _paint_rug(parent: Node2D) -> void:
 
 
 func _spawn_furniture(parent: Node2D) -> void:
+	var clusters: Array = _profile.get("clusters", [])
+	if not clusters.is_empty():
+		for cluster in clusters:
+			var anchor: Array = cluster.get("anchor", [0, 0])
+			var ax := int(anchor[0])
+			var ay := int(anchor[1])
+			for m in cluster.get("members", []):
+				var path: String = str(m.get("path", ""))
+				var tx := ax + int(m.get("dx", 0))
+				var ty := ay + int(m.get("dy", 0))
+				_spawn_prop(
+					parent,
+					path,
+					_tile_center(tx, ty),
+					float(m.get("scale", PROP_SCALE)),
+					str(m.get("title", "物件")),
+					str(m.get("desc", "")),
+				)
+		return
+	# Legacy flat props (avoid in new rooms — see INTERIOR_COMPOSITION.md).
 	var props: Array = _profile.get("props", [])
 	for p in props:
-		var path: String = str(p.get("path", ""))
-		var scale_f: float = float(p.get("scale", PROP_SCALE))
 		_spawn_prop(
 			parent,
-			path,
+			str(p.get("path", "")),
 			_tile_center(int(p.get("tx", 0)), int(p.get("ty", 0))),
-			scale_f,
+			float(p.get("scale", PROP_SCALE)),
 			str(p.get("title", "物件")),
 			str(p.get("desc", "")),
 		)
 
+
+func _cluster_anchor(cluster_id: String) -> Vector2i:
+	for cluster in _profile.get("clusters", []):
+		if str(cluster.get("id", "")) == cluster_id:
+			var a: Array = cluster.get("anchor", [0, 0])
+			return Vector2i(int(a[0]), int(a[1]))
+	return Vector2i(-1, -1)
 
 func _spawn_prop(parent: Node2D, path: String, pos: Vector2, scale_f: float, title: String, desc: String) -> void:
 	if not ResourceLoader.exists(path):
@@ -255,18 +280,6 @@ func _spawn_anim_fx(parent: Node2D, prefix: String, pos: Vector2, fps: float) ->
 	parent.add_child(anim)
 
 
-func _spawn_ambient(parent: Node2D) -> void:
-	var list: Array = _profile.get("ambient", [])
-	for a in list:
-		var species := str(a.get("species", ""))
-		if species.is_empty():
-			continue
-		var critter := AmbientCritter.new()
-		parent.add_child(critter)
-		# craft=null → free roam inside room (no outdoor water mask).
-		critter.setup(species, _tile_center(int(a.get("tx", 0)), int(a.get("ty", 0))), null, -1.0)
-
-
 func _spawn_local_lights(parent: Node2D) -> void:
 	var mod := CanvasModulate.new()
 	mod.name = "InteriorModulate"
@@ -309,13 +322,41 @@ func _radial_light_texture() -> GradientTexture2D:
 	return tex
 
 
+func _spawn_ambient(parent: Node2D) -> void:
+	var list: Array = _profile.get("ambient", [])
+	for a in list:
+		var species := str(a.get("species", ""))
+		if species.is_empty():
+			continue
+		var tx := int(a.get("tx", -1))
+		var ty := int(a.get("ty", -1))
+		if a.has("cluster") and (tx < 0 or ty < 0):
+			var anch := _cluster_anchor(str(a.get("cluster")))
+			if anch.x >= 0:
+				tx = anch.x + int(a.get("dx", 1))
+				ty = anch.y + int(a.get("dy", 1))
+		if tx < 0 or ty < 0:
+			continue
+		var critter := AmbientCritter.new()
+		parent.add_child(critter)
+		critter.setup(species, _tile_center(tx, ty), null, -1.0)
+
+
 func _spawn_actor(parent: Node2D) -> void:
 	var a: Dictionary = _profile.get("actor", {})
 	if a.is_empty():
 		return
 	var route: Array[Vector2] = []
-	for pt in a.get("route", []):
-		route.append(_tile_center(int(pt[0]), int(pt[1])))
+	# Prefer named cluster anchors so NPCs visit work stations (smart-object style).
+	var via: Array = a.get("via_clusters", [])
+	if not via.is_empty():
+		for cid in via:
+			var anch := _cluster_anchor(str(cid))
+			if anch.x >= 0:
+				route.append(_tile_center(anch.x, anch.y + 1))
+	if route.size() < 2:
+		for pt in a.get("route", []):
+			route.append(_tile_center(int(pt[0]), int(pt[1])))
 	if route.size() < 2:
 		return
 	var actor := PatrolActor.new()

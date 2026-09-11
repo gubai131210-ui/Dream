@@ -162,6 +162,7 @@
 ## Related
 
 - [`INTERIOR_FOUNDATION.md`](INTERIOR_FOUNDATION.md)  
+- [`INTERIOR_COMPOSITION.md`](INTERIOR_COMPOSITION.md) — 功能簇摆放（第二关）  
 - [`INTERIOR_LIBRARY.md`](INTERIOR_LIBRARY.md)  
 - [`PHASE5.md`](PHASE5.md)  
 - `scripts/interiors/interior_profiles.gd`
