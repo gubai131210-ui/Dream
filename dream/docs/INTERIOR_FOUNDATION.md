@@ -73,6 +73,8 @@ Scenes are thin shells (`InteriorRoomController` + `Assembler` with `profile_id`
 
 Specialty props: `assets/sprites/interior/props/` via `tools/make_interior_specialty.py`.
 
+> **2026-09-11 diagnosis:** those specialty PNGs are **PIL placeholders** (avg ~4 unique colors vs outdoor ~1000). Layout differentiation does not fix ugliness — see [`INTERIOR_DIAGNOSIS.md`](INTERIOR_DIAGNOSIS.md). Gate: `tools/qa_interior_prop_quality.py`.
+
 ## 禁止偷懒
 
 - 禁止棋盘格 / 纯色块当地板  
