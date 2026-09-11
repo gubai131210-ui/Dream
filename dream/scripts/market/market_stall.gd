@@ -24,8 +24,9 @@ var base_title: String = "市集摊"
 var base_desc: String = ""
 var stripe_a: Color = Color(0.85, 0.2, 0.2, 0.92)
 var stripe_b: Color = Color(0.95, 0.95, 0.92, 0.92)
-var crate_path: String = "res://assets/sprites/props/B11-02_crates_boxes_04.png"
+var crate_path: String = "res://assets/sprites/props/B11-02_crates_boxes_06.png"
 var barrel_path: String = "res://assets/sprites/props/B11-01_barrels_03.png"
+var body_path: String = ""  # optional full stall PNG from sprites/market/
 var state: State = State.OPEN
 
 var _layer: Node2D
@@ -55,6 +56,7 @@ func configure(cfg: Dictionary) -> void:
 	stripe_b = cfg.get("stripe_b", stripe_b)
 	crate_path = str(cfg.get("crate", crate_path))
 	barrel_path = str(cfg.get("barrel", barrel_path))
+	body_path = str(cfg.get("body", body_path))
 	var st = cfg.get("state", State.OPEN)
 	if typeof(st) == TYPE_STRING:
 		state = _parse_state(str(st))
@@ -90,20 +92,39 @@ func apply_state(next: State) -> void:
 			_add_awning(0.55, 4)
 			_add_goods(true, false)
 		State.OPEN:
-			_add_poles()
-			_add_awning(1.0, 6)
-			_add_goods(true, true)
+			if not _try_body_sprite(0.55):
+				_add_poles()
+				_add_awning(1.0, 6)
+				_add_goods(true, true)
 		State.SOLD_OUT:
-			_add_poles()
-			_add_awning(0.75, 6, true)
-			_add_goods(true, false)
+			if not _try_body_sprite(0.45):
+				_add_poles()
+				_add_awning(0.75, 6, true)
+				_add_goods(true, false)
 			_add_chip("售罄", Color(0.92, 0.35, 0.28, 0.95))
 		State.CLOSED:
-			_add_poles()
-			_add_collapsed_awning()
+			if not _try_body_sprite(0.4, true):
+				_add_poles()
+				_add_collapsed_awning()
 	title = "%s · %s" % [base_title, STATE_LABEL.get(state, "?")]
 	description = "%s\n状态：%s（再点切换）" % [base_desc, STATE_LABEL.get(state, "?")]
 	set_meta("stall_state", state_name())
+
+
+func _try_body_sprite(scale_f: float, prefer_drape: bool = false) -> bool:
+	var path := body_path
+	if prefer_drape:
+		path = "res://assets/sprites/market/awning_drape_cream_00.png"
+	if path.is_empty() or not ResourceLoader.exists(path):
+		return false
+	var spr := Sprite2D.new()
+	spr.texture = load(path) as Texture2D
+	spr.position = Vector2(0, -8)
+	spr.scale = Vector2(scale_f, scale_f)
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	spr.z_index = 2
+	_layer.add_child(spr)
+	return true
 
 
 func state_name() -> String:
