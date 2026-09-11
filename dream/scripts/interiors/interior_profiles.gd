@@ -1036,41 +1036,69 @@ static func _all() -> Dictionary:
 			],
 			"actor": {},
 		},
+		# ── C09 图书馆：西/东平行书脊体量 · 中廊借阅台 · 南门通廊 ──
 		"c09_library": {
 			"title": "图书馆",
-			"hint": "图书馆 · 大厅 / 书架（占位）",
+			"hint": "图书馆 · 平行书架 / 中岛借阅",
 			"return_path": SQ,
-			"room_w": 28,
-			"room_h": 17,
-			"door_tx0": 12,
-			"door_tx1": 15,
+			# Long hall + wing stacks ≠ school desk grid ≠ church nave.
+			"room_w": 30,
+			"room_h": 18,
+			"door_tx0": 13,
+			"door_tx1": 16,
 			"floor": "plank",
 			"modulate": Color(0.84, 0.82, 0.78, 1.0),
-			"rug": {"ox": 12, "oy": 11},
+			# Rug = customer approach south of borrow desk (not under stacks).
+			"rug": {"ox": 13, "oy": 10},
 			"window": true,
 			"clusters": [
-				_cluster("stacks_w", 6, 7, [
-					_m(P_SHELF, 0, 0, "西书架", "文学架。", 0.95),
-					_m(P_SHELF, 0, 2, "西书架", "史地架。", 0.9),
-					_m(P_SACK0, 2, 1, "书捆", "待上架书捆。", 0.55),
+				# West stack wing — repeated shelves = readable book mass; keep east of wing clear for aisle.
+				_cluster("stacks_w", 5, 6, [
+					_m(P_SHELF, 0, -2, "西书架", "文学架（可检索分类）。", 0.95),
+					_m(P_SHELF, 0, 0, "西书架", "史地架（可检索分类）。", 0.95),
+					_m(P_SHELF, 0, 2, "西书架", "童书架（可检索分类）。", 0.9),
+					_m(P_SHELF, -2, -1, "西内架", "诗集叠架（书脊体量）。", 0.9),
+					_m(P_SHELF, -2, 1, "西内架", "期刊叠架（书脊体量）。", 0.85),
+					_m(P_SACK0, 2, 2, "书捆", "待上架书捆（贴架脚，不挡中廊）。", 0.5),
+					_m(P_CRATE0, 2, 3, "还书箱", "西翼还书暂存。", 0.75),
 				]),
-				_cluster("stacks_e", 21, 7, [
-					_m(P_SHELF, 0, 0, "东书架", "自然架。", 0.95),
-					_m(P_SHELF, 0, 2, "东书架", "档案架。", 0.9),
-					_m(P_LEDGER, -2, 1, "索引册", "馆藏索引。", 0.7),
+				# East stack wing — mirror mass; aisle face west toward center corridor.
+				_cluster("stacks_e", 24, 6, [
+					_m(P_SHELF, 0, -2, "东书架", "自然架（可检索分类）。", 0.95),
+					_m(P_SHELF, 0, 0, "东书架", "农艺架（可检索分类）。", 0.95),
+					_m(P_SHELF, 0, 2, "东书架", "档案架（可检索分类）。", 0.9),
+					_m(P_SHELF, 2, -1, "东内架", "参考叠架（书脊体量）。", 0.9),
+					_m(P_SHELF, 2, 1, "东内架", "地方志叠架（书脊体量）。", 0.85),
+					_m(P_LEDGER, -2, 1, "索引册", "东翼馆藏索引（可搜条目）。", 0.7),
+					_m(P_BASKET, -2, 3, "书篮", "阅览还书篮。", 0.7),
 				]),
-				_cluster("desk", 14, 8, [
-					_m(P_COUNTER, 0, 0, "借阅台", "中岛借阅台。", 1.0),
-					_m(P_LAMP_INDOOR, 1, -2, "阅览灯", "台灯。", PROP),
-					_m(P_STOOL_TEA, 0, 2, "阅览凳", "短坐阅览。", 0.55),
+				# Center borrow island — staff north of counter; free approach tile south (dy≥2 empty).
+				_cluster("desk", 14, 7, [
+					_m(P_COUNTER, 0, 0, "借阅台", "中岛借阅台（顾客南站、馆员北侧）。", 1.05),
+					_m(P_LEDGER, -1, -1, "借阅簿", "流通登记簿。", 0.7),
+					_m(P_NOTICE, 2, -1, "分类卡", "架位索引卡（大厅检索提示）。", 0.8),
+					_m(P_LAMP_INDOOR, 1, -2, "阅览灯", "借阅台灯。", PROP),
+					_m(P_STOOL_TEA, 3, 0, "旁凳", "柜东短坐（不占南向站位）。", 0.55),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 14, "ty": 5, "oy": -10, "color": Color(1.0, 0.94, 0.82), "energy": 1.05, "scale": 2.3},
+				{"tx": 5, "ty": 5, "oy": -10, "color": Color(1.0, 0.93, 0.78), "energy": 0.85, "scale": 1.8},
+				{"tx": 14, "ty": 5, "oy": -12, "color": Color(1.0, 0.94, 0.82), "energy": 1.1, "scale": 2.4},
+				{"tx": 24, "ty": 5, "oy": -10, "color": Color(1.0, 0.93, 0.78), "energy": 0.85, "scale": 1.8},
 			],
-			"actor": {},
+			"actor": {
+				"id": "elder_woman",
+				"title": "图书管理员",
+				"desc": "在借阅台与东西书架间巡架整理。",
+				"via_clusters": ["desk", "stacks_w", "stacks_e"],
+				"via_stands": {
+					"desk": [0, -1],
+					"stacks_w": [2, 1],
+					"stacks_e": [-2, 1],
+				},
+			},
 		},
 		"c10_church": {
 			"title": "教堂",
