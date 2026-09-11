@@ -1,4 +1,4 @@
-# Hotspring C42 — 温泉（中泡池蒸汽 / 西更衣）
+# Hotspring C42 — 温泉（东泡池蒸汽 / 西更衣）
 
 **Status:** DONE 2026-09-11 (desk)  
 **Locks:** [`PHASE5_WAVE_F.md`](./PHASE5_WAVE_F.md), [`INTERIOR_LIBRARY.md`](./INTERIOR_LIBRARY.md) C42  
