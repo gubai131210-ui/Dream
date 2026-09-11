@@ -1,6 +1,6 @@
 # Phase 5 Wave F — Civic tour · Transit/dive · NPC rings · World systems
 
-**Status:** IN PROGRESS (seeded) 2026-09-11  
+**Status:** DONE (code / desk QA) 2026-09-11 — user Godot playtest pending  
 **User lock:** Ship C40–C45, C34–C36+C23, C53–C54, C55+C58–C62 as **four parallel region teams**. Do not polish Wave A–E unless broken portals.  
 **Locks:** [`PHASE5.md`](./PHASE5.md), [`INTERIOR_LIBRARY.md`](./INTERIOR_LIBRARY.md), [`INTERIOR_FOUNDATION.md`](./INTERIOR_FOUNDATION.md), [`INTERIOR_COMPOSITION.md`](./INTERIOR_COMPOSITION.md), [`SCALE.md`](./SCALE.md), [`ENV_H.md`](./ENV_H.md) (season pattern), [`NPC_ANIM.md`](./NPC_ANIM.md)  
 **Skills:** `interior-territory-craft`, `painting-asset-craft`, `interior-visual-qa`, `realistic-scene-craft` (outdoor hosts — Lead only)
@@ -82,8 +82,15 @@ C34_DOCK_FISH C34_DOCK_TRADE C35_BOAT_DOCKED C35_BOAT_WRECK C36_TRAIN_CAR C23_UN
 
 ## Integration checklist (Lead)
 
-- [ ] All region packages enriched  
-- [ ] Package/system MDs + desk QA  
-- [ ] Portals + returns + TopBar hooks  
-- [ ] Commit + push `origin/master`  
+- [x] All region packages enriched  
+- [x] Package/system MDs + desk QA  
+- [x] Portals + returns + TopBar hooks  
+- [x] Commit + push `origin/master`  
 - [ ] User Godot QA note  
+
+| Team | Status |
+| --- | --- |
+| CivicTour C40–C45 | DONE (desk) |
+| TransitDive C34–C36+C23 | DONE (desk) |
+| NpcRing C53–C54 | DONE (desk) |
+| WorldSys C55+C58–C62 | DONE (desk) |
