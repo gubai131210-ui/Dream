@@ -2627,7 +2627,7 @@ static func _all() -> Dictionary:
 					_m(P_FISH_TANK, 0, 2, "侧缸", "第二水缸叠体量。", 0.95),
 					_m(P_BARREL, 2, 1, "滤桶", "过滤循环水桶。", 0.7),
 					_m(P_BASKET, -1, 2, "鱼食筐", "喂食筐（南可站）。", 0.55),
-					_m(P_CRATE0, 3, -1, "设备箱", "气泵/滤材箱。", 0.65),
+					_m(P_CRATE0, -2, -1, "设备箱", "气泵/滤材箱（西侧，不占门轴）。", 0.65),
 					_m(P_LAMP_SHOP, 1, -2, "缸顶灯", "水缸顶吊罩灯（非家用台灯）。", PROP),
 				]),
 				_cluster("donate_fish", 16, 6, [
@@ -2656,7 +2656,7 @@ static func _all() -> Dictionary:
 		},
 		"c42_hotspring": {
 			"title": "温泉",
-			"hint": "温泉 · 中泡池蒸汽 / 西更衣",
+			"hint": "温泉 · 东泡池蒸汽 / 西更衣",
 			"return_path": HILL,
 			"room_w": 22,
 			"room_h": 14,
@@ -2666,13 +2666,13 @@ static func _all() -> Dictionary:
 			"modulate": Color(0.88, 0.82, 0.78, 1.0),
 			"rug": null,
 			"window": true,
-			# Center irregular soak pool + steam; west change; aisle 9–12 clear. ≠ civic bath rectangle.
+			# East irregular soak pool + steam; west change; aisle 9–12 clear. ≠ civic bath rectangle.
 			"clusters": [
-				_cluster("pool", 12, 5, [
-					_m(P_SOAK_POOL, 0, 0, "温泉泡池", "山石温泉泡池（蒸汽可读；≠矩形浴池）。", 1.1),
-					_m(P_ROCK0, 3, 0, "池缘石", "东缘叠石。", 0.65),
-					_m(P_ROCK1, -3, -1, "池缘石", "西缘叠石。", 0.6),
-					_m(P_STOOL, -2, 2, "池边凳", "入池前南站位凳。", 0.7),
+				_cluster("pool", 16, 5, [
+					_m(P_SOAK_POOL, 0, 0, "温泉泡池", "山石温泉泡池（蒸汽可读；≠矩形浴池）。", 1.05),
+					_m(P_ROCK0, 2, 0, "池缘石", "东缘叠石。", 0.65),
+					_m(P_ROCK1, 1, -2, "池缘石", "北缘叠石（不占门轴）。", 0.6),
+					_m(P_STOOL, 1, 2, "池边凳", "入池前东南站位凳。", 0.7),
 					_m(P_HERBS, 2, -2, "药草束", "池北药草晾挂。", 0.55),
 					_m(P_BASKET, 2, 2, "毛巾筐", "池边毛巾筐。", 0.55),
 				]),
@@ -2687,7 +2687,7 @@ static func _all() -> Dictionary:
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 12, "ty": 4, "oy": -6, "color": Color(1.0, 0.9, 0.8), "energy": 0.95, "scale": 2.1},
+				{"tx": 16, "ty": 4, "oy": -6, "color": Color(1.0, 0.9, 0.8), "energy": 0.95, "scale": 2.1},
 				{"tx": 5, "ty": 7, "oy": -8, "color": Color(1.0, 0.88, 0.7), "energy": 0.75, "scale": 1.5},
 			],
 			"actor": {
@@ -2695,7 +2695,7 @@ static func _all() -> Dictionary:
 				"title": "泉守",
 				"desc": "在泡池与更衣区之间照看客人。",
 				"via_clusters": ["pool", "change"],
-				"via_stands": {"pool": [-2, 2], "change": [2, 2]},
+				"via_stands": {"pool": [1, 2], "change": [2, 2]},
 			},
 		},
 		"c43_bathhouse": {
@@ -2712,9 +2712,9 @@ static func _all() -> Dictionary:
 			"window": true,
 			# East tiled civic bath; west locker; aisle 9–12 clear. ≠ mountain soak irregular rim.
 			"clusters": [
-				_cluster("bath", 13, 5, [
-					_m(P_BATH_POOL, 0, 0, "公共浴池", "瓷砖矩形浴池（镇区浴场；≠山石温泉）。", 1.1),
-					_m(P_STOOL, -2, 2, "池凳", "池西南站位凳。", 0.7),
+				_cluster("bath", 16, 5, [
+					_m(P_BATH_POOL, 0, 0, "公共浴池", "瓷砖矩形浴池（镇区浴场；≠山石温泉）。", 1.0),
+					_m(P_STOOL, 1, 2, "池凳", "池东南站位凳（不占门轴）。", 0.7),
 					_m(P_BARREL, 3, 1, "冲洗桶", "入池前冲洗桶。", 0.75),
 					_m(P_BASKET, 2, 2, "毛巾筐", "池边毛巾筐。", 0.55),
 					_m(P_NOTICE, 1, -2, "浴场须知", "公共浴场开放须知。", 0.6),
@@ -2730,7 +2730,7 @@ static func _all() -> Dictionary:
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 13, "ty": 4, "oy": -8, "color": Color(0.95, 0.95, 1.0), "energy": 0.9, "scale": 1.9},
+				{"tx": 16, "ty": 4, "oy": -8, "color": Color(0.95, 0.95, 1.0), "energy": 0.9, "scale": 1.9},
 				{"tx": 5, "ty": 6, "oy": -8, "color": Color(0.95, 0.94, 0.98), "energy": 0.75, "scale": 1.5},
 			],
 			"actor": {
@@ -2738,7 +2738,7 @@ static func _all() -> Dictionary:
 				"title": "浴场管事",
 				"desc": "在浴池与更衣柜之间巡场。",
 				"via_clusters": ["bath", "locker"],
-				"via_stands": {"bath": [-2, 2], "locker": [2, 2]},
+				"via_stands": {"bath": [1, 2], "locker": [2, 2]},
 			},
 		},
 		"c44_inn": {
