@@ -38,13 +38,14 @@ Goods scale ≤0.50; never block awning face (`MARKET_POLISH`).
 
 | File used as | Title in dressing | Actual visual | Action |
 | --- | --- | --- | --- |
-| `lamp_1.png` | 东街灯 | **花盆** | 改用真灯柱 `lamp_0` / `B11-08_pots_lamps_03`；花盆若保留改标题 |
-| `lamp_2.png` | 南口灯 | **木花箱** | 同上 |
+| `lamp_1.png` | ~~东街灯~~ | **花盆** | **DONE** → `B11-08_pots_lamps_03` |
+| `lamp_2.png` | ~~南口灯~~ / 街角花箱 | **木花箱** | **DONE** → 真灯 + 花箱改标题 |
 | `lamp_0.png` | 西街灯 | 真路灯柱 | OK |
-| `barrel_0.png` | 南摊货 | 横酒桶+龙头 | OK 仅 specialty；标题须 酒桶，勿当通用木桶 |
-| 程序化 ColorRect 棚 | 摊棚 | 非 PNG | Wave A 允许；勿假装有 stall atlas |
+| `barrel_0.png` | 南摊货 | 横酒桶+龙头 | OK specialty；标题须 酒桶 |
+| B09 切片 | 四柱摊 | `sprites/market/stall_open_*` | **DONE** OPEN/CLOSED 可用 |
+| 程序化 ColorRect 棚 | 兜底 | 非 PNG | locked/setup/empty 仍可用 |
 
-详见 [`MARKET_STALL_ASSET_AUDIT.md`](MARKET_STALL_ASSET_AUDIT.md).
+详见 [`MARKET_STALL_ASSET_AUDIT.md`](MARKET_STALL_ASSET_AUDIT.md)。[QA Stall-C05](e4ac8b0f-78b3-4e0a-8b09-b50def9b6585): **PASS**。
 
 ## 禁止偷懒
 
