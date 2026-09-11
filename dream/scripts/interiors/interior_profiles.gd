@@ -140,6 +140,15 @@ static func _all() -> Dictionary:
 					"sleep": [0, 3],
 				},
 			},
+			# Wave A2 Well team: thin basement stair portal (no layout polish).
+			"extra_portals": [
+				{
+					"tx": 3,
+					"ty": 16,
+					"label": "↓地下室",
+					"path": SceneRouter.C15_BASEMENT_PATH,
+				},
+			],
 		},
 		# ── C02 老人宅：极简茶区 + 床区（药箱贴床） ──
 		"c02_elder": {
@@ -674,9 +683,10 @@ static func _all() -> Dictionary:
 			],
 			"actor": {},
 		},
+		# ── C14 井底：积水池 · 井壁龛 · 隐藏缝占位 ──
 		"c14_well": {
 			"title": "井底",
-			"hint": "井底 · 潮湿石室",
+			"hint": "井底 · 潮湿石室 · 返回住宅区",
 			"return_path": RES,
 			"room_w": 16,
 			"room_h": 14,
@@ -692,18 +702,28 @@ static func _all() -> Dictionary:
 					_m(P_CRATE0, 2, 1, "沉箱", "半湿木箱。", 0.7),
 					_m(P_SACK0, -2, 1, "湿袋", "潮湿麻袋。", 0.6),
 				]),
+				_cluster("ledge", 4, 4, [
+					_m(P_CRATE1, 0, 0, "石龛箱", "嵌在井壁龛里的干箱。", 0.65),
+					_m(P_LAMP_FARM, 1, -1, "井灯", "井壁提灯，幽蓝反光。", PROP),
+					_m(P_BASKET, 2, 1, "吊篮", "上下井用的绳篮。", 0.7),
+				]),
+				_cluster("secret_mark", 12, 5, [
+					_m(P_COIN, 0, 0, "湿石缝", "石缝里隐约有物（隐藏入口占位）。", 0.55),
+				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 8, "ty": 4, "oy": -8, "color": Color(0.7, 0.85, 1.0), "energy": 0.7, "scale": 2.0},
+				{"tx": 8, "ty": 4, "oy": -8, "color": Color(0.7, 0.85, 1.0), "energy": 0.75, "scale": 2.1},
+				{"tx": 4, "ty": 3, "oy": -10, "color": Color(0.65, 0.8, 1.0), "energy": 0.55, "scale": 1.5},
 			],
 			"actor": {},
 		},
+		# ── C15 地下室：储物 · 酒窖 · 梯脚（返回 C01）──
 		"c15_basement": {
 			"title": "地下室",
-			"hint": "地下室 · 储藏",
-			"return_path": "res://scenes/interiors/c01_home/c01_home.tscn",
+			"hint": "地下室 · 储藏 / 返回楼梯",
+			"return_path": SceneRouter.C01_HOME_PATH,
 			"room_w": 20,
 			"room_h": 14,
 			"door_tx0": 8,
@@ -720,11 +740,22 @@ static func _all() -> Dictionary:
 					_m(P_SACK0, -2, 2, "粮袋", "地窖粮袋。", PROP),
 					_m(P_LAMP_INDOOR, 1, -2, "壁灯", "地窖灯。", PROP),
 				]),
+				_cluster("cellar", 15, 6, [
+					_m(P_BARREL_KEG, 0, 0, "酒桶", "地窖横置酒桶。", PROP),
+					_m(P_BARREL, 2, 1, "腌桶", "咸菜/腌货桶。", PROP),
+					_m(P_MUG_SHELF, -1, -1, "瓶架", "贴墙瓶罐架。", 0.8),
+					_m(P_SACK1, 1, 2, "干货袋", "地窖干货。", 0.7),
+				]),
+				_cluster("stair", 10, 11, [
+					_m(P_CRATE0, 0, 0, "梯脚箱", "楼梯脚杂箱（返回南门）。", 0.7),
+					_m(P_LAMP_INDOOR, -2, -1, "梯灯", "照亮返回楼梯。", PROP),
+				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
 				{"tx": 7, "ty": 4, "oy": -10, "color": Color(1.0, 0.85, 0.55), "energy": 0.8, "scale": 1.8},
+				{"tx": 15, "ty": 5, "oy": -8, "color": Color(1.0, 0.78, 0.45), "energy": 0.65, "scale": 1.6},
 			],
 			"actor": {},
 		},
