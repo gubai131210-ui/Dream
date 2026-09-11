@@ -39,7 +39,7 @@ Blockers: …
 | # | Gate | Pass if |
 | --- | --- | --- |
 | 1 | **Reality** | Zone reads as that place (coop=pen, barn=stall+aisle+mass, shop=counter axis). Enclosure/mass before prop count. |
-| 2 | **Peer games** | Matches Stardew/RPG Maker / Farming-101 silhouettes for the room type; not a random clutter dump. |
+| 2 | **Peer games** | Matches Stardew/RPG Maker / Farming-101 silhouettes; cite **1** peer ref or screenshot (web OK). Not a clutter dump. |
 | 3 | **Scene-fit** | Function OK **and** product OK (lamp matrix in WAVE_C). 功能对 ≠ 产品对. |
 | 4 | **Multi-view** | H/V = same fence family; corners are **dedicated** L-joiners; no ladder-vs-picket mix. |
 | 5 | **Style** | One 3/4 projection; one light corner (TL); same outline weight; wood ramp shared; no AA-density collage. |
@@ -55,19 +55,20 @@ Blockers: …
 
 ## Escalation (after ≥2 failed fix rounds on the same gate)
 
-1. **Metrics** — run `scripts/qa_interior_visual.py` (bbox height, alpha footprint, palette distance, optional H/V MSE). Attach numbers to FAIL.  
-2. **Joiners** — if corners/edges still look spliced: **draw new** `*_corner_*` / gate / connector sheets; do **not** keep rotating/scaling mismatched edges.  
-3. **Web** — quick search peer refs (Stardew coop, SLYNYRD interiors) before inventing a third style.  
+1. **Metrics** — run `.cursor/skills/interior-visual-qa/scripts/qa_interior_visual.py` (bbox height, palette L2 on family). Attach numbers to FAIL.  
+2. **Joiners** — if corners/edges still look spliced: **draw new** `*_corner_*` / gate / connector sheets; do **not** keep rotating/scaling/inpainting mismatched edges.  
+3. **Web** — search peer refs (Stardew coop, SLYNYRD PB35) before inventing a third style; skip = FAIL peer gate.  
 4. Stop thrashing solo gens; author a **set sheet** then slice.
 
 ## 禁止偷懒
 
 - 禁止只看文案/profile、不 Read 成果图/PNG  
 - 禁止家用灯进仓/店/铺/酒馆  
-- 禁止 H/V 两套设计或无四角硬拼  
+- 禁止 H/V 两套设计或用四角硬拼  
 - 禁止文件名对、像素错  
 - 禁止同一问题第三次“再调调”而不升级 metrics/新连接件  
-- 禁止只缩放/调色假装成套  
+- 禁止只缩放/调色/旋转/局部 inpaint 冒充成套或连接件  
+- 禁止不查 peer / SLYNYRD 就开第三套风格  
 
 ## Related
 
