@@ -56,22 +56,32 @@ Scenes are thin shells (`InteriorRoomController` + `Assembler` with `profile_id`
 - Circulation aisle before dense props; shops = counter axis; barns = stall rows; homes = 入口→起居→床.  
 - Future: Blob/autotile wall masks welcome; Wave A uses modular 32 tiles without 47-mask yet.
 
-## Wave A room map
+## Wave A room map (differentiated — see INTERIOR_ROOM_BRIEFS.md)
 
-| profile_id | Outdoor enter | Return district |
-|---|---|---|
-| `c01_home` | 住宅区 `building_00` | village_residential |
-| `c02_elder` / `farmer` / `merchant` / `blacksmith_home` | 住宅区南排四宅 | village_residential |
-| `c03_barn` / `c03_coop` | 农场住宅 谷仓/鸡舍 | farm_residential |
-| `c04_grocery` / `smith` / `tavern` | 商业街三店 | market_street |
+| profile_id | Floor | Signature | FX / ambient |
+|---|---|---|---|
+| `c01_home` | plank | hearth + stove + double bed | fire + cat |
+| `c02_elder` | plank | rocking + medicine (sparse) | soft lamp only |
+| `c02_farmer` | plank | tool rack + door sacks | dog |
+| `c02_merchant` | plank | ledger + crate wall | — |
+| `c02_blacksmith_home` | plank | home anvil + quench (not forge shop) | — |
+| `c03_barn` | **straw** | aisle + hay + troughs | sheep + cow |
+| `c03_coop` | **straw** | nests + roost | chickens |
+| `c04_grocery` | plank | wall shelves + south counter | — |
+| `c04_smith` | **stone** | forge + anvil + wait bench | forge glow |
+| `c04_tavern` | **dark** | west bar + kegs + east hearth | fire |
+
+Specialty props: `assets/sprites/interior/props/` via `tools/make_interior_specialty.py`.
 
 ## 禁止偷懒
 
 - 禁止棋盘格 / 纯色块当地板  
 - 禁止整屋橙色覆盖冒充温馨  
 - 禁止只堆家具不建墙体结构  
-- 禁止室内家具默认 scale>0.6 与室外脱节  
+- 禁止室内家具默认 scale>0.6 与室外脱节（签名大件可 0.65–0.75）  
 - 禁止门只有 InfoPanel  
 - 禁止未过 foundation QA 就开空壳室内  
 - 禁止家/店/仓复制同一 profile 改名  
 - 禁止 `barrel_0` 当通用立桶（酒馆酒桶除外）  
+- 禁止十间房共用 bench/crate 清单冒充差异  
+- 禁止有壁炉/锻炉却无火光 FX；有鸡舍却无鸡  

@@ -19,6 +19,7 @@ const TARGET_HEIGHT_PX := {
 	"sheep": 32.0,
 	"cow": 42.0,
 	"deer": 40.0,
+	"chicken": 16.0,
 }
 
 var species_id: String = ""
@@ -82,7 +83,11 @@ func _scale_for_species(species: String, frames: SpriteFrames) -> float:
 		var tex2 := frames.get_frame_texture("walk", 0)
 		if tex2:
 			native_h = float(tex2.get_height())
-	return clampf(target / maxf(native_h, 1.0), 0.06, 0.35)
+	var raw := target / maxf(native_h, 1.0)
+	# Authored near-target sprites (chicken etc.) must not use the B13 downscale band.
+	if native_h <= 48.0:
+		return clampf(raw, 0.5, 1.25)
+	return clampf(raw, 0.06, 0.35)
 
 
 func _build_frames(species: String) -> SpriteFrames:
@@ -90,34 +95,49 @@ func _build_frames(species: String) -> SpriteFrames:
 	if frames.has_animation("default"):
 		frames.remove_animation("default")
 	var base := "res://assets/sprites/animals/%s" % species
+	var sources: Array[Dictionary] = []
+	var canvas_size := Vector2i(1, 1)
+	# Source animals were exported with slightly different canvas sizes per
+	# frame. Normalize them to one bottom-aligned canvas so AnimatedSprite2D
+	# cannot jump or appear to blink when an idle/walk frame changes.
+	for anim_name in ["idle", "walk"]:
+		var count := 4 if anim_name == "idle" else 8
+		for i in range(count):
+			var path := "%s/%s_%d.png" % [base, anim_name, i]
+			if not ResourceLoader.exists(path):
+				continue
+			var tex := load(path) as Texture2D
+			if tex == null:
+				continue
+			var image := tex.get_image()
+			if image == null:
+				continue
+			sources.append({"animation": anim_name, "image": image})
+			canvas_size.x = maxi(canvas_size.x, image.get_width())
+			canvas_size.y = maxi(canvas_size.y, image.get_height())
 
 	frames.add_animation("idle")
 	frames.set_animation_speed("idle", IDLE_FPS)
 	frames.set_animation_loop("idle", true)
 	var idle_n := 0
-	for i in range(4):
-		var path := "%s/idle_%d.png" % [base, i]
-		if not ResourceLoader.exists(path):
-			continue
-		var tex := load(path) as Texture2D
-		if tex == null:
-			continue
-		frames.add_frame("idle", tex)
-		idle_n += 1
 
 	frames.add_animation("walk")
 	frames.set_animation_speed("walk", WALK_FPS)
 	frames.set_animation_loop("walk", true)
 	var walk_n := 0
-	for i in range(8):
-		var path := "%s/walk_%d.png" % [base, i]
-		if not ResourceLoader.exists(path):
-			continue
-		var tex := load(path) as Texture2D
-		if tex == null:
-			continue
-		frames.add_frame("walk", tex)
-		walk_n += 1
+	for source in sources:
+		var image: Image = source["image"]
+		var normalized := Image.create(canvas_size.x, canvas_size.y, false, Image.FORMAT_RGBA8)
+		normalized.fill(Color(0, 0, 0, 0))
+		var dst := Vector2i(floori(float(canvas_size.x - image.get_width()) / 2.0), canvas_size.y - image.get_height())
+		normalized.blend_rect(image, Rect2i(Vector2i.ZERO, image.get_size()), dst)
+		var texture := ImageTexture.create_from_image(normalized)
+		var animation: String = source["animation"]
+		frames.add_frame(animation, texture)
+		if animation == "idle":
+			idle_n += 1
+		else:
+			walk_n += 1
 
 	if idle_n == 0 and walk_n > 0:
 		frames.add_frame("idle", frames.get_frame_texture("walk", 0))

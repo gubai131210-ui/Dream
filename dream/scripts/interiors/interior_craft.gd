@@ -1,14 +1,15 @@
 class_name InteriorCraft
 extends Node
 
-## Profile-driven interior assembler (PHASE5 / INTERIOR_FOUNDATION / SCALE).
-## Pass: floor → walls/door/window → rug → props → local lights → actor → portal.
-## 32px grid. No checkerboard floors. No full-room orange wash.
+## Profile-driven interior assembler (PHASE5 / INTERIOR_FOUNDATION / INTERIOR_ROOM_BRIEFS).
+## Pass: floor → walls/door/window → rug → props → FX → ambient → lights → actor → portal.
+## 32px grid. Distinct floor sets + specialty props. Local lights only.
 
 const TILE := 32
 const ORIGIN := Vector2i(4, 4)
 const WALL_THICK := 2
 const TILE_DIR := "res://assets/sprites/interior/tiles"
+const FX_DIR := "res://assets/sprites/interior/fx"
 const PROP_SCALE := 0.55
 
 @export var profile_id: String = "c01_home"
@@ -18,6 +19,7 @@ var _room_w: int = 32
 var _room_h: int = 20
 var _door_tx0: int = 14
 var _door_tx1: int = 17
+var _floor_kind: String = "plank"
 
 
 func assemble(root: Node2D, override_profile: String = "") -> void:
@@ -30,6 +32,7 @@ func assemble(root: Node2D, override_profile: String = "") -> void:
 	_room_h = int(_profile.get("room_h", 20))
 	_door_tx0 = int(_profile.get("door_tx0", 14))
 	_door_tx1 = int(_profile.get("door_tx1", 17))
+	_floor_kind = str(_profile.get("floor", "plank"))
 
 	var world := root.get_node_or_null("InteriorWorld") as Node2D
 	if world == null:
@@ -52,6 +55,8 @@ func assemble(root: Node2D, override_profile: String = "") -> void:
 	_paint_rug(foundation)
 
 	_spawn_furniture(world)
+	_spawn_fx(world)
+	_spawn_ambient(world)
 	_spawn_local_lights(world)
 	_spawn_actor(world)
 	_spawn_return_portal(world)
@@ -83,11 +88,23 @@ func _spawn_tile(parent: Node2D, path: String, tx: int, ty: int, z: int = 0) -> 
 	parent.add_child(spr)
 
 
+func _floor_path(tx: int, ty: int) -> String:
+	var idx := (tx + ty * 3) % 4
+	match _floor_kind:
+		"straw":
+			return "%s/floor_straw_%02d.png" % [TILE_DIR, idx]
+		"stone":
+			return "%s/floor_stone_%02d.png" % [TILE_DIR, idx]
+		"dark":
+			return "%s/floor_dark_%02d.png" % [TILE_DIR, idx]
+		_:
+			return "%s/floor_%02d.png" % [TILE_DIR, idx]
+
+
 func _paint_floor(parent: Node2D) -> void:
 	for ty in range(WALL_THICK, _room_h):
 		for tx in range(_room_w):
-			var path := "%s/floor_%02d.png" % [TILE_DIR, (tx + ty * 3) % 4]
-			_spawn_tile(parent, path, tx, ty, -5)
+			_spawn_tile(parent, _floor_path(tx, ty), tx, ty, -5)
 
 
 func _paint_walls(parent: Node2D) -> void:
@@ -142,7 +159,11 @@ func _paint_door_and_window(parent: Node2D) -> void:
 
 
 func _paint_rug(parent: Node2D) -> void:
-	var rug: Dictionary = _profile.get("rug", {"ox": 14, "oy": 12})
+	if not _profile.has("rug") or _profile["rug"] == null:
+		return
+	var rug: Dictionary = _profile.get("rug", {})
+	if rug.is_empty():
+		return
 	var ox: int = int(rug.get("ox", 14))
 	var oy: int = int(rug.get("oy", 12))
 	for qy in range(2):
@@ -167,6 +188,7 @@ func _spawn_furniture(parent: Node2D) -> void:
 
 func _spawn_prop(parent: Node2D, path: String, pos: Vector2, scale_f: float, title: String, desc: String) -> void:
 	if not ResourceLoader.exists(path):
+		push_warning("InteriorCraft: missing prop %s" % path)
 		return
 	var tex := load(path) as Texture2D
 	if tex == null:
@@ -187,6 +209,62 @@ func _spawn_prop(parent: Node2D, path: String, pos: Vector2, scale_f: float, tit
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	spr.z_index = 2
 	hs.get_node("Visual").add_child(spr)
+
+
+func _spawn_fx(parent: Node2D) -> void:
+	var fx_list: Array = _profile.get("fx", [])
+	for fx in fx_list:
+		var kind := str(fx.get("kind", ""))
+		var tx := int(fx.get("tx", 0))
+		var ty := int(fx.get("ty", 0))
+		var pos := _tile_center(tx, ty) + Vector2(float(fx.get("ox", 0)), float(fx.get("oy", -8)))
+		match kind:
+			"fire":
+				_spawn_anim_fx(parent, "fire", pos, 6.0)
+				_add_point_light(parent, pos + Vector2(0, -6), Color(1.0, 0.55, 0.25), 1.25, 2.4)
+			"forge":
+				_spawn_anim_fx(parent, "forge", pos, 8.0)
+				_add_point_light(parent, pos + Vector2(0, -4), Color(1.0, 0.45, 0.2), 1.45, 2.6)
+			_:
+				pass
+
+
+func _spawn_anim_fx(parent: Node2D, prefix: String, pos: Vector2, fps: float) -> void:
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("loop")
+	frames.set_animation_speed("loop", fps)
+	frames.set_animation_loop("loop", true)
+	var n := 0
+	for i in range(4):
+		var path := "%s/%s_%02d.png" % [FX_DIR, prefix, i]
+		if not ResourceLoader.exists(path):
+			continue
+		frames.add_frame("loop", load(path) as Texture2D)
+		n += 1
+	if n == 0:
+		return
+	var anim := AnimatedSprite2D.new()
+	anim.name = "FX_%s" % prefix
+	anim.sprite_frames = frames
+	anim.position = pos
+	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	anim.z_index = 6
+	anim.play("loop")
+	parent.add_child(anim)
+
+
+func _spawn_ambient(parent: Node2D) -> void:
+	var list: Array = _profile.get("ambient", [])
+	for a in list:
+		var species := str(a.get("species", ""))
+		if species.is_empty():
+			continue
+		var critter := AmbientCritter.new()
+		parent.add_child(critter)
+		# craft=null → free roam inside room (no outdoor water mask).
+		critter.setup(species, _tile_center(int(a.get("tx", 0)), int(a.get("ty", 0))), null, -1.0)
 
 
 func _spawn_local_lights(parent: Node2D) -> void:
