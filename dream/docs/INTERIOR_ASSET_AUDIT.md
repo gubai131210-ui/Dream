@@ -13,6 +13,7 @@
 2. Gap regen: `table_dining` 光桌 · `counter` 长柜 · `shelf_grocery` · `roost` · `rocking` · `lamp_indoor_00`  
 3. Profiles use `P_LAMP_INDOOR` (no outdoor lamp_0/lamp_1 indoors)  
 4. Misnamed preimages archived under `props/_misnamed_archive/`  
+5. **roost_v2**（[Visual QA](8405d0f5-f8ea-4689-857e-d30d7a010dbc) FAIL 后）：替换 mug-rack 伪栖木为双柱横杆栖木  
 
 ## Verdict (pre-fix)
 
