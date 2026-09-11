@@ -264,7 +264,9 @@ func _spawn_buildings(ysort: Node2D) -> void:
 			"pos": Vector2(448, 296),  # ~tx 14, ty 9 — north-west flank
 			"hw": 2, "hh": 1,
 			"title": "西侧货栈",
-			"desc": "河东岸西侧货栈，门脸朝南对街。",
+			"desc": "河东岸西侧货栈，门脸朝南对街（市场后台卸货）。",
+			"enter_title": "进入市场后台",
+			"interior": SceneRouter.C32_MARKET_BACK_PATH,
 		},
 	]
 	for s in specs:
@@ -327,3 +329,10 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(ysort, "→广场", SceneRouter.SQUARE_PATH, Vector2(80, 480), Vector2(96, 56))
 	craft.make_portal(ysort, "→住宅区", SceneRouter.RESIDENTIAL_PATH, Vector2(1200, 480), Vector2(96, 56))
 	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))
+	# Wave D: night bazaar alley + craft workshop annex (door feet, not InfoPanel-only).
+	craft.make_portal(
+		ysort, "进入夜市", SceneRouter.C33_NIGHT_MARKET_PATH, Vector2(640, 560), Vector2(100, 52)
+	)
+	craft.make_portal(
+		ysort, "进入工坊", SceneRouter.C38_WORKSHOP_PATH, Vector2(980, 320), Vector2(88, 48)
+	)

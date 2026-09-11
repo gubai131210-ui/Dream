@@ -55,6 +55,14 @@ const C28_GIANT_TREE_PATH := "res://scenes/interiors/c28_giant_tree/c28_giant_tr
 const C29_RUINS_PATH := "res://scenes/interiors/c29_ruins/c29_ruins.tscn"
 const C30_CEMETERY_PATH := "res://scenes/interiors/c30_cemetery/c30_cemetery.tscn"
 const C31_SEWER_PATH := "res://scenes/interiors/c31_sewer/c31_sewer.tscn"
+## Phase 5 Wave D agro / market expand
+const C32_MARKET_BACK_PATH := "res://scenes/interiors/c32_market_back/c32_market_back.tscn"
+const C33_NIGHT_MARKET_PATH := "res://scenes/interiors/c33_night_market/c33_night_market.tscn"
+const C37_WAREHOUSE_PATH := "res://scenes/interiors/c37_warehouse/c37_warehouse.tscn"
+const C38_WORKSHOP_PATH := "res://scenes/interiors/c38_workshop/c38_workshop.tscn"
+const C39_PROCESSING_PATH := "res://scenes/interiors/c39_processing/c39_processing.tscn"
+const C51_APIARY_PATH := "res://scenes/interiors/c51_apiary/c51_apiary.tscn"
+const C52_ORCHARD_STORE_PATH := "res://scenes/interiors/c52_orchard_store/c52_orchard_store.tscn"
 
 
 func go_hub() -> void:

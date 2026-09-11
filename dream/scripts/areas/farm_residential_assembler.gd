@@ -379,3 +379,10 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(ysort, "→广场", SceneRouter.SQUARE_PATH, Vector2(1200, 480), Vector2(96, 56))
 	craft.make_portal(ysort, "→农田", SceneRouter.FARMLAND_PATH, Vector2(640, 900), Vector2(96, 56))
 	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))
+	# Wave D: farm warehouse east of barn + orchard annex near west yard trees.
+	craft.make_portal(
+		ysort, "进入仓库", SceneRouter.C37_WAREHOUSE_PATH, Vector2(1080, 380), Vector2(100, 52)
+	)
+	craft.make_portal(
+		ysort, "进入果仓", SceneRouter.C52_ORCHARD_STORE_PATH, Vector2(200, 560), Vector2(100, 52)
+	)

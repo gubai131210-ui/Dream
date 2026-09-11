@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/interiors/interior_room_controller.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/interiors/interior_craft.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/core/camera_controller.gd" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/ui/info_panel.tscn" id="4"]
+
+[node name="C37WarehouseInterior" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1")
+profile_id = "c37_warehouse"
+
+[node name="Assembler" type="Node" parent="."]
+script = ExtResource("2")
+profile_id = "c37_warehouse"
+
+[node name="InteriorWorld" type="Node2D" parent="."]
+y_sort_enabled = true
+z_index = 2
+
+[node name="CameraController" type="Camera2D" parent="."]
+position = Vector2(640, 480)
+script = ExtResource("3")
+min_zoom = 1.0
+max_zoom = 2.0
+
+[node name="InfoLayer" parent="." instance=ExtResource("4")]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="TopBar" type="HBoxContainer" parent="UI"]
+offset_left = 18.0
+offset_top = 16.0
+offset_right = 700.0
+offset_bottom = 60.0
+theme_override_constants/separation = 10
+
+[node name="Hint" type="Label" parent="UI/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "室内"
+
+[node name="BackOutside" type="Button" parent="UI/TopBar"]
+layout_mode = 2
+text = "返回室外"
+
+[node name="BackHub" type="Button" parent="UI/TopBar"]
+layout_mode = 2
+text = "世界总览"

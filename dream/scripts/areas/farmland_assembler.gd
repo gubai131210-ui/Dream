@@ -249,7 +249,9 @@ func _spawn_buildings(ysort: Node2D) -> void:
 			"pos": Vector2(560, 400),
 			"hw": 2, "hh": 1,
 			"title": "农具棚",
-			"desc": "农田中心工具棚：门朝南对土路枢纽。",
+			"desc": "农田中心工具棚：门朝南对土路枢纽（加工棚入口）。",
+			"enter_title": "进入加工棚",
+			"enter_scene": SceneRouter.C39_PROCESSING_PATH,
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
@@ -511,3 +513,7 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(ysort, "→农场住宅", SceneRouter.FARM_HOME_PATH, Vector2(80, 480), Vector2(96, 56))
 	craft.make_portal(ysort, "→广场", SceneRouter.SQUARE_PATH, Vector2(1200, 480), Vector2(96, 56))
 	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))
+	# Wave D: apiary meadow entry (north edge — ≠ mill C13 / processing shed).
+	craft.make_portal(
+		ysort, "进入蜂场", SceneRouter.C51_APIARY_PATH, Vector2(360, 220), Vector2(100, 52)
+	)

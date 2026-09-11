@@ -43,6 +43,14 @@ ROOMS = [
     ("c29_ruins", "c29_ruins", "C29RuinsInterior"),
     ("c30_cemetery", "c30_cemetery", "C30CemeteryInterior"),
     ("c31_sewer", "c31_sewer", "C31SewerInterior"),
+    # Wave D agro / market expand
+    ("c32_market_back", "c32_market_back", "C32MarketBackInterior"),
+    ("c33_night_market", "c33_night_market", "C33NightMarketInterior"),
+    ("c37_warehouse", "c37_warehouse", "C37WarehouseInterior"),
+    ("c38_workshop", "c38_workshop", "C38WorkshopInterior"),
+    ("c39_processing", "c39_processing", "C39ProcessingInterior"),
+    ("c51_apiary", "c51_apiary", "C51ApiaryInterior"),
+    ("c52_orchard_store", "c52_orchard_store", "C52OrchardStoreInterior"),
 ]
 
 TEMPLATE = """[gd_scene load_steps=6 format=3]
