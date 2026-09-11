@@ -30,20 +30,24 @@ rails: [
   { axis: "v"|"h", tx|ty, a0, a1, step?:1, prop, scale?:1, title, desc }
 ]
 enclosures: [
-  { rect:[x0,y0,x1,y1], prop_h, prop_v, scale?:1, title, desc, gaps:[[tx,ty],...] }
+  {
+    rect:[x0,y0,x1,y1], prop_h, prop_v,
+    corners:{nw,ne,sw,se},
+    scale?:1, title, desc, gaps:[[tx,ty],...]
+  }
 ]
 ```
 
-- `rails`：畜栏朝过道的隔栏线（谷仓）；`axis=h`→正视，`axis=v`→侧视  
-- `enclosures`：南北 `prop_h`、东西 `prop_v`；`gaps` 南门开口  
-- Craft：`InteriorCraft._spawn_territory` / `_spawn_fence_segment`  
+- `rails`：畜栏隔栏；`axis=h`→正视，`axis=v`→侧视  
+- `enclosures`：南北 `prop_h`、东西 `prop_v`、四角 `corners`；`gaps` 南门  
+- Craft：先角后边，避免硬接留洞  
 
 ## Wave B 房间清单
 
 | profile | Boundary | Mass |
 | --- | --- | --- |
 | `c03_barn` | 东西 `rails` 划 stall / aisle | 北 `grain_stack` + 栏后 `hay_stack` |
-| `c03_coop` | `enclosures` 低鸡栏 + 南 gaps | （笔内既有巢/槽即可） |
+| `c03_coop` | 满间笔 + 四角 + 南 gaps | 巢/槽/栖木铺开 |
 | `c02_farmer` | — | 门厅 `grain_stack` |
 | `c02_merchant` | — | `cargo` 货箱叠高偏移 |
 
@@ -51,10 +55,10 @@ enclosures: [
 
 | 文件 | 用途 |
 | --- | --- |
-| `stall_rail_00.png` / `stall_rail_v_00.png` | 畜栏隔栏 |
-| `pen_fence_00.png` | 鸡舍低围栏段 |
-| `grain_stack_00.png` | 粮垛体量 |
-| `hay_stack_00.png` | 干草垛体量 |
+| `stall_rail_00.png` / `stall_rail_v_00.png` | 畜栏隔栏（同套板条） |
+| `pen_fence_00.png` / `pen_fence_v_00.png` | 鸡栏正视/侧视（同套板条） |
+| `pen_corner_{nw,ne,sw,se}_00.png` | 鸡栏四角 |
+| `grain_stack_00.png` / `hay_stack_00.png` | 粮垛 / 干草垛 |
 
 生成：`tools/gen_interior_territory_props.py`
 
