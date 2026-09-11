@@ -1,6 +1,7 @@
 # Interior Wave D — Ensemble · Interact-ready · Shell polish
 
 **Status:** LANDED 2026-09-11 (code) — user Godot screenshot QA next  
+**Next focus:** [`PHASE5_WAVE_A2.md`](./PHASE5_WAVE_A2.md) — Stall/Fish/Mine/Well/Lighthouse/Forest/Env（**不**继续抛光 C01–C04）  
 **After:** Wave C (scene-fit + territory) SHIPPED  
 **Locks:** [`INTERIOR_COMPOSITION.md`](./INTERIOR_COMPOSITION.md), [`INTERIOR_TERRITORY.md`](./INTERIOR_TERRITORY.md), [`research/INTERIOR_NEXT_LAYER_RESEARCH.md`](./research/INTERIOR_NEXT_LAYER_RESEARCH.md)  
 **Skills:** [`interior-visual-qa`](../.cursor/skills/interior-visual-qa/SKILL.md) (mandatory accept), [`interior-territory-craft`](../.cursor/skills/interior-territory-craft/SKILL.md), [`painting-asset-craft`](../.cursor/skills/painting-asset-craft/SKILL.md)

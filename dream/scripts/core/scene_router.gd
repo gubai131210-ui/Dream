@@ -19,7 +19,7 @@ const HILL_FARM_PATH := "res://scenes/areas/hill_farm/hill_farm.tscn"
 const LAKE_PATH := "res://scenes/areas/lake/lake.tscn"
 const LIGHTHOUSE_PATH := "res://scenes/areas/lighthouse/lighthouse.tscn"
 const LAKE_HOUSE_PATH := "res://scenes/areas/lake_house/lake_house.tscn"
-## Phase 5 Wave A interiors
+## Phase 5 Wave A interiors (C01–C04)
 const C01_HOME_PATH := "res://scenes/interiors/c01_home/c01_home.tscn"
 const C02_ELDER_PATH := "res://scenes/interiors/c02_elder/c02_elder.tscn"
 const C02_FARMER_PATH := "res://scenes/interiors/c02_farmer/c02_farmer.tscn"
@@ -30,6 +30,14 @@ const C03_COOP_PATH := "res://scenes/interiors/c03_coop/c03_coop.tscn"
 const C04_GROCERY_PATH := "res://scenes/interiors/c04_grocery/c04_grocery.tscn"
 const C04_SMITH_PATH := "res://scenes/interiors/c04_smith/c04_smith.tscn"
 const C04_TAVERN_PATH := "res://scenes/interiors/c04_tavern/c04_tavern.tscn"
+## Phase 5 Wave A2 (parallel packages — scenes owned by each team)
+const C12_LIGHTHOUSE_INT_PATH := "res://scenes/interiors/c12_lighthouse/c12_lighthouse.tscn"
+const C14_WELL_PATH := "res://scenes/interiors/c14_well/c14_well.tscn"
+const C15_BASEMENT_PATH := "res://scenes/interiors/c15_basement/c15_basement.tscn"
+const C17_MINE_PATH := "res://scenes/interiors/c17_mine/c17_mine.tscn"
+const C26_WATERFALL_CAVE_PATH := "res://scenes/interiors/c26_waterfall_cave/c26_waterfall_cave.tscn"
+const C27_FOREST_HIDE_A_PATH := "res://scenes/interiors/c27_forest_hide_a/c27_forest_hide_a.tscn"
+const C27_FOREST_HIDE_B_PATH := "res://scenes/interiors/c27_forest_hide_b/c27_forest_hide_b.tscn"
 
 
 func go_hub() -> void:

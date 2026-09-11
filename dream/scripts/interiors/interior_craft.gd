@@ -26,11 +26,14 @@ var _door_tx1: int = 17
 var _floor_kind: String = "plank"
 
 
-func assemble(root: Node2D, override_profile: String = "") -> void:
+func assemble(root: Node2D, override_profile: String = "", profile_override: Dictionary = {}) -> void:
 	var pid := override_profile if not override_profile.is_empty() else profile_id
 	if root.has_meta("profile_id"):
 		pid = str(root.get_meta("profile_id"))
-	_profile = InteriorProfiles.get_profile(pid)
+	if not profile_override.is_empty():
+		_profile = profile_override
+	else:
+		_profile = InteriorProfiles.get_profile(pid)
 	profile_id = pid
 	_room_w = int(_profile.get("room_w", 32))
 	_room_h = int(_profile.get("room_h", 20))

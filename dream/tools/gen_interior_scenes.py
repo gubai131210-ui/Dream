@@ -18,6 +18,14 @@ ROOMS = [
     ("c04_grocery", "c04_grocery", "C04GroceryInterior"),
     ("c04_smith", "c04_smith", "C04SmithInterior"),
     ("c04_tavern", "c04_tavern", "C04TavernInterior"),
+    # Wave A2
+    ("c12_lighthouse", "c12_lighthouse", "C12LighthouseInterior"),
+    ("c14_well", "c14_well", "C14WellInterior"),
+    ("c15_basement", "c15_basement", "C15BasementInterior"),
+    ("c17_mine", "c17_mine", "C17MineInterior"),
+    ("c26_waterfall_cave", "c26_waterfall_cave", "C26WaterfallCaveInterior"),
+    ("c27_forest_hide_a", "c27_forest_hide_a", "C27ForestHideAInterior"),
+    ("c27_forest_hide_b", "c27_forest_hide_b", "C27ForestHideBInterior"),
 ]
 
 TEMPLATE = """[gd_scene load_steps=6 format=3]
