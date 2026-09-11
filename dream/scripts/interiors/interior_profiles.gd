@@ -728,36 +728,61 @@ static func _all() -> Dictionary:
 			],
 			"actor": {},
 		},
+		# ── C17 矿洞入口层：西凿岩面 · 中轴通廊 · 东矿石堆 · 北支架箱 ──
+		# Corridor: door tiles 12–15 stay clear south→north (≥2 tile aisle).
 		"c17_mine": {
 			"title": "矿洞入口",
-			"hint": "矿洞 · 入口层",
+			"hint": "矿洞 · 入口层可挖",
 			"return_path": "res://scenes/areas/hill_farm/hill_farm.tscn",
 			"room_w": 28,
 			"room_h": 18,
 			"door_tx0": 12,
 			"door_tx1": 15,
 			"floor": "stone",
-			"modulate": Color(0.58, 0.56, 0.54, 1.0),
+			"modulate": Color(0.50, 0.48, 0.46, 1.0),
 			"rug": null,
 			"window": false,
 			"clusters": [
-				_cluster("dig", 8, 8, [
-					_m(P_CRATE0, 0, 0, "矿车箱", "入口矿石箱。", PROP),
-					_m(P_TOOL_RACK, -2, -1, "镐架", "采矿工具。", 0.75),
-					_m(P_BARREL, 2, 1, "爆破桶", "慎放。", PROP),
-					_m(P_LAMP_FARM, 1, -2, "矿灯", "入口矿灯。", PROP),
+				# West dig face (rocks as dig hotspots; tools/lamp satellites).
+				_cluster("dig", 5, 7, [
+					_m(DIR_OUTDOOR_PROP + "/rock_02.png", 0, 0, "可挖岩面", "入口西壁凿痕岩面，可交互试挖。", 0.75),
+					_m(DIR_OUTDOOR_PROP + "/rock_00.png", -1, 1, "矿脉凿口", "浅层矿脉露出点。", 0.65),
+					_m(DIR_OUTDOOR_PROP + "/rock_03.png", 1, 2, "碎石堆", "刚凿下的碎石。", 0.55),
+					_m(P_TOOL_RACK, 2, 0, "镐架", "入口采矿工具架。", 0.7),
+					_m(P_LAMP_SMITH, 1, -2, "矿灯", "钉在支架旁的矿用油灯。", PROP),
+					_m(P_BARREL, 2, 2, "爆破桶", "慎放的爆破药桶。", PROP),
+					_m(P_CRATE0, 3, 1, "矿车箱", "贴镐架的入料木箱。", 0.8),
 				]),
-				_cluster("ore", 20, 7, [
-					_m(P_CRATE1, 0, 0, "矿石堆箱", "待运矿石。", 0.85),
-					_m(P_SACK1, 2, 1, "矿粉袋", "碎矿袋。", 0.7),
+				# East ore staging — approach from corridor west of crates.
+				_cluster("ore", 21, 8, [
+					_m(P_CRATE0, 0, 0, "矿石箱", "待运粗矿石箱。", PROP),
+					_m(P_CRATE1, 2, 1, "矿石堆箱", "叠放矿石箱。", 0.85),
+					_m(P_SACK1, -1, 2, "矿粉袋", "碎矿粉袋。", 0.7),
+					_m(P_SACK0, 1, 2, "矿砂袋", "筛后矿砂。", 0.65),
+					_m(P_BASKET, -2, 1, "拾矿筐", "手拣矿样筐。", 0.75),
+					_m(P_LAMP_FARM, 0, -2, "货区灯", "矿石堆区矿灯。", PROP),
+				]),
+				# North timber / support staging (west of door axis).
+				_cluster("timber", 8, 4, [
+					_m(P_CRATE1, 0, 0, "支架木箱", "洞木与支柱备用箱。", 0.8),
+					_m(P_BARREL, 2, 0, "水桶", "入口冲洗泥尘用。", PROP),
+					_m(DIR_OUTDOOR_PROP + "/rock_01.png", -2, 1, "可挖岩壁", "北壁浅层可挖点。", 0.6),
+					_m(P_NOTICE, 1, -1, "矿洞告示", "入口层安全告示。", 0.7),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 9, "ty": 6, "oy": -8, "color": Color(1.0, 0.75, 0.4), "energy": 0.9, "scale": 2.0},
+				{"tx": 6, "ty": 5, "oy": -10, "color": Color(1.0, 0.72, 0.35), "energy": 1.0, "scale": 2.2},
+				{"tx": 21, "ty": 6, "oy": -8, "color": Color(1.0, 0.8, 0.45), "energy": 0.85, "scale": 1.8},
 			],
-			"actor": {},
+			"actor": {
+				"id": "farmer",
+				"title": "矿工",
+				"desc": "在凿岩面与矿石堆之间来回。",
+				"via_clusters": ["dig", "timber", "ore"],
+				"via_stands": {"dig": [3, 1], "timber": [0, 2], "ore": [-2, 1]},
+			},
 		},
 		"c26_waterfall_cave": {
 			"title": "瀑后洞窟",

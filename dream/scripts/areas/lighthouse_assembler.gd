@@ -27,7 +27,6 @@ func assemble(root: Node2D) -> void:
 	craft.paint_water(water, ground)
 	craft.paint_paths(path)
 	_spawn_lighthouse(ysort)
-	_spawn_rocks(ysort)
 	_spawn_props(ysort)
 	_spawn_trees(ysort)
 	_spawn_actors(ysort)
@@ -159,7 +158,14 @@ func _spawn_lighthouse(ysort: Node2D) -> void:
 	craft.mark_blocked_footprint(cleared, 2, 1)
 	if scale_f < 0.999:
 		spr.scale = Vector2(scale_f, scale_f)
-	craft.make_hotspot(ysort, "灯塔", "红白条纹灯塔立于海岸礁岩之上。", cleared + Vector2(0, 28), Vector2(120, 90))
+	# C12 door portal at south foot (replace InfoPanel-only hotspot). Keep lake/hub portals elsewhere.
+	craft.make_portal(
+		ysort,
+		"进入灯塔",
+		SceneRouter.C12_LIGHTHOUSE_INT_PATH,
+		cleared + Vector2(0, 28),
+		Vector2(112, 56)
+	)
 
 
 func _spawn_rocks(ysort: Node2D) -> void:
@@ -222,7 +228,7 @@ func _spawn_trees(ysort: Node2D) -> void:
 		Vector2(360, 260), Vector2(300, 800), Vector2(240, 400),
 	]
 	for i in ideals.size():
-		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
+		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % (i % 6)
 		craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 8, false)
 
 

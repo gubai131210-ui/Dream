@@ -40,7 +40,7 @@ Phase 5 打开世界 **第二/三层**：可进入室内、地下入口、钓鱼
 | Fish-E | 钓鱼地点+动作+2 竿 | C18–C22 | 最小可钓闭环 |
 | Mine-C17 | 矿洞入口层 | C17 | 可进入一层 |
 | Well-C14C15 | 井底 + 一地下室 | C14, C15 | 井/梯返回 |
-| Lighthouse-C12 | 灯塔三层 | C12 | 依赖 A14 室外 |
+| Lighthouse-C12 | 灯塔三层 | C12 | **DONE** — 高塔三簇 + A14 门 portal；见 [`LIGHTHOUSE_C12.md`](./LIGHTHOUSE_C12.md) |
 | ForestSecret-C26C27 | 瀑后洞 + 林隐藏点 | C26, C27 | 依赖 A05/A07 |
 | Env-H | 夜间+≥3 天气 | C56–C57 / H | 至少一室外场景可切换 |
 | Hub-QA | 接线与复查 | — | TopBar 不堆弹层；checklist |
