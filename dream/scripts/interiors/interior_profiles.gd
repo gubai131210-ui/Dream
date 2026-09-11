@@ -50,6 +50,27 @@ const P_GRAIN_STACK := DIR_INTERIOR_PROP + "/grain_stack_00.png"
 const P_PEW := DIR_INTERIOR_PROP + "/pew_00.png"
 const P_MILLSTONE := DIR_INTERIOR_PROP + "/millstone_00.png"
 const P_MILL_GEAR := DIR_INTERIOR_PROP + "/mill_gear_00.png"
+const P_CHEESE_PRESS := DIR_INTERIOR_PROP + "/cheese_press_00.png"
+const P_CHEESE_AGING := DIR_INTERIOR_PROP + "/cheese_aging_00.png"
+const P_PICKLE_CROCK := DIR_INTERIOR_PROP + "/pickle_crock_00.png"
+const P_WINE_RACK := DIR_INTERIOR_PROP + "/wine_rack_00.png"
+const P_BREW_VAT := DIR_INTERIOR_PROP + "/brew_vat_00.png"
+const P_BEEHIVE := DIR_INTERIOR_PROP + "/beehive_00.png"
+const P_FLOWER_BED := DIR_INTERIOR_PROP + "/flower_bed_00.png"
+const P_DOGHOUSE := DIR_INTERIOR_PROP + "/doghouse_00.png"
+const P_CLOTHESLINE := DIR_INTERIOR_PROP + "/clothesline_00.png"
+const P_CHIMNEY := DIR_INTERIOR_PROP + "/chimney_00.png"
+const P_TELESCOPE := DIR_INTERIOR_PROP + "/telescope_00.png"
+const P_WOOD_PILE := DIR_INTERIOR_PROP + "/wood_pile_00.png"
+const P_FRUIT_PRESS := DIR_INTERIOR_PROP + "/fruit_press_00.png"
+const P_FRUIT_CRATE_STACK := DIR_INTERIOR_PROP + "/fruit_crate_stack_00.png"
+const P_HANDCART := DIR_INTERIOR_PROP + "/handcart_00.png"
+const P_BALCONY_RAIL := DIR_INTERIOR_PROP + "/balcony_rail_00.png"
+const P_TRUNK_OLD := DIR_INTERIOR_PROP + "/trunk_old_00.png"
+const P_COBWEB := DIR_INTERIOR_PROP + "/cobweb_00.png"
+const P_CRAFT_BENCH := DIR_INTERIOR_PROP + "/craft_bench_00.png"
+const P_LANTERN_STRING := DIR_INTERIOR_PROP + "/lantern_string_00.png"
+const P_RARE_CRATE := DIR_INTERIOR_PROP + "/rare_crate_00.png"
 const P_HEADSTONE_0 := DIR_INTERIOR_PROP + "/headstone_00.png"
 const P_HEADSTONE_1 := DIR_INTERIOR_PROP + "/headstone_01.png"
 const P_CRYPT_DOOR := DIR_INTERIOR_PROP + "/crypt_door_00.png"
@@ -158,13 +179,19 @@ static func _all() -> Dictionary:
 					"sleep": [0, 3],
 				},
 			},
-			# Wave A2 Well team: thin basement stair portal (no layout polish).
+			# Wave A2 Well + Wave E SecondFloor: thin stair portals (no layout polish).
 			"extra_portals": [
 				{
 					"tx": 3,
 					"ty": 16,
 					"label": "↓地下室",
 					"path": SceneRouter.C15_BASEMENT_PATH,
+				},
+				{
+					"tx": 30,
+					"ty": 16,
+					"label": "↑二楼",
+					"path": SceneRouter.C46_SECOND_FLOOR_PATH,
 				},
 			],
 		},
@@ -1828,9 +1855,10 @@ static func _all() -> Dictionary:
 			},
 		},
 		# ── Wave D stubs (enrich per-key only; remove 「占位」) ──
+		# ── C32 市场后台：西卸货推车垛 · 东货架体量 · 东南休息（门轴 9–12 通廊）──
 		"c32_market_back": {
 			"title": "市场后台",
-			"hint": "市场后台占位 · 卸货 / 推车 / 休息",
+			"hint": "市场后台 · 卸货推车 / 货垛 / 休息角",
 			"return_path": MKT,
 			"room_w": 22,
 			"room_h": 14,
@@ -1838,74 +1866,159 @@ static func _all() -> Dictionary:
 			"door_tx1": 12,
 			"floor": "plank",
 			"modulate": Color(0.86, 0.82, 0.74, 1.0),
-			"rug": null,
+			# Rug under rest nook (east of door corridor 9–12).
+			"rug": {"ox": 15, "oy": 7},
 			"window": true,
 			"clusters": [
+				# West dock unload — cart anchor + stacked crate/sack mass; leave tx 9–12 clear.
 				_cluster("unload", 5, 5, [
-					_m(P_CRATE1, 0, 0, "卸货箱", "后台卸货木箱。", 0.9),
-					_m(P_SACK0, 2, 1, "货袋", "待分拣货袋。", 0.7),
-					_m(P_LAMP_SHOP, 1, -2, "货栈灯", "商店铁灯。", PROP),
+					_m(P_HANDCART, 0, 0, "卸货推车", "西侧手推车（卸货锚；车斗载箱袋）。", 1.0),
+					_m(P_CRATE0, -2, -1, "货箱垛", "推车西底垛货箱。", 0.9),
+					_m(P_CRATE1, -1, -2, "叠箱", "西墙叠高待分拣箱。", 0.85),
+					_m(P_CRATE0, 2, -1, "货箱", "推车东侧卸下箱。", 0.9),
+					_m(P_CRATE1, 2, -2, "叠箱", "东侧第二层叠箱（体量）。", 0.8),
+					_m(P_SACK0, -2, 1, "货袋", "贴垛待运麻袋。", 0.7),
+					_m(P_SACK1, 1, 2, "货袋", "车前落地袋。", 0.65),
+					_m(P_SACK0, 2, 1, "货袋", "东垛脚袋。", 0.6),
+					_m(P_BARREL, -1, 2, "水桶", "卸货区冲洗桶（南站位西侧）。", 0.7),
+					_m(P_LAMP_SHOP, 1, -3, "货栈灯", "卸货区吊罩店灯（非家用台灯）。", PROP),
 				]),
-				_cluster("rest", 16, 6, [
-					_m(P_STOOL_BAR, 0, 0, "休息凳", "搬运工休息凳。", 0.8),
-					_m(P_BARREL, 2, 0, "水桶", "休息区水桶。", 0.7),
-					_m(P_NOTICE, -1, -2, "排班牌", "后台排班告示。", 0.65),
+				# East wall stock shelf mass — market return samples (≠ farm warehouse alone).
+				_cluster("shelf", 17, 4, [
+					_m(P_SHELF_GROCERY, 0, 0, "回货架", "东墙回货/样品架（竖向体量）。", 0.95),
+					_m(P_CRATE1, -2, 1, "待上架箱", "架脚待拆箱。", 0.75),
+					_m(P_BASKET, 1, 1, "分拣筐", "架前分拣筐。", 0.7),
+					_m(P_SACK0, -1, 2, "零袋", "架脚零散袋。", 0.55),
+				]),
+				# Southeast rest nook — stool + notice; approach from west aisle.
+				_cluster("rest", 16, 8, [
+					_m(P_STOOL_BAR, 0, 0, "休息凳", "搬运工休息凳（交谈锚）。", 0.85),
+					_m(P_NOTICE, 1, -2, "排班牌", "壁挂排班与到货告示。", 0.7),
+					_m(P_BARREL, 2, 0, "饮水桶", "休息角饮水桶。", 0.65),
+					_m(P_BASKET, -1, 1, "饭盒筐", "休息角饭盒筐。", 0.55),
+					_m(P_LEDGER, -2, -1, "到货簿", "管事到货登记簿。", 0.55),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 5, "ty": 4, "oy": -8, "color": Color(1.0, 0.92, 0.75), "energy": 0.85, "scale": 1.8},
+				{"tx": 5, "ty": 4, "oy": -10, "color": Color(1.0, 0.92, 0.75), "energy": 1.0, "scale": 2.0},
+				{"tx": 17, "ty": 4, "oy": -8, "color": Color(1.0, 0.94, 0.8), "energy": 0.85, "scale": 1.7},
 			],
 			"actor": {
 				"id": "merchant",
 				"title": "货栈管事",
-				"desc": "在卸货区与休息凳之间巡视。",
-				"via_clusters": ["unload", "rest"],
-				"via_stands": {"unload": [1, 2], "rest": [-2, 1]},
+				"desc": "在卸货推车、回货架与休息凳之间巡视登记。",
+				"via_clusters": ["unload", "shelf", "rest"],
+				"via_stands": {
+					"unload": [1, 2],
+					"shelf": [-2, 2],
+					"rest": [-2, 1],
+				},
 			},
 		},
+		# ── C33 夜市巷：西灯笼摊 · 北符签小摊 · 东稀有货（门轴 10–13 南廊清空；≠后台货栈/日间杂货）──
 		"c33_night_market": {
 			"title": "夜市巷",
-			"hint": "夜市占位 · 灯笼摊 / 稀有货",
+			"hint": "夜市巷 · 灯笼摊 / 稀有货",
 			"return_path": MKT,
 			"room_w": 24,
 			"room_h": 14,
 			"door_tx0": 10,
 			"door_tx1": 13,
 			"floor": "dark",
-			"modulate": Color(0.72, 0.70, 0.78, 1.0),
+			"modulate": Color(0.58, 0.56, 0.68, 1.0),
 			"rug": null,
 			"window": false,
 			"clusters": [
-				_cluster("lantern_stall", 6, 5, [
-					_m(P_COUNTER, 0, 0, "夜市摊", "灯笼摊柜台。", 1.0),
-					_m(P_LAMP_TAVERN, 0, -2, "摊烛", "夜市烛灯。", PROP),
-					_m(P_BASKET, 2, 1, "货筐", "稀有货筐。", 0.7),
+				# West lantern bazaar — warm stall; customer approach from east aisle.
+				_cluster("lantern_stall", 5, 5, [
+					_m(P_COUNTER, 0, 0, "灯笼摊", "西廊灯笼摊柜台（客东主西）。", 1.0),
+					_m(P_LANTERN_STRING, 0, -2, "灯笼串", "摊顶彩灯笼串（夜市剪影锚）。", 0.95),
+					_m(P_STOOL_BAR, -1, 0, "摊主凳", "柜台西侧摊主位。", 0.75),
+					_m(P_BASKET, 1, 1, "灯笼筐", "柜东客侧旁筐（不挡站位）。", 0.7),
+					_m(P_BASKET, -2, 1, "纸灯筐", "摊脚备用纸灯筐。", 0.65),
+					_m(P_NOTICE, 2, -1, "夜市牌", "灯笼价目与开摊暗号。", 0.7),
+					_m(P_LAMP_TAVERN, 1, -1, "摊烛", "暖烛灯（非家用台灯）。", PROP),
+					_m(P_LAMP_TAVERN, -2, -1, "串烛", "灯笼串旁烛灯。", PROP),
 				]),
-				_cluster("rare_goods", 18, 6, [
-					_m(P_SHELF_GROCERY, 0, 0, "稀货架", "夜间稀有货架。", 0.9),
+				# North-east of door aisle — keeps tx 10–13 clear to north wall.
+				_cluster("charm_booth", 15, 2, [
+					_m(P_LEDGER, 0, 0, "符签摊", "北壁符签小摊台（偏东，让出中轴通廊）。", 0.85),
+					_m(P_NOTICE, 1, -1, "符单", "护身符价目单。", 0.7),
+					_m(P_BASKET, 2, 0, "符筐", "叠好的符纸筐。", 0.65),
+					_m(P_STOOL_BAR, 0, 1, "守摊凳", "符签摊守摊凳（廊东站位）。", 0.7),
+					_m(P_LAMP_SHOP, 0, -1, "巷灯", "北廊冷罩店灯。", PROP),
+				]),
+				# East rare-goods booth — cool glow + stock mass; customer from west aisle.
+				_cluster("rare_goods", 19, 6, [
+					_m(P_SHELF_GROCERY, 1, -1, "稀货架", "夜间稀有货架体量。", 0.95),
+					_m(P_SHELF, 1, 1, "暗货架", "下层暗货。", 0.85),
+					_m(P_RARE_CRATE, 0, 0, "稀货箱", "开盖稀有货箱（宝石/异物）。", 0.95),
 					_m(P_COIN, 2, 1, "钱箱", "摊主钱箱。", 0.7),
-					_m(P_LAMP_SHOP, -1, -2, "巷灯", "巷道铁灯。", PROP),
+					_m(P_CRATE1, -1, 2, "暗箱", "摊脚封条木箱。", 0.75),
+					_m(P_BASKET, -2, 1, "客筐", "柜西客侧旁筐（不挡站位）。", 0.7),
+					_m(P_LAMP_SHOP, -1, -2, "稀货灯", "稀货区罩灯（冷光感）。", PROP),
+					_m(P_LAMP_TAVERN, 2, -1, "柜烛", "货架旁暖烛对比。", PROP),
 				]),
 			],
+			# Stall booth boundaries; gaps open to mid door aisle (10–13).
+			"enclosures": [
+				{
+					"rect": [1, 2, 8, 8],
+					"prop_h": P_STALL_RAIL,
+					"prop_v": P_STALL_RAIL_V,
+					"corners": {
+						"nw": P_STALL_CORNER_NW,
+						"ne": P_STALL_CORNER_NE,
+						"sw": P_STALL_CORNER_SW,
+						"se": P_STALL_CORNER_SE,
+					},
+					"scale": 1.0,
+					"title": "灯笼摊位",
+					"desc": "西廊灯笼围栏摊位（东向开口）。",
+					"gaps": [[8, 4], [8, 5], [8, 6]],
+				},
+				{
+					"rect": [16, 3, 23, 9],
+					"prop_h": P_STALL_RAIL,
+					"prop_v": P_STALL_RAIL_V,
+					"corners": {
+						"nw": P_STALL_CORNER_NW,
+						"ne": P_STALL_CORNER_NE,
+						"sw": P_STALL_CORNER_SW,
+						"se": P_STALL_CORNER_SE,
+					},
+					"scale": 1.0,
+					"title": "稀货摊位",
+					"desc": "东廊稀有货围栏摊位（西向开口）。",
+					"gaps": [[16, 5], [16, 6], [16, 7]],
+				},
+			],
+			"rails": [],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 6, "ty": 4, "oy": -10, "color": Color(1.0, 0.7, 0.4), "energy": 1.0, "scale": 2.0},
-				{"tx": 18, "ty": 5, "oy": -8, "color": Color(0.85, 0.75, 1.0), "energy": 0.75, "scale": 1.7},
+				{"tx": 5, "ty": 4, "oy": -12, "color": Color(1.0, 0.68, 0.38), "energy": 1.15, "scale": 2.2},
+				{"tx": 15, "ty": 1, "oy": -8, "color": Color(0.75, 0.82, 1.0), "energy": 0.7, "scale": 1.5},
+				{"tx": 19, "ty": 5, "oy": -10, "color": Color(0.78, 0.62, 1.0), "energy": 0.95, "scale": 1.9},
 			],
 			"actor": {
 				"id": "merchant",
 				"title": "夜市摊主",
-				"desc": "在灯笼摊与稀货架之间招呼客人。",
-				"via_clusters": ["lantern_stall", "rare_goods"],
-				"via_stands": {"lantern_stall": [1, 2], "rare_goods": [-2, 1]},
+				"desc": "在灯笼摊、符签小摊与稀货箱之间招呼夜客。",
+				"via_clusters": ["lantern_stall", "charm_booth", "rare_goods"],
+				"via_stands": {
+					"lantern_stall": [2, 1],
+					"charm_booth": [-1, 2],
+					"rare_goods": [-2, 1],
+				},
 			},
 		},
+		# ── C37 农仓：西箱袋体量 · 东仓架拣货 · 南装车推车（门轴 9–12 通廊；≠ C03 畜栏 / ≠ C32 货栈休息）──
 		"c37_warehouse": {
 			"title": "农仓",
-			"hint": "仓库占位 · 箱袋架 / 推车",
+			"hint": "农仓 · 箱垛 / 袋垛 / 仓架 / 手推车",
 			"return_path": FARM,
 			"room_w": 22,
 			"room_h": 14,
@@ -1915,35 +2028,56 @@ static func _all() -> Dictionary:
 			"modulate": Color(0.84, 0.80, 0.72, 1.0),
 			"rug": null,
 			"window": true,
+			# West mass: tall crates+sacks; east shelves; cart bay west of door; aisle 9–12 clear.
 			"clusters": [
 				_cluster("crate_mass", 5, 5, [
-					_m(P_CRATE0, 0, 0, "木箱", "仓房木箱垛。", 0.9),
-					_m(P_CRATE1, 2, 0, "木箱", "第二箱垛。", 0.85),
-					_m(P_SACK1, 1, 2, "麻袋", "粮袋。", 0.7),
-					_m(P_LAMP_FARM, 0, -2, "仓灯", "农场铁灯。", PROP),
+					_m(P_GRAIN_STACK, 0, 0, "袋垛", "西墙麻袋高垛（体量锚）。", 0.9),
+					_m(P_GRAIN_STACK, 2, -1, "袋垛", "第二袋垛叠高。", 0.8),
+					_m(P_CRATE0, -1, -2, "木箱", "袋垛旁叠箱底。", 0.85),
+					_m(P_CRATE1, 0, -3, "木箱", "叠高木箱。", 0.8),
+					_m(P_CRATE0, 1, -2, "木箱", "侧垛木箱。", 0.75),
+					_m(P_SACK0, -2, 1, "麻袋", "垛脚待运袋。", 0.65),
+					_m(P_SACK1, 2, 2, "麻袋", "前脚麻袋（南可站）。", 0.6),
+					_m(P_LAMP_FARM, 1, -2, "仓灯", "农场铁壳仓灯（非家用台灯）。", PROP),
 				]),
-				_cluster("shelf_aisle", 16, 6, [
-					_m(P_SHELF, 0, 0, "货架", "仓架。", 0.9),
-					_m(P_BARREL, 2, 1, "桶", "油桶。", 0.75),
-					_m(P_BASKET, -2, 1, "筐", "拣货筐。", 0.65),
+				_cluster("shelf_aisle", 17, 5, [
+					_m(P_SHELF, 0, 0, "仓架", "种子/农具仓架。", 0.95),
+					_m(P_SHELF, 0, 2, "仓架", "下层仓架。", 0.9),
+					_m(P_BARREL, 2, 1, "油桶", "备用油/种肥桶。", 0.75),
+					_m(P_BASKET, -2, 1, "拣货筐", "拣货筐（南可站）。", 0.65),
+					_m(P_CRATE1, 2, -1, "备货箱", "架旁备货箱。", 0.7),
+					_m(P_LEDGER, -1, -1, "存货簿", "农仓库存登记。", 0.55),
+					_m(P_LAMP_FARM, 2, -2, "架灯", "货架侧农场灯。", PROP),
+				]),
+				# Loading cart west of door axis — farm outbound, not market rest stool.
+				_cluster("cart_bay", 6, 10, [
+					_m(P_HANDCART, 0, 0, "手推车", "农仓装车用手推车。", 1.0),
+					_m(P_CRATE0, 2, 0, "待装箱", "推车旁待装木箱（不占门轴）。", 0.7),
+					_m(P_SACK0, 2, 1, "待装袋", "推车旁待装麻袋。", 0.6),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 5, "ty": 4, "oy": -8, "color": Color(1.0, 0.94, 0.8), "energy": 0.9, "scale": 1.9},
+				{"tx": 5, "ty": 4, "oy": -8, "color": Color(1.0, 0.94, 0.8), "energy": 0.95, "scale": 2.0},
+				{"tx": 17, "ty": 4, "oy": -8, "color": Color(1.0, 0.93, 0.78), "energy": 0.85, "scale": 1.8},
+				{"tx": 6, "ty": 9, "oy": -6, "color": Color(1.0, 0.92, 0.76), "energy": 0.65, "scale": 1.5},
 			],
 			"actor": {
 				"id": "farmer",
 				"title": "仓管",
-				"desc": "在箱垛与货架之间清点。",
-				"via_clusters": ["crate_mass", "shelf_aisle"],
-				"via_stands": {"crate_mass": [1, 2], "shelf_aisle": [-2, 1]},
+				"desc": "在箱袋垛、仓架与手推车之间清点装车。",
+				"via_clusters": ["crate_mass", "shelf_aisle", "cart_bay"],
+				"via_stands": {
+					"crate_mass": [1, 2],
+					"shelf_aisle": [-2, 2],
+					"cart_bay": [1, -1],
+				},
 			},
 		},
 		"c38_workshop": {
 			"title": "工坊",
-			"hint": "工坊占位 · 工作台 / 工具架",
+			"hint": "工坊 · 西木工台钳 / 东酿料桶垛",
 			"return_path": MKT,
 			"room_w": 22,
 			"room_h": 14,
@@ -1953,34 +2087,45 @@ static func _all() -> Dictionary:
 			"modulate": Color(0.85, 0.81, 0.74, 1.0),
 			"rug": null,
 			"window": true,
+			# West craft bench (vise) ≠ C04 forge/anvil; east keg/crate mass; door 9–12 clear.
 			"clusters": [
 				_cluster("bench", 5, 5, [
-					_m(P_COUNTER, 0, 0, "工作台", "木工/酿作台（非铁匠炉）。", 1.0),
-					_m(P_TOOL_RACK, -2, -1, "工具架", "刨凿锤钳。", 0.85),
-					_m(P_LAMP_SMITH, 2, -2, "工坊灯", "工坊铁灯。", PROP),
+					_m(P_CRAFT_BENCH, 0, 0, "木工台", "带台钳的木作台（非铁砧/锻炉）。", 1.0),
+					_m(P_TOOL_RACK, -2, -1, "工具架", "刨凿锯钳挂架。", 0.85),
+					_m(P_STOOL, 2, 1, "操作凳", "台前南站位操作凳。", 0.7),
+					_m(P_CRATE0, 2, -1, "半成品箱", "台侧半成品木箱。", 0.65),
+					_m(P_BASKET, -1, 2, "刨花筐", "刨花与边角料筐。", 0.55),
+					_m(P_LAMP_SMITH, 1, -2, "工坊灯", "工坊铁壁灯（非家用台灯）。", PROP),
 				]),
 				_cluster("materials", 16, 6, [
-					_m(P_BARREL_KEG, 0, 0, "料桶", "原料桶。", 0.85),
-					_m(P_CRATE0, 2, 1, "木料箱", "半成品箱。", 0.75),
+					_m(P_BARREL_KEG, 0, 0, "酿料桶", "横置酿料/熟成桶（体量锚）。", 0.9),
+					_m(P_BARREL, 2, 0, "原料桶", "竖放原料桶。", 0.85),
+					_m(P_BARREL_KEG, 1, -1, "酿桶", "第二酿桶叠体量。", 0.75),
+					_m(P_CRATE0, 3, 1, "木料箱", "板条与木料箱。", 0.75),
+					_m(P_CRATE1, 2, 2, "瓶箱", "待装瓶成品箱。", 0.7),
 					_m(P_SACK0, -1, 2, "木屑袋", "刨花袋。", 0.65),
+					_m(P_SACK1, -2, 1, "辅料袋", "酿用辅料袋。", 0.6),
+					_m(P_SHELF, 0, -2, "夹具搁板", "量尺与夹具搁板。", 0.7),
+					_m(P_LAMP_SHOP, 2, -2, "料区灯", "料区吊罩店灯（非家用台灯）。", PROP),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
 				{"tx": 5, "ty": 4, "oy": -10, "color": Color(1.0, 0.88, 0.65), "energy": 0.95, "scale": 1.9},
+				{"tx": 16, "ty": 5, "oy": -8, "color": Color(1.0, 0.9, 0.72), "energy": 0.85, "scale": 1.7},
 			],
 			"actor": {
-				"id": "blacksmith",
+				"id": "merchant",
 				"title": "工匠",
-				"desc": "在工作台与料桶之间来回。",
+				"desc": "在木工台与酿料桶垛之间来回作业。",
 				"via_clusters": ["bench", "materials"],
 				"via_stands": {"bench": [1, 2], "materials": [-2, 1]},
 			},
 		},
 		"c39_processing": {
 			"title": "加工棚",
-			"hint": "加工占位 · 双机具",
+			"hint": "加工棚 · 奶酪压机 / 铜酿釜",
 			"return_path": FLD,
 			"room_w": 22,
 			"room_h": 14,
@@ -1990,105 +2135,400 @@ static func _all() -> Dictionary:
 			"modulate": Color(0.86, 0.82, 0.74, 1.0),
 			"rug": null,
 			"window": true,
+			# West cheese press machine; east brew kettle; door aisle 9–12 clear. ≠ C13 mill / C52 press.
 			"clusters": [
 				_cluster("cheese_press", 5, 5, [
-					_m(P_BARREL, 0, 0, "奶酪机", "奶酪压桶（占位机具）。", 0.95),
-					_m(P_STOOL, 2, 1, "操作凳", "机旁操作位。", 0.7),
-					_m(P_LAMP_FARM, 1, -2, "加工灯", "农场铁灯。", PROP),
+					_m(P_CHEESE_PRESS, 0, 0, "奶酪压机", "西侧螺杆奶酪压机（工作锚）。", 1.0),
+					_m(P_STOOL, 2, 1, "操作凳", "压机南侧操作位。", 0.7),
+					_m(P_LAMP_FARM, 1, -2, "加工灯", "农场铁壳工作灯（非家用台灯）。", PROP),
+					_m(P_BARREL, -2, 1, "奶桶", "待压凝乳奶桶。", 0.7),
+					_m(P_BASKET, 2, -1, "凝乳筐", "滤布凝乳筐。", 0.55),
 				]),
 				_cluster("brew_vat", 16, 6, [
-					_m(P_BARREL_KEG, 0, 0, "酿桶", "发酵酿桶（第二机具）。", 0.95),
-					_m(P_BASKET, 2, 1, "果筐", "待加工果筐。", 0.7),
-					_m(P_CRATE1, -2, 1, "瓶箱", "成品瓶箱。", 0.75),
+					_m(P_BREW_VAT, 0, 0, "铜酿釜", "东侧开口铜酿釜与放酒嘴（第二机具）。", 1.0),
+					_m(P_BASKET, 2, 1, "果筐", "待酿果筐。", 0.7),
+					_m(P_CRATE1, -2, 1, "瓶箱", "成品瓶箱（站位西侧）。", 0.75),
+					_m(P_SACK0, 2, -1, "麦芽袋", "酿釜旁麦芽袋。", 0.6),
+					_m(P_CRATE0, 3, 2, "空瓶箱", "待灌空瓶。", 0.55),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 5, "ty": 4, "oy": -8, "color": Color(1.0, 0.94, 0.8), "energy": 0.9, "scale": 1.8},
-				{"tx": 16, "ty": 5, "oy": -8, "color": Color(1.0, 0.92, 0.78), "energy": 0.85, "scale": 1.7},
+				{"tx": 5, "ty": 4, "oy": -10, "color": Color(1.0, 0.95, 0.82), "energy": 1.0, "scale": 2.0},
+				{"tx": 16, "ty": 5, "oy": -8, "color": Color(1.0, 0.92, 0.78), "energy": 0.9, "scale": 1.8},
 			],
 			"actor": {
 				"id": "farmer",
 				"title": "加工工",
-				"desc": "在奶酪机与酿桶之间操作。",
+				"desc": "在奶酪压机与铜酿釜之间操作。",
 				"via_clusters": ["cheese_press", "brew_vat"],
-				"via_stands": {"cheese_press": [1, 2], "brew_vat": [-2, 1]},
+				"via_stands": {
+					"cheese_press": [2, 2],
+					"brew_vat": [-2, 2],
+				},
 			},
 		},
+		# ── C51 蜂场：西蜂箱列 · 东蜜源花田体量 · 南门 9–12 通廊（≠仓房木箱垛）──
 		"c51_apiary": {
 			"title": "蜂场",
-			"hint": "蜂场占位 · 蜂箱 / 花田",
+			"hint": "蜂场 · 蜂箱列 / 蜜源花田",
 			"return_path": FLD,
 			"room_w": 22,
 			"room_h": 14,
 			"door_tx0": 9,
 			"door_tx1": 12,
 			"floor": "straw",
-			"modulate": Color(0.88, 0.90, 0.78, 1.0),
+			# Soft meadow green wash (not warehouse orange).
+			"modulate": Color(0.86, 0.90, 0.78, 1.0),
 			"rug": null,
 			"window": true,
+			# West hives (≥2 Langstroth silhouettes); east flower mass; door aisle 9–12 clear.
 			"clusters": [
 				_cluster("hives", 5, 5, [
-					_m(P_CRATE0, 0, 0, "蜂箱", "木箱蜂箱占位。", 0.9),
-					_m(P_CRATE1, 2, 0, "蜂箱", "第二蜂箱。", 0.85),
-					_m(P_LAMP_FARM, 1, -2, "场灯", "农场铁灯。", PROP),
+					_m(P_BEEHIVE, 0, 0, "蜂箱", "西列 Langstroth 三层蜂箱（工作锚）。", 0.95),
+					_m(P_BEEHIVE, 2, 0, "蜂箱", "西列第二蜂箱。", 0.9),
+					_m(P_BEEHIVE, 1, -2, "蜂箱", "北侧第三蜂箱（簇可读）。", 0.85),
+					_m(P_LAMP_FARM, 3, -2, "场灯", "农场铁壳场灯（非家用台灯）。", PROP),
+					_m(P_TOOL_RACK, -2, 0, "养蜂架", "烟熏器与刮刀架。", 0.55),
+					_m(P_BASKET, 0, 2, "蜜筐", "取蜜筐（南站位可交互）。", 0.65),
 				]),
 				_cluster("flowers", 16, 6, [
-					_m(P_HERBS, 0, 0, "蜜源花", "蜜源花丛。", 0.8),
-					_m(P_HERBS, 2, 1, "蜜源花", "第二花丛。", 0.75),
-					_m(P_BASKET, -1, 2, "蜜筐", "收蜜筐。", 0.7),
+					_m(P_FLOWER_BED, 0, 0, "蜜源花田", "东侧蜜源花床体量（花田锚）。", 0.95),
+					_m(P_FLOWER_BED, 2, 1, "蜜源花田", "东南第二花床。", 0.85),
+					_m(P_FLOWER_BED, -1, -1, "蜜源花田", "花田西北补块。", 0.75),
+					_m(P_HAY, 2, -2, "干草垫", "花田北缘干草垫。", 0.5),
+					_m(P_BASKET, -2, 2, "花筐", "采花粉筐。", 0.6),
+					_m(P_SACK0, 3, 2, "蜂粮袋", "越冬糖浆/蜂粮袋。", 0.55),
 				]),
 			],
 			"fx": [],
+			# No bee ambient species in AmbientCritter catalog — leave empty (do not invent).
 			"ambient": [],
 			"lights": [
-				{"tx": 5, "ty": 4, "oy": -6, "color": Color(1.0, 0.98, 0.85), "energy": 0.85, "scale": 1.8},
+				{"tx": 5, "ty": 4, "oy": -10, "color": Color(1.0, 0.98, 0.86), "energy": 0.95, "scale": 2.0},
+				{"tx": 16, "ty": 5, "oy": -8, "color": Color(0.98, 1.0, 0.88), "energy": 0.85, "scale": 1.8},
 			],
 			"actor": {
 				"id": "farmer",
 				"title": "养蜂人",
-				"desc": "在蜂箱与花田之间巡视。",
+				"desc": "在蜂箱列与蜜源花田之间巡视取蜜。",
 				"via_clusters": ["hives", "flowers"],
-				"via_stands": {"hives": [1, 2], "flowers": [-2, 1]},
+				"via_stands": {
+					"hives": [1, 2],
+					"flowers": [-2, 2],
+				},
 			},
 		},
+		# ── C52 果园附属：西果垛体量 · 东单机榨汁房（≠ C39 双机奶酪/酿桶）──
 		"c52_orchard_store": {
 			"title": "果仓",
-			"hint": "果仓占位 · 果垛 / 榨汁",
+			"hint": "果仓 · 果垛 / 榨汁压机",
 			"return_path": FARM,
 			"room_w": 22,
 			"room_h": 14,
 			"door_tx0": 9,
 			"door_tx1": 12,
 			"floor": "plank",
-			"modulate": Color(0.88, 0.84, 0.74, 1.0),
+			"modulate": Color(0.90, 0.86, 0.76, 1.0),
 			"rug": null,
 			"window": true,
+			# West mass: crate stack + baskets; east work: single screw press; door 9–12 clear.
 			"clusters": [
 				_cluster("fruit_mass", 5, 5, [
-					_m(P_CRATE1, 0, 0, "果箱", "鲜果箱垛。", 0.9),
-					_m(P_BASKET, 2, 1, "果筐", "拣果筐。", 0.75),
-					_m(P_LAMP_FARM, 0, -2, "果仓灯", "农场铁灯。", PROP),
+					_m(P_FRUIT_CRATE_STACK, 0, 0, "果箱垛", "苹果梨箱高垛（体量锚）。", 0.95),
+					_m(P_BASKET, 2, 1, "拣果筐", "鲜果拣选筐。", 0.75),
+					_m(P_CRATE1, -2, 1, "果箱", "待入垛木箱。", 0.7),
+					_m(P_BASKET, 1, 2, "果筐", "次拣果筐。", 0.65),
+					_m(P_SACK0, 3, 0, "衬垫袋", "箱底稻草垫袋。", 0.55),
+					_m(P_LAMP_FARM, 0, -2, "果仓灯", "农场铁壳工作灯（非家用台灯）。", PROP),
 				]),
 				_cluster("press", 16, 6, [
-					_m(P_BARREL, 0, 0, "榨汁桶", "果浆榨汁桶。", 0.95),
-					_m(P_SACK0, 2, 1, "果渣袋", "榨汁渣袋。", 0.7),
-					_m(P_CRATE0, -2, 1, "瓶箱", "果汁瓶箱。", 0.75),
+					_m(P_FRUIT_PRESS, 0, 0, "榨汁压机", "木架螺杆果压机（单机工作锚）。", 1.0),
+					_m(P_BARREL, 2, 1, "果汁桶", "压出果汁承接桶。", 0.75),
+					_m(P_SACK0, -2, 1, "果渣袋", "压渣出料袋。", 0.65),
+					_m(P_CRATE0, 2, -1, "瓶箱", "果汁瓶装箱。", 0.7),
+					_m(P_TOOL_RACK, 1, -3, "压机架", "压机检修扳手。", 0.55),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 5, "ty": 4, "oy": -8, "color": Color(1.0, 0.94, 0.8), "energy": 0.9, "scale": 1.8},
-				{"tx": 16, "ty": 5, "oy": -8, "color": Color(1.0, 0.92, 0.78), "energy": 0.85, "scale": 1.7},
+				{"tx": 5, "ty": 4, "oy": -8, "color": Color(1.0, 0.95, 0.82), "energy": 0.95, "scale": 1.9},
+				{"tx": 16, "ty": 5, "oy": -10, "color": Color(1.0, 0.93, 0.78), "energy": 0.9, "scale": 1.85},
 			],
 			"actor": {
 				"id": "farmer",
 				"title": "果仓工",
-				"desc": "在果垛与榨汁桶之间忙碌。",
+				"desc": "在果垛与榨汁压机之间忙碌，偶尔倒渣装瓶。",
 				"via_clusters": ["fruit_mass", "press"],
-				"via_stands": {"fruit_mass": [1, 2], "press": [-2, 1]},
+				"via_stands": {
+					"fruit_mass": [2, 2],
+					"press": [-2, 2],
+				},
+			},
+		},
+		# ── Wave E stubs (enrich per-key only; remove 「占位」) ──
+		# ── C46 二楼：西卧室睡区 · 东阳台眺望（门轴 9–12；楼梯回 C01）──
+		"c46_second_floor": {
+			"title": "建筑二楼",
+			"hint": "二楼 · 卧室睡区 / 阳台眺望",
+			"return_path": SceneRouter.C01_HOME_PATH,
+			"room_w": 22,
+			"room_h": 14,
+			"door_tx0": 9,
+			"door_tx1": 12,
+			"floor": "plank",
+			"modulate": Color(0.88, 0.84, 0.78, 1.0),
+			# Rug under bedroom (west of mid door aisle 9–12).
+			"rug": {"ox": 5, "oy": 6},
+			"window": true,
+			"clusters": [
+				# West sleep — peer C01/C02 bed+dresser+lamp; south approach free.
+				_cluster("bedroom", 5, 5, [
+					_m(P_BED_S, 0, 1, "单人床", "西卧私密睡区（南侧站位可交互）。", 1.0),
+					_m(P_DRESSER, 0, -2, "衣柜", "床头北墙衣柜。", 0.9),
+					_m(P_LAMP_INDOOR, 2, -2, "壁灯", "卧室暖黄壁灯。", PROP),
+					_m(P_BASKET, 2, 1, "衣篮", "床脚脏衣/换洗衣篮（不堵南站位）。", 0.55),
+					_m(P_STOOL_TEA, -2, 1, "床边凳", "西侧轻起居矮凳（同家族；西站位）。", 0.7),
+				]),
+				# East balcony — railing silhouette ≠ attic crates / open roof deck.
+				_cluster("balcony", 16, 5, [
+					_m(P_BALCONY_RAIL, 1, -1, "阳台栏杆", "东缘木栏眺望（签名 prop；≠篱笆/畜栏）。", 1.05),
+					_m(P_STOOL, 0, 1, "眺望凳", "栏前眺望矮凳（南站位可交互）。", 0.75),
+					_m(P_FLOWER_BED, -1, -2, "花箱", "阳台花箱（靠栏内侧）。", 0.7),
+					_m(P_HERBS, 2, -2, "盆栽", "栏角草本小盆。", 0.55),
+				]),
+			],
+			"fx": [],
+			"ambient": [{"species": "cat", "cluster": "balcony", "dx": -2, "dy": 0}],
+			"lights": [
+				{"tx": 5, "ty": 4, "oy": -10, "color": Color(1.0, 0.9, 0.7), "energy": 0.9, "scale": 1.8},
+				{"tx": 16, "ty": 4, "oy": -8, "color": Color(1.0, 0.95, 0.82), "energy": 0.75, "scale": 1.6},
+			],
+			"actor": {
+				"id": "farmer",
+				"title": "住户",
+				"desc": "在卧室与阳台之间走动，偶尔凭栏眺望。",
+				"via_clusters": ["bedroom", "balcony"],
+				"via_stands": {
+					"bedroom": [0, 3],
+					"balcony": [0, 2],
+				},
+			},
+			# Lead-seeded stairs to attic / roof (keep; clear of door aisle 9–12).
+			"extra_portals": [
+				{
+					"tx": 3,
+					"ty": 11,
+					"label": "↑阁楼",
+					"path": SceneRouter.C47_ATTIC_PATH,
+				},
+				{
+					"tx": 18,
+					"ty": 11,
+					"label": "↑屋顶",
+					"path": SceneRouter.C48_ROOF_PATH,
+				},
+			],
+		},
+		# ── C47 阁楼：西旧箱垛 · 东蛛网秘密角（门轴 8–11；≠ C15 石窖酒桶）──
+		"c47_attic": {
+			"title": "阁楼",
+			"hint": "阁楼 · 旧箱垛 / 蛛网 / 秘密",
+			"return_path": SceneRouter.C46_SECOND_FLOOR_PATH,
+			"room_w": 20,
+			"room_h": 12,
+			"door_tx0": 8,
+			"door_tx1": 11,
+			"floor": "plank",
+			"modulate": Color(0.64, 0.60, 0.52, 1.0),
+			"rug": null,
+			"window": false,
+			# West storage mass (height via stacked crates); east secret behind cobweb; aisle 8–11 clear.
+			"clusters": [
+				_cluster("trunks", 5, 4, [
+					_m(P_TRUNK_OLD, 0, 0, "旧皮箱", "积灰老式旅行皮箱（体量锚）。", 1.0),
+					_m(P_CRATE0, -1, -2, "旧木箱", "西墙底垛木箱。", 0.85),
+					_m(P_CRATE1, 0, -3, "叠箱", "叠高积灰木箱。", 0.8),
+					_m(P_CRATE0, 1, -2, "侧箱", "侧垛木箱。", 0.75),
+					_m(P_CRATE1, 2, -1, "前叠箱", "前脚叠箱（南可站）。", 0.7),
+					_m(P_SACK0, -2, 1, "尘袋", "蒙尘麻袋。", 0.65),
+					_m(P_SACK1, 2, 1, "旧袋", "垛脚旧袋。", 0.6),
+					_m(P_COBWEB, 2, -3, "垛角蛛网", "箱垛顶角蛛网。", 0.55),
+					_m(P_LAMP_INDOOR, 1, -1, "阁楼灯", "昏黄油灯。", PROP),
+				]),
+				_cluster("secret", 15, 5, [
+					_m(P_COIN, 0, 0, "秘密箱", "蛛网后的小宝箱。", 0.75),
+					_m(P_COBWEB, -1, -1, "遮箱蛛网", "挡在宝箱前的蛛网。", 0.7),
+					_m(P_ROCKING, -2, 1, "旧摇椅", "蒙尘老家具。", 0.7),
+					_m(P_DRESSER, 2, -1, "旧柜", "阁楼东角旧衣柜。", 0.75),
+					_m(P_BASKET, 1, 2, "旧筐", "忘在角落的空筐（南可站）。", 0.55),
+					_m(P_COBWEB, 2, 1, "角蛛网", "东墙角蛛网。", 0.5),
+					_m(P_LAMP_INDOOR, -1, -2, "角灯", "秘密角昏灯。", PROP),
+				]),
+			],
+			"fx": [],
+			"ambient": [{"species": "cat", "cluster": "trunks", "dx": 2, "dy": 2}],
+			"lights": [
+				{"tx": 5, "ty": 3, "oy": -8, "color": Color(1.0, 0.78, 0.42), "energy": 0.65, "scale": 1.5},
+				{"tx": 15, "ty": 4, "oy": -6, "color": Color(1.0, 0.72, 0.38), "energy": 0.55, "scale": 1.4},
+			],
+			"actor": {},
+		},
+		# ── C48 屋顶：西烟囱 · 东晾衣 · 东南观星（门轴 9–12；露天石面夜调）──
+		"c48_roof": {
+			"title": "屋顶",
+			"hint": "屋顶 · 烟囱 / 晾衣 / 观星",
+			"return_path": SceneRouter.C46_SECOND_FLOOR_PATH,
+			"room_w": 22,
+			"room_h": 12,
+			"door_tx0": 9,
+			"door_tx1": 12,
+			"floor": "stone",
+			# Cool night wash (blue-grey) — not orange; open sky-deck vs meadow apiary.
+			"modulate": Color(0.60, 0.66, 0.84, 1.0),
+			"rug": null,
+			"window": false,
+			"clusters": [
+				# West primary: tall outdoor chimney (≠ indoor fireplace).
+				_cluster("chimney", 5, 4, [
+					_m(P_CHIMNEY, 0, 0, "烟囱", "西侧砖砌屋顶烟囱（剪影锚）。", 1.0),
+					_m(P_BARREL, 2, 1, "雨水桶", "烟囱脚雨水桶。", 0.65),
+					_m(P_STOOL, 1, 2, "暖脚凳", "烟囱南脚矮凳（猫旁站位可交互）。", 0.7),
+					_m(P_CRATE0, -2, 1, "瓦箱", "修瓦小木箱。", 0.55),
+				]),
+				# East laundry — real clothesline (≠ herbs rename).
+				_cluster("clothesline", 15, 4, [
+					_m(P_CLOTHESLINE, 0, 0, "晾衣绳", "东侧两柱晾衣绳（衣物可读）。", 0.9),
+					_m(P_BASKET, 2, 2, "衣筐", "晾衣南侧衣筐（站位可交互）。", 0.6),
+					_m(P_BASKET, -2, 1, "衣筐", "未晒衣筐。", 0.55),
+				]),
+				# SE star deck — telescope + stool + tavern candle.
+				_cluster("star_deck", 17, 7, [
+					_m(P_TELESCOPE, 0, 0, "望远镜", "东南观星望远镜（工作锚）。", 0.9),
+					_m(P_STOOL, -2, 1, "观星凳", "镜西矮凳（并排站位）。", 0.7),
+					_m(P_LAMP_TAVERN, 2, 0, "屋顶烛", "夜观星小烛（非农场工业灯）。", PROP),
+					_m(P_CRATE1, 1, 2, "星图箱", "星图/镜头小箱。", 0.5),
+				]),
+			],
+			"fx": [],
+			"ambient": [{"species": "cat", "cluster": "chimney", "dx": 2, "dy": 2}],
+			"lights": [
+				{"tx": 5, "ty": 3, "oy": -16, "color": Color(1.0, 0.86, 0.68), "energy": 0.65, "scale": 1.45},
+				{"tx": 17, "ty": 6, "oy": -8, "color": Color(0.72, 0.84, 1.0), "energy": 0.85, "scale": 1.85},
+			],
+			"actor": {},
+		},
+		# ── C49 后院：西菜园体量 · 东柴垛/狗屋 · 西南晾衣（门轴 9–12 通廊；≠ C03 鸡舍 / ≠ C51 蜂场）──
+		"c49_backyard": {
+			"title": "后院",
+			"hint": "后院 · 菜园 / 晾衣 / 柴垛 / 狗屋",
+			"return_path": RES,
+			"room_w": 22,
+			"room_h": 14,
+			"door_tx0": 9,
+			"door_tx1": 12,
+			"floor": "straw",
+			# Soft yard green wash (apiary-like; not warehouse orange / home lamp).
+			"modulate": Color(0.86, 0.90, 0.78, 1.0),
+			"rug": null,
+			"window": true,
+			# West garden mass; east wood+doghouse; SW clothesline clear of mid door aisle.
+			"clusters": [
+				_cluster("garden", 5, 5, [
+					_m(P_FLOWER_BED, 0, 0, "菜畦", "西侧菜园畦（主锚）。", 0.95),
+					_m(P_FLOWER_BED, 2, 1, "菜畦", "东南第二畦（体量）。", 0.85),
+					_m(P_FLOWER_BED, -1, -1, "菜畦", "西北补畦。", 0.75),
+					_m(P_BASKET, 2, -1, "菜筐", "采菜筐（北可站）。", 0.65),
+					_m(P_BARREL, -2, 1, "浇水桶", "菜园浇水桶。", 0.65),
+					_m(P_SACK0, 1, 2, "肥土袋", "畦脚堆肥袋（南站位可交互）。", 0.55),
+					_m(P_LAMP_FARM, 0, -2, "院灯", "后院农场铁壳灯（非家用台灯）。", PROP),
+				]),
+				_cluster("wood_dog", 16, 5, [
+					_m(P_WOOD_PILE, 0, 0, "柴垛", "东侧劈柴高垛（体量锚）。", 0.95),
+					_m(P_DOGHOUSE, 2, 1, "狗屋", "柴旁尖顶狗屋（签名 prop）。", 0.85),
+					_m(P_CRATE0, -2, 1, "柴箱", "待劈短柴箱。", 0.65),
+					_m(P_HAY, 2, -1, "垫草", "狗屋旁垫草。", 0.5),
+					_m(P_LAMP_FARM, 1, -2, "柴区灯", "柴垛侧农场灯。", PROP),
+				]),
+				# Clothesline SW of door axis — laundry readable, mid 9–12 free.
+				_cluster("line", 5, 10, [
+					_m(P_CLOTHESLINE, 0, 0, "晾衣绳", "西南两柱晾衣（签名 prop）。", 1.0),
+					_m(P_BASKET, 2, 1, "衣筐", "收衣筐（不占门轴）。", 0.55),
+				]),
+			],
+			"fx": [],
+			"ambient": [{"species": "dog", "cluster": "wood_dog", "dx": 1, "dy": 2}],
+			"lights": [
+				{"tx": 5, "ty": 4, "oy": -8, "color": Color(1.0, 0.98, 0.88), "energy": 0.9, "scale": 1.9},
+				{"tx": 16, "ty": 4, "oy": -8, "color": Color(1.0, 0.96, 0.86), "energy": 0.8, "scale": 1.7},
+			],
+			"actor": {
+				"id": "farmer",
+				"title": "宅院住户",
+				"desc": "在菜园、柴垛与晾衣绳之间打理后院。",
+				"via_clusters": ["garden", "wood_dog", "line"],
+				"via_stands": {
+					"garden": [1, 2],
+					"wood_dog": [-2, 2],
+					"line": [2, 1],
+				},
+			},
+		},
+		# ── C50 农场地窖：西酒窖体量 · 东腌菜/奶酪陈化生产（≠ C15 家用储藏）──
+		# Door aisle tx 9–12 clear; lamp_farm only; signature aging/crock/wine props.
+		"c50_farm_cellar": {
+			"title": "农场地窖",
+			"hint": "农场地窖 · 酒窖 / 腌菜 / 奶酪陈化",
+			"return_path": FARM,
+			"room_w": 22,
+			"room_h": 14,
+			"door_tx0": 9,
+			"door_tx1": 12,
+			"floor": "stone",
+			"modulate": Color(0.52, 0.54, 0.50, 1.0),
+			"rug": null,
+			"window": false,
+			"clusters": [
+				# West wine — keg mass + bottle rack volume (production cellar ≠ C15 mug shelf).
+				_cluster("wine", 5, 5, [
+					_m(P_WINE_RACK, 0, 0, "酒架", "菱格瓶架（陈酿成品体量锚）。", 1.0),
+					_m(P_BARREL_KEG, -2, 1, "陈酿桶", "西墙横置陈酿大桶。", 0.95),
+					_m(P_BARREL_KEG, 2, 1, "陈酿桶", "架东第二横桶（体量）。", 0.9),
+					_m(P_BARREL, -1, 2, "立桶", "竖放待装瓶桶。", 0.85),
+					_m(P_BARREL, 2, 2, "立桶", "架脚叠放立桶。", 0.8),
+					_m(P_BARREL_KEG, 1, -2, "上层桶", "北壁第三陈酿桶（竖向体量）。", 0.75),
+					_m(P_CRATE0, 3, 0, "瓶箱", "待上架空瓶箱。", 0.7),
+					_m(P_LAMP_FARM, -2, -2, "酒窖灯", "农场铁壳灯（非家用台灯）。", PROP),
+				]),
+				# East cure — pickle crocks + cheese aging rack (≠ C39 screw press).
+				_cluster("cure", 16, 5, [
+					_m(P_CHEESE_AGING, 0, 0, "陈化架", "多层奶酪轮陈化架（非压机）。", 1.0),
+					_m(P_PICKLE_CROCK, -2, 1, "腌菜缸", "釉陶腌菜缸簇（生产锚）。", 0.95),
+					_m(P_SHELF, 2, -1, "罐架", "酱菜罐与标签搁板（竖向体量）。", 0.85),
+					_m(P_SACK1, -2, 2, "盐袋", "腌渍粗盐袋。", 0.7),
+					_m(P_SACK0, 1, 2, "麸袋", "奶酪包浆麸皮袋。", 0.65),
+					_m(P_CRATE1, 2, 1, "罐箱", "待封酱菜罐箱。", 0.75),
+					_m(P_BASKET, 3, 2, "检视筐", "抽检奶酪轮筐（南站位东）。", 0.6),
+					_m(P_LAMP_FARM, 1, -2, "腌房灯", "农场铁壳灯（非家用台灯）。", PROP),
+				]),
+			],
+			"fx": [],
+			"ambient": [],
+			"lights": [
+				{"tx": 5, "ty": 4, "oy": -10, "color": Color(0.95, 0.82, 0.55), "energy": 0.75, "scale": 1.8},
+				{"tx": 16, "ty": 4, "oy": -8, "color": Color(0.92, 0.78, 0.5), "energy": 0.7, "scale": 1.6},
+			],
+			"actor": {
+				"id": "farmer",
+				"title": "地窖农丁",
+				"desc": "在酒窖桶垛与腌菜/奶酪陈化架之间巡视翻缸检轮。",
+				"via_clusters": ["wine", "cure"],
+				"via_stands": {
+					"wine": [1, 2],
+					"cure": [-2, 2],
+				},
 			},
 		},
 	}
