@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c13mp17abv343"
-path="res://.godot/imported/trough_00.png-57401195e80062fb63a319b0069d88af.ctex"
+uid="uid://oeg0ovv5qcij"
+path="res://.godot/imported/trough_00.png-1271413c3eea7cc98674fa1add6538a7.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/trough_00.png"
-dest_files=["res://.godot/imported/trough_00.png-57401195e80062fb63a319b0069d88af.ctex"]
+dest_files=["res://.godot/imported/trough_00.png-1271413c3eea7cc98674fa1add6538a7.ctex"]
 
 [params]
 

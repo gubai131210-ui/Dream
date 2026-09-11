@@ -41,8 +41,7 @@ const P_CRATE0 := DIR_OUTDOOR_PROP + "/crate_0.png"
 const P_CRATE1 := DIR_OUTDOOR_PROP + "/crate_1.png"
 const P_SACK0 := DIR_OUTDOOR_PROP + "/sack_0.png"
 const P_SACK1 := DIR_OUTDOOR_PROP + "/sack_1.png"
-const P_LAMP0 := DIR_OUTDOOR_PROP + "/lamp_0.png"
-const P_LAMP1 := DIR_OUTDOOR_PROP + "/lamp_1.png"
+const P_LAMP_INDOOR := DIR_INTERIOR_PROP + "/lamp_indoor_00.png"
 
 const RES := "res://scenes/areas/village_residential/village_residential.tscn"
 const FARM := "res://scenes/areas/farm_residential/farm_residential.tscn"
@@ -97,7 +96,7 @@ static func _all() -> Dictionary:
 				_cluster("sleep", 28, 13, [
 					_m(P_BED_D, 0, 1, "双人床", "东南私密睡区。", 1.05),
 					_m(P_DRESSER, 0, -2, "衣柜", "床头北墙衣柜。", 0.95),
-					_m(P_LAMP0, 1, -3, "壁灯", "床区壁灯。", PROP),
+					_m(P_LAMP_INDOOR, 1, -3, "壁灯", "床区壁灯。", PROP),
 				]),
 			],
 			"fx": [{"kind": "fire", "tx": 16, "ty": 5, "oy": -18}],
@@ -135,7 +134,7 @@ static func _all() -> Dictionary:
 				_cluster("sleep", 20, 10, [
 					_m(P_BED_S, 0, 1, "单人床", "东墙私密床。", 0.65),
 					_m(P_MEDICINE, 0, -2, "药箱", "床头药箱。", 0.6),
-					_m(P_LAMP1, -1, -1, "台灯", "床头柔和灯。", PROP),
+					_m(P_LAMP_INDOOR, -1, -1, "台灯", "床头柔和灯。", PROP),
 				]),
 			],
 			"fx": [],
@@ -179,7 +178,7 @@ static func _all() -> Dictionary:
 				_cluster("sleep", 24, 12, [
 					_m(P_BED_D, 0, 1, "床铺", "夫妻床。", 1.0),
 					_m(P_CRATE1, 0, -2, "工具箱", "床头备用农具箱。", PROP),
-					_m(P_LAMP0, 1, -3, "壁灯", "暖黄壁灯。", PROP),
+					_m(P_LAMP_INDOOR, 1, -3, "壁灯", "暖黄壁灯。", PROP),
 				]),
 			],
 			"fx": [],
@@ -210,7 +209,7 @@ static func _all() -> Dictionary:
 			"clusters": [
 				_cluster("ledger", 10, 6, [
 					_m(P_LEDGER, 0, 0, "账桌", "北侧账簿桌。", 0.65),
-					_m(P_LAMP1, 2, -1, "台灯", "账桌灯。", PROP),
+					_m(P_LAMP_INDOOR, 2, -1, "台灯", "账桌灯。", PROP),
 					_m(P_COIN, -2, 1, "钱箱", "账桌旁钱箱。", 0.55),
 					_m(P_NOTICE, -3, -1, "货单", "壁挂货单。", 0.5),
 				]),
@@ -263,7 +262,7 @@ static func _all() -> Dictionary:
 				_cluster("sleep", 21, 11, [
 					_m(P_BED_S, 0, 1, "床铺", "铁匠床铺。", 1.0),
 					_m(P_CRATE1, 1, -2, "零件箱", "床头铁钉零件。", PROP),
-					_m(P_LAMP0, 0, -3, "壁灯", "偏橙暖灯。", PROP),
+					_m(P_LAMP_INDOOR, 0, -3, "壁灯", "偏橙暖灯。", PROP),
 				]),
 			],
 			"fx": [],
@@ -307,7 +306,7 @@ static func _all() -> Dictionary:
 					_m(P_SACK0, -2, 0, "饲料袋", "通道饲料。", PROP),
 					_m(P_SACK1, 0, 1, "饲料袋", "叠放饲料。", PROP),
 					_m(P_BARREL, 2, 1, "水桶", "通道备用饮水。", PROP),
-					_m(P_LAMP0, 0, -3, "吊灯", "通道暖灯。", PROP),
+					_m(P_LAMP_INDOOR, 0, -3, "吊灯", "通道暖灯。", PROP),
 				]),
 			],
 			"fx": [],
@@ -348,7 +347,7 @@ static func _all() -> Dictionary:
 					_m(P_TROUGH, 0, 0, "食槽", "中央食槽。", 0.55),
 					_m(P_SACK0, 3, 1, "鸡食", "贴槽鸡食袋。", PROP),
 					_m(P_BARREL, 3, 3, "水桶", "贴食饮水桶。", PROP),
-					_m(P_LAMP1, 0, -3, "小灯", "鸡舍小灯。", PROP),
+					_m(P_LAMP_INDOOR, 0, -3, "小灯", "鸡舍小灯。", PROP),
 				]),
 				_cluster("roost", 15, 5, [
 					_m(P_ROOST, 0, 0, "栖木", "东侧栖木。", 0.7),
@@ -399,7 +398,7 @@ static func _all() -> Dictionary:
 					_m(P_BASKET, -2, 2, "菜筐", "柜前蔬果筐。", 0.85),
 					_m(P_BASKET, 2, 2, "菜筐", "柜前根茎筐。", 0.85),
 					_m(P_NOTICE, 2, -2, "告示板", "柜上价目。", 0.85),
-					_m(P_LAMP0, 1, -3, "店灯", "柜台顶灯。", PROP),
+					_m(P_LAMP_INDOOR, 1, -3, "店灯", "柜台顶灯。", PROP),
 				]),
 			],
 			"fx": [],
@@ -437,7 +436,7 @@ static func _all() -> Dictionary:
 					_m(P_BARREL, 2, 1, "淬火桶", "贴砧淬火。", PROP),
 					_m(P_CRATE1, 3, -1, "成品箱", "砧旁待售铁器。", PROP),
 					_m(P_CRATE0, 3, 1, "废料箱", "贴成品废料。", PROP),
-					_m(P_LAMP0, 2, -2, "壁灯", "工作区壁灯。", PROP),
+					_m(P_LAMP_INDOOR, 2, -2, "壁灯", "工作区壁灯。", PROP),
 				]),
 				_cluster("wait", 16, 13, [
 					_m(P_TABLE_DINING, 0, 0, "候坐", "顾客等候桌。", 0.9),
@@ -476,7 +475,7 @@ static func _all() -> Dictionary:
 					_m(P_BARREL_KEG, -1, 1, "酒桶", "吧后横放取酒桶。", 0.6),
 					_m(P_BARREL, -1, 3, "存酒", "吧后竖放存酒。", PROP),
 					_m(P_MUG_SHELF, 0, -3, "杯架", "吧上墙杯架。", 0.6),
-					_m(P_LAMP0, 2, -3, "酒馆灯", "吧台暖灯。", PROP),
+					_m(P_LAMP_INDOOR, 2, -3, "酒馆灯", "吧台暖灯。", PROP),
 					_m(P_STOOL, 3, 1, "吧凳", "吧前高凳。", 0.5),
 					_m(P_STOOL, 3, 3, "吧凳", "吧前高凳。", 0.5),
 				]),

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://uhwyi1vyuwhd"
-path="res://.godot/imported/ledger_00.png-813e2c8e6091d0f3607fdaf168a36aa4.ctex"
+uid="uid://dvcnn333h3e5x"
+path="res://.godot/imported/ledger_00.png-dd1dbb1baf1302d154923214d015b3a2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/ledger_00.png"
-dest_files=["res://.godot/imported/ledger_00.png-813e2c8e6091d0f3607fdaf168a36aa4.ctex"]
+dest_files=["res://.godot/imported/ledger_00.png-dd1dbb1baf1302d154923214d015b3a2.ctex"]
 
 [params]
 

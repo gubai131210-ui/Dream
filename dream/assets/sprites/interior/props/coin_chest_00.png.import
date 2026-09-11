@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c6cpqged6lq2d"
-path="res://.godot/imported/coin_chest_00.png-4d1fc65fe32d4861d357012fe79af964.ctex"
+uid="uid://d02tqv7x864m3"
+path="res://.godot/imported/coin_chest_00.png-d8f82ee1963ff0fa0b2a7f34618012ff.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/coin_chest_00.png"
-dest_files=["res://.godot/imported/coin_chest_00.png-4d1fc65fe32d4861d357012fe79af964.ctex"]
+dest_files=["res://.godot/imported/coin_chest_00.png-d8f82ee1963ff0fa0b2a7f34618012ff.ctex"]
 
 [params]
 

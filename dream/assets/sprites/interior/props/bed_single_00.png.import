@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dtt3q4s3g1fdm"
-path="res://.godot/imported/bed_single_00.png-e1c7248cb16e75d00a2034d03123122b.ctex"
+uid="uid://ce1w205jmayb3"
+path="res://.godot/imported/bed_single_00.png-5f2786d8acd87bae65d81028553d5424.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/bed_single_00.png"
-dest_files=["res://.godot/imported/bed_single_00.png-e1c7248cb16e75d00a2034d03123122b.ctex"]
+dest_files=["res://.godot/imported/bed_single_00.png-5f2786d8acd87bae65d81028553d5424.ctex"]
 
 [params]
 

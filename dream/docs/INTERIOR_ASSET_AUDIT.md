@@ -1,12 +1,20 @@
 # Interior asset naming audit (filename ≠ visual)
 
-**Status:** BLOCKER before Phase 5 Wave A remainder (Stall-C05…)  
+**Status:** REMAP v1 + gap-gen LANDED (2026-09-11) — user Godot playtest next  
 **Date:** 2026-09-11  
 **Method:** Multi-agent Read of gameplay PNGs vs `interior_profiles.gd` + titles  
-**Agents:** [Asset naming audit](52b9262b-583e-407b-afa0-b6ba6c4ed915) · [Next-phase docs](c50cca65-b08a-49d8-866b-63fdbd984cde) · [Next-layer research](ee18a4c7-c126-44cb-be01-7d02f0f65065)  
+**Agents:** [Asset naming audit](52b9262b-583e-407b-afa0-b6ba6c4ed915) · [Next-phase docs](c50cca65-b08a-49d8-866b-63fdbd984cde) · [Next-layer research](ee18a4c7-c126-44cb-be01-7d02f0f65065) · [Cross-check](f8c3e2f6-54fd-486e-8d70-ec3034978381)  
+**Tools:** `tools/remap_interior_props_v1.py`, `tools/install_interior_gap_props.py`, `tools/wire_indoor_lamp.py`  
 **Related:** [`PHASE5.md`](PHASE5.md), [`INTERIOR_COMPOSITION.md`](INTERIOR_COMPOSITION.md), [`research/INTERIOR_NEXT_LAYER_RESEARCH.md`](research/INTERIOR_NEXT_LAYER_RESEARCH.md)
 
-## Verdict
+## Applied (user confirmed 1A+2B + bare table)
+
+1. Path-preserving remap cycles (marker `props/.remap_v1_done`)  
+2. Gap regen: `table_dining` 光桌 · `counter` 长柜 · `shelf_grocery` · `roost` · `rocking` · `lamp_indoor_00`  
+3. Profiles use `P_LAMP_INDOOR` (no outdoor lamp_0/lamp_1 indoors)  
+4. Misnamed preimages archived under `props/_misnamed_archive/`  
+
+## Verdict (pre-fix)
 
 **多数室内 specialty 道具文件名与画面错位。**  
 路径几乎都存在（0 missing Resource），但 **代码以为在用 X，实际渲染的是 Y**。  

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fylym74achrm"
-path="res://.godot/imported/hay_00.png-0d7c16f27164583860a20cee2acf3e56.ctex"
+uid="uid://cmicirxh5wxi0"
+path="res://.godot/imported/hay_00.png-238648cdca606865f29ecc7d33f2ea63.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/hay_00.png"
-dest_files=["res://.godot/imported/hay_00.png-0d7c16f27164583860a20cee2acf3e56.ctex"]
+dest_files=["res://.godot/imported/hay_00.png-238648cdca606865f29ecc7d33f2ea63.ctex"]
 
 [params]
 

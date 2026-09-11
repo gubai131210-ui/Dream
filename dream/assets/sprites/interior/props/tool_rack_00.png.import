@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cm47ucijo4qlj"
-path="res://.godot/imported/tool_rack_00.png-86134319f741e8449b2a7a2b09822bc5.ctex"
+uid="uid://o7tnlfsprkrs"
+path="res://.godot/imported/tool_rack_00.png-46466769abfd9a06a74f63f9e908f2a1.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/tool_rack_00.png"
-dest_files=["res://.godot/imported/tool_rack_00.png-86134319f741e8449b2a7a2b09822bc5.ctex"]
+dest_files=["res://.godot/imported/tool_rack_00.png-46466769abfd9a06a74f63f9e908f2a1.ctex"]
 
 [params]
 

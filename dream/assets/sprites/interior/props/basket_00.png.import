@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://r8l50jofl4a5"
-path="res://.godot/imported/basket_00.png-593a463b350aade96f0df82bf333e6df.ctex"
+uid="uid://c13mp17abv343"
+path="res://.godot/imported/basket_00.png-57401195e80062fb63a319b0069d88af.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/basket_00.png"
-dest_files=["res://.godot/imported/basket_00.png-593a463b350aade96f0df82bf333e6df.ctex"]
+dest_files=["res://.godot/imported/basket_00.png-57401195e80062fb63a319b0069d88af.ctex"]
 
 [params]
 

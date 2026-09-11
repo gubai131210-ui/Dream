@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dvcnn333h3e5x"
-path="res://.godot/imported/nest_00.png-dd1dbb1baf1302d154923214d015b3a2.ctex"
+uid="uid://c3763ctianni3"
+path="res://.godot/imported/nest_00.png-e89d079cb1f97005bb44bc67f13dd5c3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/nest_00.png"
-dest_files=["res://.godot/imported/nest_00.png-dd1dbb1baf1302d154923214d015b3a2.ctex"]
+dest_files=["res://.godot/imported/nest_00.png-e89d079cb1f97005bb44bc67f13dd5c3.ctex"]
 
 [params]
 

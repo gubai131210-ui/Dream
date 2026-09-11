@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cruiojo7bs566"
-path="res://.godot/imported/mug_shelf_00.png-b8f0e922558481b77435fed9cb2fe28d.ctex"
+uid="uid://c6cpqged6lq2d"
+path="res://.godot/imported/mug_shelf_00.png-4d1fc65fe32d4861d357012fe79af964.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/mug_shelf_00.png"
-dest_files=["res://.godot/imported/mug_shelf_00.png-b8f0e922558481b77435fed9cb2fe28d.ctex"]
+dest_files=["res://.godot/imported/mug_shelf_00.png-4d1fc65fe32d4861d357012fe79af964.ctex"]
 
 [params]
 

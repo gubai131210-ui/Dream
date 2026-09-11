@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d02tqv7x864m3"
-path="res://.godot/imported/roost_00.png-d8f82ee1963ff0fa0b2a7f34618012ff.ctex"
+uid="uid://cruiojo7bs566"
+path="res://.godot/imported/roost_00.png-b8f0e922558481b77435fed9cb2fe28d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/roost_00.png"
-dest_files=["res://.godot/imported/roost_00.png-d8f82ee1963ff0fa0b2a7f34618012ff.ctex"]
+dest_files=["res://.godot/imported/roost_00.png-b8f0e922558481b77435fed9cb2fe28d.ctex"]
 
 [params]
 

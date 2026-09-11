@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdc22pa16msrd"
-path="res://.godot/imported/shelf_grocery_00.png-4641eeea4ea163a57e045cc6825952f3.ctex"
+uid="uid://cee4qn05iolpj"
+path="res://.godot/imported/coin_chest_00.png-4c0967a64c6eb194261b798d77696bd5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/interior/props/shelf_grocery_00.png"
-dest_files=["res://.godot/imported/shelf_grocery_00.png-4641eeea4ea163a57e045cc6825952f3.ctex"]
+source_file="res://assets/sprites/interior/props/_pil_archive/coin_chest_00.png"
+dest_files=["res://.godot/imported/coin_chest_00.png-4c0967a64c6eb194261b798d77696bd5.ctex"]
 
 [params]
 

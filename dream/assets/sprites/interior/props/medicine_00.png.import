@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://o7tnlfsprkrs"
-path="res://.godot/imported/medicine_00.png-46466769abfd9a06a74f63f9e908f2a1.ctex"
+uid="uid://fylym74achrm"
+path="res://.godot/imported/medicine_00.png-0d7c16f27164583860a20cee2acf3e56.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/medicine_00.png"
-dest_files=["res://.godot/imported/medicine_00.png-46466769abfd9a06a74f63f9e908f2a1.ctex"]
+dest_files=["res://.godot/imported/medicine_00.png-0d7c16f27164583860a20cee2acf3e56.ctex"]
 
 [params]
 

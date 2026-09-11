@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cmicirxh5wxi0"
-path="res://.godot/imported/notice_00.png-238648cdca606865f29ecc7d33f2ea63.ctex"
+uid="uid://uhwyi1vyuwhd"
+path="res://.godot/imported/notice_00.png-813e2c8e6091d0f3607fdaf168a36aa4.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/interior/props/notice_00.png"
-dest_files=["res://.godot/imported/notice_00.png-238648cdca606865f29ecc7d33f2ea63.ctex"]
+dest_files=["res://.godot/imported/notice_00.png-813e2c8e6091d0f3607fdaf168a36aa4.ctex"]
 
 [params]
 
