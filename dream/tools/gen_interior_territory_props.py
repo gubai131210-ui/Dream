@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-"""Generate seamless interior fence family (H/V same fence) + mass props.
+"""Interior fence family: one design, H/V views + 4 corners, 32px seamless tiles.
 
-Fence lock (INTERIOR_TERRITORY):
-- H and V are TWO VIEWS of one fence, not two designs.
-- Segments tile at 32px (1 tile) with no visual gaps (shared post language).
-- Stall = taller 3-rail; pen = shorter 2-rail; same wood / post / rail thickness.
+Pen = short dense board fence (same language H/V/corners).
+Stall = taller dense board fence (same language H/V).
 """
 from __future__ import annotations
 
@@ -16,7 +14,6 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "assets" / "sprites" / "interior" / "props"
 
-# Cozy wood ramp
 OUTLINE = (42, 28, 18, 255)
 DARK = (78, 48, 28, 255)
 MID = (128, 82, 48, 255)
@@ -31,7 +28,7 @@ SACK_L = (172, 146, 98, 255)
 SACK_TIE = (64, 48, 28, 255)
 
 TILE = 32
-POST_W = 4
+POST_W = 5
 
 
 def blank(w: int, h: int) -> np.ndarray:
@@ -61,7 +58,6 @@ def vline(a: np.ndarray, x: int, y0: int, y1: int, c: tuple) -> None:
 
 
 def draw_post(a: np.ndarray, x: int, y0: int, y1: int) -> None:
-	"""Square post: outline / lit left / mid / dark right."""
 	fill_rect(a, x, y0, x + POST_W - 1, y1, MID)
 	vline(a, x, y0, y1, OUTLINE)
 	vline(a, x + 1, y0, y1, HI)
@@ -71,71 +67,93 @@ def draw_post(a: np.ndarray, x: int, y0: int, y1: int) -> None:
 	hline(a, x, x + POST_W - 1, y1, OUTLINE)
 
 
-def draw_rail_h(a: np.ndarray, x0: int, x1: int, y: int, thick: int = 3) -> None:
-	"""Horizontal beam with top highlight."""
+def draw_board_h(a: np.ndarray, x0: int, x1: int, y: int, thick: int) -> None:
 	fill_rect(a, x0, y, x1, y + thick - 1, MID)
 	hline(a, x0, x1, y, HI)
-	if thick >= 3:
-		hline(a, x0, x1, y + 1, LIT)
+	for k in range(1, thick - 1):
+		hline(a, x0, x1, y + k, LIT if k == 1 else MID)
 	hline(a, x0, x1, y + thick - 1, OUTLINE)
 
 
-def make_fence_h(rail_ys: list[int], ground_y: int, rail_thick: int = 3, pickets: bool = False) -> Image.Image:
-	"""Front view: 32px tile. Left post + continuous rails/pickets to right edge."""
-	h = ground_y + 2
-	a = blank(TILE, h)
-	if pickets:
-		# Dense pickets — chicken cannot pass (≤1px air).
-		for x in range(POST_W, TILE, 2):
-			fill_rect(a, x, rail_ys[0], x, ground_y - 1, MID if x % 4 == 0 else LIT)
-			vline(a, x, rail_ys[0], ground_y - 1, OUTLINE if x % 4 == 0 else DARK)
-		draw_rail_h(a, 0, TILE - 1, rail_ys[0], rail_thick)
-		draw_rail_h(a, 0, TILE - 1, ground_y - rail_thick - 1, rail_thick)
-	else:
-		for ry in rail_ys:
-			draw_rail_h(a, 0, TILE - 1, ry, rail_thick)
-	draw_post(a, 0, rail_ys[0] - 2, ground_y)
-	hline(a, 0, POST_W - 1, ground_y, OUTLINE)
+def board_ys(ground_y: int, n: int, thick: int) -> list[int]:
+	"""Evenly pack n boards from top to near ground with ≤1px gaps."""
+	usable = ground_y - 4 - n * thick
+	gap = max(1, usable // max(1, n - 1)) if n > 1 else 1
+	ys = []
+	y = 3
+	for _ in range(n):
+		ys.append(y)
+		y += thick + gap
+	return ys
+
+
+def make_fence_h(ground_y: int, n_boards: int, thick: int = 4) -> Image.Image:
+	"""Front view along X: left post + boards to right edge (seamless tile)."""
+	a = blank(TILE, ground_y + 2)
+	ys = board_ys(ground_y, n_boards, thick)
+	for y in ys:
+		draw_board_h(a, 0, TILE - 1, y, thick)
+	draw_post(a, 0, ys[0] - 2, ground_y)
 	return Image.fromarray(a, "RGBA")
 
 
-def make_fence_v(rail_ys: list[int], ground_y: int, rail_thick: int = 3, pickets: bool = False) -> Image.Image:
-	"""Side view of SAME fence — same rail count/thickness/picket language."""
-	h = ground_y + 2
-	a = blank(TILE, h)
-	near_x = 5
-	far_x = TILE - POST_W - 5
-	# Depth rails / picket edges (foreshortened)
-	if pickets:
-		for i, x in enumerate(range(near_x + POST_W, far_x + 1, 4)):
-			t = (x - near_x) / max(1, far_x - near_x)
-			y0 = rail_ys[0] + int(round(t))
-			fill_rect(a, x, y0, x + 1, ground_y - 1, LIT if i % 2 == 0 else MID)
-			vline(a, x, y0, ground_y - 1, OUTLINE)
-		for ry in (rail_ys[0], ground_y - rail_thick - 1):
-			for x in range(near_x + POST_W - 1, far_x + 1):
-				t = (x - near_x) / max(1, far_x - near_x)
-				yy = ry + int(round(t))
-				put(a, x, yy, HI)
-				put(a, x, yy + 1, MID)
-				put(a, x, yy + rail_thick - 1, OUTLINE)
+def make_fence_v(ground_y: int, n_boards: int, thick: int = 4) -> Image.Image:
+	"""Side view of SAME boards: near post + boards foreshortened in depth + far post.
+
+	Must read as the same board fence turned 90°, not a ladder / picket wall.
+	"""
+	a = blank(TILE, ground_y + 2)
+	ys = board_ys(ground_y, n_boards, thick)
+	near = 4
+	far = TILE - POST_W - 4
+	for y in ys:
+		for x in range(near + POST_W - 1, far + 1):
+			t = (x - near) / max(1.0, far - near)
+			yy = y + int(round(t * 2))  # slight drop into depth
+			for k in range(thick):
+				c = HI if k == 0 else (LIT if k == 1 else (OUTLINE if k == thick - 1 else MID))
+				put(a, x, yy + k, c)
+	draw_post(a, near, ys[0] - 2, ground_y)
+	draw_post(a, far, ys[0], ground_y)
+	return Image.fromarray(a, "RGBA")
+
+
+def make_corner(kind: str, ground_y: int, n_boards: int, thick: int = 4) -> Image.Image:
+	"""Corner joins H+V runs: post + boards east/west and north/south stubs."""
+	a = blank(TILE, ground_y + 2)
+	ys = board_ys(ground_y, n_boards, thick)
+	# Corner post centered-leftish for NW/SW, rightish for NE/SE
+	if kind in ("nw", "sw"):
+		px = 4
 	else:
-		for ry in rail_ys:
-			for x in range(near_x + POST_W - 1, far_x + 1):
-				t = (x - near_x) / max(1, far_x - near_x)
-				yy = ry + int(round(t * 1.5))
-				for k in range(rail_thick):
-					c = HI if k == 0 else (MID if k < rail_thick - 1 else OUTLINE)
-					put(a, x, yy + k, c)
-	draw_post(a, near_x, rail_ys[0] - 2, ground_y)
-	draw_post(a, far_x, rail_ys[0], ground_y)
-	hline(a, near_x, near_x + POST_W - 1, ground_y, OUTLINE)
-	hline(a, far_x, far_x + POST_W - 1, ground_y, OUTLINE)
+		px = TILE - POST_W - 4
+	draw_post(a, px, ys[0] - 2, ground_y)
+	# Horizontal stub (along X toward enclosure interior from corner)
+	for y in ys:
+		if kind in ("nw", "sw"):
+			draw_board_h(a, px + POST_W - 1, TILE - 1, y, thick)
+		else:
+			draw_board_h(a, 0, px + 1, y, thick)
+	# Vertical stub (along Y / depth) — short foreshortened boards matching V language
+	for y in ys:
+		if kind in ("nw", "ne"):
+			# boards going "south" (down screen) from post
+			x0 = px + 1
+			for i in range(10):
+				yy = y + 2 + i
+				for k in range(thick):
+					put(a, x0 + (0 if kind == "nw" else POST_W - 2), yy + k, LIT if k < 2 else DARK)
+		else:
+			# boards going "north" (up) — short stub above
+			x0 = px + 1
+			for i in range(8):
+				yy = y - 1 - i
+				for k in range(min(2, thick)):
+					put(a, x0 + (0 if kind == "sw" else POST_W - 2), yy + k, LIT)
 	return Image.fromarray(a, "RGBA")
 
 
 def make_grain_stack() -> Image.Image:
-	"""Bulging grain sacks piled high — soft bags, not boxes."""
 	a = blank(64, 80)
 
 	def sack(cx: int, cy: int, rx: int, ry: int, shade: float = 0.0) -> None:
@@ -143,32 +161,16 @@ def make_grain_stack() -> Image.Image:
 			for x in range(cx - rx, cx + rx + 1):
 				nx = (x - cx) / max(1, rx)
 				ny = (y - cy) / max(1, ry)
-				# softer sack silhouette (squircle)
 				if abs(nx) ** 2.4 + abs(ny) ** 2.2 > 1.0:
 					continue
-				# light from top-left
 				lit = (-nx * 0.35 - ny * 0.45) + shade
-				if lit > 0.25:
-					c = SACK_L
-				elif lit < -0.2:
-					c = SACK_D
-				else:
-					c = SACK
+				c = SACK_L if lit > 0.25 else (SACK_D if lit < -0.2 else SACK)
 				put(a, x, y, c)
-		# outline rim
 		for t in range(0, 360, 4):
 			rad = np.deg2rad(t)
-			x = int(round(cx + rx * np.cos(rad) * 0.98))
-			y = int(round(cy + ry * np.sin(rad) * 0.98))
-			put(a, x, y, OUTLINE)
-		# mouth / tie
+			put(a, int(round(cx + rx * np.cos(rad) * 0.98)), int(round(cy + ry * np.sin(rad) * 0.98)), OUTLINE)
 		hline(a, cx - 3, cx + 3, cy - ry + 2, SACK_TIE)
-		hline(a, cx - 2, cx + 2, cy - ry + 3, SACK_D)
-		# grain spill on crown
-		for dx in range(-4, 5):
-			put(a, cx + dx, cy - ry, STRAW if dx % 2 == 0 else STRAW_D)
 
-	# pyramid mass
 	sack(18, 66, 14, 10, 0.05)
 	sack(40, 68, 13, 9, -0.05)
 	sack(54, 62, 11, 8, 0.0)
@@ -176,29 +178,16 @@ def make_grain_stack() -> Image.Image:
 	sack(42, 50, 13, 9, 0.0)
 	sack(32, 34, 12, 9, 0.08)
 	sack(34, 20, 10, 8, 0.12)
-	# loose grain peak
-	for x, y in ((30, 10), (34, 8), (38, 10), (32, 12), (36, 12), (34, 6)):
-		put(a, x, y, STRAW_L if y < 9 else STRAW)
+	for x, y in ((30, 10), (34, 8), (38, 10), (32, 12), (36, 12)):
+		put(a, x, y, STRAW_L)
 		put(a, x, y + 1, STRAW_D)
-	# crop
 	ys, xs = np.where(a[:, :, 3] > 0)
-	crop = a[ys.min() - 1 : ys.max() + 2, xs.min() - 1 : xs.max() + 2]
-	return Image.fromarray(crop, "RGBA")
+	return Image.fromarray(a[ys.min() - 1 : ys.max() + 2, xs.min() - 1 : xs.max() + 2], "RGBA")
 
 
 def make_hay_stack() -> Image.Image:
-	"""Continuous hay mound mass (one silhouette, not floating ellipses)."""
 	a = blank(52, 64)
-	# stacked elliptical lobes that overlap into one pile
-	lobes = [
-		(26, 52, 22, 12),
-		(18, 42, 16, 11),
-		(34, 40, 15, 10),
-		(26, 30, 16, 11),
-		(22, 20, 13, 9),
-		(30, 14, 11, 8),
-		(26, 8, 8, 6),
-	]
+	lobes = [(26, 52, 22, 12), (18, 42, 16, 11), (34, 40, 15, 10), (26, 30, 16, 11), (22, 20, 13, 9), (30, 14, 11, 8), (26, 8, 8, 6)]
 	for cx, cy, rx, ry in lobes:
 		for y in range(cy - ry, cy + ry + 1):
 			for x in range(cx - rx, cx + rx + 1):
@@ -207,14 +196,8 @@ def make_hay_stack() -> Image.Image:
 				if nx * nx + ny * ny > 1.0:
 					continue
 				lit = -nx * 0.3 - ny * 0.5
-				if lit > 0.3:
-					c = STRAW_L
-				elif lit < -0.25:
-					c = STRAW_D
-				else:
-					c = STRAW if (x + 3 * y) % 4 else STRAW_D
+				c = STRAW_L if lit > 0.3 else (STRAW_D if lit < -0.25 else (STRAW if (x + 3 * y) % 4 else STRAW_D))
 				put(a, x, y, c)
-	# silhouette outline
 	mask = a[:, :, 3] > 0
 	h, w = mask.shape
 	for y in range(h):
@@ -226,24 +209,24 @@ def make_hay_stack() -> Image.Image:
 					put(a, x, y, OUTLINE)
 					break
 	ys, xs = np.where(a[:, :, 3] > 0)
-	crop = a[ys.min() - 1 : ys.max() + 2, xs.min() - 1 : xs.max() + 2]
-	return Image.fromarray(crop, "RGBA")
+	return Image.fromarray(a[ys.min() - 1 : ys.max() + 2, xs.min() - 1 : xs.max() + 2], "RGBA")
 
 
 def main() -> None:
 	OUT.mkdir(parents=True, exist_ok=True)
-	# Stall: dense board rails (small gaps — livestock barrier)
-	stall_rails = [5, 11, 17, 23, 29]
-	stall_ground = 36
-	# Pen: picket fill + top/bottom rails (chicken-proof)
-	pen_rails = [6]
-	pen_ground = 28
+	# Overwrite ALL pen/stall fence names so Godot cannot keep mixed old V + new H.
+	pen_g, pen_n, pen_t = 28, 4, 4
+	stall_g, stall_n, stall_t = 36, 6, 4
 
-	items = {
-		"stall_rail_00.png": make_fence_h(stall_rails, stall_ground, rail_thick=4, pickets=False),
-		"stall_rail_v_00.png": make_fence_v(stall_rails, stall_ground, rail_thick=4, pickets=False),
-		"pen_fence_00.png": make_fence_h(pen_rails, pen_ground, rail_thick=3, pickets=True),
-		"pen_fence_v_00.png": make_fence_v(pen_rails, pen_ground, rail_thick=3, pickets=True),
+	items: dict[str, Image.Image] = {
+		"pen_fence_00.png": make_fence_h(pen_g, pen_n, pen_t),
+		"pen_fence_v_00.png": make_fence_v(pen_g, pen_n, pen_t),
+		"pen_corner_nw_00.png": make_corner("nw", pen_g, pen_n, pen_t),
+		"pen_corner_ne_00.png": make_corner("ne", pen_g, pen_n, pen_t),
+		"pen_corner_sw_00.png": make_corner("sw", pen_g, pen_n, pen_t),
+		"pen_corner_se_00.png": make_corner("se", pen_g, pen_n, pen_t),
+		"stall_rail_00.png": make_fence_h(stall_g, stall_n, stall_t),
+		"stall_rail_v_00.png": make_fence_v(stall_g, stall_n, stall_t),
 		"grain_stack_00.png": make_grain_stack(),
 		"hay_stack_00.png": make_hay_stack(),
 	}
@@ -251,23 +234,26 @@ def main() -> None:
 		im.save(OUT / name)
 		print("wrote", name, im.size)
 
-	h = items["stall_rail_00.png"]
+	# Family diag
+	keys = [
+		"pen_fence_00", "pen_fence_v_00",
+		"pen_corner_nw_00", "pen_corner_ne_00", "pen_corner_sw_00", "pen_corner_se_00",
+	]
+	imgs = [items[k + ".png"] for k in keys]
+	H = max(i.height for i in imgs) + 8
+	W = sum(i.width for i in imgs) + 4 * (len(imgs) + 1)
+	sheet = Image.new("RGBA", (W, H), (36, 32, 28, 255))
+	x = 4
+	for im in imgs:
+		sheet.paste(im, (x, H - im.height - 4), im)
+		x += im.width + 4
+	sheet.save(OUT / "_diag_pen_family.png")
+	# Seamless H×3
+	h = items["pen_fence_00.png"]
 	pair = Image.new("RGBA", (TILE * 3, h.height), (30, 28, 24, 255))
 	for i in range(3):
 		pair.paste(h, (TILE * i, 0), h)
 	pair.save(OUT / "_diag_fence_h_seamless.png")
-	pv = items["pen_fence_00.png"]
-	pp = Image.new("RGBA", (TILE * 3, pv.height), (30, 28, 24, 255))
-	for i in range(3):
-		pp.paste(pv, (TILE * i, 0), pv)
-	pp.save(OUT / "_diag_pen_h_seamless.png")
-	# H vs V family sheet
-	sheet = Image.new("RGBA", (TILE * 4 + 12, max(h.height, items["stall_rail_v_00.png"].height) + 8), (36, 32, 28, 255))
-	sheet.paste(items["stall_rail_00.png"], (4, 4), items["stall_rail_00.png"])
-	sheet.paste(items["stall_rail_v_00.png"], (TILE + 8, 4), items["stall_rail_v_00.png"])
-	sheet.paste(items["pen_fence_00.png"], (TILE * 2 + 12, 4), items["pen_fence_00.png"])
-	sheet.paste(items["pen_fence_v_00.png"], (TILE * 3 + 16, 4), items["pen_fence_v_00.png"])
-	sheet.save(OUT / "_diag_fence_family.png")
 	print("diag ok")
 
 

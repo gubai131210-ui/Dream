@@ -62,25 +62,26 @@ enclosures: [
 
 | Rule | Why |
 | --- | --- |
-| **H / V = 同一栅栏两视角** | 正视（rails along X）与侧视（foresorten）共享柱粗、横档数、木色 |
-| **32px 瓦片段 + step=1 + scale=1** | 段间接缝；禁止 step=2 留洞 |
-| **enclosure 用 `prop_h` + `prop_v`** | 南北正视、东西侧视；禁止四边同一张图 |
-| **只有 `gaps` 允许开口** | 南门通道；别处禁止视觉空隙 |
+| **H / V = 同一栅栏两视角** | 同板条数/厚度/木色；禁止正视竖条、侧视横梯混用 |
+| **四角专用 `corners`** | nw/ne/sw/se 转角件，禁止 H∩V 硬接留洞 |
+| **32px 瓦片 + step=1 + scale=1** | 段间接缝 |
+| **只有 `gaps` 允许开口** | 南门；别处禁止空隙 |
+| **鸡舍笔区铺满可用面积** | 禁止房间中央小圈、四周空地 |
 
-Stall = 三档高栏；Pen = 两档低栏；同家族不同高度。
-
-生成：`tools/gen_interior_territory_props.py`（含 `_diag_fence_h_seamless.png`）
+生成：`tools/gen_interior_territory_props.py`（含 `_diag_pen_family.png`）
 
 ## 禁止偷懒
 
 - 禁止只用干草/食槽**语义暗示**畜栏、却不画隔栏  
 - 禁止鸡 ambient 在无围栏空地上当「鸡圈」交差  
-- 禁止两个平铺粮袋冒充「存粮区」（必须有垂直堆叠或成排重复）  
+- 禁止两个平铺粮袋冒充「存粮区」  
 - 禁止为填空在通廊撒箱  
-- 禁止把边界物做成挡死南门（鸡栏必须 `gaps` 对齐门轴）  
-- 禁止只改文案/hint、不改 `rails`/`enclosures`/mass 道具  
-- 禁止正视/侧视做成两套不同栅栏设计  
-- 禁止 step>1 或 scale<1 造成栏间空洞  
+- 禁止围栏堵死南门  
+- 禁止只改文案不改 `rails`/`enclosures`  
+- 禁止正视/侧视做成两套不同栅栏  
+- 禁止 step>1 或旧 V 资产残留（重生时必须覆盖 `*_v_00.png`）  
+- 禁止无四角拐角硬拼  
+- 禁止鸡舍小笔四周大片空地  
 
 ## Related
 

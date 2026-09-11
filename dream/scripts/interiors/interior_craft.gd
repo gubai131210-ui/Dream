@@ -239,10 +239,13 @@ func _spawn_prop(parent: Node2D, path: String, pos: Vector2, scale_f: float, tit
 
 ## Territory grammar (INTERIOR_TERRITORY.md): enclosure rings + aisle rails.
 ## Profiles may declare:
-##   enclosures: [{rect:[x0,y0,x1,y1], prop_h, prop_v, prop?, scale?, title, desc, gaps:[[tx,ty],...]}]
-##     prop_h = front view (N/S edges); prop_v = side view (E/W) — SAME fence family.
+##   enclosures: [{
+##     rect:[x0,y0,x1,y1], prop_h, prop_v,
+##     corners:{nw,ne,sw,se},  # required for clean joins
+##     scale?, title, desc, gaps:[[tx,ty],...]
+##   }]
 ##   rails: [{axis:"v"|"h", tx|ty, a0, a1, prop, scale?, title, desc, step?}]
-## Fence segments are 32px-wide tiles; default step=1 and scale=1.0 for seamless runs.
+## Fence tiles are 32px; default step=1 scale=1. Corners replace raw H∩V butts.
 func _spawn_territory(parent: Node2D) -> void:
 	for enc in _profile.get("enclosures", []):
 		_spawn_enclosure_ring(parent, enc)
@@ -261,6 +264,7 @@ func _spawn_enclosure_ring(parent: Node2D, enc: Dictionary) -> void:
 	var prop_fallback := str(enc.get("prop", ""))
 	var prop_h := str(enc.get("prop_h", prop_fallback))
 	var prop_v := str(enc.get("prop_v", prop_fallback))
+	var corners: Dictionary = enc.get("corners", {})
 	var scale_f := float(enc.get("scale", 1.0))
 	var title := str(enc.get("title", "围栏"))
 	var desc := str(enc.get("desc", ""))
@@ -268,18 +272,36 @@ func _spawn_enclosure_ring(parent: Node2D, enc: Dictionary) -> void:
 	for g in enc.get("gaps", []):
 		if g is Array and g.size() >= 2:
 			gap_set["%d,%d" % [int(g[0]), int(g[1])]] = true
-	# North / south — front view (rails along X)
-	for tx in range(x0, x1 + 1):
+
+	var corner_cells := {
+		"nw": Vector2i(x0, y0),
+		"ne": Vector2i(x1, y0),
+		"sw": Vector2i(x0, y1),
+		"se": Vector2i(x1, y1),
+	}
+	for cname in corner_cells.keys():
+		var cell: Vector2i = corner_cells[cname]
+		var key := "%d,%d" % [cell.x, cell.y]
+		if gap_set.has(key):
+			continue
+		var cpath := str(corners.get(cname, ""))
+		if cpath.is_empty():
+			# Fallback: prefer H on corners if corner art missing
+			cpath = prop_h
+		_spawn_fence_segment(parent, cpath, cell.x, cell.y, scale_f, title, desc)
+
+	# North / south edges — exclude corners
+	for tx in range(x0 + 1, x1):
 		for ty in [y0, y1]:
-			var key := "%d,%d" % [tx, ty]
-			if gap_set.has(key):
+			var key_ns := "%d,%d" % [tx, ty]
+			if gap_set.has(key_ns):
 				continue
 			_spawn_fence_segment(parent, prop_h, tx, ty, scale_f, title, desc)
-	# East / west — side view (same fence, foreshortened); skip corners (already on N/S)
+	# East / west edges — exclude corners
 	for ty in range(y0 + 1, y1):
 		for tx in [x0, x1]:
-			var key2 := "%d,%d" % [tx, ty]
-			if gap_set.has(key2):
+			var key_ew := "%d,%d" % [tx, ty]
+			if gap_set.has(key_ew):
 				continue
 			_spawn_fence_segment(parent, prop_v, tx, ty, scale_f, title, desc)
 

@@ -42,6 +42,10 @@ const P_STALL_RAIL := DIR_INTERIOR_PROP + "/stall_rail_00.png"
 const P_STALL_RAIL_V := DIR_INTERIOR_PROP + "/stall_rail_v_00.png"
 const P_PEN_FENCE := DIR_INTERIOR_PROP + "/pen_fence_00.png"
 const P_PEN_FENCE_V := DIR_INTERIOR_PROP + "/pen_fence_v_00.png"
+const P_PEN_CORNER_NW := DIR_INTERIOR_PROP + "/pen_corner_nw_00.png"
+const P_PEN_CORNER_NE := DIR_INTERIOR_PROP + "/pen_corner_ne_00.png"
+const P_PEN_CORNER_SW := DIR_INTERIOR_PROP + "/pen_corner_sw_00.png"
+const P_PEN_CORNER_SE := DIR_INTERIOR_PROP + "/pen_corner_se_00.png"
 const P_GRAIN_STACK := DIR_INTERIOR_PROP + "/grain_stack_00.png"
 const P_BARREL := DIR_OUTDOOR_PROP + "/barrel_1.png"
 const P_BARREL_KEG := DIR_OUTDOOR_PROP + "/barrel_0.png"
@@ -347,45 +351,55 @@ static func _all() -> Dictionary:
 				"via_clusters": ["stall_w", "aisle_feed", "stall_e"],
 			},
 		},
-		# ── C03 鸡舍：西巢 · 中饲 · 东栖 · 低围栏笔 ──
+		# ── C03 鸡舍：整间几乎都是笔区，南门开缺口 ──
 		"c03_coop": {
 			"title": "鸡舍内部",
-			"hint": "鸡舍 · 围栏笔内巢箱/食槽/栖木",
+			"hint": "鸡舍 · 满间鸡栏：巢箱 / 食槽 / 栖木",
 			"return_path": FARM,
-			"room_w": 20,
-			"room_h": 14,
-			"door_tx0": 8,
-			"door_tx1": 11,
+			"room_w": 24,
+			"room_h": 16,
+			"door_tx0": 10,
+			"door_tx1": 13,
 			"floor": "straw",
 			"modulate": Color(0.84, 0.80, 0.70, 1.0),
 			"rug": null,
 			"window": true,
 			"clusters": [
 				_cluster("nests", 4, 6, [
-					_m(P_NEST, 0, -2, "巢箱", "西墙产蛋巢。", 0.65),
-					_m(P_NEST, 0, 0, "巢箱", "中层巢箱。", 0.65),
-					_m(P_NEST, 0, 2, "巢箱", "底层巢箱。", 0.6),
+					_m(P_NEST, 0, -2, "巢箱", "西墙产蛋巢。", 0.7),
+					_m(P_NEST, 0, 0, "巢箱", "中层巢箱。", 0.7),
+					_m(P_NEST, 0, 2, "巢箱", "底层巢箱。", 0.65),
+					_m(P_NEST, 0, 4, "巢箱", "南侧巢箱。", 0.65),
 				]),
-				_cluster("feed", 10, 6, [
-					_m(P_TROUGH, 0, 0, "食槽", "笔内食槽。", 0.55),
+				_cluster("feed", 12, 7, [
+					_m(P_TROUGH, 0, 0, "食槽", "笔内中央食槽。", 0.6),
 					_m(P_SACK0, 2, 1, "鸡食", "贴槽鸡食袋。", PROP),
-					_m(P_BARREL, 2, 2, "水桶", "贴食饮水桶。", PROP),
-					_m(P_LAMP_INDOOR, 0, -2, "小灯", "鸡舍小灯。", PROP),
+					_m(P_SACK1, -2, 1, "鸡食", "西侧鸡食袋。", 0.85),
+					_m(P_BARREL, 3, 2, "水桶", "贴食饮水桶。", PROP),
+					_m(P_LAMP_INDOOR, 0, -3, "小灯", "鸡舍小灯。", PROP),
 				]),
-				_cluster("roost", 15, 5, [
-					_m(P_ROOST, 0, 0, "栖木", "东侧栖木。", 0.7),
+				_cluster("roost", 19, 5, [
+					_m(P_ROOST, 0, 0, "栖木", "东侧栖木。", 0.75),
+					_m(P_HAY, -1, 2, "垫草", "栖木旁垫草。", 0.55),
+					_m(P_ROOST, 1, 3, "栖木", "东南栖木。", 0.65),
 				]),
 			],
-			# Low pen around work clusters; south gate aligns with door aisle.
+			# Pen fills almost the whole room; only 1-tile wall margin + south gate.
 			"enclosures": [
 				{
-					"rect": [2, 3, 17, 10],
+					"rect": [1, 2, 22, 13],
 					"prop_h": P_PEN_FENCE,
 					"prop_v": P_PEN_FENCE_V,
+					"corners": {
+						"nw": P_PEN_CORNER_NW,
+						"ne": P_PEN_CORNER_NE,
+						"sw": P_PEN_CORNER_SW,
+						"se": P_PEN_CORNER_SE,
+					},
 					"scale": 1.0,
 					"title": "鸡栏",
-					"desc": "同一低栏的正视/侧视无缝围合。",
-					"gaps": [[8, 10], [9, 10], [10, 10], [11, 10]],
+					"desc": "密板条鸡栏：正视/侧视同套，四角专用转角。",
+					"gaps": [[10, 13], [11, 13], [12, 13], [13, 13]],
 				},
 			],
 			"fx": [],
@@ -393,9 +407,10 @@ static func _all() -> Dictionary:
 				{"species": "chicken", "cluster": "feed", "dx": -1, "dy": 1},
 				{"species": "chicken", "cluster": "nests", "dx": 2, "dy": 0},
 				{"species": "chicken", "cluster": "roost", "dx": -1, "dy": 2},
+				{"species": "chicken", "cluster": "feed", "dx": 2, "dy": 2},
 			],
 			"lights": [
-				{"tx": 10, "ty": 3, "oy": -10, "color": Color(1.0, 0.92, 0.7), "energy": 0.8, "scale": 1.6},
+				{"tx": 12, "ty": 4, "oy": -10, "color": Color(1.0, 0.92, 0.7), "energy": 0.85, "scale": 1.8},
 			],
 			"actor": {
 				"id": "farmer",

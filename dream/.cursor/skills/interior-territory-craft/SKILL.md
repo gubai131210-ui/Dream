@@ -44,26 +44,26 @@ Territory checklist:
 3. Coop needs a **pen enclosure** with south `gaps`; chickens spawn inside.
 4. Storage needs **height or repetition** (`grain_stack` / stacked crates), not two flat sacks.
 5. Doors enter **real scenes**; InfoPanel does not replace territory grammar.
-6. Generate matching wood props via `tools/gen_interior_territory_props.py` — **H/V are two views of one fence**; 32px tiles; step=1; enclosure uses `prop_h`+`prop_v`.
+6. Generate via `tools/gen_interior_territory_props.py` — **H/V same board fence**; **4 corner sprites**; overwrite old `*_v_00.png`; coop pen fills the room.
+7. Always re-cover fence PNGs when changing style so Godot does not mix old V with new H.
 
 ## Schema (craft)
 
 ```text
-rails: [{axis, tx|ty, a0, a1, step?:1, prop, scale?:1, title, desc}]
-enclosures: [{rect:[x0,y0,x1,y1], prop_h, prop_v, gaps:[[tx,ty],...], scale?:1, ...}]
+rails: [{axis, tx|ty, a0, a1, step?:1, prop, scale?:1, ...}]
+enclosures: [{
+  rect:[x0,y0,x1,y1], prop_h, prop_v,
+  corners:{nw,ne,sw,se}, gaps:[[tx,ty],...], scale?:1
+}]
 ```
-
-Implemented in `scripts/interiors/interior_craft.gd` → `_spawn_territory` / `_spawn_fence_segment`.
 
 ## 禁止偷懒
 
-- 禁止语义暗示代替隔栏/围栏  
-- 禁止无围栏鸡圈  
-- 禁止两袋粮当粮仓  
-- 禁止围栏堵门  
+- 禁止语义暗示代替隔栏  
+- 禁止无围栏鸡圈 / 小笔四周空地  
+- 禁止正视侧视两套设计 / 旧 V 残留  
+- 禁止无四角拐角硬拼  
 - 禁止只写 MD 不改 profile/craft  
-- 禁止正视/侧视两套设计  
-- 禁止 step>1 栏间留缝  
 
 ## Related skills
 
