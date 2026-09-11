@@ -1321,7 +1321,7 @@ static func _all() -> Dictionary:
 		# ── Wave C stubs (teams enrich ONLY their keys) ──
 		"c13_mill": {
 			"title": "磨坊",
-			"hint": "磨坊 · 磨盘 / 面粉（占位）",
+			"hint": "磨坊 · 石磨盘 / 传动齿轮 / 面粉垛",
 			"return_path": FLD,
 			"room_w": 20,
 			"room_h": 14,
@@ -1331,24 +1331,41 @@ static func _all() -> Dictionary:
 			"modulate": Color(0.88, 0.84, 0.76, 1.0),
 			"rug": null,
 			"window": true,
+			# West work: millstone+gears; east flour mass; door aisle 8–11 clear.
 			"clusters": [
-				_cluster("millstone", 10, 6, [
-					_m(P_TABLE_DINING, 0, 0, "磨盘", "中央磨盘占位。", 1.0),
-					_m(P_TOOL_RACK, -3, 0, "齿轮架", "传动齿轮架占位。", 0.7),
-					_m(P_LAMP_FARM, 2, -2, "磨坊灯", "工作灯。", PROP),
+				_cluster("millstone", 5, 5, [
+					_m(P_MILLSTONE, 0, 0, "石磨盘", "西侧石磨盘与木斗（工作锚）。", 1.0),
+					_m(P_MILL_GEAR, -2, -1, "传动齿轮", "木架铁齿轮传动（贴磨盘）。", 0.85),
+					_m(P_LAMP_FARM, 2, -2, "磨坊灯", "农场铁壳工作灯（非家用台灯）。", PROP),
+					_m(P_BARREL, 2, 1, "麦桶", "待磨麦粒桶（站位东侧）。", 0.7),
+					_m(P_TOOL_RACK, 1, -3, "检修架", "磨盘检修锤钳。", 0.55),
 				]),
-				_cluster("flour", 15, 8, [
-					_m(P_GRAIN_STACK, 0, 0, "面粉垛", "袋装面粉体量。", 0.75),
-					_m(P_SACK0, 2, 1, "面袋", "待运面袋。", 0.6),
-					_m(P_SACK1, -1, 2, "麸皮袋", "麸皮袋。", 0.55),
+				_cluster("flour", 15, 6, [
+					_m(P_GRAIN_STACK, 0, 0, "面粉垛", "袋装面粉高垛（体量锚）。", 0.85),
+					_m(P_GRAIN_STACK, 2, -1, "面粉垛", "东墙第二面粉垛。", 0.75),
+					_m(P_SACK0, -1, 2, "面袋", "待运面粉袋。", 0.65),
+					_m(P_SACK1, 2, 2, "麸皮袋", "麸皮与筛余。", 0.6),
+					_m(P_SACK0, 1, 1, "面袋", "垛前小袋。", 0.55),
+					_m(P_BASKET, -2, 1, "筛筐", "面粉筛筐。", 0.55),
+					_m(P_CRATE0, 3, 1, "运箱", "出货木箱。", 0.7),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 10, "ty": 4, "oy": -8, "color": Color(1.0, 0.95, 0.8), "energy": 0.95, "scale": 2.0},
+				{"tx": 5, "ty": 4, "oy": -10, "color": Color(1.0, 0.95, 0.82), "energy": 1.0, "scale": 2.1},
+				{"tx": 15, "ty": 5, "oy": -8, "color": Color(1.0, 0.94, 0.8), "energy": 0.9, "scale": 1.8},
 			],
-			"actor": {},
+			"actor": {
+				"id": "miller",
+				"title": "磨坊主",
+				"desc": "在石磨与面粉垛之间巡视，偶尔检修齿轮。",
+				"via_clusters": ["millstone", "flour"],
+				"via_stands": {
+					"millstone": [2, 2],
+					"flour": [-2, 2],
+				},
+			},
 		},
 		# ── C16 洞穴入口层：西洞口乱石营 · 东下探井口（门轴 11–14 中廊；≠矿洞）──
 		"c16_cave_entry": {
