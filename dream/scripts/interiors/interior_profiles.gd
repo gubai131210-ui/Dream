@@ -54,6 +54,7 @@ const P_CRATE1 := DIR_OUTDOOR_PROP + "/crate_1.png"
 const P_SACK0 := DIR_OUTDOOR_PROP + "/sack_0.png"
 const P_SACK1 := DIR_OUTDOOR_PROP + "/sack_1.png"
 const P_LAMP_INDOOR := DIR_INTERIOR_PROP + "/lamp_indoor_00.png"
+const P_LAMP_FARM := DIR_INTERIOR_PROP + "/lamp_farm_00.png"
 
 const RES := "res://scenes/areas/village_residential/village_residential.tscn"
 const FARM := "res://scenes/areas/farm_residential/farm_residential.tscn"
@@ -324,7 +325,7 @@ static func _all() -> Dictionary:
 					_m(P_SACK0, -2, 0, "饲料袋", "通道饲料。", PROP),
 					_m(P_SACK1, 1, 1, "饲料袋", "贴垛饲料。", PROP),
 					_m(P_BARREL, 3, 1, "水桶", "通道备用饮水。", PROP),
-					_m(P_LAMP_INDOOR, 0, -1, "吊灯", "通道暖灯。", PROP),
+					_m(P_LAMP_FARM, 0, -1, "仓灯", "过道铁壳油灯（农场灯，非家用台灯）。", PROP),
 				]),
 			],
 			# Seamless same-family fence: H = front, V = side; step 1 = no gaps.
@@ -376,7 +377,7 @@ static func _all() -> Dictionary:
 					_m(P_SACK0, 2, 1, "鸡食", "贴槽鸡食袋。", PROP),
 					_m(P_SACK1, -2, 1, "鸡食", "西侧鸡食袋。", 0.85),
 					_m(P_BARREL, 3, 2, "水桶", "贴食饮水桶。", PROP),
-					_m(P_LAMP_INDOOR, 0, -3, "小灯", "鸡舍小灯。", PROP),
+					_m(P_LAMP_FARM, 0, -3, "栏灯", "鸡舍铁壳油灯（农场灯，非家用台灯）。", PROP),
 				]),
 				_cluster("roost", 19, 5, [
 					_m(P_ROOST, 0, 0, "栖木", "东侧栖木。", 0.75),

@@ -41,11 +41,12 @@ Territory checklist:
 
 1. **区界 → 体量 → 数量.** Never scatter-fill to fake density.
 2. Barn stalls need **aisle-facing rails**, not hay alone.
-3. Coop needs a **pen enclosure** with south `gaps`; chickens spawn inside.
-4. Storage needs **height or repetition** (`grain_stack` / stacked crates), not two flat sacks.
+3. Coop needs a **pen enclosure** with south `gaps` + **4 corner sprites**; chickens spawn inside.
+4. Storage needs **height or repetition**.
 5. Doors enter **real scenes**; InfoPanel does not replace territory grammar.
-6. Generate via `tools/gen_interior_territory_props.py` — **H/V same board fence**; **4 corner sprites**; overwrite old `*_v_00.png`; coop pen fills the room.
-7. Always re-cover fence PNGs when changing style so Godot does not mix old V with new H.
+6. **Scene-fit variants:** same function ≠ same product. Coop/barn use `lamp_farm_00`, never household `lamp_indoor_00`. Draw new variants when missing.
+7. Fence H/V/corners = one board family; overwrite old `*_v` when style changes.
+8. Always re-cover fence PNGs when changing style so Godot does not mix old V with new H.
 
 ## Schema (craft)
 
@@ -62,7 +63,9 @@ enclosures: [{
 - 禁止语义暗示代替隔栏  
 - 禁止无围栏鸡圈 / 小笔四周空地  
 - 禁止正视侧视两套设计 / 旧 V 残留  
-- 禁止无四角拐角硬拼  
+- 禁止无四角拐角硬拼 / 对角斜条糊弄转角  
+- 禁止家用台灯进鸡舍谷仓  
+- 禁止功能同类就跨场景复用同一 PNG  
 - 禁止只写 MD 不改 profile/craft  
 
 ## Related skills

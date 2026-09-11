@@ -62,6 +62,18 @@ enclosures: [
 
 生成：`tools/gen_interior_territory_props.py`
 
+## Scene-fit variants（种类适配）
+
+同一功能类（灯 / 凳 / 箱）在不同房间必须用 **场景变体**，不是复用家用件。
+
+| 场景 | 灯 | 禁止 |
+| --- | --- | --- |
+| 住宅 / 老人宅 / 商贾 | `lamp_indoor_00` 家用台灯/壁灯 | 铁壳仓灯 |
+| 鸡舍 / 谷仓 | `lamp_farm_00` 铁壳吊油灯 | 布罩家用台灯 |
+| 铁匠 / 酒馆 | 后续 `lamp_smith` / `lamp_tavern` | 直接塞家用灯 |
+
+规则：功能对 ≠ 产品对。需要时 **自画变体**（`tools/install_scene_fit_props.py` / GenerateImage），写入 `INTERIOR_TERRITORY` 与 skill。
+
 ## Fence family lock
 
 | Rule | Why |
@@ -86,6 +98,8 @@ enclosures: [
 - 禁止 step>1 或旧 V 资产残留（重生时必须覆盖 `*_v_00.png`）  
 - 禁止无四角拐角硬拼  
 - 禁止鸡舍小笔四周大片空地  
+- 禁止家用台灯出现在鸡舍/谷仓（必须用农场灯变体）  
+- 禁止「功能同类」就复用同一 PNG 跨场景  
 
 ## Related
 
