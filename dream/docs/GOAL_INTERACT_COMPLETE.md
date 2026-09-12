@@ -119,7 +119,7 @@
 | G1 | **DONE (code)** — C58/C59/C60 prop 精灵 + 灯/脉冲；广场 MCP smoke 无 ERROR |
 | G2 | **DONE (code)** — `leaf_fall` / `well_rope` / `crate_lid` / `bird_peck` 固定画布帧已接线；StyleQA 抛光仍开放 |
 | G3 | **DONE (code)** — C55 四季改用真实 prop；层与 TopBar 默认可见（不依赖 demo overlay） |
-| G4 | **DONE (code)** — 市集/农田/深林各 ≥2 DistrictInteractKit prop 交互 |
+| G4 | **DONE (code)** — 市集/农田/深林 + 河/湖/站/住宅各 ≥2 DistrictInteractKit prop |
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
 | G7 | **IN PROGRESS** — bobber 精灵优先；NPC 工作环短 cue；C22 渔笼河/湖已接线（演示 6s soak）；完整职业姿态 sheet 仍缺 |

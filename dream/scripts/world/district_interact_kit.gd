@@ -1,11 +1,15 @@
 extends Node
 
-## G4 district prop-backed interacts (market / farmland / forest_deep).
+## G4 district prop-backed interacts (expanding beyond market / farmland / forest_deep).
 
 const NODE_NAME := "DistrictInteractKit"
 const HOST_MARKET := "market"
 const HOST_FARMLAND := "farmland"
 const HOST_FOREST := "forest_deep"
+const HOST_RIVER := "river"
+const HOST_LAKE := "lake"
+const HOST_STATION := "station"
+const HOST_RESIDENTIAL := "residential"
 
 const HOST_DEFS := {
 	"market": [
@@ -66,6 +70,86 @@ const HOST_DEFS := {
 			"sprite": "res://assets/sprites/props/rock_03.png",
 			"scale": 0.55,
 			"color": Color(0.4, 0.55, 0.4, 0.92),
+		},
+	],
+	"river": [
+		{
+			"id": "riv_barrel",
+			"title": "河岸木桶",
+			"desc": "敲敲木桶，听回声测水位。",
+			"pos": Vector2(420, 700),
+			"sprite": "res://assets/sprites/props/barrel_1.png",
+			"scale": 0.5,
+			"color": Color(0.55, 0.45, 0.3, 0.92),
+		},
+		{
+			"id": "riv_sack",
+			"title": "晒网袋",
+			"desc": "抖一抖岸边网袋，沙粒簌簌落下。",
+			"pos": Vector2(900, 680),
+			"sprite": "res://assets/sprites/props/sack_0.png",
+			"scale": 0.5,
+			"color": Color(0.7, 0.65, 0.4, 0.92),
+		},
+	],
+	"lake": [
+		{
+			"id": "lake_dock_barrel",
+			"title": "系缆桶",
+			"desc": "检查系缆空桶，绳结还沾着水。",
+			"pos": Vector2(960, 500),
+			"sprite": "res://assets/sprites/props/barrel_1.png",
+			"scale": 0.5,
+			"color": Color(0.5, 0.55, 0.7, 0.92),
+		},
+		{
+			"id": "lake_bench",
+			"title": "湖畔长凳",
+			"desc": "坐一会儿看湖面粼光。",
+			"pos": Vector2(720, 700),
+			"sprite": "res://assets/sprites/props/bench_0.png",
+			"scale": 0.55,
+			"color": Color(0.65, 0.55, 0.35, 0.92),
+		},
+	],
+	"station": [
+		{
+			"id": "stn_crate",
+			"title": "站台货箱",
+			"desc": "掀开货箱盖，闻到机油味。",
+			"pos": Vector2(720, 560),
+			"sprite": "res://assets/sprites/props/crate_0.png",
+			"scale": 0.5,
+			"color": Color(0.6, 0.5, 0.35, 0.92),
+		},
+		{
+			"id": "stn_lamp",
+			"title": "月台灯",
+			"desc": "拨一下灯罩，铜环叮一声。",
+			"pos": Vector2(520, 480),
+			"sprite": "res://assets/sprites/props/lamp_0.png",
+			"scale": 0.55,
+			"color": Color(0.9, 0.75, 0.35, 0.92),
+		},
+	],
+	"residential": [
+		{
+			"id": "res_bench",
+			"title": "巷口木凳",
+			"desc": "在巷口木凳歇脚，听见邻里闲话。",
+			"pos": Vector2(560, 560),
+			"sprite": "res://assets/sprites/props/bench_0.png",
+			"scale": 0.55,
+			"color": Color(0.7, 0.6, 0.4, 0.92),
+		},
+		{
+			"id": "res_sack",
+			"title": "门廊粮袋",
+			"desc": "拍拍门廊粮袋，谷壳飞起。",
+			"pos": Vector2(880, 520),
+			"sprite": "res://assets/sprites/props/sack_0.png",
+			"scale": 0.5,
+			"color": Color(0.75, 0.68, 0.4, 0.92),
 		},
 	],
 }

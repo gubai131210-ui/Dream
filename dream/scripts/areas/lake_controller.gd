@@ -36,6 +36,9 @@ func _ready() -> void:
 		grid_overlay.visible = false
 	# Wave F WorldSys — C61 island chest site (near lake isle ferry).
 	HiddenChests.attach_site(self, "island")
+	var top_bar := get_node_or_null("UI/TopBar") as Control
+	var _dik = load("res://scripts/world/district_interact_kit.gd")
+	_dik.attach_to(self, "lake", top_bar)
 
 
 func _wire_portals(node: Node) -> void:

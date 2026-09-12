@@ -27,6 +27,9 @@ func _ready() -> void:
 	camera.max_zoom = 3.0
 	if grid_overlay:
 		grid_overlay.visible = false
+	var top_bar := get_node_or_null("UI/TopBar") as Control
+	var _dik = load("res://scripts/world/district_interact_kit.gd")
+	_dik.attach_to(self, "residential", top_bar)
 
 
 func _unhandled_input(event: InputEvent) -> void:
