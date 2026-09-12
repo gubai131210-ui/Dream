@@ -36,6 +36,7 @@ def main() -> None:
 	for name in (
 		"fish_bubble_00",
 		"fish_splash_00",
+		"fish_ring_00",
 		"leaf_fall_00",
 		"leaf_fall_01",
 		"leaf_fall_02",

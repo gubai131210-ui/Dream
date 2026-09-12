@@ -61,6 +61,12 @@ def main() -> None:
     fishing = read("scripts/fishing/fishing_spot.gd")
     require(fishing, "fish_bubble_00.png", "fishing bubble sprite")
     require(fishing, "fish_splash_00.png", "fishing splash sprite")
+    require(fishing, "fish_ring_00.png", "fishing water ring sprite")
+    require(fishing, "_add_water_ring", "fishing ring helper prefers sprite")
+
+    cage = read("scripts/fishing/fish_cage.gd")
+    require(cage, "fish_ring_00.png", "C22 cage water ring sprite")
+    require(cage, "_add_water_ring", "C22 cage ring helper")
 
     gates = read("scripts/world/progress_gates.gd")
     require(gates, "gate_log_00.png", "C60 fallen log sprite")

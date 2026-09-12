@@ -95,6 +95,18 @@ func _ensure_sprite() -> void:
 func _add_water_ring(visual: Node2D) -> void:
 	if visual.get_node_or_null("WaterRing") != null:
 		return
+	var ring_tex := WorldSpawnUtil.load_prop_texture("res://assets/sprites/fx/fish_ring_00.png")
+	if ring_tex != null:
+		var spr := Sprite2D.new()
+		spr.name = "WaterRing"
+		spr.texture = ring_tex
+		spr.centered = true
+		spr.position = Vector2(0, 10)
+		spr.scale = Vector2(1.15, 1.0)
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		spr.z_index = 0
+		visual.add_child(spr)
+		return
 	var ring := Polygon2D.new()
 	ring.name = "WaterRing"
 	ring.color = Color(0.4, 0.65, 0.8, 0.3)

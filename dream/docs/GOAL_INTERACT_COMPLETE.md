@@ -123,7 +123,7 @@
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
 | G7 | **DONE (code)** — bobber；C22；pose×4；drawer StyleQA；C05 摊位默认真棚 PNG |
-| G8 | **IN PROGRESS** — headless smoke **13/13 PASS**（见 `GOAL_G8_SMOKE_EVIDENCE.md`）；姿态/叶/鸟 StyleQA 加深；**用户 Godot QA 仍待** |
+| G8 | **IN PROGRESS** — headless smoke **13/13 PASS**；姿态/叶/鸟 StyleQA；`fish_ring` 像素水环；**用户 Godot QA 仍待** |
 
 ### G8 已知残留（不可假装清零）
 
@@ -141,16 +141,57 @@
 | ~~NPC 职业姿态 sheet~~ | C53 work rings | **DONE (minimal)** → `npc/work_poses/{sow,smith,stall,cook}` |
 | ~~C59 木桩/杂草错用桶袋~~ | BreakablesKit | **DONE** → `breakable_stake/weed` |
 | ~~C05 摊位 ColorRect 棚~~ | MarketStall | **DONE** → 默认 `stall_open_wood_00`（ColorRect 仅 fallback） |
+| ~~钓鱼浮漂下 Polygon 水环~~ | `fishing_spot.gd` / `fish_cage.gd` | **DONE** → `fx/fish_ring_00.png`（Polygon 仅 fallback） |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
 | Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
 | 姿态/摊位 ArtGen 抛光 | work_poses / market | **部分加深**（farmer 调色板姿态）；还可继续 |
-| 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认** |
+| 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据
 
 - [`GOAL_G8_SMOKE_EVIDENCE.md`](GOAL_G8_SMOKE_EVIDENCE.md) — headless load matrix  
 - `tools/qa_interaction_frames.py` — 12 groups GREEN  
 - `tools/qa_no_placeholder_visuals.py` — GREEN  
+
+---
+
+## 7. 场景清单（可玩区 + 室内壳）与用户 QA
+
+### 户外区（assembler 场景）
+
+| 区 | 场景 | 交互/门面要点 | 用户勾选 |
+| --- | --- | --- | --- |
+| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、工作环姿态 | [ ] |
+| 市集 | `market_street` | 木棚摊位、DistrictInteract | [ ] |
+| 农田 | `farmland` | 垄线、栅栏、DistrictInteract | [ ] |
+| 住宅 | `village_residential` | 门阶/拱门、DistrictInteract | [ ] |
+| 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [ ] |
+| 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract | [ ] |
+| 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [ ] |
+| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 | [ ] |
+| 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [ ] |
+
+### 室内（抽样必测）
+
+| 室 | 要点 | 用户勾选 |
+| --- | --- | --- |
+| C01 家 | dresser/chest 开合帧、返回门 | [ ] |
+| C06 议事厅 | 门户进出 | [ ] |
+| C40/C43 博物/浴 | 立面可发现 → 进门 | [ ] |
+| Wave A2–F 其余已锁室 | 按 PHASE5 进出各一次 | [ ] |
+
+### 本机 QA 步骤（请你跑，避免中文路径 CLI 损文件）
+
+1. 编辑器打开 `dream/`，从世界总览进广场。  
+2. 点：长椅/井/树/告示/箱/灯/喂鸟/路牌 → 要有脉冲或短帧，非纯 Info。  
+3. C59 桩草、C60 倒木/石/锁门 → 精灵可见，解锁变淡。  
+4. K 切工作环 → sow/smith/stall/cook 姿态非棍人。  
+5. 市集摊位默认木棚；河/湖投竿见浮漂+水环；鱼笼放置约 6s 可收。  
+6. 进 C01/C06，开柜/箱，出门回户外。  
+
+勾选结果回填本表或口头确认后，G8 才可标 DONE。
+
+---
 
 - [`INTERACTION_DESIGN.md`](INTERACTION_DESIGN.md)  
 - [`WORLD_C58_C62.md`](WORLD_C58_C62.md)  

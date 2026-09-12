@@ -3,6 +3,7 @@
 **Status:** LOCKED  
 **Date:** 2026-09-10  
 **Purpose:** 统一素材/场景编号语言，避免「只有 A 参考图 + B 室外贴图、进门空洞」。  
+**Goal 权威统称（交互/场景/流水线/验收）：** [`GOAL_INTERACT_COMPLETE.md`](GOAL_INTERACT_COMPLETE.md)  
 **Raw inventory:** [`../assets/MANIFEST.md`](../assets/MANIFEST.md)（现有 A/B 文件列表；本文件定义分层语义，不强制立刻重命名全部 raw）
 
 ---
