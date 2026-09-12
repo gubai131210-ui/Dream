@@ -69,13 +69,11 @@ static func make_hotspot(
 	return hs
 
 
-## Feet-anchored outdoor prop (Nearest). Skips quietly if path missing.
 ## Prefer imported texture only when `.ctex` exists; else raw PNG (avoids import ERROR spam).
-static func attach_prop_sprite(visual: Node2D, path: String, scale_f: float = 0.55) -> Sprite2D:
-	if visual == null or path.is_empty():
+static func load_prop_texture(path: String) -> Texture2D:
+	if path.is_empty():
 		return null
 	var abs_path := ProjectSettings.globalize_path(path)
-	var tex: Texture2D = null
 	var can_use_import := false
 	var import_path := abs_path + ".import"
 	if FileAccess.file_exists(import_path):
@@ -84,12 +82,21 @@ static func attach_prop_sprite(visual: Node2D, path: String, scale_f: float = 0.
 			var dest := str(cfg.get_value("remap", "path", ""))
 			if not dest.is_empty():
 				can_use_import = FileAccess.file_exists(ProjectSettings.globalize_path(dest))
+	var tex: Texture2D = null
 	if can_use_import:
 		tex = load(path) as Texture2D
 	if tex == null and FileAccess.file_exists(abs_path):
 		var img := Image.load_from_file(abs_path)
 		if img != null:
 			tex = ImageTexture.create_from_image(img)
+	return tex
+
+
+## Feet-anchored outdoor prop (Nearest). Skips quietly if path missing.
+static func attach_prop_sprite(visual: Node2D, path: String, scale_f: float = 0.55) -> Sprite2D:
+	if visual == null or path.is_empty():
+		return null
+	var tex := load_prop_texture(path)
 	if tex == null:
 		push_warning("WorldSpawnUtil: failed load %s" % path)
 		return null
@@ -115,6 +122,72 @@ static func attach_prop_sprite(visual: Node2D, path: String, scale_f: float = 0.
 	return spr
 
 
+const DOORSTEP_MAT := "res://assets/sprites/props/doorstep_mat_00.png"
+const DOOR_ARCH_CUE := "res://assets/sprites/props/door_arch_cue_00.png"
+
+
+## Always-visible portal doorstep + arch sprites (G8 — replaces Polygon2D cues).
+## Returns { "cue": Sprite2D, "arch": Sprite2D } for hover/pulse modulate.
+static func attach_portal_cues(area: Area2D, size: Vector2) -> Dictionary:
+	var out := {"cue": null, "arch": null}
+	if area == null:
+		return out
+	var mat_tex := load_prop_texture(DOORSTEP_MAT)
+	var arch_tex := load_prop_texture(DOOR_ARCH_CUE)
+	var cue: CanvasItem
+	if mat_tex != null:
+		var spr := Sprite2D.new()
+		spr.name = "DoorstepCue"
+		spr.texture = mat_tex
+		spr.centered = true
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		var target_w := maxf(size.x * 0.55, 28.0)
+		var sx := target_w / float(mat_tex.get_width())
+		spr.scale = Vector2(sx, sx)
+		spr.position = Vector2(0, size.y * 0.22)
+		spr.z_index = -1
+		area.add_child(spr)
+		cue = spr
+	else:
+		var poly := Polygon2D.new()
+		poly.name = "DoorstepCue"
+		poly.color = Color(0.95, 0.82, 0.4, 0.42)
+		var hw := size.x * 0.22
+		poly.polygon = PackedVector2Array([
+			Vector2(-hw, 4), Vector2(hw, 4), Vector2(hw * 0.7, 14), Vector2(-hw * 0.7, 14),
+		])
+		poly.position = Vector2(0, size.y * 0.12)
+		poly.z_index = -1
+		area.add_child(poly)
+		cue = poly
+	var arch: CanvasItem
+	if arch_tex != null:
+		var spr_a := Sprite2D.new()
+		spr_a.name = "DoorArchCue"
+		spr_a.texture = arch_tex
+		spr_a.centered = true
+		spr_a.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		var target_h := maxf(size.y * 0.55, 22.0)
+		var sy := target_h / float(arch_tex.get_height())
+		spr_a.scale = Vector2(sy, sy)
+		spr_a.position = Vector2(0, -size.y * 0.2)
+		area.add_child(spr_a)
+		arch = spr_a
+	else:
+		var poly_a := Polygon2D.new()
+		poly_a.name = "DoorArchCue"
+		poly_a.color = Color(0.98, 0.9, 0.55, 0.35)
+		poly_a.polygon = PackedVector2Array([
+			Vector2(-10, 2), Vector2(10, 2), Vector2(8, -16), Vector2(0, -22), Vector2(-8, -16),
+		])
+		poly_a.position = Vector2(0, -size.y * 0.18)
+		area.add_child(poly_a)
+		arch = poly_a
+	out["cue"] = cue
+	out["arch"] = arch
+	return out
+
+
 static func make_portal(
 	parent: Node2D,
 	title: String,
@@ -132,24 +205,9 @@ static func make_portal(
 	rect.size = size
 	shape.shape = rect
 	area.add_child(shape)
-	var cue := Polygon2D.new()
-	cue.name = "DoorstepCue"
-	cue.color = Color(0.55, 0.85, 0.95, 0.4)
-	var hw := size.x * 0.22
-	cue.polygon = PackedVector2Array([
-		Vector2(-hw, 4), Vector2(hw, 4), Vector2(hw * 0.7, 14), Vector2(-hw * 0.7, 14),
-	])
-	cue.position = Vector2(0, size.y * 0.12)
-	cue.z_index = -1
-	area.add_child(cue)
-	var arch := Polygon2D.new()
-	arch.name = "DoorArchCue"
-	arch.color = Color(0.65, 0.9, 1.0, 0.38)
-	arch.polygon = PackedVector2Array([
-		Vector2(-10, 2), Vector2(10, 2), Vector2(8, -16), Vector2(0, -22), Vector2(-8, -16),
-	])
-	arch.position = Vector2(0, -size.y * 0.18)
-	area.add_child(arch)
+	var cues := attach_portal_cues(area, size)
+	var cue: CanvasItem = cues.get("cue")
+	var arch: CanvasItem = cues.get("arch")
 	var hint := Polygon2D.new()
 	hint.name = "PortalMarker"
 	hint.color = marker_color
@@ -178,17 +236,22 @@ static func make_portal(
 	area.add_child(label)
 	area.mouse_entered.connect(func():
 		label.visible = true
-		cue.modulate = Color(1.15, 1.2, 1.25, 1.0)
-		arch.modulate = Color(1.2, 1.25, 1.3, 1.0)
+		if cue:
+			cue.modulate = Color(1.15, 1.2, 1.25, 1.0)
+		if arch:
+			arch.modulate = Color(1.2, 1.25, 1.3, 1.0)
 	)
 	area.mouse_exited.connect(func():
 		label.visible = show_debug_markers()
-		cue.modulate = Color.WHITE
-		arch.modulate = Color.WHITE
+		if cue:
+			cue.modulate = Color.WHITE
+		if arch:
+			arch.modulate = Color.WHITE
 	)
-	var pulse := arch.create_tween().set_loops()
-	pulse.tween_property(arch, "modulate:a", 0.22, 0.8).set_trans(Tween.TRANS_SINE)
-	pulse.tween_property(arch, "modulate:a", 0.55, 0.8).set_trans(Tween.TRANS_SINE)
+	if arch:
+		var pulse := arch.create_tween().set_loops()
+		pulse.tween_property(arch, "modulate:a", 0.22, 0.8).set_trans(Tween.TRANS_SINE)
+		pulse.tween_property(arch, "modulate:a", 0.55, 0.8).set_trans(Tween.TRANS_SINE)
 	if show_debug_markers():
 		var pulse_m := hint.create_tween().set_loops()
 		pulse_m.tween_property(hint, "modulate:a", 0.4, 0.7).set_trans(Tween.TRANS_SINE)

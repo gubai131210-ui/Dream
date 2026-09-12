@@ -5,7 +5,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PROP = ROOT / "assets/sprites/props"
 params = (PROP / "bench_0.png.import").read_text(encoding="utf-8").split("[params]")[1]
-names = ["track_sleeper_00", "track_rail_00", "fence_post_00", "bridge_plank_00"]
+names = [
+	"track_sleeper_00",
+	"track_rail_00",
+	"fence_post_00",
+	"bridge_plank_00",
+	"doorstep_mat_00",
+	"door_arch_cue_00",
+	"furrow_line_00",
+]
 for name in names:
 	png = PROP / f"{name}.png"
 	if not png.exists():

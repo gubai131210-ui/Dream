@@ -333,8 +333,7 @@ func mark_dirt_rect(x0: int, y0: int, x1: int, y1: int, force: bool = false) -> 
 			dirt_mask[ty][tx] = true
 
 
-## Crop bed marker: hotspot + thin dirt furrows only (no opaque green ColorRect slabs).
-## Until B12 crop sprites exist, beds read as tilled dirt with subtle row lines.
+## Crop bed marker: hotspot + furrow sprites (G8 — no ColorRect soil lines).
 func spawn_crop_rows(
 	parent: Node2D,
 	bed: Rect2,
@@ -349,21 +348,35 @@ func spawn_crop_rows(
 	var inner := Rect2(bed.position + Vector2(inset, inset), bed.size - Vector2(inset, inset) * 2.0)
 	if inner.size.x <= 4.0 or inner.size.y <= 4.0:
 		return
-	# Derive a muted soil furrow from row_color (never full-bed green overlays).
-	var furrow := Color(
-		lerpf(0.42, row_color.r, 0.25),
-		lerpf(0.32, row_color.g, 0.2),
-		lerpf(0.18, row_color.b, 0.15),
-		0.35
-	)
+	const FURROW := "res://assets/sprites/props/furrow_line_00.png"
+	var furrow_tex := WorldSpawnUtil.load_prop_texture(FURROW)
 	var row_h: float = inner.size.y / float(maxi(rows, 1))
+	var tint := Color(
+		lerpf(0.85, row_color.r, 0.2),
+		lerpf(0.75, row_color.g, 0.15),
+		lerpf(0.55, row_color.b, 0.1),
+		0.85
+	)
 	for i in range(rows):
-		var line := ColorRect.new()
-		line.color = furrow.darkened(0.04 * float(i % 2))
-		line.size = Vector2(inner.size.x, 2.0)
-		line.position = inner.position - bed.get_center() + Vector2(0.0, row_h * (float(i) + 0.5) - 1.0)
-		line.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		visual.add_child(line)
+		var y_off := row_h * (float(i) + 0.5)
+		var pos := inner.position - bed.get_center() + Vector2(inner.size.x * 0.5, y_off)
+		if furrow_tex != null:
+			var spr := Sprite2D.new()
+			spr.name = "Furrow_%d" % i
+			spr.texture = furrow_tex
+			spr.centered = true
+			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			spr.position = pos
+			spr.scale = Vector2(inner.size.x / float(furrow_tex.get_width()), 1.0)
+			spr.modulate = tint.darkened(0.04 * float(i % 2))
+			visual.add_child(spr)
+		else:
+			var line := ColorRect.new()
+			line.color = Color(0.42, 0.32, 0.18, 0.35).darkened(0.04 * float(i % 2))
+			line.size = Vector2(inner.size.x, 2.0)
+			line.position = pos - Vector2(inner.size.x * 0.5, 1.0)
+			line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			visual.add_child(line)
 
 
 func spawn_sprite(parent: Node2D, path: String, pos: Vector2, z: int = 0) -> Sprite2D:
@@ -551,25 +564,10 @@ func make_portal(parent: Node2D, title: String, scene_path: String, pos: Vector2
 	rect.size = size
 	shape.shape = rect
 	area.add_child(shape)
-	# G5: always-visible soft doorstep cue (not debug diamond).
-	var cue := Polygon2D.new()
-	cue.name = "DoorstepCue"
-	cue.color = Color(0.95, 0.82, 0.4, 0.42)
-	var hw := size.x * 0.22
-	cue.polygon = PackedVector2Array([
-		Vector2(-hw, 4), Vector2(hw, 4), Vector2(hw * 0.7, 14), Vector2(-hw * 0.7, 14),
-	])
-	cue.position = Vector2(0, size.y * 0.12)
-	cue.z_index = -1
-	area.add_child(cue)
-	var arch := Polygon2D.new()
-	arch.name = "DoorArchCue"
-	arch.color = Color(0.98, 0.9, 0.55, 0.35)
-	arch.polygon = PackedVector2Array([
-		Vector2(-10, 2), Vector2(10, 2), Vector2(8, -16), Vector2(0, -22), Vector2(-8, -16),
-	])
-	arch.position = Vector2(0, -size.y * 0.18)
-	area.add_child(arch)
+	# G8: doorstep mat + arch sprites (fallback polygon inside WorldSpawnUtil).
+	var cues := WorldSpawnUtil.attach_portal_cues(area, size)
+	var cue: CanvasItem = cues.get("cue")
+	var arch: CanvasItem = cues.get("arch")
 	var hint := Polygon2D.new()
 	hint.name = "PortalMarker"
 	hint.color = Color(0.95, 0.72, 0.28, 0.86)
@@ -599,17 +597,22 @@ func make_portal(parent: Node2D, title: String, scene_path: String, pos: Vector2
 	area.add_child(label)
 	area.mouse_entered.connect(func():
 		label.visible = true
-		cue.modulate = Color(1.2, 1.15, 0.9, 1.0)
-		arch.modulate = Color(1.25, 1.2, 0.95, 1.0)
+		if cue:
+			cue.modulate = Color(1.2, 1.15, 0.9, 1.0)
+		if arch:
+			arch.modulate = Color(1.25, 1.2, 0.95, 1.0)
 	)
 	area.mouse_exited.connect(func():
 		label.visible = show_marker
-		cue.modulate = Color.WHITE
-		arch.modulate = Color.WHITE
+		if cue:
+			cue.modulate = Color.WHITE
+		if arch:
+			arch.modulate = Color.WHITE
 	)
-	var pulse := arch.create_tween().set_loops()
-	pulse.tween_property(arch, "modulate:a", 0.22, 0.85).set_trans(Tween.TRANS_SINE)
-	pulse.tween_property(arch, "modulate:a", 0.55, 0.85).set_trans(Tween.TRANS_SINE)
+	if arch:
+		var pulse := arch.create_tween().set_loops()
+		pulse.tween_property(arch, "modulate:a", 0.22, 0.85).set_trans(Tween.TRANS_SINE)
+		pulse.tween_property(arch, "modulate:a", 0.55, 0.85).set_trans(Tween.TRANS_SINE)
 	if show_marker:
 		var pulse_m := hint.create_tween().set_loops()
 		pulse_m.tween_property(hint, "modulate:a", 0.45, 0.65).set_trans(Tween.TRANS_SINE)

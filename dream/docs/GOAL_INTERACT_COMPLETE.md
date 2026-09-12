@@ -123,19 +123,20 @@
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
 | G7 | **IN PROGRESS** — 钓点 bobber 精灵优先；NPC 工作环短 prop cue；完整职业姿态 sheet / C22 渔笼仍缺 |
-| G8 | **IN PROGRESS** — 轨枕/铁轨/围栏/桥 plank sprite + `attach_prop_sprite` ctex-gate；station/farmland/square headless ERROR=0；门脸立面 / 作物垄 / StyleQA 仍开放 |
+| G8 | **IN PROGRESS** — 门阶/拱门/作物垄 sprite 已接线；StyleQA + 季节罩仍开放 |
 
 ### G8 已知残留（不可假装清零）
 
 | 残留 | 位置 | 处理方向 |
 | --- | --- | --- |
-| ~~ColorRect 轨枕/铁轨~~ | `station_assembler.gd` | **DONE** → `track_sleeper/rail`（editor reimport + ctex OK） |
+| ~~ColorRect 轨枕/铁轨~~ | `station_assembler.gd` | **DONE** → `track_sleeper/rail` |
 | ~~ColorRect 栅栏柱~~ | farmland / farm_residential | **DONE** → `fence_post_00` |
 | ~~bridge label_proxy~~ | village_square | **DONE** → `bridge_plank_00` |
+| ~~程序门阶多边形~~ | area_craft / WorldSpawnUtil / interior | **DONE** → `doorstep_mat` + `door_arch_cue` |
+| ~~作物床 ColorRect 垄线~~ | area_craft crop beds | **DONE** → `furrow_line_00` |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
-| 程序门阶多边形 | area_craft portals | 换成门脸立面 sprite（下一刀） |
-| G2/G6/G8 PIL 帧 | leaf/drawer/chest/track/fence | StyleQA 重绘 |
-| 作物床 ColorRect 垄线 | area_craft crop beds | 换 `furrow_line_00` 或保留薄泥土线 |
+| G2/G6/G8 PIL 帧 | leaf/drawer/chest/track/fence/door/furrow | StyleQA 重绘 |
+| 完整建筑门脸立面 | 各区 exterior façades | 独立 facade sheet（非 cue） |
 
 ## Related
 

@@ -652,22 +652,9 @@ func _spawn_return_portal(parent: Node2D) -> void:
 	rect.size = Vector2(128, 56)
 	shape.shape = rect
 	portal.add_child(shape)
-	var cue := Polygon2D.new()
-	cue.name = "DoorstepCue"
-	cue.color = Color(0.95, 0.82, 0.4, 0.42)
-	cue.polygon = PackedVector2Array([
-		Vector2(-28, 4), Vector2(28, 4), Vector2(20, 14), Vector2(-20, 14),
-	])
-	cue.z_index = -1
-	portal.add_child(cue)
-	var arch := Polygon2D.new()
-	arch.name = "DoorArchCue"
-	arch.color = Color(0.98, 0.9, 0.55, 0.38)
-	arch.polygon = PackedVector2Array([
-		Vector2(-12, 2), Vector2(12, 2), Vector2(10, -18), Vector2(0, -26), Vector2(-10, -18),
-	])
-	arch.position = Vector2(0, -12)
-	portal.add_child(arch)
+	var cues := WorldSpawnUtil.attach_portal_cues(portal, Vector2(128, 56))
+	var cue: CanvasItem = cues.get("cue")
+	var arch: CanvasItem = cues.get("arch")
 	var marker := Polygon2D.new()
 	marker.color = Color(0.95, 0.72, 0.28, 0.75)
 	marker.polygon = PackedVector2Array([Vector2(0, -8), Vector2(10, 0), Vector2(0, 8), Vector2(-10, 0)])
@@ -688,17 +675,22 @@ func _spawn_return_portal(parent: Node2D) -> void:
 	portal.add_child(label)
 	portal.mouse_entered.connect(func():
 		label.visible = true
-		cue.modulate = Color(1.2, 1.15, 0.9)
-		arch.modulate = Color(1.25, 1.2, 0.95)
+		if cue:
+			cue.modulate = Color(1.2, 1.15, 0.9)
+		if arch:
+			arch.modulate = Color(1.25, 1.2, 0.95)
 	)
 	portal.mouse_exited.connect(func():
 		label.visible = show_marker
-		cue.modulate = Color.WHITE
-		arch.modulate = Color.WHITE
+		if cue:
+			cue.modulate = Color.WHITE
+		if arch:
+			arch.modulate = Color.WHITE
 	)
-	var pulse := arch.create_tween().set_loops()
-	pulse.tween_property(arch, "modulate:a", 0.22, 0.85).set_trans(Tween.TRANS_SINE)
-	pulse.tween_property(arch, "modulate:a", 0.55, 0.85).set_trans(Tween.TRANS_SINE)
+	if arch:
+		var pulse := arch.create_tween().set_loops()
+		pulse.tween_property(arch, "modulate:a", 0.22, 0.85).set_trans(Tween.TRANS_SINE)
+		pulse.tween_property(arch, "modulate:a", 0.55, 0.85).set_trans(Tween.TRANS_SINE)
 	portal.set_meta("scene_path", str(_profile.get("return_path", SceneRouter.RESIDENTIAL_PATH)))
 	parent.add_child(portal)
 
@@ -726,22 +718,9 @@ func _spawn_extra_portals(parent: Node2D) -> void:
 		rect.size = Vector2(96, 48)
 		shape.shape = rect
 		portal.add_child(shape)
-		var cue := Polygon2D.new()
-		cue.name = "DoorstepCue"
-		cue.color = Color(0.55, 0.85, 0.95, 0.4)
-		cue.polygon = PackedVector2Array([
-			Vector2(-22, 4), Vector2(22, 4), Vector2(16, 12), Vector2(-16, 12),
-		])
-		cue.z_index = -1
-		portal.add_child(cue)
-		var arch := Polygon2D.new()
-		arch.name = "DoorArchCue"
-		arch.color = Color(0.65, 0.9, 1.0, 0.38)
-		arch.polygon = PackedVector2Array([
-			Vector2(-10, 2), Vector2(10, 2), Vector2(8, -16), Vector2(0, -22), Vector2(-8, -16),
-		])
-		arch.position = Vector2(0, -10)
-		portal.add_child(arch)
+		var cues := WorldSpawnUtil.attach_portal_cues(portal, Vector2(96, 48))
+		var cue: CanvasItem = cues.get("cue")
+		var arch: CanvasItem = cues.get("arch")
 		var marker := Polygon2D.new()
 		marker.color = Color(0.55, 0.78, 0.95, 0.8)
 		marker.polygon = PackedVector2Array([Vector2(0, -8), Vector2(10, 0), Vector2(0, 8), Vector2(-10, 0)])
@@ -762,17 +741,22 @@ func _spawn_extra_portals(parent: Node2D) -> void:
 		portal.add_child(lbl)
 		portal.mouse_entered.connect(func():
 			lbl.visible = true
-			cue.modulate = Color(1.15, 1.2, 1.25)
-			arch.modulate = Color(1.2, 1.25, 1.3)
+			if cue:
+				cue.modulate = Color(1.15, 1.2, 1.25)
+			if arch:
+				arch.modulate = Color(1.2, 1.25, 1.3)
 		)
 		portal.mouse_exited.connect(func():
 			lbl.visible = show_marker
-			cue.modulate = Color.WHITE
-			arch.modulate = Color.WHITE
+			if cue:
+				cue.modulate = Color.WHITE
+			if arch:
+				arch.modulate = Color.WHITE
 		)
-		var pulse := arch.create_tween().set_loops()
-		pulse.tween_property(arch, "modulate:a", 0.22, 0.8).set_trans(Tween.TRANS_SINE)
-		pulse.tween_property(arch, "modulate:a", 0.55, 0.8).set_trans(Tween.TRANS_SINE)
+		if arch:
+			var pulse := arch.create_tween().set_loops()
+			pulse.tween_property(arch, "modulate:a", 0.22, 0.8).set_trans(Tween.TRANS_SINE)
+			pulse.tween_property(arch, "modulate:a", 0.55, 0.8).set_trans(Tween.TRANS_SINE)
 		portal.set_meta("scene_path", path)
 		parent.add_child(portal)
 
