@@ -14,6 +14,13 @@ NAMES = [
 	"hay_00.png",
 	"trough_00.png",
 	"wood_pile_00.png",
+	"anvil_00.png",
+	"stove_00.png",
+	"grain_stack_00.png",
+	"flower_bed_00.png",
+	"herbs_00.png",
+	"lantern_string_00.png",
+	"coin_chest_00.png",
 ]
 
 

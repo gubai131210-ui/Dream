@@ -4,7 +4,7 @@ extends Node
 ## C61 — ≥5 hidden chest sites across explore maps (tree/waterfall/cave/well/island).
 
 const NODE_NAME := "HiddenChests"
-const CHEST_TEX := "res://assets/sprites/interior/props/coin_chest_00.png"
+const CHEST_TEX := "res://assets/sprites/props/coin_chest_00.png"
 
 const SITE_DEFS := {
 	"tree_behind": {

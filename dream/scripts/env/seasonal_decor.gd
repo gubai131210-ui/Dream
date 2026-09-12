@@ -160,13 +160,13 @@ func _spawn_season_props() -> void:
 	match _season:
 		Season.SPRING:
 			_add_prop_cluster([
-				{"path": "res://assets/sprites/interior/props/flower_bed_00.png", "pos": Vector2(180, 360), "scale": 0.5},
-				{"path": "res://assets/sprites/interior/props/flower_bed_00.png", "pos": Vector2(240, 420), "scale": 0.45},
-				{"path": "res://assets/sprites/interior/props/herbs_00.png", "pos": Vector2(980, 340), "scale": 0.5},
-				{"path": "res://assets/sprites/interior/props/herbs_00.png", "pos": Vector2(1080, 400), "scale": 0.45},
+				{"path": "res://assets/sprites/props/flower_bed_00.png", "pos": Vector2(180, 360), "scale": 0.5},
+				{"path": "res://assets/sprites/props/flower_bed_00.png", "pos": Vector2(240, 420), "scale": 0.45},
+				{"path": "res://assets/sprites/props/herbs_00.png", "pos": Vector2(980, 340), "scale": 0.5},
+				{"path": "res://assets/sprites/props/herbs_00.png", "pos": Vector2(1080, 400), "scale": 0.45},
 			])
 			_add_prop_banner(
-				"res://assets/sprites/interior/props/lantern_string_00.png",
+				"res://assets/sprites/props/lantern_string_00.png",
 				"春灯",
 				Vector2(640, 220),
 				0.55,
@@ -176,23 +176,23 @@ func _spawn_season_props() -> void:
 				{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(200, 520), "scale": 0.5},
 				{"path": "res://assets/sprites/props/fountain_small.png", "pos": Vector2(320, 560), "scale": 0.45},
 				{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(960, 540), "scale": 0.5},
-				{"path": "res://assets/sprites/interior/props/lantern_string_00.png", "pos": Vector2(1100, 500), "scale": 0.5},
+				{"path": "res://assets/sprites/props/lantern_string_00.png", "pos": Vector2(1100, 500), "scale": 0.5},
 			])
 			_add_prop_banner(
-				"res://assets/sprites/interior/props/lantern_string_00.png",
+				"res://assets/sprites/props/lantern_string_00.png",
 				"夏浪饰",
 				Vector2(640, 240),
 				0.55,
 			)
 		Season.AUTUMN:
 			_add_prop_cluster([
-				{"path": "res://assets/sprites/interior/props/grain_stack_00.png", "pos": Vector2(220, 380), "scale": 0.5},
-				{"path": "res://assets/sprites/interior/props/hay_stack_00.png", "pos": Vector2(300, 440), "scale": 0.5},
+				{"path": "res://assets/sprites/props/grain_stack_00.png", "pos": Vector2(220, 380), "scale": 0.5},
+				{"path": "res://assets/sprites/props/hay_stack_00.png", "pos": Vector2(300, 440), "scale": 0.5},
 				{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(1000, 360), "scale": 0.5},
-				{"path": "res://assets/sprites/interior/props/fruit_crate_stack_00.png", "pos": Vector2(1120, 430), "scale": 0.45},
+				{"path": "res://assets/sprites/props/fruit_crate_stack_00.png", "pos": Vector2(1120, 430), "scale": 0.45},
 			])
 			_add_prop_banner(
-				"res://assets/sprites/interior/props/grain_stack_00.png",
+				"res://assets/sprites/props/grain_stack_00.png",
 				"秋穗挂",
 				Vector2(640, 230),
 				0.5,
@@ -202,7 +202,7 @@ func _spawn_season_props() -> void:
 				{"path": "res://assets/sprites/props/rock_01.png", "pos": Vector2(190, 400), "scale": 0.5, "mod": Color(0.85, 0.92, 1.0)},
 				{"path": "res://assets/sprites/props/rock_03.png", "pos": Vector2(280, 460), "scale": 0.45, "mod": Color(0.88, 0.94, 1.0)},
 				{"path": "res://assets/sprites/props/lamp_1.png", "pos": Vector2(990, 380), "scale": 0.5},
-				{"path": "res://assets/sprites/interior/props/lantern_string_00.png", "pos": Vector2(1090, 450), "scale": 0.5},
+				{"path": "res://assets/sprites/props/lantern_string_00.png", "pos": Vector2(1090, 450), "scale": 0.5},
 			])
 			_add_prop_banner(
 				"res://assets/sprites/props/lamp_2.png",

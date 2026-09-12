@@ -195,11 +195,11 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 		"sow":
 			prop_path = "res://assets/sprites/props/hay_00.png"
 		"smith":
-			prop_path = "res://assets/sprites/interior/props/anvil_00.png"
+			prop_path = "res://assets/sprites/props/anvil_00.png"
 		"stall":
 			prop_path = "res://assets/sprites/props/sack_0.png"
 		"cook":
-			prop_path = "res://assets/sprites/interior/props/stove_00.png"
+			prop_path = "res://assets/sprites/props/stove_00.png"
 		_:
 			return
 	var cue := Node2D.new()

@@ -110,6 +110,13 @@ def main() -> None:
         require(dik, f'"{host}"', f"DistrictInteractKit host {host}")
     if "interior/props" in dik:
         raise AssertionError("DistrictInteractKit must use outdoor props/ paths (Genre cohesion)")
+    if "interior/props" in routine:
+        raise AssertionError("npc_routine_demo work cues must use outdoor props/ paths (Genre cohesion)")
+    if "interior/props" in seasonal:
+        raise AssertionError("seasonal_decor must use outdoor props/ paths (Genre cohesion)")
+    chests = read("scripts/world/hidden_chests.gd")
+    if "interior/props" in chests:
+        raise AssertionError("hidden_chests must use outdoor props/ coin_chest (Genre cohesion)")
 
     print("GREEN production-placeholder QA (facades, poses, gates, breakables, stall, districts)")
 
