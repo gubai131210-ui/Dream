@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pdfbce25ef79d"
-path="res://.godot/imported/grave_marker_00.png-d0ad716fea42bf1077031b1b8ed92239.ctex"
+uid="uid://p750169709ac0"
+path="res://.godot/imported/stall_awning_00.png-9b033866dc44406dd148226b291e5344.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/props/grave_marker_00.png"
-dest_files=["res://.godot/imported/grave_marker_00.png-d0ad716fea42bf1077031b1b8ed92239.ctex"]
+source_file="res://assets/sprites/market/stall_awning_00.png"
+dest_files=["res://.godot/imported/stall_awning_00.png-9b033866dc44406dd148226b291e5344.ctex"]
 
 [params]
 

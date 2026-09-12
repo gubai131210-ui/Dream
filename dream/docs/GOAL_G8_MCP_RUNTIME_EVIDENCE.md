@@ -62,6 +62,7 @@
 - Landmark hotspots own `Visual/PropSprite`: 巨树/遗迹残垣/芦苇岔口 (queried live); market bridge + cemetery + mine/cave/渡口 wired similarly
 - Station `站台轨道` + Lake `登岛渡口` boat skiff; lake house building reparented into hotspot Visual
 - `tools/qa_orphan_hotspot_visuals.py` GREEN (assembler hotspot Visual ownership)
+- Landmark StyleQA: reed/ruin/grave/boat/door_facade/awning repainted to painted-grade uniq colors (`qa_landmark_style` GREEN)
 
 ## Agent reviews this batch
 

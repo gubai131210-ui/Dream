@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d23ebbf4582d6"
-path="res://.godot/imported/door_facade_00.png-32682f2f4bd2c1bb3587f7914eccdcab.ctex"
+uid="uid://p54901b5b7647"
+path="res://.godot/imported/door_facade_00.png-d0ad716fea42bf1077031b1b8ed92239.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/props/door_facade_00.png"
-dest_files=["res://.godot/imported/door_facade_00.png-32682f2f4bd2c1bb3587f7914eccdcab.ctex"]
+dest_files=["res://.godot/imported/door_facade_00.png-d0ad716fea42bf1077031b1b8ed92239.ctex"]
 
 [params]
 

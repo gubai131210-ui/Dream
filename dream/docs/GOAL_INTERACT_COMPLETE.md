@@ -148,6 +148,7 @@
 | ~~工作姿态/季节/藏宝箱室外串味~~ | routine / seasonal / hidden_chests | **DONE** → anvil/stove/花床/灯串/粮垛/coin_chest 进 outdoor props；QA 禁 interior |
 | ~~地标热区空 Visual~~ | 巨树/遗迹/芦苇/墓园/市集桥/瀑/洞口/渡口 | **DONE** → `attach_hotspot_prop` + reed/ruin/grave 精灵；瀑 cascade reparent |
 | ~~站台轨道/湖屋/渡口船~~ | station / lake_house / lake ferry | **DONE** → rail+sleeper / house reparent / `boat_skiff_00`；orphan Visual QA |
+| ~~地标/门脸/棚布低色阶~~ | reed/ruin/grave/boat/door_facade/awning | **DONE** → 重绘至 painted 色密度；`qa_landmark_style` GREEN |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
 | Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
 | 姿态/摊位 ArtGen 抛光 | work_poses / market | **StyleQA GREEN**（32×48×4）；ArtGen 还可继续 |

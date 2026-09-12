@@ -97,6 +97,7 @@ def main() -> None:
     stall = read("scripts/market/market_stall.gd")
     require(stall, "stall_open_wood_00.png", "C05 default stall body PNG")
     require(stall, "DEFAULT_BODY", "C05 body default constant")
+    require(stall, "stall_awning_00.png", "C05 awning PNG preferred over ColorRect")
 
     dik = read("scripts/world/district_interact_kit.gd")
     for host in (

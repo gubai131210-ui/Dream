@@ -32,6 +32,7 @@ var state: State = State.OPEN
 const DEFAULT_BODY := "res://assets/sprites/market/stall_open_wood_00.png"
 const LOCKED_BOARD := "res://assets/sprites/props/door_facade_00.png"
 const EMPTY_MARK := "res://assets/sprites/props/furrow_line_00.png"
+const AWNING_TEX := "res://assets/sprites/market/stall_awning_00.png"
 
 var _layer: Node2D
 
@@ -214,6 +215,9 @@ func _add_poles() -> void:
 
 
 func _add_awning(alpha_mul: float, stripes: int, dull: bool = false) -> void:
+	if _add_sprite(AWNING_TEX, Vector2(0, -24), 0.9, Color(1, 1, 1, alpha_mul * (0.75 if dull else 1.0))):
+		return
+	# Last-resort procedural stripes only if awning PNG missing.
 	var awning := Node2D.new()
 	awning.name = "Awning"
 	awning.position = Vector2(-36, -34)
@@ -232,6 +236,8 @@ func _add_awning(alpha_mul: float, stripes: int, dull: bool = false) -> void:
 
 
 func _add_collapsed_awning() -> void:
+	if _add_sprite(AWNING_TEX, Vector2(0, -4), 0.85, Color(0.75, 0.75, 0.8, 0.85)):
+		return
 	_rect(_layer, Vector2(68, 8), Vector2(-34, -6), stripe_a.darkened(0.2), 2)
 
 

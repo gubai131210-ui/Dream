@@ -64,6 +64,7 @@ def main() -> int:
 		"assets/sprites/props/boat_skiff_00.png",
 		"assets/sprites/props/track_rail_00.png",
 		"assets/sprites/props/track_sleeper_00.png",
+		"assets/sprites/market/stall_awning_00.png",
 	):
 		if not (ROOT / p).exists():
 			missing.append(f"landmark: res://{p}")

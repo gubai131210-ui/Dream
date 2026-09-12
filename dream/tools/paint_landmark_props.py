@@ -1,106 +1,193 @@
 #!/usr/bin/env python3
-"""Paint outdoor landmark props for empty investigate hotspots (reed/ruin/grave)."""
+"""Repaint landmark/utility props to painted-grade color density (sample from rock/bench/stall)."""
 from __future__ import annotations
 
 import uuid
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter, ImageEnhance
 
 ROOT = Path(__file__).resolve().parents[1]
 PROPS = ROOT / "assets" / "sprites" / "props"
+MARKET = ROOT / "assets" / "sprites" / "market"
 TMPL = (PROPS / "crate_0.png.import").read_text(encoding="utf-8")
 
-STONE = [(55, 54, 61), (72, 70, 77), (83, 79, 85), (98, 94, 100)]
-MOSS = [(62, 92, 54), (78, 110, 60)]
-REED = [(70, 108, 52), (92, 128, 58), (48, 78, 40), (120, 140, 70)]
-WOOD = [(92, 64, 42), (110, 78, 50), (70, 48, 32)]
+
+def sample_palette(path: Path, n: int = 48) -> list[tuple[int, int, int]]:
+	im = Image.open(path).convert("RGBA")
+	counts: dict[tuple[int, int, int], int] = {}
+	for r, g, b, a in im.getdata():
+		if a < 200:
+			continue
+		counts[(r, g, b)] = counts.get((r, g, b), 0) + 1
+	ordered = [c for c, _ in sorted(counts.items(), key=lambda kv: -kv[1])]
+	# Keep mid-spread samples, not only the top flat color.
+	step = max(1, len(ordered) // n)
+	picked = ordered[::step][:n]
+	while len(picked) < 8:
+		picked.append(ordered[len(picked) % len(ordered)])
+	return picked
 
 
-def _put(px, x: int, y: int, rgb: tuple[int, int, int], a: int = 255) -> None:
+def jitter(rgb: tuple[int, int, int], x: int, y: int, amp: int = 10) -> tuple[int, int, int]:
+	h = (x * 374761393 + y * 668265263) & 0xFFFFFFFF
+	dr = ((h & 255) % (amp * 2 + 1)) - amp
+	dg = (((h >> 8) & 255) % (amp * 2 + 1)) - amp
+	db = (((h >> 16) & 255) % (amp * 2 + 1)) - amp
+	return (
+		max(0, min(255, rgb[0] + dr)),
+		max(0, min(255, rgb[1] + dg)),
+		max(0, min(255, rgb[2] + db)),
+	)
+
+
+def put(px, x: int, y: int, rgb: tuple[int, int, int], a: int = 255) -> None:
 	px[x, y] = (*rgb, a)
 
 
-def paint_reed(w: int = 48, h: int = 56) -> Image.Image:
+def paint_reed(greens: list[tuple[int, int, int]], browns: list[tuple[int, int, int]]) -> Image.Image:
+	w, h = 64, 72
 	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
 	px = im.load()
-	# Clump of vertical stalks with tips.
-	bases = [10, 16, 22, 28, 34, 38]
+	bases = [12, 18, 24, 30, 36, 42, 48, 52]
 	for i, bx in enumerate(bases):
-		hgt = 28 + (i * 3) % 11
-		col = REED[i % len(REED)]
-		for y in range(h - 4, h - 4 - hgt, -1):
-			x = bx + ((h - 4 - y) // 7) * (1 if i % 2 == 0 else -1)
-			if 0 <= x < w and 0 <= y < h:
-				_put(px, x, y, col)
-				if x + 1 < w:
-					_put(px, x + 1, y, REED[(i + 1) % len(REED)], 220)
-		# Seed tip
-		ty = h - 4 - hgt
-		for dx in (-1, 0, 1):
-			for dy in (0, 1):
-				xx, yy = bx + dx, ty + dy
-				if 0 <= xx < w and 0 <= yy < h:
-					_put(px, xx, yy, REED[2])
-	# Mud foot
-	for x in range(8, 42):
-		_put(px, x, h - 3, (68, 58, 42), 200)
-		_put(px, x, h - 2, (58, 48, 34), 180)
-	return im
+		hgt = 34 + (i * 5) % 16
+		for t in range(hgt):
+			y = h - 6 - t
+			bend = (t // 8) * (1 if i % 2 == 0 else -1)
+			x = bx + bend
+			col = greens[(i * 3 + t // 3) % len(greens)]
+			for dx in (0, 1):
+				xx = x + dx
+				if 0 <= xx < w and 0 <= y < h:
+					put(px, xx, y, jitter(col, xx, y, 8))
+			if t > hgt - 5:
+				tip = greens[(i + 2) % len(greens)]
+				for dx in (-1, 0, 1):
+					xx = x + dx
+					if 0 <= xx < w and y - 1 >= 0:
+						put(px, xx, y - 1, jitter(tip, xx, y, 6), 230)
+	for x in range(10, 54):
+		put(px, x, h - 4, jitter(browns[x % len(browns)], x, h - 4, 6), 210)
+		put(px, x, h - 3, jitter(browns[(x + 2) % len(browns)], x, h - 3, 6), 180)
+	return im.filter(ImageFilter.SMOOTH_MORE)
 
 
-def paint_ruin_arch(w: int = 64, h: int = 56) -> Image.Image:
+def paint_ruin(stones: list[tuple[int, int, int]], moss: list[tuple[int, int, int]]) -> Image.Image:
+	w, h = 80, 64
 	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
 	px = im.load()
-	# Two pillars + broken lintel.
-	for x in list(range(8, 16)) + list(range(48, 56)):
-		for y in range(14, h - 4):
-			_put(px, x, y, STONE[(x + y) % len(STONE)])
-	for x in range(8, 56):
-		for y in range(10, 18):
-			if 22 <= x <= 42 and y > 14:
-				continue  # broken gap
-			_put(px, x, y, STONE[(x + y) % len(STONE)])
-	# Moss patches
-	for x, y in ((10, 20), (12, 28), (50, 22), (52, 34), (30, 12)):
-		_put(px, x, y, MOSS[0])
-		_put(px, x + 1, y, MOSS[1], 200)
-	# Rubble foot
-	for x in range(6, 58):
-		if (x + 3) % 5 == 0:
-			continue
-		_put(px, x, h - 4, STONE[1], 210)
-		_put(px, x, h - 3, STONE[0], 190)
-	return im
-
-
-def paint_grave(w: int = 32, h: int = 48) -> Image.Image:
-	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-	px = im.load()
-	# Headstone
-	for x in range(8, 24):
-		for y in range(8, 36):
-			# rounded top
-			if y < 12 and (x < 10 or x > 21):
+	for x in list(range(10, 22)) + list(range(58, 70)):
+		for y in range(16, h - 6):
+			put(px, x, y, jitter(stones[(x + y) % len(stones)], x, y, 9))
+	for x in range(10, 70):
+		for y in range(12, 22):
+			if 30 <= x <= 50 and y > 16:
 				continue
-			_put(px, x, y, STONE[(x + y) % len(STONE)])
-	# Cross notch
-	for x in range(14, 18):
-		for y in range(14, 28):
-			_put(px, x, y, STONE[0])
-	for x in range(11, 21):
-		for y in range(16, 19):
-			_put(px, x, y, STONE[0])
-	# Base slab
-	for x in range(4, 28):
-		_put(px, x, 36, STONE[2])
-		_put(px, x, 37, STONE[1])
-		_put(px, x, 38, WOOD[0], 180)
-	return im
+			put(px, x, y, jitter(stones[(x * 2 + y) % len(stones)], x, y, 8))
+	# Capstones / chips
+	for x, y in ((14, 18), (18, 28), (62, 20), (66, 32), (40, 14), (24, 40), (56, 44)):
+		put(px, x, y, jitter(moss[0], x, y, 5))
+		put(px, x + 1, y, jitter(moss[min(1, len(moss) - 1)], x, y, 5), 200)
+	for x in range(8, 72):
+		if (x + 2) % 4 == 0:
+			continue
+		put(px, x, h - 5, jitter(stones[1], x, h - 5, 7), 220)
+		put(px, x, h - 4, jitter(stones[0], x, h - 4, 7), 200)
+	return im.filter(ImageFilter.SMOOTH)
 
 
-def write_import(name: str) -> None:
-	text = TMPL.replace("crate_0.png", name)
+def paint_grave(stones: list[tuple[int, int, int]], wood: list[tuple[int, int, int]]) -> Image.Image:
+	w, h = 40, 56
+	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+	px = im.load()
+	for x in range(10, 30):
+		for y in range(8, 40):
+			if y < 14 and (x < 12 or x > 27):
+				continue
+			put(px, x, y, jitter(stones[(x + y * 3) % len(stones)], x, y, 7))
+	# Carved cross depression
+	for x in range(17, 23):
+		for y in range(16, 32):
+			put(px, x, y, jitter(stones[0], x, y, 4))
+	for x in range(14, 26):
+		for y in range(19, 23):
+			put(px, x, y, jitter(stones[0], x, y, 4))
+	for x in range(6, 34):
+		put(px, x, 40, jitter(stones[2 % len(stones)], x, 40, 6))
+		put(px, x, 41, jitter(wood[x % len(wood)], x, 41, 5), 200)
+		put(px, x, 42, jitter(wood[(x + 1) % len(wood)], x, 42, 5), 170)
+	return im.filter(ImageFilter.SMOOTH)
+
+
+def paint_boat(wood: list[tuple[int, int, int]]) -> Image.Image:
+	w, h = 72, 36
+	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+	px = im.load()
+	for x in range(8, 64):
+		depth = 8 + int(4 * (1 - abs((x - 36) / 28)))
+		for y in range(h - 5 - depth, h - 5):
+			put(px, x, y, jitter(wood[(x + y) % len(wood)], x, y, 8))
+		gun = wood[min(3, len(wood) - 1)]
+		put(px, x, h - 6 - depth, jitter(gun, x, h - 6 - depth, 5))
+	for x in range(22, 50):
+		put(px, x, h - 16, jitter(wood[1], x, h - 16, 5))
+		put(px, x, h - 15, jitter(wood[0], x, h - 15, 5))
+	for y in range(h - 18, h - 8):
+		put(px, 6, y, jitter(wood[2 % len(wood)], 6, y, 5), 230)
+		put(px, 7, y, jitter(wood[0], 7, y, 5))
+	# Interior shadow wash
+	for x in range(16, 56):
+		for y in range(h - 14, h - 8):
+			r, g, b = wood[(x + y) % len(wood)]
+			put(px, x, y, (max(0, r - 25), max(0, g - 20), max(0, b - 15)), 140)
+	return im.filter(ImageFilter.SMOOTH)
+
+
+def paint_awning(reds: list[tuple[int, int, int]], creams: list[tuple[int, int, int]]) -> Image.Image:
+	w, h = 72, 24
+	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+	px = im.load()
+	stripe_w = 12
+	for x in range(w):
+		band = (x // stripe_w) % 2 == 0
+		base = reds[x % len(reds)] if band else creams[x % len(creams)]
+		for y in range(2, h - 2):
+			# scallop bottom
+			if y > h - 6 and ((x + y) % 6) < 2:
+				continue
+			put(px, x, y, jitter(base, x, y, 7), 235)
+		put(px, x, 1, jitter(base, x, 1, 4), 200)
+	return im.filter(ImageFilter.SMOOTH)
+
+
+def paint_facade(wood: list[tuple[int, int, int]], stone: list[tuple[int, int, int]]) -> Image.Image:
+	w, h = 56, 72
+	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+	px = im.load()
+	# Door frame
+	for x in range(8, 48):
+		for y in range(6, 66):
+			put(px, x, y, jitter(wood[(x + y) % len(wood)], x, y, 8))
+	# Inner door panel
+	for x in range(14, 42):
+		for y in range(14, 58):
+			put(px, x, y, jitter(wood[(x * 2 + y) % len(wood)], x, y, 6))
+	# Stone sill
+	for x in range(6, 50):
+		for y in range(60, 66):
+			put(px, x, y, jitter(stone[(x + y) % len(stone)], x, y, 7))
+	# Handle
+	for y in range(34, 40):
+		put(px, 38, y, jitter((180, 150, 70), 38, y, 4))
+	return im.filter(ImageFilter.SMOOTH)
+
+
+def write_import(folder: Path, name: str) -> None:
+	tmpl = TMPL if folder == PROPS else (MARKET / "stall_open_wood_00.png.import").read_text(encoding="utf-8")
+	# Replace basename in path lines
+	old = "crate_0.png" if folder == PROPS else "stall_open_wood_00.png"
+	text = tmpl.replace(old, name)
 	uid = "uid://p" + uuid.uuid4().hex[:12]
 	lines = []
 	for line in text.splitlines(True):
@@ -108,40 +195,42 @@ def write_import(name: str) -> None:
 			lines.append(f'uid="{uid}"\n')
 		else:
 			lines.append(line)
-	(PROPS / f"{name}.import").write_text("".join(lines), encoding="utf-8")
+	(folder / f"{name}.import").write_text("".join(lines), encoding="utf-8")
 
 
-def paint_boat(w: int = 56, h: int = 32) -> Image.Image:
-	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-	px = im.load()
-	# Simple skiff hull — dark wood + lighter gunwale.
-	for x in range(6, 50):
-		depth = 6 + int(3 * (1 - abs((x - 28) / 22)))
-		for y in range(h - 4 - depth, h - 4):
-			_put(px, x, y, WOOD[(x + y) % len(WOOD)])
-		_put(px, x, h - 5 - depth, (130, 96, 62))
-	# Seat thwart
-	for x in range(18, 38):
-		_put(px, x, h - 14, WOOD[1])
-		_put(px, x, h - 13, WOOD[0])
-	# Bow tip
-	for y in range(h - 16, h - 6):
-		_put(px, 4, y, WOOD[2], 220)
-		_put(px, 5, y, WOOD[0])
-	return im
+def uniq_count(im: Image.Image) -> int:
+	return len({c[:3] for c in im.getdata() if c[3] > 200})
 
 
 def main() -> None:
-	PROPS.mkdir(parents=True, exist_ok=True)
-	for name, fn in (
-		("reed_clump_00.png", paint_reed),
-		("ruin_arch_00.png", paint_ruin_arch),
-		("grave_marker_00.png", paint_grave),
-		("boat_skiff_00.png", paint_boat),
-	):
-		fn().save(PROPS / name)
-		write_import(name)
-		print("wrote", name)
+	rock = sample_palette(PROPS / "rock_02.png", 64)
+	bench = sample_palette(PROPS / "bench_0.png", 48)
+	stall = sample_palette(MARKET / "stall_open_wood_00.png", 64)
+	# Split-ish: darker = stone/wood, greener from rock+bench mix
+	greens = [c for c in rock + bench if c[1] >= c[0] - 10 and c[1] > 50] or rock[:16]
+	browns = [c for c in stall + bench if c[0] > c[2]] or stall[:16]
+	stones = rock[:48]
+	moss = greens[:16]
+	wood = browns[:48]
+	creams = [c for c in stall if min(c) > 140][:16] or [(240, 230, 210)] * 8
+	reds = [(180, 60, 50), (160, 45, 40), (200, 80, 70), (140, 40, 35)] + [
+		(max(40, c[0]), max(20, c[1] // 2), max(20, c[2] // 2)) for c in stall[:8]
+	]
+
+	jobs = [
+		(PROPS, "reed_clump_00.png", paint_reed(greens, browns)),
+		(PROPS, "ruin_arch_00.png", paint_ruin(stones, moss)),
+		(PROPS, "grave_marker_00.png", paint_grave(stones, wood)),
+		(PROPS, "boat_skiff_00.png", paint_boat(wood)),
+		(PROPS, "door_facade_00.png", paint_facade(wood, stones)),
+		(MARKET, "stall_awning_00.png", paint_awning(reds, creams)),
+	]
+	for folder, name, im in jobs:
+		# Mild contrast to keep pixel readable after smooth
+		im = ImageEnhance.Contrast(im).enhance(1.08)
+		im.save(folder / name)
+		write_import(folder, name)
+		print(f"wrote {name} uniq={uniq_count(im)} size={im.size}")
 
 
 if __name__ == "__main__":
