@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://62fcc8c14ed48"
-path="res://.godot/imported/pose_01.png-39cb5a0e177e8f635a3cf72cc594ee85.ctex"
+uid="uid://w67d1290da265"
+path="res://.godot/imported/pose_01.png-5b7da5cfeefb525849c6eb2b12c59339.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,10 +11,9 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/npc/work_poses/sow/pose_01.png"
-dest_files=["res://.godot/imported/pose_01.png-39cb5a0e177e8f635a3cf72cc594ee85.ctex"]
+dest_files=["res://.godot/imported/pose_01.png-5b7da5cfeefb525849c6eb2b12c59339.ctex"]
 
 [params]
-
 
 compress/mode=0
 compress/high_quality=false

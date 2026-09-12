@@ -68,6 +68,9 @@ def main() -> None:
 			ew = edge_white(f)
 			if ew > MAX_EDGE_WHITE:
 				failures.append(f"{kind}/{f.name}: edge-white={ew}")
+			uniq = len({c[:3] for c in im.getdata() if c[3] > 200})
+			if uniq < 80:
+				failures.append(f"{kind}/{f.name}: uniq={uniq} < 80 (need painted density)")
 			bb = im.getchannel("A").getbbox()
 			if bb is None:
 				failures.append(f"{kind}/{f.name}: empty alpha")

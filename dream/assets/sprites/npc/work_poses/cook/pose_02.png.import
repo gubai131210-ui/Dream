@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0e04f27627afb"
-path="res://.godot/imported/pose_02.png-7c63627b8a1008b26398bcf43ea59863.ctex"
+uid="uid://w336db573f14e"
+path="res://.godot/imported/pose_02.png-5b7da5cfeefb525849c6eb2b12c59339.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,10 +11,9 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/npc/work_poses/cook/pose_02.png"
-dest_files=["res://.godot/imported/pose_02.png-7c63627b8a1008b26398bcf43ea59863.ctex"]
+dest_files=["res://.godot/imported/pose_02.png-5b7da5cfeefb525849c6eb2b12c59339.ctex"]
 
 [params]
-
 
 compress/mode=0
 compress/high_quality=false

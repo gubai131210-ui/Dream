@@ -67,7 +67,7 @@
 [x] StyleQA + CohereQA 签字 — `qa_landmark_style` + `qa_work_pose_style` + TEAM_SIGNOFF
 [x] CanonQA：状态变化可解释 — C58/C59/C60/C22 smokes + Genre/Canon agent PASS
 [x] GenreQA：不破坏邻接/站位规则 — outdoor props 路径禁 interior；orphan Visual GREEN
-[ ] 引擎内整数缩放目视 — **用户 §7**
+[ ] 引擎内整数缩放目视 — **用户 §7**（Agent MCP：plaza `CameraController.zoom=(1,1)` + `g8_square_zoom1_work_pose_v2.png`）
 [x] 交互：hover → action → result 三层反馈 — focus_corners + activate/open FX smokes + MCP
 ```
 
@@ -154,7 +154,7 @@
 | ~~civic façade / 破 / 栅 / 桥 / 垄~~ | bath/museum/stake/weed/fence/bridge/furrow | **DONE** → 同批次重绘 + StyleQA 地板 |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
 | Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
-| 姿态/摊位 ArtGen 抛光 | work_poses / market | **StyleQA GREEN**（32×48×4）；ArtGen 还可继续 |
+| 姿态/摊位 ArtGen 抛光 | work_poses / market | **StyleQA GREEN**（32×48×4，uniq≥80）；awning PNG |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据
