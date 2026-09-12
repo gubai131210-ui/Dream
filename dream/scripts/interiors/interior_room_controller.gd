@@ -30,10 +30,25 @@ func _ready() -> void:
 	_wire_hotspots(world)
 	_wire_portals(world)
 	var rr: Rect2 = assembler.room_rect() if assembler else Rect2(0, 0, 1280, 960)
-	camera.bounds = Rect2(0, 0, maxf(1280.0, rr.end.x + 64.0), maxf(960.0, rr.end.y + 96.0))
-	camera.position = Vector2(640, 480)
-	camera.zoom = Vector2.ONE
-	camera.min_zoom = 1.0
+	_frame_room(rr)
+
+
+func _frame_room(room_rect: Rect2) -> void:
+	# Interior art is authored from the 32px grid, but room sizes vary from
+	# compact 16x14 shops to 36x22 homes. Frame the actual room instead of
+	# assuming every scene is a 1280x960 board.
+	var framed := room_rect.grow(32.0)
+	var viewport_size := get_viewport_rect().size
+	var safe_size := Vector2(viewport_size.x, maxf(480.0, viewport_size.y - 112.0))
+	var fit_zoom := minf(1.0, minf(safe_size.x / maxf(framed.size.x, 1.0), safe_size.y / maxf(framed.size.y, 1.0)))
+	# Quarter-step zoom avoids arbitrary sub-pixel scale while still fitting the
+	# two largest rooms inside the 720px presentation area.
+	fit_zoom = clampf(floorf(fit_zoom * 4.0) / 4.0, 0.75, 1.0)
+	camera.bounds = framed
+	var room_center := framed.get_center()
+	camera.position = room_center - Vector2(0, 24)
+	camera.zoom = Vector2(fit_zoom, fit_zoom)
+	camera.min_zoom = 0.75
 	camera.max_zoom = 2.0
 	# Wave F WorldSys C62 — append-only secret chain hop (e.g. c16_cave_entry → waterfall).
 	# Portal click is wired inside SecretPassageChain (avoid double _wire_portals).
@@ -65,6 +80,12 @@ func _wire_portals(node: Node) -> void:
 
 
 func _on_hotspot(hotspot: InteractableHotspot) -> void:
+	# Click target becomes the shared executable (sync prompt if needed).
+	if hotspot != null and hotspot != _prompt_active:
+		if _prompt_active and is_instance_valid(_prompt_active):
+			_prompt_active.set_proximity_prompt_shown(false)
+		_prompt_active = hotspot
+		_prompt_active.set_proximity_prompt_shown(true)
 	info.show_info(hotspot.title, hotspot.description)
 
 
@@ -89,34 +110,42 @@ func _find_character_body(node: Node) -> CharacterBody2D:
 
 
 func _update_nearest_proximity_prompt() -> void:
-	var player := _find_player_body()
-	var has_player_body := player != null
-	var anchor: Vector2
-	if has_player_body:
-		anchor = player.global_position
-	elif camera:
-		anchor = camera.global_position
-	else:
-		anchor = global_position
-
+	## Shared executable target: mouse-hover wins, else nearest in-reach hotspot.
+	## Keeps proximity 「互动」cue aligned with the hotspot a click would activate
+	## (INTERACTION_DESIGN §2.4 P1 — no more prompt-A / click-B split).
 	var best: InteractableHotspot = null
-	var best_dist := INF
-
 	for hs in _hotspots:
-		if not is_instance_valid(hs):
-			continue
-		var candidate := false
-		if has_player_body:
-			candidate = hs.has_player_overlap()
-		else:
-			# No walkable player yet: camera pan acts as temporary proximity probe.
-			candidate = hs.is_point_in_reach(anchor)
-		if not candidate:
-			continue
-		var d := hs.global_position.distance_squared_to(anchor)
-		if d < best_dist:
-			best_dist = d
+		if is_instance_valid(hs) and hs.is_mouse_hovered():
 			best = hs
+			break
+
+	if best == null:
+		var player := _find_player_body()
+		var has_player_body := player != null
+		var anchor: Vector2
+		if has_player_body:
+			anchor = player.global_position
+		elif camera:
+			anchor = camera.global_position
+		else:
+			anchor = global_position
+
+		var best_dist := INF
+		for hs in _hotspots:
+			if not is_instance_valid(hs):
+				continue
+			var candidate := false
+			if has_player_body:
+				candidate = hs.has_player_overlap()
+			else:
+				# No walkable player yet: camera pan acts as temporary proximity probe.
+				candidate = hs.is_point_in_reach(anchor)
+			if not candidate:
+				continue
+			var d := hs.global_position.distance_squared_to(anchor)
+			if d < best_dist:
+				best_dist = d
+				best = hs
 
 	if _prompt_active == best:
 		return
@@ -125,3 +154,8 @@ func _update_nearest_proximity_prompt() -> void:
 	_prompt_active = best
 	if _prompt_active:
 		_prompt_active.set_proximity_prompt_shown(true)
+
+
+## Current shared target for prompt + click (null if none in reach / hovered).
+func get_executable_interact_target() -> InteractableHotspot:
+	return _prompt_active

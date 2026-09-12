@@ -134,6 +134,10 @@ func has_player_overlap() -> bool:
 	return not _overlap_players.is_empty()
 
 
+func is_mouse_hovered() -> bool:
+	return _hovered
+
+
 ## Camera / future player proxy: true when `world_pos` is inside the collision AABB + pad.
 func is_point_in_reach(world_pos: Vector2) -> bool:
 	_cache_marker_size()

@@ -156,6 +156,7 @@
 | Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
 | 姿态/摊位 ArtGen 抛光 | work_poses / market | **StyleQA GREEN**（32×48×4，uniq≥80）；awning PNG |
 | ~~室内语义代理（祭坛/课桌/候车椅/黑板/芦苇/管道）~~ | C07/C10/C11/C25/C31 | **DONE** → dedicated props + `qa_semantic_interior_props` GREEN |
+| ~~提示A/点击B 目标分裂~~ | InteriorRoomController | **DONE** → hover 优先 + click sync；`g8_interact_target_smoke` PASS |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据
@@ -169,6 +170,7 @@
 - [`GOAL_G8_BATH_PORTAL_EVIDENCE.md`](GOAL_G8_BATH_PORTAL_EVIDENCE.md) — 浴场 façade + SceneRouter 进门  
 - [`GOAL_G8_C62_SECRET_EVIDENCE.md`](GOAL_G8_C62_SECRET_EVIDENCE.md) — 密道门脸 + 进洞冒烟 + MCP 截图  
 - [`GOAL_G8_SEMANTIC_INTERIOR_EVIDENCE.md`](GOAL_G8_SEMANTIC_INTERIOR_EVIDENCE.md) — 室内语义专用 prop  
+- [`GOAL_G8_INTERACT_TARGET_EVIDENCE.md`](GOAL_G8_INTERACT_TARGET_EVIDENCE.md) — 室内提示/点击共享目标  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 12 groups GREEN  
 - `tools/qa_no_placeholder_visuals.py` — GREEN  
@@ -222,13 +224,13 @@
 
 | # | 要求 | 证据 | 状态 |
 | --- | --- | --- | --- |
-| 1 | 已列交互正式像素 + 反馈 + 多帧 | C58 activate 8/8；sprite inventory GREEN；focus/叶/绳/盖/鸟帧；qa_interaction_frames GREEN；MCP InfoPanel/OpenFX | **PROVEN（代码+MCP）**；§7 手感确认仍待 |
-| 2 | 全户外+室内门面/道具/可进出 | load smoke 72/72；portal cue 12；MCP 广场→博物馆进门截图 | **PROVEN（加载+MCP 进门）**；§7 全表进出仍待 |
+| 1 | 已列交互正式像素 + 反馈 + 多帧 | C58 activate 8/8；sprite inventory GREEN；focus/叶/绳/盖/鸟帧；qa_interaction_frames GREEN；MCP InfoPanel/OpenFX；语义 prop QA | **PROVEN（代码+MCP）**；§7 手感确认仍待 |
+| 2 | 全户外+室内门面/道具/可进出 | load smoke 72/72；portal cue 12；MCP 进门+多室内 idle；C62 全链 | **PROVEN（加载+MCP 进门）**；§7 全表进出仍待 |
 | 3 | 统称权威 | 本文件 + `ASSET_TAXONOMY` 回链 | **PROVEN** |
-| 4 | 多团队流水线门禁 | §2 角色表；[`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md)；Style/Anim/Cohere + Genre/Canon agent PASS；qa_* GREEN | **PROVEN（本轮批次）** |
-| 5 | MCP/运行时交互动画证据 | [`GOAL_G8_MCP_RUNTIME_EVIDENCE.md`](GOAL_G8_MCP_RUNTIME_EVIDENCE.md) | **PROVEN** |
+| 4 | 多团队流水线门禁 | §2 角色表；[`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md)；Style/Anim/Cohere + Genre/Canon；qa_* GREEN；语义+目标同步 | **PROVEN（本轮批次）** |
+| 5 | MCP/运行时交互动画证据 | [`GOAL_G8_MCP_RUNTIME_EVIDENCE.md`](GOAL_G8_MCP_RUNTIME_EVIDENCE.md) + activate/open FX/anim/target smokes | **PROVEN** |
 
-**结论：** MCP 关键表面截图已齐；在 §7 用户本机勾选确认前，**不得**将 Goal 标 complete。
+**结论：** Agent 侧五条要求已有可复核证据；在 §7 用户本机勾选确认前，**不得**将 Goal 标 complete（项目验收门）。
 
 ---
 
