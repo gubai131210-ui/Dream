@@ -62,7 +62,15 @@ def main() -> None:
     require(fishing, "fish_bubble_00.png", "fishing bubble sprite")
     require(fishing, "fish_splash_00.png", "fishing splash sprite")
 
-    print("GREEN production-placeholder QA (markers, demo overlays, facade, tree, fish FX)")
+    gates = read("scripts/world/progress_gates.gd")
+    require(gates, "gate_log_00.png", "C60 fallen log sprite")
+    require(gates, "door_facade_00.png", "C60 locked door facade")
+
+    routine = read("scripts/npc/npc_routine_demo.gd")
+    require(routine, "work_poses", "C53 work pose sheet path")
+    require(routine, "WorkPoseAnim", "C53 work pose AnimatedSprite")
+
+    print("GREEN production-placeholder QA (markers, facades, tree, fish FX, poses, gates)")
 
 
 if __name__ == "__main__":

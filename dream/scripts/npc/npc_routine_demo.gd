@@ -179,7 +179,7 @@ func _spawn_or_replace_actor(entry: Dictionary) -> void:
 
 
 func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
-	## G7: short occupational prop flash near demo actor (not full pose sheets yet).
+	## G7: occupational pose sheet flash (4 frames) + prop cue near demo actor.
 	if _ysort == null or kind != "work":
 		return
 	var old := _ysort.get_node_or_null("WorkPoseCue")
@@ -207,13 +207,44 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 	cue.position = anchor + Vector2(18, -28)
 	cue.z_index = 8
 	_ysort.add_child(cue)
-	WorldSpawnUtil.attach_prop_sprite(cue, prop_path, 0.35)
+	_attach_work_pose_anim(cue, work_id)
+	WorldSpawnUtil.attach_prop_sprite(cue, prop_path, 0.28)
 	var tw := cue.create_tween()
-	tw.tween_property(cue, "modulate:a", 0.35, 0.15)
-	tw.tween_property(cue, "modulate:a", 1.0, 0.2)
-	tw.tween_interval(1.2)
-	tw.tween_property(cue, "modulate:a", 0.0, 0.45)
+	tw.tween_property(cue, "modulate:a", 0.35, 0.12)
+	tw.tween_property(cue, "modulate:a", 1.0, 0.18)
+	tw.tween_interval(1.35)
+	tw.tween_property(cue, "modulate:a", 0.0, 0.4)
 	tw.tween_callback(cue.queue_free)
+
+
+func _attach_work_pose_anim(parent: Node2D, work_id: String) -> void:
+	var dir := "res://assets/sprites/npc/work_poses/%s" % work_id
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("pose")
+	frames.set_animation_loop("pose", true)
+	frames.set_animation_speed("pose", 6.0)
+	var n := 0
+	for i in range(4):
+		var path := "%s/pose_%02d.png" % [dir, i]
+		var tex := WorldSpawnUtil.load_prop_texture(path)
+		if tex == null:
+			continue
+		frames.add_frame("pose", tex)
+		n += 1
+	if n == 0:
+		return
+	var anim := AnimatedSprite2D.new()
+	anim.name = "WorkPoseAnim"
+	anim.sprite_frames = frames
+	anim.centered = true
+	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	anim.position = Vector2(-22, -6)
+	anim.scale = Vector2(1.15, 1.15)
+	anim.z_index = 2
+	parent.add_child(anim)
+	anim.play("pose")
 
 
 func _ensure_status_label() -> void:

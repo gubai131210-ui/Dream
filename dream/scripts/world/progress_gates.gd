@@ -13,8 +13,8 @@ const GATE_DEFS := [
 		"unlocked": "倒木已移开，小路通畅。",
 		"pos": Vector2(200, 780),
 		"color": Color(0.5, 0.35, 0.22, 0.95),
-		"sprite": "res://assets/sprites/props/barrel_0.png",
-		"scale": 0.6,
+		"sprite": "res://assets/sprites/props/gate_log_00.png",
+		"scale": 0.65,
 	},
 	{
 		"id": "boulder",
@@ -33,8 +33,8 @@ const GATE_DEFS := [
 		"unlocked": "锁已打开，门扇轻推即入。",
 		"pos": Vector2(80, 480),
 		"color": Color(0.55, 0.45, 0.65, 0.95),
-		"sprite": "res://assets/sprites/interior/props/crypt_door_00.png",
-		"scale": 0.45,
+		"sprite": "res://assets/sprites/props/door_facade_00.png",
+		"scale": 0.5,
 	},
 ]
 

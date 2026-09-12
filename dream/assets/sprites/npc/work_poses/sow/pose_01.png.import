@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://47aa6f2daee6"
-path="res://.godot/imported/drawer_open_01.png-31d4301e7735c36b2d0f30f52d121e0d.ctex"
+uid="uid://45dmry1lrd24"
+path="res://.godot/imported/pose_01.png-39cb5a0e177e8f635a3cf72cc594ee85.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/interior/props/drawer_open_01.png"
-dest_files=["res://.godot/imported/drawer_open_01.png-31d4301e7735c36b2d0f30f52d121e0d.ctex"]
+source_file="res://assets/sprites/npc/work_poses/sow/pose_01.png"
+dest_files=["res://.godot/imported/pose_01.png-39cb5a0e177e8f635a3cf72cc594ee85.ctex"]
 
 [params]
 

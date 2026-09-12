@@ -122,8 +122,8 @@
 | G4 | **DONE (code)** — 市集/农田/深林 + 河/湖/站/住宅各 ≥2 DistrictInteractKit prop |
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
-| G7 | **DONE (code)** — bobber 精灵；NPC 工作环短 cue；C22 渔笼；职业姿态 sheet StyleQA 仍开放 |
-| G8 | **IN PROGRESS** — 门脸 façade + StyleQA 批次；季节罩仍开放 |
+| G7 | **DONE (code)** — bobber；C22 渔笼；工作环 **pose sheet×4**（sow/smith/stall/cook）；drawer StyleQA |
+| G8 | **IN PROGRESS** — façade DONE；季节罩仍开放；drawer/chest/pose StyleQA 批次已加深 |
 
 ### G8 已知残留（不可假装清零）
 
@@ -137,9 +137,10 @@
 | ~~摇树 Polygon 占位~~ | WorldInteractKit | **DONE** → `trees/grounded/tree_00` |
 | ~~孤岛传送无门脸~~ | museum/bath 等 portal | **DONE** → `door_facade_00` on all portals |
 | ~~完整独立建筑 façade sheet~~ | 博物馆/浴场 | **DONE** → `facade_museum_00` / `facade_bath_00` |
+| ~~drawer_open PIL~~ | interior dresser | **DONE** → StyleQA 48×40 开合帧 |
+| ~~NPC 职业姿态 sheet~~ | C53 work rings | **DONE (minimal)** → `npc/work_poses/{sow,smith,stall,cook}` |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
-| drawer_open PIL | interior dresser | StyleQA 可继续加深 |
-| NPC 职业姿态 sheet | C53 | 长线 ArtGen |
+| 姿态 sheet 深度抛光 | work_poses / NPC walk | ArtGen 继续（非占位） |
 
 ## Related
 
