@@ -41,8 +41,8 @@ Scene is InteriorProfiles + InteriorCraft stub (`profile_id` wired). Enrichment 
 | Cluster | Anchor | Verb |
 | --- | --- | --- |
 | `hall` | (10, 8) | Primary — root stump table + stools + log pew; bark notice; indoor warm lamp |
-| `climb` | (4, 7) | West trunk peg ladder (`tool_rack`) + stump-step crates + climb shelf |
-| `roots` | (17, 13) | SE root cellar — hay_stack mass, crates, moss, resin sack, sap barrel, coin cache |
+| `climb` | (4, 7) | West trunk peg ladder (`peg_ladder_00`) + stump-step crates + climb shelf |
+| `roots` | (17, 13) | SE root cellar — `root_mass_00` mass, crates, moss, resin sack, sap barrel, coin cache |
 
 - `rug` under hall south sit (`ox/oy` 10, 10).
 - Lights: hall amber key + climb + roots fills.
@@ -75,12 +75,12 @@ Blockers: user Godot playtest for collider / diegetic light / prompt polish
 | Reality | Reads as hollow-tree hall in ≤3s (stump table + climb wall + root mass) |
 | Peer | Hollow-tree shrine chamber (central sit, climb periphery, root cellar) |
 | Scene-fit | Warm wood/straw; `lamp_indoor` hall + `lamp_farm` climb/roots (not shop/smith/tavern) |
-| Territory | Roots use **mass** (hay_stack + crate stack); no fake barn enclosure |
+| Territory | Roots use **mass** (`root_mass_00` + crate stack); no fake barn enclosure |
 | Composition | Three verbs; satellites \|d\|≤3; rug under hall talk |
 | Ensemble | Primary hall + secondary climb/roots + open mid aisle ≥30% |
 | Interact-ready | South stands at hall/climb/roots; door 9–12 clear ≥2 tiles |
 | Corridor | South door → axis clear; climb west, roots east of aisle |
-| Profile-wire | Paths reuse existing props; scene `profile_id` = `c28_giant_tree` |
+| Profile-wire | Paths use dedicated root/peg props + shared crates/lamps; scene `profile_id` = `c28_giant_tree` |
 | Bleed | No outdoor grass furniture |
 
 ## 禁止偷懒

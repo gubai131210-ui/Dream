@@ -11,7 +11,7 @@
 
 | Cluster | Verb | Anchor | Key props |
 | --- | --- | --- | --- |
-| `hall` | 公示 / 议事 | (7, 9) | notice + dining table + stools (approach south) |
+| `hall` | 公示 / 议事 | (7, 9) | `civic_board_00` + `meeting_table_00` + stools (approach south) |
 | `office` | 批文 / 归档 | (19, 7) | counter (visitor south) + ledger + dresser/shelf/crates mass |
 
 ## Enter / return
@@ -30,14 +30,14 @@ Lead-seeded: `SceneRouter.C06_TOWN_HALL_PATH`, square portal label「进入村�
 | --- | --- |
 | Profile block only | `scripts/interiors/interior_profiles.gd` → `"c06_town_hall"` |
 | This MD | `docs/TOWN_HALL_C06.md` |
-| Props | Reused: `notice`, `table_dining`, `stool`/`stool_tea`, `counter`, `ledger`, `dresser`, `shelf`, `crate_*`, `lamp_indoor` |
+| Props | `civic_board_00`, `meeting_table_00`, `stool`/`stool_tea`, `counter`, `ledger`, `dresser`, `shelf`, `crate_*`, `lamp_indoor` |
 
 **Silhouette:** room `26×19` plank; west meeting hall + east archive office; center south aisle `door_tx0–door_tx1 = 11–14`. ≠ school rows / clinic bed / library stacks / church nave / station waiting.
 
 ## Circulation
 
 - South door aisle columns **11–14** kept clear (hall east stool ≤ tx9; office west ≥ tx18).
-- Hall: free approach south of旁听凳 `(7,12)` and south of notice `(6,6)`.
+- Hall: free approach south of旁听凳 `(7,12)` and south of 公告板 `(6,6)`.
 - Office: staff at counter north (`via_stands.office [0,0]`); visitor approach south of办证柜 `(19,10)`.
 - Actor 镇长: `via_clusters` ≥2 (`office`, `hall`).
 
@@ -50,7 +50,7 @@ Local `PointLight2D` at hall lamp, office desk, soft north window — **no** ful
 - [ ] Hub → 广场 →「进入村公所」loads C06
 - [ ] South door / TopBar returns to square
 - [ ] South aisle walkable (not blocked by meeting or office props)
-- [ ] Hall reads as公告+议事 (notice + table seating) in ≤3s
+- [ ] Hall reads as公告+议事 (`civic_board` + meeting table seating) in ≤3s
 - [ ] Office reads as职员北 / 访客南 + archive mass east
 - [ ] 镇长 patrol visits office then hall stands
 - [ ] Local lamps only (no whole-room orange)
@@ -77,8 +77,8 @@ Blockers: none (user Godot playtest for colliders / prompts)
 | Territory | Office archive **mass** = dresser + 2 shelves + 2 crates east of staff; no pen needed. |
 | Composition | One verb/cluster; satellites \|d\|≤3; stools face table; staff≠visitor at counter. |
 | Ensemble | Primary hall table + secondary office; center aisle + ≥30% open floor south/center. |
-| Interact-ready | Approach tiles at notice south, meeting south `(7,12)`, visitor south of counter; patrol lane free; door aisle ≥2 tiles. |
-| Style / Craft | Read PNGs: notice board, dining table, ledger desk, shelf jars, dresser, stool, counter bell, indoor lamp — shared 3/4 wood ramp. |
+| Interact-ready | Approach tiles at civic board south, meeting south `(7,12)`, visitor south of counter; patrol lane free; door aisle ≥2 tiles. |
+| Style / Craft | Read PNGs: civic board, meeting table, ledger desk, shelf jars, dresser, stool, counter bell, indoor lamp — shared 3/4 wood ramp. |
 | Set-complete | Table + matching stools; shelf pair + crates as archive set. |
 | Bleed | Indoor props only; crates are outdoor storage sprites used as archive mass (no grass tile). |
 | FX | None required (no hearth/forge). |
