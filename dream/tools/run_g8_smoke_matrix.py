@@ -167,6 +167,24 @@ def smoke_bath_portal(godot: str) -> bool:
 	)
 
 
+def smoke_c62_secret(godot: str) -> bool:
+	return _run_script_smoke(
+		godot,
+		"res://tools/g8_c62_secret_smoke.gd",
+		"G8_C62",
+		ROOT / "docs" / "GOAL_G8_C62_SECRET_EVIDENCE.md",
+	)
+
+
+def smoke_interact_target(godot: str) -> bool:
+	return _run_script_smoke(
+		godot,
+		"res://tools/g8_interact_target_smoke.gd",
+		"G8_TARGET",
+		ROOT / "docs" / "GOAL_G8_INTERACT_TARGET_EVIDENCE.md",
+	)
+
+
 def main() -> int:
 	godot = find_godot()
 	print(
@@ -191,6 +209,8 @@ def main() -> int:
 	worldsys_ok = smoke_worldsys_activate(godot)
 	anim_ok = smoke_anim_fx(godot)
 	bath_ok = smoke_bath_portal(godot)
+	c62_ok = smoke_c62_secret(godot)
+	target_ok = smoke_interact_target(godot)
 	lines = [
 		"# Goal G8 smoke evidence",
 		"",
@@ -202,6 +222,8 @@ def main() -> int:
 		f"**Worldsys activate:** {'PASS' if worldsys_ok else 'FAIL'} — `GOAL_G8_WORLDSYS_ACTIVATE_EVIDENCE.md`",
 		f"**Anim FX (pose+leaf):** {'PASS' if anim_ok else 'FAIL'} — `GOAL_G8_ANIM_FX_EVIDENCE.md`",
 		f"**Bath portal enter:** {'PASS' if bath_ok else 'FAIL'} — `GOAL_G8_BATH_PORTAL_EVIDENCE.md`",
+		f"**C62 secret chain:** {'PASS' if c62_ok else 'FAIL'} — `GOAL_G8_C62_SECRET_EVIDENCE.md`",
+		f"**Interact target sync:** {'PASS' if target_ok else 'FAIL'} — `GOAL_G8_INTERACT_TARGET_EVIDENCE.md`",
 		"",
 		"| Scene | ERRORS | SCRIPT | Status |",
 		"| --- | ---: | ---: | --- |",
@@ -218,6 +240,8 @@ def main() -> int:
 			"- Worldsys-activate covers C58+C59+C60 (15 activations).",
 			"- Anim-FX asserts WorkPoseAnim ≥4 frames + shake_tree leaf_fall FX.",
 			"- Bath portal smoke asserts facade_bath cues + SceneRouter enter C43.",
+			"- C62 secret smoke walks forest→cave→waterfall→lake with Sprite2D façades.",
+			"- Interact-target smoke asserts hover/click share one executable hotspot.",
 			"- Interior open-FX activates C01 open_fx hotspots.",
 			"- Portal cue smoke asserts DoorFacade / doorstep sprites on square portals.",
 			"- User local Godot QA still required for click/animation fidelity.",
@@ -227,7 +251,7 @@ def main() -> int:
 	)
 	REPORT.write_text("\n".join(lines), encoding="utf-8")
 	print("wrote", REPORT.relative_to(ROOT))
-	return 0 if (
+	ok = (
 		passed == len(rows)
 		and interact_ok
 		and interior_ok
@@ -235,7 +259,10 @@ def main() -> int:
 		and worldsys_ok
 		and anim_ok
 		and bath_ok
-	) else 1
+		and c62_ok
+		and target_ok
+	)
+	return 0 if ok else 1
 
 
 if __name__ == "__main__":

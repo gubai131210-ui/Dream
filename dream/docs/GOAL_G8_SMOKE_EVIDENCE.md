@@ -8,7 +8,8 @@
 **Worldsys activate:** PASS — `GOAL_G8_WORLDSYS_ACTIVATE_EVIDENCE.md`
 **Anim FX (pose+leaf):** PASS — `GOAL_G8_ANIM_FX_EVIDENCE.md`
 **Bath portal enter:** PASS — `GOAL_G8_BATH_PORTAL_EVIDENCE.md`
-**C62 secret chain:** PASS — `GOAL_G8_C62_SECRET_EVIDENCE.md` (forest→cave→waterfall→lake)
+**C62 secret chain:** PASS — `GOAL_G8_C62_SECRET_EVIDENCE.md`
+**Interact target sync:** PASS — `GOAL_G8_INTERACT_TARGET_EVIDENCE.md`
 
 | Scene | ERRORS | SCRIPT | Status |
 | --- | ---: | ---: | --- |

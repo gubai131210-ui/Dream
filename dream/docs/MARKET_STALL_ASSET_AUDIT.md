@@ -43,7 +43,7 @@ C05 **状态机已进 A10**（程序化棚 + 换货）。
 2. ~~C05 六态同槽机~~ DONE  
 3. ~~蔬果摊改 `_06`~~ + **B09 切片进 `sprites/market/`**，OPEN/CLOSED 可用真棚体  
 4. Remap B11-02 常量名（stall_face / produce_crate / lumber）  
-5. 可选：空摊/锁定专用 B09 变体，减少 ColorRect 残留  
+5. ~~可选：空摊/锁定专用 B09 变体，减少 ColorRect 残留~~ **DONE** → `stall_empty_bay_00` / `stall_locked_board_00`（2026-09-13）
 
 ## 禁止偷懒
 

@@ -30,8 +30,8 @@ var body_path: String = "res://assets/sprites/market/stall_open_wood_00.png"
 var state: State = State.OPEN
 
 const DEFAULT_BODY := "res://assets/sprites/market/stall_open_wood_00.png"
-const LOCKED_BOARD := "res://assets/sprites/props/door_facade_00.png"
-const EMPTY_MARK := "res://assets/sprites/props/furrow_line_00.png"
+const LOCKED_BOARD := "res://assets/sprites/market/stall_locked_board_00.png"
+const EMPTY_MARK := "res://assets/sprites/market/stall_empty_bay_00.png"
 const AWNING_TEX := "res://assets/sprites/market/stall_awning_00.png"
 
 var _layer: Node2D

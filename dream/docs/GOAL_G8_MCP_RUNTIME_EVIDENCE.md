@@ -58,6 +58,8 @@
 | C11 station benches | `docs/evidence/g8_c11_station_benches.png` | 候车长椅专用 prop |
 | C25 river hide reed | `docs/evidence/g8_c25_river_hide_reed.png` | 芦苇丛专用 prop（非 hay） |
 | C31 sewer pipes | `docs/evidence/g8_c31_sewer_pipes.png` | 管道段专用 prop（非 barrel） |
+| Market EMPTY | `docs/evidence/g8_market_stall_empty.png` | C05 空位专用 bay |
+| Market LOCKED | `docs/evidence/g8_market_stall_locked.png` | C05 锁定专用板 |
 
 ## Runtime queries
 
