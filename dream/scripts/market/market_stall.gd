@@ -121,16 +121,16 @@ func apply_state(next: State) -> void:
 	set_meta("stall_state", state_name())
 
 
-func _try_body_sprite(scale_f: float, prefer_drape: bool = false, modulate: Color = Color.WHITE) -> bool:
+func _try_body_sprite(scale_f: float, prefer_drape: bool = false, tint: Color = Color.WHITE) -> bool:
 	var path := body_path
 	if prefer_drape:
 		path = "res://assets/sprites/market/awning_drape_cream_00.png"
 	if path.is_empty():
 		path = DEFAULT_BODY
-	return _add_sprite(path, Vector2(0, -8), scale_f, modulate)
+	return _add_sprite(path, Vector2(0, -8), scale_f, tint)
 
 
-func _add_sprite(path: String, pos: Vector2, scale_f: float, modulate: Color = Color.WHITE) -> bool:
+func _add_sprite(path: String, pos: Vector2, scale_f: float, tint: Color = Color.WHITE) -> bool:
 	var tex := WorldSpawnUtil.load_prop_texture(path)
 	if tex == null:
 		return false
@@ -138,7 +138,7 @@ func _add_sprite(path: String, pos: Vector2, scale_f: float, modulate: Color = C
 	spr.texture = tex
 	spr.position = pos
 	spr.scale = Vector2(scale_f, scale_f)
-	spr.modulate = modulate
+	spr.modulate = tint
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	spr.z_index = 2
 	_layer.add_child(spr)

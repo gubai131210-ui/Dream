@@ -23,7 +23,6 @@ var _btn_action: Button
 var _btn_close: Button
 var _tween: Tween
 var _caught: Dictionary = {}
-var _ripple: Node2D
 
 
 func _ready() -> void:

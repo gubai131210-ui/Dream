@@ -161,28 +161,30 @@
 
 ## 7. 场景清单（可玩区 + 室内壳）与用户 QA
 
+> **Agent MCP 列** = 本机 MCP 截图/激活证据（不代替手感）。**用户勾选** = 你本机 Godot 确认后才勾。
+
 ### 户外区（assembler 场景）
 
-| 区 | 场景 | 交互/门面要点 | 用户勾选 |
-| --- | --- | --- | --- |
-| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、工作环姿态 | [ ] |
-| 市集 | `market_street` | 木棚摊位、DistrictInteract | [ ] |
-| 农田 | `farmland` | 垄线、栅栏、DistrictInteract | [ ] |
-| 住宅 | `village_residential` | 门阶/拱门、DistrictInteract | [ ] |
-| 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [ ] |
-| 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract | [ ] |
-| 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [ ] |
-| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 | [ ] |
-| 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [ ] |
+| 区 | 场景 | 交互/门面要点 | Agent MCP | 用户勾选 |
+| --- | --- | --- | --- | --- |
+| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、工作环姿态 | [x] idle+井/灯点击；activate 8/8 + worldsys 15 | [ ] |
+| 市集 | `market_street` | 木棚摊位、DistrictInteract | [x] `g8_market_idle.png` 木棚可见 | [ ] |
+| 农田 | `farmland` | 垄线、栅栏、DistrictInteract | [ ] load smoke only | [ ] |
+| 住宅 | `village_residential` | 门阶/拱门、DistrictInteract | [ ] load smoke only | [ ] |
+| 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [ ] load smoke only | [ ] |
+| 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract | [ ] load smoke only | [ ] |
+| 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] `g8_river_*` + `g8_lake_idle.png`；笼 place→ready | [ ] |
+| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 | [ ] load smoke only | [ ] |
+| 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [ ] load smoke only | [ ] |
 
 ### 室内（抽样必测）
 
-| 室 | 要点 | 用户勾选 |
-| --- | --- | --- |
-| C01 家 | dresser/chest 开合帧、返回门 | [ ] |
-| C06 议事厅 | 门户进出 | [ ] |
-| C40/C43 博物/浴 | 立面可发现 → 进门 | [ ] |
-| Wave A2–F 其余已锁室 | 按 PHASE5 进出各一次 | [ ] |
+| 室 | 要点 | Agent MCP | 用户勾选 |
+| --- | --- | --- | --- |
+| C01 家 | dresser/chest 开合帧、返回门 | [x] idle + dresser OpenFX | [ ] |
+| C06 议事厅 | 门户进出 | [ ] load smoke only | [ ] |
+| C40/C43 博物/浴 | 立面可发现 → 进门 | [x] 广场→博物馆进门截图 | [ ] |
+| Wave A2–F 其余已锁室 | 按 PHASE5 进出各一次 | [ ] 72/72 load；未逐室 MCP | [ ] |
 
 ### 本机 QA 步骤（请你跑，避免中文路径 CLI 损文件）
 
