@@ -149,10 +149,12 @@ func _spawn_or_replace_actor(entry: Dictionary) -> void:
 	if _ysort == null:
 		return
 	if _demo_actor != null and is_instance_valid(_demo_actor):
+		_demo_actor.name = "NpcRingDemoActor_dying"
 		_demo_actor.queue_free()
 		_demo_actor = null
 	var old := _ysort.get_node_or_null(DEMO_ACTOR_NAME)
 	if old:
+		old.name = "NpcRingDemoActor_dying"
 		old.queue_free()
 
 	var route: Array[Vector2] = []
@@ -184,6 +186,8 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 		return
 	var old := _ysort.get_node_or_null("WorkPoseCue")
 	if old:
+		# queue_free is deferred — rename so the replacement can reuse the name this frame.
+		old.name = "WorkPoseCue_dying"
 		old.queue_free()
 	var work_id := str(entry.get("id", ""))
 	var prop_path := ""

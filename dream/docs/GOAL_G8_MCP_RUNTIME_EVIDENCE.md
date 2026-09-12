@@ -29,6 +29,9 @@
 | Lake house idle | `docs/evidence/g8_lake_house_idle.png` | 湖屋 DistrictInteract |
 | C06 town hall | `docs/evidence/g8_c06_town_hall_idle.png` | 议事厅室内 + 镇长 Anim + Portal_Return cues |
 | C43 bathhouse | `docs/evidence/g8_c43_bathhouse_idle.png` | 浴场室内 props + return portal |
+| C04 tavern | `docs/evidence/g8_c04_tavern_idle.png` | 酒馆室内抽样 |
+| C04 smith | `docs/evidence/g8_c04_smith_idle.png` | 铁匠铺室内抽样 |
+| Square work ring | `docs/evidence/g8_square_work_pose.png` | C53 工作环 InfoPanel（打铁环）+ 铁匠 demo actor |
 
 ## Runtime queries
 
@@ -41,6 +44,8 @@
 - River `FishCage_river_west_bend_cage`: after soak → `prompt_text=收取渔获` / fish_name 河鲦；collect resets empty
 - C06 `镇长/Visual/Anim` present after `npc/mayor` pack; prior `no walk frames for 'mayor'` cleared
 - Interior profile actor ids: **0 missing** packs (`list_missing_npc_packs.py`)
+- Headless `g8_anim_fx_smoke.gd`: WorkPoseAnim frames=4 + shake_tree `FX_leaf_fall` **PASS**
+- Fixed `NpcRoutineDemo` name collision on WorkPoseCue / demo actor respawn (rename before `queue_free`)
 
 ## Agent reviews this batch
 
