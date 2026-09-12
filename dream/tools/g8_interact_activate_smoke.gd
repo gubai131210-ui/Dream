@@ -62,15 +62,33 @@ func _probe(host: Node2D) -> void:
 		hs.emit_signal("activated", hs)
 		_ok += 1
 		print("G8_INTERACT_SMOKE: activated ", id)
-	create_timer(0.75).timeout.connect(func() -> void:
+	create_timer(0.9).timeout.connect(func() -> void:
 		for id in ["shake_tree", "well_water", "crate_search", "feed_critter", "lamp_toggle"]:
 			if not found.has(id):
 				continue
 			var hs2: Node = found[id]
 			if not is_instance_valid(hs2):
 				_fail(id, "freed after activate")
+				continue
+			print("G8_INTERACT_SMOKE: post-ok ", id)
+			if id == "lamp_toggle":
+				continue
+			# Action FX should leave an AnimatedSprite2D child or have already played.
+			var visual: Node = hs2.get_node_or_null("Visual")
+			var has_fx := false
+			if visual:
+				for c in visual.get_children():
+					if c is AnimatedSprite2D:
+						has_fx = true
+						break
+			if has_fx:
+				print("G8_INTERACT_SMOKE: fx-present ", id)
 			else:
-				print("G8_INTERACT_SMOKE: post-ok ", id)
+				# Soft: FX may free before this timer; require PropSprite still valid.
+				if hs2.get_node_or_null("Visual/PropSprite") == null:
+					_fail(id, "PropSprite lost after activate")
+				else:
+					print("G8_INTERACT_SMOKE: fx-cleared-ok ", id)
 		_finish(0 if _failures.is_empty() else 1)
 	)
 

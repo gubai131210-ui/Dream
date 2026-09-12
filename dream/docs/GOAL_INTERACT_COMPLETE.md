@@ -204,7 +204,7 @@
 | 2 | 全户外+室内门面/道具/可进出 | load smoke 全 areas+interiors(+hubs)；portal cue smoke；C01 open FX | **加载 PROVEN**；进出手感待 §7 |
 | 3 | 统称权威 | 本文件 + `ASSET_TAXONOMY` 回链 | **PROVEN** |
 | 4 | 多团队流水线门禁 | §2 角色表；Style/Anim/Cohere agent PASS；qa_* 脚本 | **PROVEN（本轮批次）** |
-| 5 | MCP/运行时交互动画证据 | headless activate + open FX + portal cues；tomyud1 截图 **不可用** | **部分**：无 ERROR + 激活日志；**缺截图/用户目视** |
+| 5 | MCP/运行时交互动画证据 | headless activate + open FX + portal cues；MCP 插件编译已修（去根 `.gdignore`）；tomyud1 **6506 需 Cursor 重开或本地起 server** | **部分**：激活日志 PROVEN；**截图仍待 MCP server** |
 
 **结论：** 在 §7 用户勾选与（可选）MCP 截图补齐前，**不得**将 Goal 标 complete。
 
