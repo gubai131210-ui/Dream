@@ -53,6 +53,11 @@
 | C29 ruins | `docs/evidence/g8_c29_ruins_idle.png` | 遗迹主殿 |
 | C30 cemetery | `docs/evidence/g8_c30_cemetery_idle.png` | 墓地区 |
 | C44 inn | `docs/evidence/g8_c44_inn_idle.png` | 旅馆大厅 |
+| C07 school semantic | `docs/evidence/g8_c07_school_semantic.png` | 黑板 + 课桌专用 prop |
+| C10 church altar | `docs/evidence/g8_c10_church_altar.png` | 祭坛专用 prop（非 counter） |
+| C11 station benches | `docs/evidence/g8_c11_station_benches.png` | 候车长椅专用 prop |
+| C25 river hide reed | `docs/evidence/g8_c25_river_hide_reed.png` | 芦苇丛专用 prop（非 hay） |
+| C31 sewer pipes | `docs/evidence/g8_c31_sewer_pipes.png` | 管道段专用 prop（非 barrel） |
 
 ## Runtime queries
 

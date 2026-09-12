@@ -108,6 +108,13 @@ const P_STALL_CORNER_NW := DIR_INTERIOR_PROP + "/stall_corner_nw_00.png"
 const P_STALL_CORNER_NE := DIR_INTERIOR_PROP + "/stall_corner_ne_00.png"
 const P_STALL_CORNER_SW := DIR_INTERIOR_PROP + "/stall_corner_sw_00.png"
 const P_STALL_CORNER_SE := DIR_INTERIOR_PROP + "/stall_corner_se_00.png"
+# Semantic signature props (replace dining/counter/hay/barrel proxies)
+const P_ALTAR := DIR_INTERIOR_PROP + "/altar_00.png"
+const P_WAITING_BENCH := DIR_INTERIOR_PROP + "/waiting_bench_00.png"
+const P_BLACKBOARD := DIR_INTERIOR_PROP + "/blackboard_00.png"
+const P_SCHOOL_DESK := DIR_INTERIOR_PROP + "/school_desk_00.png"
+const P_SEWER_PIPE := DIR_INTERIOR_PROP + "/sewer_pipe_00.png"
+const P_REED_CLUMP := DIR_INTERIOR_PROP + "/reed_clump_00.png"
 
 const RES := "res://scenes/areas/village_residential/village_residential.tscn"
 const FARM := "res://scenes/areas/farm_residential/farm_residential.tscn"
@@ -1095,26 +1102,26 @@ static func _all() -> Dictionary:
 			"clusters": [
 				# North wall: board + flanking lamps + west-offset lectern (aisle 12–15 clear).
 				_cluster("blackboard", 14, 3, [
-					_m(P_NOTICE, 0, 0, "黑板", "北壁黑板（授课锚）。", 1.05),
+					_m(P_BLACKBOARD, 0, 0, "黑板", "北壁黑板（授课锚）。", 1.05),
 					_m(P_LAMP_INDOOR, -4, 0, "西壁灯", "黑板西侧教室灯。", PROP),
 					_m(P_LAMP_INDOOR, 4, 0, "东壁灯", "黑板东侧教室灯。", PROP),
-					_m(P_TABLE_DINING, -4, 2, "讲台", "偏西讲台（让出中轴通廊）。", 0.8),
+					_m(P_SCHOOL_DESK, -4, 2, "讲台", "偏西讲台（让出中轴通廊）。", 0.8),
 					_m(P_STOOL, -4, 3, "教凳", "讲台南教凳（面向课桌）。", 0.5),
 					_m(P_LEDGER, -3, 1, "教案", "讲台旁教案册。", 0.65),
 				]),
 				# Two columns × three rows facing north; stools south of desks; aisle 12–15 open.
 				_cluster("desks", 6, 7, [
-					_m(P_TABLE_DINING, 0, 0, "前排课桌", "西列前排（面北黑板）。", 0.72),
+					_m(P_SCHOOL_DESK, 0, 0, "前排课桌", "西列前排（面北黑板）。", 0.72),
 					_m(P_STOOL, 0, 2, "课凳", "西列前排课凳（南向站位可交互）。", 0.48),
-					_m(P_TABLE_DINING, 14, 0, "前排课桌", "东列前排（面北黑板）。", 0.72),
+					_m(P_SCHOOL_DESK, 14, 0, "前排课桌", "东列前排（面北黑板）。", 0.72),
 					_m(P_STOOL, 14, 2, "课凳", "东列前排课凳（南向站位可交互）。", 0.48),
-					_m(P_TABLE_DINING, 0, 3, "中排课桌", "西列中排。", 0.72),
+					_m(P_SCHOOL_DESK, 0, 3, "中排课桌", "西列中排。", 0.72),
 					_m(P_STOOL, 0, 5, "课凳", "西列中排课凳。", 0.48),
-					_m(P_TABLE_DINING, 14, 3, "中排课桌", "东列中排。", 0.72),
+					_m(P_SCHOOL_DESK, 14, 3, "中排课桌", "东列中排。", 0.72),
 					_m(P_STOOL, 14, 5, "课凳", "东列中排课凳。", 0.48),
-					_m(P_TABLE_DINING, 0, 6, "后排课桌", "西列后排（南门带空出）。", 0.72),
+					_m(P_SCHOOL_DESK, 0, 6, "后排课桌", "西列后排（南门带空出）。", 0.72),
 					_m(P_STOOL, 0, 8, "课凳", "西列后排课凳。", 0.48),
-					_m(P_TABLE_DINING, 14, 6, "后排课桌", "东列后排（南门带空出）。", 0.72),
+					_m(P_SCHOOL_DESK, 14, 6, "后排课桌", "东列后排（南门带空出）。", 0.72),
 					_m(P_STOOL, 14, 8, "课凳", "东列后排课凳。", 0.48),
 				]),
 				# East book corner — secondary zone, not a second classroom.
@@ -1279,7 +1286,7 @@ static func _all() -> Dictionary:
 			"clusters": [
 				# Verb: 祭礼 — north sanctuary; clergy south of altar facing nave.
 				_cluster("altar", 13, 4, [
-					_m(P_COUNTER, 0, 0, "祭坛", "北向长祭坛（礼堂主锚）。", 1.0),
+					_m(P_ALTAR, 0, 0, "祭坛", "北向长祭坛（礼堂主锚）。", 1.0),
 					_m(P_NOTICE, 0, -2, "经文牌", "北壁经文/彩窗下告示。", 0.8),
 					_m(P_LEDGER, -2, 0, "经书", "祭坛西侧经书。", 0.65),
 					_m(P_LAMP_INDOOR, 2, -1, "圣灯", "祭坛东侧圣灯。", PROP),
@@ -1337,13 +1344,13 @@ static func _all() -> Dictionary:
 			"rug": {"ox": 7, "oy": 9},
 			"window": true,
 			"clusters": [
-				# Verb: 候车 — long bench rows + timetable (table_dining = bench proxy).
+				# Verb: 候车 — dedicated waiting benches + timetable.
 				_cluster("waiting", 6, 7, [
-					_m(P_TABLE_DINING, 0, 0, "候车长椅", "北排西座（候车）。", 0.85),
-					_m(P_TABLE_DINING, 3, 0, "候车长椅", "北排中座（候车）。", 0.85),
-					_m(P_TABLE_DINING, 6, 0, "候车长椅", "北排东座（贴通廊西缘）。", 0.85),
-					_m(P_TABLE_DINING, 0, 3, "候车长椅", "南排西座（候车）。", 0.85),
-					_m(P_TABLE_DINING, 3, 3, "候车长椅", "南排中座（候车）。", 0.85),
+					_m(P_WAITING_BENCH, 0, 0, "候车长椅", "北排西座（候车）。", 0.85),
+					_m(P_WAITING_BENCH, 3, 0, "候车长椅", "北排中座（候车）。", 0.85),
+					_m(P_WAITING_BENCH, 6, 0, "候车长椅", "北排东座（贴通廊西缘）。", 0.85),
+					_m(P_WAITING_BENCH, 0, 3, "候车长椅", "南排西座（候车）。", 0.85),
+					_m(P_WAITING_BENCH, 3, 3, "候车长椅", "南排中座（候车）。", 0.85),
 					_m(P_NOTICE, 3, -3, "时刻表", "班次与站台告示。", 0.85),
 					_m(P_LAMP_SHOP, 5, -2, "站厅灯", "候车厅壁灯。", PROP),
 					_m(P_STOOL, -2, 1, "边座", "长椅端头短坐。", 0.55),
@@ -1606,9 +1613,9 @@ static func _all() -> Dictionary:
 			"clusters": [
 				# West reed mouth — dense damp bank; leave south approach at (0,2).
 				_cluster("reed", 4, 7, [
-					_m(P_HAY, 0, 0, "芦苇丛", "西岸芦苇丛掩口（主锚）。", 0.9),
+					_m(P_REED_CLUMP, 0, 0, "芦苇丛", "西岸芦苇丛掩口（主锚）。", 0.9),
 					_m(P_HERBS, -2, -1, "湿苇梢", "潮气打湿的苇梢。", 0.55),
-					_m(P_HAY, 2, -1, "侧苇丛", "口缘侧苇。", 0.75),
+					_m(P_REED_CLUMP, 2, -1, "侧苇丛", "口缘侧苇。", 0.75),
 					_m(P_BASKET, 2, 1, "采苇篮", "割苇篮（南站位可交互）。", 0.75),
 					_m(P_SACK0, 0, 2, "湿袋", "岸边湿麻袋。", 0.55),
 					_m(P_LAMP_FARM, -1, -2, "苇口灯", "隐径入口微光。", PROP),
@@ -1828,11 +1835,11 @@ static func _all() -> Dictionary:
 			"rug": null,
 			"window": false,
 			"clusters": [
-				# West horizontal pipe run — barrels read as pipe mass along corridor.
+				# West horizontal pipe run — dedicated pipe segments along corridor.
 				_cluster("pipe_run", 6, 4, [
-					_m(P_BARREL, 0, 0, "主管段", "西廊排污主管段。", 0.75),
-					_m(P_BARREL, 2, 0, "接管段", "水平接管。", 0.72),
-					_m(P_BARREL_KEG, 4, 0, "支管段", "横置支管。", 0.7),
+					_m(P_SEWER_PIPE, 0, 0, "主管段", "西廊排污主管段。", 0.75),
+					_m(P_SEWER_PIPE, 2, 0, "接管段", "水平接管。", 0.72),
+					_m(P_SEWER_PIPE, 4, 0, "支管段", "横置支管。", 0.7),
 					_m(P_CRATE0, 1, 1, "闸门箱", "管旁闸阀检修箱。", 0.7),
 					_m(P_CRATE1, 3, 1, "法兰箱", "管件法兰箱。", 0.65),
 					_m(P_TOOL_RACK, -1, 0, "管钳架", "管钳与扳手架。", 0.65),

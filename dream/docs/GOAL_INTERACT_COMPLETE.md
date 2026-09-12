@@ -105,7 +105,7 @@
 | 优先级 | 缺口 |
 | --- | ---:|
 | P0 | **用户 Godot QA Waves A2–F + §7 勾选** |
-| P1 | 姿态/摊位 ArtGen 继续抛光（非阻塞） |
+| P1 | 姿态/摊位 ArtGen 继续抛光（非阻塞）；室内语义代理本轮已关 |
 | P2 | tomyud1 MCP 截图证据（**全户外 + C01/C06/C11/C12/C16/C17/C28–C30/C40/C43/C44**；C62 全链冒烟 PASS；仍不代替 §7） |
 
 ---
@@ -155,6 +155,7 @@
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
 | Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
 | 姿态/摊位 ArtGen 抛光 | work_poses / market | **StyleQA GREEN**（32×48×4，uniq≥80）；awning PNG |
+| ~~室内语义代理（祭坛/课桌/候车椅/黑板/芦苇/管道）~~ | C07/C10/C11/C25/C31 | **DONE** → dedicated props + `qa_semantic_interior_props` GREEN |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据
@@ -167,11 +168,13 @@
 - [`GOAL_G8_ANIM_FX_EVIDENCE.md`](GOAL_G8_ANIM_FX_EVIDENCE.md) — 工作姿态×4 + 摇树 leaf_fall  
 - [`GOAL_G8_BATH_PORTAL_EVIDENCE.md`](GOAL_G8_BATH_PORTAL_EVIDENCE.md) — 浴场 façade + SceneRouter 进门  
 - [`GOAL_G8_C62_SECRET_EVIDENCE.md`](GOAL_G8_C62_SECRET_EVIDENCE.md) — 密道门脸 + 进洞冒烟 + MCP 截图  
+- [`GOAL_G8_SEMANTIC_INTERIOR_EVIDENCE.md`](GOAL_G8_SEMANTIC_INTERIOR_EVIDENCE.md) — 室内语义专用 prop  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 12 groups GREEN  
 - `tools/qa_no_placeholder_visuals.py` — GREEN  
 - `tools/qa_interact_sprite_inventory.py` — GREEN（kits + focus/open FX）  
 - `tools/qa_work_pose_style.py` — GREEN（C53 pose sheets）  
+- `tools/qa_semantic_interior_props.py` — GREEN（祭坛/候车椅/黑板/课桌/芦苇/管道）  
 
 ---
 
