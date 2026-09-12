@@ -104,7 +104,7 @@
 | --- | ---:|
 | P0 | **用户 Godot QA Waves A2–F + §7 勾选** |
 | P1 | 姿态/摊位 ArtGen 继续抛光（非阻塞） |
-| P2 | tomyud1 MCP 截图证据（可选；headless smoke 已有） |
+| P2 | tomyud1 MCP 截图证据（**本轮已覆盖全户外 + C01/C06/C43**；仍不代替 §7 用户手感） |
 
 ---
 
