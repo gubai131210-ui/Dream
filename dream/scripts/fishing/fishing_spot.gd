@@ -218,33 +218,76 @@ func play_miss_fx() -> void:
 
 
 func _pulse_ring(color: Color, duration: float) -> void:
+	var splash_tex := WorldSpawnUtil.load_prop_texture("res://assets/sprites/fx/fish_splash_00.png")
+	if splash_tex != null:
+		var spr := Sprite2D.new()
+		spr.texture = splash_tex
+		spr.centered = true
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		spr.modulate = color
+		spr.position = Vector2(0, 2)
+		spr.scale = Vector2(0.7, 0.55)
+		_fx_layer.add_child(spr)
+		var tw := create_tween()
+		tw.tween_property(spr, "scale", Vector2(1.35, 0.9), duration)
+		tw.parallel().tween_property(spr, "modulate:a", 0.0, duration)
+		tw.tween_callback(spr.queue_free)
+		return
 	var ring := ColorRect.new()
 	ring.size = Vector2(12, 6)
 	ring.position = Vector2(-6, 0)
 	ring.color = color
 	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_fx_layer.add_child(ring)
-	var tw := create_tween()
-	tw.tween_property(ring, "size", Vector2(40, 14), duration)
-	tw.parallel().tween_property(ring, "position", Vector2(-20, -4), duration)
-	tw.parallel().tween_property(ring, "modulate:a", 0.0, duration)
-	tw.tween_callback(ring.queue_free)
+	var tw2 := create_tween()
+	tw2.tween_property(ring, "size", Vector2(40, 14), duration)
+	tw2.parallel().tween_property(ring, "position", Vector2(-20, -4), duration)
+	tw2.parallel().tween_property(ring, "modulate:a", 0.0, duration)
+	tw2.tween_callback(ring.queue_free)
 
 
 func _spawn_bubble(offset: Vector2) -> void:
+	var bubble_tex := WorldSpawnUtil.load_prop_texture("res://assets/sprites/fx/fish_bubble_00.png")
+	if bubble_tex != null:
+		var spr := Sprite2D.new()
+		spr.texture = bubble_tex
+		spr.centered = true
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		spr.position = offset + Vector2(2, 2)
+		spr.scale = Vector2(0.7, 0.7)
+		_fx_layer.add_child(spr)
+		var tw := create_tween()
+		tw.tween_property(spr, "position", offset + Vector2(0, -18), 0.9)
+		tw.parallel().tween_property(spr, "modulate:a", 0.0, 0.9)
+		tw.tween_callback(spr.queue_free)
+		return
 	var b := ColorRect.new()
 	b.size = Vector2(5, 5)
 	b.position = offset
 	b.color = Color(0.75, 0.9, 1.0, 0.7)
 	b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_fx_layer.add_child(b)
-	var tw := create_tween()
-	tw.tween_property(b, "position", offset + Vector2(0, -18), 0.9)
-	tw.parallel().tween_property(b, "modulate:a", 0.0, 0.9)
-	tw.tween_callback(b.queue_free)
+	var tw2 := create_tween()
+	tw2.tween_property(b, "position", offset + Vector2(0, -18), 0.9)
+	tw2.parallel().tween_property(b, "modulate:a", 0.0, 0.9)
+	tw2.tween_callback(b.queue_free)
 
 
 func _spawn_splash() -> void:
+	var splash_tex := WorldSpawnUtil.load_prop_texture("res://assets/sprites/fx/fish_splash_00.png")
+	if splash_tex != null:
+		var spr := Sprite2D.new()
+		spr.texture = splash_tex
+		spr.centered = true
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		spr.position = Vector2(0, -2)
+		spr.scale = Vector2(0.85, 0.85)
+		_fx_layer.add_child(spr)
+		var tw := create_tween()
+		tw.tween_property(spr, "position", Vector2(0, -14), 0.35)
+		tw.parallel().tween_property(spr, "modulate:a", 0.0, 0.35)
+		tw.tween_callback(spr.queue_free)
+		return
 	for i in 3:
 		var drop := ColorRect.new()
 		drop.size = Vector2(3, 6)
@@ -252,10 +295,10 @@ func _spawn_splash() -> void:
 		drop.color = Color(0.85, 0.95, 1.0, 0.85)
 		drop.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_fx_layer.add_child(drop)
-		var tw := create_tween()
-		tw.tween_property(drop, "position", drop.position + Vector2(randf_range(-8, 8), -16), 0.35)
-		tw.parallel().tween_property(drop, "modulate:a", 0.0, 0.35)
-		tw.tween_callback(drop.queue_free)
+		var tw2 := create_tween()
+		tw2.tween_property(drop, "position", drop.position + Vector2(randf_range(-8, 8), -16), 0.35)
+		tw2.parallel().tween_property(drop, "modulate:a", 0.0, 0.35)
+		tw2.tween_callback(drop.queue_free)
 
 
 func _try_water_frame() -> void:

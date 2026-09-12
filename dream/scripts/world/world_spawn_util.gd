@@ -124,14 +124,29 @@ static func attach_prop_sprite(visual: Node2D, path: String, scale_f: float = 0.
 
 const DOORSTEP_MAT := "res://assets/sprites/props/doorstep_mat_00.png"
 const DOOR_ARCH_CUE := "res://assets/sprites/props/door_arch_cue_00.png"
+const DOOR_FACADE := "res://assets/sprites/props/door_facade_00.png"
 
 
-## Always-visible portal doorstep + arch sprites (G8 — replaces Polygon2D cues).
-## Returns { "cue": Sprite2D, "arch": Sprite2D } for hover/pulse modulate.
+## Always-visible portal doorstep + arch + façade sprites (G8).
+## Returns { "cue": CanvasItem, "arch": CanvasItem, "facade": CanvasItem }.
 static func attach_portal_cues(area: Area2D, size: Vector2) -> Dictionary:
-	var out := {"cue": null, "arch": null}
+	var out := {"cue": null, "arch": null, "facade": null}
 	if area == null:
 		return out
+	var facade_tex := load_prop_texture(DOOR_FACADE)
+	if facade_tex != null:
+		var spr_f := Sprite2D.new()
+		spr_f.name = "DoorFacade"
+		spr_f.texture = facade_tex
+		spr_f.centered = true
+		spr_f.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		var target_h := maxf(size.y * 0.95, 36.0)
+		var sy := target_h / float(facade_tex.get_height())
+		spr_f.scale = Vector2(sy, sy)
+		spr_f.position = Vector2(0, -size.y * 0.12)
+		spr_f.z_index = -2
+		area.add_child(spr_f)
+		out["facade"] = spr_f
 	var mat_tex := load_prop_texture(DOORSTEP_MAT)
 	var arch_tex := load_prop_texture(DOOR_ARCH_CUE)
 	var cue: CanvasItem
@@ -167,10 +182,11 @@ static func attach_portal_cues(area: Area2D, size: Vector2) -> Dictionary:
 		spr_a.texture = arch_tex
 		spr_a.centered = true
 		spr_a.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		var target_h := maxf(size.y * 0.55, 22.0)
-		var sy := target_h / float(arch_tex.get_height())
-		spr_a.scale = Vector2(sy, sy)
-		spr_a.position = Vector2(0, -size.y * 0.2)
+		var target_ha := maxf(size.y * 0.55, 22.0)
+		var sya := target_ha / float(arch_tex.get_height())
+		spr_a.scale = Vector2(sya, sya)
+		spr_a.position = Vector2(0, -size.y * 0.28)
+		spr_a.z_index = 1
 		area.add_child(spr_a)
 		arch = spr_a
 	else:

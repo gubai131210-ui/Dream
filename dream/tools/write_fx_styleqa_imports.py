@@ -1,25 +1,13 @@
 #!/usr/bin/env python3
+"""Write .import sidecars for fishing/fx PNGs used by StyleQA batch."""
 import hashlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PROP = ROOT / "assets/sprites/props"
-params = (PROP / "bench_0.png.import").read_text(encoding="utf-8").split("[params]")[1]
-names = [
-	"track_sleeper_00",
-	"track_rail_00",
-	"fence_post_00",
-	"bridge_plank_00",
-	"doorstep_mat_00",
-	"door_arch_cue_00",
-	"furrow_line_00",
-	"door_facade_00",
-]
-for name in names:
-	png = PROP / f"{name}.png"
-	if not png.exists():
-		print("missing", name)
-		continue
+
+
+def write_import(png: Path, template_import: Path) -> None:
+	params = template_import.read_text(encoding="utf-8").split("[params]")[1]
 	rel = "res://" + png.relative_to(ROOT).as_posix()
 	h = hashlib.md5(rel.encode()).hexdigest()
 	uid = "uid://" + hashlib.md5(png.name.encode()).hexdigest()[:13]
@@ -40,4 +28,16 @@ for name in names:
 		+ params
 	)
 	(png.parent / f"{png.name}.import").write_text(content, encoding="utf-8", newline="\n")
-	print("import", name)
+	print("import", png.relative_to(ROOT))
+
+
+def main() -> None:
+	fx_tpl = ROOT / "assets/sprites/fx/leaf_fall_00.png.import"
+	for name in ("fish_bubble_00", "fish_splash_00", "leaf_fall_00", "leaf_fall_01", "leaf_fall_02", "leaf_fall_03"):
+		png = ROOT / "assets/sprites/fx" / f"{name}.png"
+		if png.exists():
+			write_import(png, fx_tpl)
+
+
+if __name__ == "__main__":
+	main()

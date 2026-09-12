@@ -32,8 +32,8 @@ const INTERACT_DEFS := [
 		"desc": "摇晃庭树，落下一片叶子。",
 		"pos": Vector2(180, 300),
 		"color": Color(0.35, 0.75, 0.4, 0.92),
-		"sprite": "",
-		"scale": 0.0,
+		"sprite": "res://assets/sprites/trees/grounded/tree_00.png",
+		"scale": 0.42,
 	},
 	{
 		"id": "notice_board",
@@ -148,7 +148,9 @@ func setup(host: Node2D, _top_bar: Control = null) -> void:
 		if interact_id == "lamp_toggle":
 			_setup_lamp(hs)
 		if interact_id == "shake_tree":
-			_setup_tree_marker(hs)
+			# Only fall back to polygon canopy if tree sprite failed to attach.
+			if hs.get_node_or_null("Visual/PropSprite") == null:
+				_setup_tree_marker(hs)
 		hs.activated.connect(func(_h: InteractableHotspot) -> void:
 			_handle_interact(interact_id, title, desc)
 		)

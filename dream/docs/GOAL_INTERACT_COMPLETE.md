@@ -122,8 +122,8 @@
 | G4 | **DONE (code)** — 市集/农田/深林 + 河/湖/站/住宅各 ≥2 DistrictInteractKit prop |
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
-| G7 | **IN PROGRESS** — bobber 精灵优先；NPC 工作环短 cue；C22 渔笼河/湖已接线（演示 6s soak）；完整职业姿态 sheet 仍缺 |
-| G8 | **IN PROGRESS** — 门阶/拱门/作物垄 sprite 已接线；StyleQA + 季节罩仍开放 |
+| G7 | **DONE (code)** — bobber 精灵；NPC 工作环短 cue；C22 渔笼；职业姿态 sheet StyleQA 仍开放 |
+| G8 | **IN PROGRESS** — 门脸 façade + StyleQA 批次；季节罩仍开放 |
 
 ### G8 已知残留（不可假装清零）
 
@@ -134,9 +134,11 @@
 | ~~bridge label_proxy~~ | village_square | **DONE** → `bridge_plank_00` |
 | ~~程序门阶多边形~~ | area_craft / WorldSpawnUtil / interior | **DONE** → `doorstep_mat` + `door_arch_cue` |
 | ~~作物床 ColorRect 垄线~~ | area_craft crop beds | **DONE** → `furrow_line_00` |
+| ~~摇树 Polygon 占位~~ | WorldInteractKit | **DONE** → `trees/grounded/tree_00` |
+| ~~孤岛传送无门脸~~ | museum/bath 等 portal | **DONE** → `door_facade_00` on all portals |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
-| G2/G6/G8 PIL 帧 | leaf/drawer/chest/track/fence/door/furrow | StyleQA 重绘 |
-| 完整建筑门脸立面 | 各区 exterior façades | 独立 facade sheet（非 cue） |
+| G2/G6 PIL 帧深度抛光 | drawer/chest/well_rope/crate | StyleQA 继续 |
+| 完整独立建筑 façade sheet | 博物馆/浴场等无 building_* 的入口 | 可换专用 building 图（facade 已可发现） |
 
 ## Related
 
