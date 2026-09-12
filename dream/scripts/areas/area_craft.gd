@@ -552,7 +552,14 @@ func make_hotspot(parent: Node2D, title: String, desc: String, pos: Vector2, siz
 	return hs
 
 
-func make_portal(parent: Node2D, title: String, scene_path: String, pos: Vector2, size: Vector2 = Vector2(80, 48)) -> Area2D:
+func make_portal(
+	parent: Node2D,
+	title: String,
+	scene_path: String,
+	pos: Vector2,
+	size: Vector2 = Vector2(80, 48),
+	facade_path: String = "",
+) -> Area2D:
 	title = repair_user_text(title)
 	var show_marker := bool(ProjectSettings.get_setting("debug/show_interaction_markers", false))
 	var area := Area2D.new()
@@ -564,10 +571,11 @@ func make_portal(parent: Node2D, title: String, scene_path: String, pos: Vector2
 	rect.size = size
 	shape.shape = rect
 	area.add_child(shape)
-	# G8: doorstep mat + arch sprites (fallback polygon inside WorldSpawnUtil).
-	var cues := WorldSpawnUtil.attach_portal_cues(area, size)
+	var facade := facade_path if not facade_path.is_empty() else WorldSpawnUtil.DOOR_FACADE
+	var cues := WorldSpawnUtil.attach_portal_cues(area, size, facade)
 	var cue: CanvasItem = cues.get("cue")
 	var arch: CanvasItem = cues.get("arch")
+	var facade_node: CanvasItem = cues.get("facade")
 	var hint := Polygon2D.new()
 	hint.name = "PortalMarker"
 	hint.color = Color(0.95, 0.72, 0.28, 0.86)
@@ -601,6 +609,8 @@ func make_portal(parent: Node2D, title: String, scene_path: String, pos: Vector2
 			cue.modulate = Color(1.2, 1.15, 0.9, 1.0)
 		if arch:
 			arch.modulate = Color(1.25, 1.2, 0.95, 1.0)
+		if facade_node:
+			facade_node.modulate = Color(1.1, 1.08, 0.95, 1.0)
 	)
 	area.mouse_exited.connect(func():
 		label.visible = show_marker
@@ -608,6 +618,8 @@ func make_portal(parent: Node2D, title: String, scene_path: String, pos: Vector2
 			cue.modulate = Color.WHITE
 		if arch:
 			arch.modulate = Color.WHITE
+		if facade_node:
+			facade_node.modulate = Color.WHITE
 	)
 	if arch:
 		var pulse := arch.create_tween().set_loops()

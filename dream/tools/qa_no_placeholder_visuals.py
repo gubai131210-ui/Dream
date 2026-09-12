@@ -38,6 +38,8 @@ def main() -> None:
     square = read("scripts/areas/village_square_assembler.gd")
     if 'rock_g := "res://assets/sprites/props/rock_02.png"' in square:
         raise AssertionError("village square still spawns a standalone rock")
+    require(square, "facade_museum_00.png", "museum civic façade")
+    require(square, "facade_bath_00.png", "bath civic façade")
 
     controller = read("scripts/areas/village_square_controller.gd")
     require(controller, 'debug/show_demo_overlays', "NPC demo setting")
@@ -53,11 +55,14 @@ def main() -> None:
     interact = read("scripts/world/world_interact_kit.gd")
     require(interact, "trees/grounded/tree_00.png", "shake_tree uses real tree sprite")
 
-    spawn = read("scripts/world/world_spawn_util.gd")
     require(spawn, "door_facade_00.png", "portal door façade sprite")
     require(spawn, 'DoorFacade', "portal DoorFacade node")
 
-    print("GREEN production-placeholder QA (markers, demo overlays, facade, tree)")
+    fishing = read("scripts/fishing/fishing_spot.gd")
+    require(fishing, "fish_bubble_00.png", "fishing bubble sprite")
+    require(fishing, "fish_splash_00.png", "fishing splash sprite")
+
+    print("GREEN production-placeholder QA (markers, demo overlays, facade, tree, fish FX)")
 
 
 if __name__ == "__main__":

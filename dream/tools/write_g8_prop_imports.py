@@ -14,6 +14,20 @@ names = [
 	"door_arch_cue_00",
 	"furrow_line_00",
 	"door_facade_00",
+	"facade_museum_00",
+	"facade_bath_00",
+	"chest_lid_00",
+	"chest_lid_01",
+	"chest_lid_02",
+	"chest_lid_03",
+	"crate_lid_00",
+	"crate_lid_01",
+	"crate_lid_02",
+	"crate_lid_03",
+	"well_rope_00",
+	"well_rope_01",
+	"well_rope_02",
+	"well_rope_03",
 ]
 for name in names:
 	png = PROP / f"{name}.png"

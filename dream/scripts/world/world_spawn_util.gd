@@ -129,11 +129,11 @@ const DOOR_FACADE := "res://assets/sprites/props/door_facade_00.png"
 
 ## Always-visible portal doorstep + arch + façade sprites (G8).
 ## Returns { "cue": CanvasItem, "arch": CanvasItem, "facade": CanvasItem }.
-static func attach_portal_cues(area: Area2D, size: Vector2) -> Dictionary:
+static func attach_portal_cues(area: Area2D, size: Vector2, facade_path: String = DOOR_FACADE) -> Dictionary:
 	var out := {"cue": null, "arch": null, "facade": null}
 	if area == null:
 		return out
-	var facade_tex := load_prop_texture(DOOR_FACADE)
+	var facade_tex := load_prop_texture(facade_path if not facade_path.is_empty() else DOOR_FACADE)
 	if facade_tex != null:
 		var spr_f := Sprite2D.new()
 		spr_f.name = "DoorFacade"

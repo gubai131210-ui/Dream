@@ -136,9 +136,10 @@
 | ~~作物床 ColorRect 垄线~~ | area_craft crop beds | **DONE** → `furrow_line_00` |
 | ~~摇树 Polygon 占位~~ | WorldInteractKit | **DONE** → `trees/grounded/tree_00` |
 | ~~孤岛传送无门脸~~ | museum/bath 等 portal | **DONE** → `door_facade_00` on all portals |
+| ~~完整独立建筑 façade sheet~~ | 博物馆/浴场 | **DONE** → `facade_museum_00` / `facade_bath_00` |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
-| G2/G6 PIL 帧深度抛光 | drawer/chest/well_rope/crate | StyleQA 继续 |
-| 完整独立建筑 façade sheet | 博物馆/浴场等无 building_* 的入口 | 可换专用 building 图（facade 已可发现） |
+| drawer_open PIL | interior dresser | StyleQA 可继续加深 |
+| NPC 职业姿态 sheet | C53 | 长线 ArtGen |
 
 ## Related
 
