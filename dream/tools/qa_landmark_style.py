@@ -17,6 +17,13 @@ MIN_UNIQ = {
 	"grave_marker_00.png": 120,
 	"boat_skiff_00.png": 100,
 	"door_facade_00.png": 200,
+	"facade_bath_00.png": 200,
+	"facade_museum_00.png": 200,
+	"breakable_stake_00.png": 40,
+	"breakable_weed_00.png": 20,
+	"fence_post_00.png": 40,
+	"bridge_plank_00.png": 60,
+	"furrow_line_00.png": 20,
 	"stall_awning_00.png": 120,
 }
 

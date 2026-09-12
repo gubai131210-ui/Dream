@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://db7ec7eab2a7f"
-path="res://.godot/imported/bridge_plank_00.png-87b5249e24ffadb60f6f69fa27f3ab1e.ctex"
+uid="uid://pc69c2193f6e4"
+path="res://.godot/imported/bridge_plank_00.png-d0ad716fea42bf1077031b1b8ed92239.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/props/bridge_plank_00.png"
-dest_files=["res://.godot/imported/bridge_plank_00.png-87b5249e24ffadb60f6f69fa27f3ab1e.ctex"]
+dest_files=["res://.godot/imported/bridge_plank_00.png-d0ad716fea42bf1077031b1b8ed92239.ctex"]
 
 [params]
 

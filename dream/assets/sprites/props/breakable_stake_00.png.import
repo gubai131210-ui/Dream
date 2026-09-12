@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0d2da913f772e"
-path="res://.godot/imported/breakable_stake_00.png-9e72bc4156b0a6fef8bbbc255f2df68f.ctex"
+uid="uid://p8f4dcf491ac4"
+path="res://.godot/imported/breakable_stake_00.png-d0ad716fea42bf1077031b1b8ed92239.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,10 +11,9 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/props/breakable_stake_00.png"
-dest_files=["res://.godot/imported/breakable_stake_00.png-9e72bc4156b0a6fef8bbbc255f2df68f.ctex"]
+dest_files=["res://.godot/imported/breakable_stake_00.png-d0ad716fea42bf1077031b1b8ed92239.ctex"]
 
 [params]
-
 
 compress/mode=0
 compress/high_quality=false

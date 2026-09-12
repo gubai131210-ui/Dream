@@ -183,6 +183,116 @@ def paint_facade(wood: list[tuple[int, int, int]], stone: list[tuple[int, int, i
 	return im.filter(ImageFilter.SMOOTH)
 
 
+def paint_civic_facade(
+	walls: list[tuple[int, int, int]],
+	trim: list[tuple[int, int, int]],
+	accent: tuple[int, int, int],
+) -> Image.Image:
+	w, h = 64, 80
+	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+	px = im.load()
+	for x in range(4, 60):
+		for y in range(8, 70):
+			put(px, x, y, jitter(walls[(x + y) % len(walls)], x, y, 7))
+	# Pediment
+	for x in range(8, 56):
+		for y in range(4, 14):
+			if abs(x - 32) + (y - 4) < 28:
+				put(px, x, y, jitter(trim[(x + y) % len(trim)], x, y, 6))
+	# Door recess
+	for x in range(22, 42):
+		for y in range(28, 66):
+			put(px, x, y, jitter(trim[(x * 3 + y) % len(trim)], x, y, 5))
+	# Accent tile band
+	for x in range(6, 58):
+		put(px, x, 24, jitter(accent, x, 24, 4))
+		put(px, x, 25, jitter(accent, x, 25, 4), 220)
+	# Columns
+	for x in (10, 52):
+		for y in range(14, 68):
+			put(px, x, y, jitter(trim[y % len(trim)], x, y, 5))
+			put(px, x + 1, y, jitter(trim[(y + 1) % len(trim)], x, y, 5))
+	return im.filter(ImageFilter.SMOOTH)
+
+
+def paint_stake(wood: list[tuple[int, int, int]]) -> Image.Image:
+	w, h = 20, 44
+	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+	px = im.load()
+	for y in range(4, 40):
+		for x in range(7, 13):
+			put(px, x, y, jitter(wood[(x + y) % len(wood)], x, y, 6))
+		# Pointed tip
+		if y < 10:
+			span = 10 - y
+			for x in range(10 - span // 2, 10 + span // 2 + 1):
+				if 0 <= x < w:
+					put(px, x, y, jitter(wood[0], x, y, 4))
+	for x in range(4, 16):
+		put(px, x, 40, jitter(wood[1], x, 40, 4), 200)
+	return im.filter(ImageFilter.SMOOTH)
+
+
+def paint_weed(greens: list[tuple[int, int, int]]) -> Image.Image:
+	w, h = 36, 28
+	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+	px = im.load()
+	for i, bx in enumerate((8, 14, 18, 22, 26)):
+		for t in range(10 + i % 5):
+			y = h - 4 - t
+			x = bx + ((t // 3) * (1 if i % 2 else -1))
+			if 0 <= x < w and 0 <= y < h:
+				put(px, x, y, jitter(greens[(i + t) % len(greens)], x, y, 7))
+				if x + 1 < w:
+					put(px, x + 1, y, jitter(greens[(i + 2) % len(greens)], x, y, 5), 210)
+	for x in range(6, 30):
+		put(px, x, h - 3, jitter(greens[0], x, h - 3, 5), 180)
+	return im.filter(ImageFilter.SMOOTH)
+
+
+def paint_fence(wood: list[tuple[int, int, int]]) -> Image.Image:
+	w, h = 20, 36
+	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+	px = im.load()
+	for y in range(4, 32):
+		for x in range(7, 13):
+			put(px, x, y, jitter(wood[(x + y) % len(wood)], x, y, 6))
+	for y in (10, 18, 26):
+		for x in range(3, 17):
+			put(px, x, y, jitter(wood[(x + y) % len(wood)], x, y, 5))
+			put(px, x, y + 1, jitter(wood[(x + y + 1) % len(wood)], x, y, 5), 220)
+	return im.filter(ImageFilter.SMOOTH)
+
+
+def paint_bridge(wood: list[tuple[int, int, int]]) -> Image.Image:
+	w, h = 64, 20
+	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+	px = im.load()
+	for y in range(4, 16):
+		for x in range(2, 62):
+			# plank seams every 8px
+			base = wood[(x // 8 + y) % len(wood)]
+			if x % 8 == 0:
+				base = wood[0]
+			put(px, x, y, jitter(base, x, y, 6))
+	for x in range(2, 62):
+		put(px, x, 3, jitter(wood[1], x, 3, 4), 210)
+		put(px, x, 16, jitter(wood[0], x, 16, 4), 210)
+	return im.filter(ImageFilter.SMOOTH)
+
+
+def paint_furrow(soil: list[tuple[int, int, int]]) -> Image.Image:
+	w, h = 64, 8
+	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+	px = im.load()
+	for x in range(w):
+		for y in range(2, 6):
+			put(px, x, y, jitter(soil[(x + y) % len(soil)], x, y, 8), 230)
+		put(px, x, 1, jitter(soil[0], x, 1, 5), 160)
+		put(px, x, 6, jitter(soil[min(2, len(soil) - 1)], x, 6, 5), 160)
+	return im
+
+
 def write_import(folder: Path, name: str) -> None:
 	tmpl = TMPL if folder == PROPS else (MARKET / "stall_open_wood_00.png.import").read_text(encoding="utf-8")
 	# Replace basename in path lines
@@ -216,6 +326,12 @@ def main() -> None:
 	reds = [(180, 60, 50), (160, 45, 40), (200, 80, 70), (140, 40, 35)] + [
 		(max(40, c[0]), max(20, c[1] // 2), max(20, c[2] // 2)) for c in stall[:8]
 	]
+	soil = [c for c in browns + rock if c[0] < 160][:32] or browns[:16]
+	bath_walls = [(c[0], min(255, c[1] + 20), min(255, c[2] + 35)) for c in stones[:24]]
+	museum_walls = [(min(255, c[0] + 15), c[1], max(0, c[2] - 10)) for c in stones[:24]]
+	trim = wood[:24]
+	teal = (70, 140, 150)
+	gold = (180, 140, 70)
 
 	jobs = [
 		(PROPS, "reed_clump_00.png", paint_reed(greens, browns)),
@@ -223,6 +339,13 @@ def main() -> None:
 		(PROPS, "grave_marker_00.png", paint_grave(stones, wood)),
 		(PROPS, "boat_skiff_00.png", paint_boat(wood)),
 		(PROPS, "door_facade_00.png", paint_facade(wood, stones)),
+		(PROPS, "facade_bath_00.png", paint_civic_facade(bath_walls, trim, teal)),
+		(PROPS, "facade_museum_00.png", paint_civic_facade(museum_walls, trim, gold)),
+		(PROPS, "breakable_stake_00.png", paint_stake(wood)),
+		(PROPS, "breakable_weed_00.png", paint_weed(greens)),
+		(PROPS, "fence_post_00.png", paint_fence(wood)),
+		(PROPS, "bridge_plank_00.png", paint_bridge(wood)),
+		(PROPS, "furrow_line_00.png", paint_furrow(soil)),
 		(MARKET, "stall_awning_00.png", paint_awning(reds, creams)),
 	]
 	for folder, name, im in jobs:

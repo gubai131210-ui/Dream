@@ -8,8 +8,8 @@
 
 | Role | Focus | Evidence / verdict |
 | --- | --- | --- |
-| Draw / Crop / Cutout / Import | Farmer white-plate → v2; mayor/miller packs; outdoor prop copies (DIK + seasonal + work cues + chest) | `props/{handcart,hay,anvil,stove,flower_bed,lantern_string,coin_chest,…}` |
-| StyleQA | Work pose sheets 32×48 ×4; edge-white | `qa_work_pose_style.py` **GREEN** |
+| Draw / Crop / Cutout / Import | Farmer white-plate → v2; mayor/miller packs; outdoor prop copies; landmark/civic/breakable/fence/bridge/furrow/awning repaints | `paint_landmark_props.py` + props/market PNG+import |
+| StyleQA | Work pose sheets 32×48 ×4; landmark/utility painted uniq floors | `qa_work_pose_style` + `qa_landmark_style` **GREEN** |
 | Continuity / science (Canon) | C58–C60 / C22 state explainable | Genre+Canon agent **PASS** |
 | Genre reference | Portals façade/doorstep; outdoor hosts ban `interior/props` | Genre **PASS**; QA blocks DIK / routine / seasonal / hidden_chests |
 | Imported-style consistency | NPC edge-white gate; farmer promote | `qa_npc_white_plates.py` **GREEN** (7 packs) |
