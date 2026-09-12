@@ -36,6 +36,8 @@
 | C10 church | `docs/evidence/g8_c10_church_idle.png` | 教堂室内抽样 |
 | Square work ring | `docs/evidence/g8_square_work_pose.png` | C53 工作环 InfoPanel（打铁环）+ 铁匠 demo actor |
 | Square C53 buttons | `docs/evidence/g8_square_c53_buttons.png` | TopBar「工作:播种环」「生活:用餐」**visible=true** |
+| Square outdoor UI | `docs/evidence/g8_square_outdoor_work_season.png` | 工作/生活环 + 春花季节 TopBar；室外 Genre 路径后的广场 idle |
+| Square WorkPoseCue | `docs/evidence/g8_square_work_pose_cue.png` | C53 `WorkPoseCue` + `WorkPoseAnim` + outdoor `PropSprite`（6s hold） |
 
 ## Runtime queries
 
@@ -48,8 +50,11 @@
 - River `FishCage_river_west_bend_cage`: after soak → `prompt_text=收取渔获` / fish_name 河鲦；collect resets empty
 - C06 `镇长/Visual/Anim` present after `npc/mayor` pack; prior `no walk frames for 'mayor'` cleared
 - Interior profile actor ids: **0 missing** packs (`list_missing_npc_packs.py`)
-- Headless `g8_anim_fx_smoke.gd`: WorkPoseAnim frames=4 + shake_tree `FX_leaf_fall` **PASS**
+- Headless `g8_anim_fx_smoke.gd`: WorkPoseAnim frames=4 + shake_tree `FX_leaf_fall` **PASS** (re-run 2026-09-13 after outdoor prop remap)
 - Fixed `NpcRoutineDemo` name collision on WorkPoseCue / demo actor respawn (rename before `queue_free`)
+- Demo actor keeps `NpcRingDemoActor` after `PatrolActor.setup` (no clash with plaza `摊主`/`铁匠` Area2D)
+- Outdoor Genre: DIK / seasonal / work cues / hidden_chests use `sprites/props/` only (`qa_no_placeholder` bans `interior/props`)
+- Live `WorkPoseCue`: children `WorkPoseAnim` + `PropSprite` + `ContactShadow`; `modulate.a=1`; hold ~6s for QA/MCP
 
 ## Agent reviews this batch
 

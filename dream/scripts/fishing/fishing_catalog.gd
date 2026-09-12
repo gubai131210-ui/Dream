@@ -1,8 +1,7 @@
 class_name FishingCatalog
 extends RefCounted
 
-## C18–C21 catalog — sites, rods, placeholder fish tables.
-## See docs/FISH_E.md.
+## C18–C21 catalog — sites, rods, and fish tables (see docs/FISH_E.md).
 
 const ROD_BAMBOO := "bamboo"
 const ROD_IRON := "iron"

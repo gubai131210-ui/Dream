@@ -28,6 +28,10 @@ static func attach_to(host: Node2D, top_bar: Control = null, key: String = NpcRo
 		return null
 	var existing := host.get_node_or_null(NODE_NAME) as NpcRoutineDemo
 	if existing:
+		existing.host_key = key
+		existing.bind_host(host)
+		if top_bar:
+			existing.mount_top_bar(top_bar)
 		return existing
 	var demo := NpcRoutineDemo.new()
 	demo.name = NODE_NAME
@@ -126,6 +130,38 @@ func current_life_id() -> String:
 	return str(states[clampi(_life_idx, 0, states.size() - 1)].get("id", ""))
 
 
+## QA / MCP: force spawn pose cue and report id + presence.
+func debug_force_work_pose() -> String:
+	var rings := NpcRoutineRings.work_demo_waypoints(host_key)
+	if rings.is_empty():
+		return "no_rings"
+	_showing_life = false
+	_work_idx = clampi(_work_idx, 0, rings.size() - 1)
+	var entry: Dictionary = rings[_work_idx]
+	_spawn_work_pose_cue("work", entry)
+	var cue := _ysort.get_node_or_null("WorkPoseCue") if _ysort else null
+	return "id=%s ysort=%s cue=%s names=%s" % [
+		str(entry.get("id", "")),
+		_ysort != null,
+		cue != null,
+		",".join(debug_work_pose_names()),
+	]
+
+
+## QA / MCP: names under YSort that look like work-pose demo nodes.
+func debug_work_pose_names() -> PackedStringArray:
+	var out: PackedStringArray = PackedStringArray()
+	if _ysort == null:
+		out.append("_ysort_null")
+		return out
+	out.append("ysort=%s" % _ysort.get_path())
+	for c in _ysort.get_children():
+		var n := str(c.name)
+		if n.contains("Pose") or n.contains("NpcRing") or n.begins_with("Work"):
+			out.append(n)
+	return out
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
@@ -215,11 +251,12 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 	_ysort.add_child(cue)
 	_attach_work_pose_anim(cue, work_id)
 	WorldSpawnUtil.attach_prop_sprite(cue, prop_path, 0.28)
+	# Hold long enough for player QA / MCP round-trips; next cycle replaces this node.
 	var tw := cue.create_tween()
 	tw.tween_property(cue, "modulate:a", 0.35, 0.12)
 	tw.tween_property(cue, "modulate:a", 1.0, 0.18)
-	tw.tween_interval(2.0)
-	tw.tween_property(cue, "modulate:a", 0.0, 0.4)
+	tw.tween_interval(6.0)
+	tw.tween_property(cue, "modulate:a", 0.0, 0.45)
 	tw.tween_callback(cue.queue_free)
 
 
