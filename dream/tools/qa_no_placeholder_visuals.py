@@ -128,6 +128,13 @@ def main() -> None:
     require(market_dress, "bridge_plank_00.png", "market bridge plank prop")
     square = read("scripts/areas/village_square_assembler.gd")
     require(square, "grave_marker_00.png", "C30 cemetery landmark prop")
+    station = read("scripts/areas/station_assembler.gd")
+    require(station, "站台轨道", "station band hotspot")
+    require(station, "attach_hotspot_prop(hs_band", "station band owns rail prop")
+    lake_house = read("scripts/areas/lake_house_assembler.gd")
+    require(lake_house, 'spr.reparent(hs_house.get_node("Visual"))', "lake house sprite on hotspot Visual")
+    lake = read("scripts/areas/lake_assembler.gd")
+    require(lake, "boat_skiff_00.png", "C24 ferry boat landmark prop")
 
     print("GREEN production-placeholder QA (facades, poses, gates, breakables, stall, districts)")
 

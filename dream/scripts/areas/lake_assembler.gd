@@ -206,7 +206,7 @@ func _spawn_portals(ysort: Node2D) -> void:
 	# Wave C C24 — south-shore boat/island embark (append-only).
 	var isle := Vector2(640, 520)
 	var hs_isle := craft.make_hotspot(ysort, "登岛渡口", "南岸小舟可渡湖心岛。", isle, Vector2(72, 56))
-	craft.attach_hotspot_prop(hs_isle, "res://assets/sprites/props/rock_02.png", 0.55)
+	craft.attach_hotspot_prop(hs_isle, "res://assets/sprites/props/boat_skiff_00.png", 0.7)
 	craft.make_portal(ysort, "登湖心岛", SceneRouter.C24_LAKE_ISLAND_PATH, isle + Vector2(0, 14), Vector2(100, 52))
 	# Wave F transit / dive
 	craft.make_portal(ysort, "进入水族馆", SceneRouter.C41_AQUARIUM_PATH, Vector2(420, 480), Vector2(100, 52))

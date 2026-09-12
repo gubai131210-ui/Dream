@@ -162,7 +162,11 @@ func _spawn_house(ysort: Node2D) -> void:
 	craft.mark_blocked_footprint(cleared, 2, 1)
 	if scale_f < 0.999:
 		spr.scale = Vector2(scale_f, scale_f)
-	craft.make_hotspot(ysort, "湖畔小屋", "临湖木屋，西侧土径伸入浅湾。", cleared + Vector2(0, 24), Vector2(110, 80))
+	var hs_house := craft.make_hotspot(
+		ysort, "湖畔小屋", "临湖木屋，西侧土径伸入浅湾。", cleared + Vector2(0, 24), Vector2(110, 80)
+	)
+	spr.reparent(hs_house.get_node("Visual"))
+	spr.position = Vector2.ZERO
 
 
 func _spawn_dock_props(ysort: Node2D) -> void:
@@ -170,7 +174,6 @@ func _spawn_dock_props(ysort: Node2D) -> void:
 	var samples := [
 		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(400, 560), "title": "系缆桶", "desc": "码头尽头的系缆空桶。", "scale": 0.5},
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(480, 548), "title": "卸货箱", "desc": "小舟卸货用的木箱。", "scale": 0.52},
-		{"path": "res://assets/sprites/props/rock_02.png", "pos": Vector2(360, 580), "title": "岸石", "desc": "码头旁的浅滩石。", "scale": 0.38},
 	]
 	for s in samples:
 		_place_land_prop(ysort, s)
@@ -215,7 +218,7 @@ func _spawn_trees(ysort: Node2D) -> void:
 		Vector2(940, 180), Vector2(720, 200), Vector2(680, 780),
 	]
 	for i in ideals.size():
-		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
+		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % (i % 6)
 		craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 5, false)
 
 

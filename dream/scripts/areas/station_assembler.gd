@@ -189,13 +189,19 @@ func _spawn_track_proxy(ysort: Node2D) -> void:
 		float(TRACK_TX0 + TRACK_TX1 + 1) * 0.5 * float(craft.tile),
 		mid_y
 	)
-	craft.make_hotspot(
+	var hs_band := craft.make_hotspot(
 		ysort,
 		"站台轨道",
 		"东西向轨道带：与石台平行，构成车站交通脊。",
 		mid,
 		Vector2(160, 40)
 	)
+	craft.attach_hotspot_prop(hs_band, RAIL, 0.9)
+	var sleeper_holder := Node2D.new()
+	sleeper_holder.name = "SleeperCue"
+	sleeper_holder.position = Vector2(0, 8)
+	hs_band.get_node("Visual").add_child(sleeper_holder)
+	WorldSpawnUtil.attach_prop_sprite(sleeper_holder, SLEEPER, 0.75)
 
 
 func _spawn_station_building(ysort: Node2D) -> void:

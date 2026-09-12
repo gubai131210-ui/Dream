@@ -40,6 +40,8 @@
 | Square WorkPoseCue | `docs/evidence/g8_square_work_pose_cue.png` | C53 `WorkPoseCue` + `WorkPoseAnim` + outdoor `PropSprite`（6s hold） |
 | Forest deep landmarks | `docs/evidence/g8_forest_deep_landmarks.png` | C28 巨树 / C29 遗迹 `Visual/PropSprite` |
 | River reed landmark | `docs/evidence/g8_river_reed_landmark.png` | C25 芦苇岔口 `Visual/PropSprite` |
+| Station track band | `docs/evidence/g8_station_track_band.png` | 站台轨道 `PropSprite` + SleeperCue |
+| Lake ferry boat | `docs/evidence/g8_lake_ferry_boat.png` | C24 登岛渡口 `boat_skiff_00` |
 
 ## Runtime queries
 
@@ -58,6 +60,8 @@
 - Outdoor Genre: DIK / seasonal / work cues / hidden_chests use `sprites/props/` only (`qa_no_placeholder` bans `interior/props`)
 - Live `WorkPoseCue`: children `WorkPoseAnim` + `PropSprite` + `ContactShadow`; `modulate.a=1`; hold ~6s for QA/MCP
 - Landmark hotspots own `Visual/PropSprite`: 巨树/遗迹残垣/芦苇岔口 (queried live); market bridge + cemetery + mine/cave/渡口 wired similarly
+- Station `站台轨道` + Lake `登岛渡口` boat skiff; lake house building reparented into hotspot Visual
+- `tools/qa_orphan_hotspot_visuals.py` GREEN (assembler hotspot Visual ownership)
 
 ## Agent reviews this batch
 

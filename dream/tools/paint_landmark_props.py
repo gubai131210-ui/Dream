@@ -111,12 +111,33 @@ def write_import(name: str) -> None:
 	(PROPS / f"{name}.import").write_text("".join(lines), encoding="utf-8")
 
 
+def paint_boat(w: int = 56, h: int = 32) -> Image.Image:
+	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+	px = im.load()
+	# Simple skiff hull — dark wood + lighter gunwale.
+	for x in range(6, 50):
+		depth = 6 + int(3 * (1 - abs((x - 28) / 22)))
+		for y in range(h - 4 - depth, h - 4):
+			_put(px, x, y, WOOD[(x + y) % len(WOOD)])
+		_put(px, x, h - 5 - depth, (130, 96, 62))
+	# Seat thwart
+	for x in range(18, 38):
+		_put(px, x, h - 14, WOOD[1])
+		_put(px, x, h - 13, WOOD[0])
+	# Bow tip
+	for y in range(h - 16, h - 6):
+		_put(px, 4, y, WOOD[2], 220)
+		_put(px, 5, y, WOOD[0])
+	return im
+
+
 def main() -> None:
 	PROPS.mkdir(parents=True, exist_ok=True)
 	for name, fn in (
 		("reed_clump_00.png", paint_reed),
 		("ruin_arch_00.png", paint_ruin_arch),
 		("grave_marker_00.png", paint_grave),
+		("boat_skiff_00.png", paint_boat),
 	):
 		fn().save(PROPS / name)
 		write_import(name)

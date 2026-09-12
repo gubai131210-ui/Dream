@@ -22,6 +22,7 @@
 - `tools/qa_interact_sprite_inventory.py`
 - `tools/qa_npc_white_plates.py`
 - `tools/qa_work_pose_style.py`
+- `tools/qa_orphan_hotspot_visuals.py`
 - G8 smoke matrix scripts (interact / interior FX / portal / worldsys / anim FX / bath)
 
 ## Still open for Goal complete
