@@ -108,6 +108,8 @@ def main() -> None:
         "lake_house",
     ):
         require(dik, f'"{host}"', f"DistrictInteractKit host {host}")
+    if "interior/props" in dik:
+        raise AssertionError("DistrictInteractKit must use outdoor props/ paths (Genre cohesion)")
 
     print("GREEN production-placeholder QA (facades, poses, gates, breakables, stall, districts)")
 

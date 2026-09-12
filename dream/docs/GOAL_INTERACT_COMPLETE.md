@@ -144,9 +144,10 @@
 | ~~农夫 walk 不透明白底盘~~ | `assets/sprites/npc/farmer` | **DONE** → 提升 `farmer_v2`；`qa_npc_white_plates` GREEN |
 | ~~室内 actor 缺 mayor/miller 包~~ | `interior_profiles` | **DONE** → `npc/mayor` + `npc/miller`（recolor 正式包） |
 | ~~C53/C54 按钮被 demo 开关隐藏~~ | square/market/farmland controllers | **DONE** → TopBar 工作/生活环常显；仅 status strip 仍 demo 门控 |
+| ~~DistrictInteract 串用 interior/props~~ | `district_interact_kit.gd` | **DONE** → 拷贝至 `sprites/props/`；QA 禁 interior 路径 |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
 | Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
-| 姿态/摊位 ArtGen 抛光 | work_poses / market | **部分加深**（farmer 调色板姿态）；还可继续 |
+| 姿态/摊位 ArtGen 抛光 | work_poses / market | **StyleQA GREEN**（32×48×4）；ArtGen 还可继续 |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据
@@ -158,9 +159,11 @@
 - [`GOAL_G8_PORTAL_CUE_EVIDENCE.md`](GOAL_G8_PORTAL_CUE_EVIDENCE.md) — 广场门户 façade/门阶  
 - [`GOAL_G8_ANIM_FX_EVIDENCE.md`](GOAL_G8_ANIM_FX_EVIDENCE.md) — 工作姿态×4 + 摇树 leaf_fall  
 - [`GOAL_G8_BATH_PORTAL_EVIDENCE.md`](GOAL_G8_BATH_PORTAL_EVIDENCE.md) — 浴场 façade + SceneRouter 进门  
+- [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 12 groups GREEN  
 - `tools/qa_no_placeholder_visuals.py` — GREEN  
 - `tools/qa_interact_sprite_inventory.py` — GREEN（kits + focus/open FX）  
+- `tools/qa_work_pose_style.py` — GREEN（C53 pose sheets）  
 
 ---
 
@@ -211,7 +214,7 @@
 | 1 | 已列交互正式像素 + 反馈 + 多帧 | C58 activate 8/8；sprite inventory GREEN；focus/叶/绳/盖/鸟帧；qa_interaction_frames GREEN；MCP InfoPanel/OpenFX | **PROVEN（代码+MCP）**；§7 手感确认仍待 |
 | 2 | 全户外+室内门面/道具/可进出 | load smoke 72/72；portal cue 12；MCP 广场→博物馆进门截图 | **PROVEN（加载+MCP 进门）**；§7 全表进出仍待 |
 | 3 | 统称权威 | 本文件 + `ASSET_TAXONOMY` 回链 | **PROVEN** |
-| 4 | 多团队流水线门禁 | §2 角色表；Style/Anim/Cohere + Genre/Canon agent PASS；qa_* GREEN | **PROVEN（本轮批次）** |
+| 4 | 多团队流水线门禁 | §2 角色表；[`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md)；Style/Anim/Cohere + Genre/Canon agent PASS；qa_* GREEN | **PROVEN（本轮批次）** |
 | 5 | MCP/运行时交互动画证据 | [`GOAL_G8_MCP_RUNTIME_EVIDENCE.md`](GOAL_G8_MCP_RUNTIME_EVIDENCE.md) | **PROVEN** |
 
 **结论：** MCP 关键表面截图已齐；在 §7 用户本机勾选确认前，**不得**将 Goal 标 complete。
