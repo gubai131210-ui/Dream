@@ -203,7 +203,13 @@ def main() -> int:
 	)
 	REPORT.write_text("\n".join(lines), encoding="utf-8")
 	print("wrote", REPORT.relative_to(ROOT))
-	return 0 if passed == len(rows) and interact_ok and interior_ok and portal_ok else 1
+	return 0 if (
+		passed == len(rows)
+		and interact_ok
+		and interior_ok
+		and portal_ok
+		and worldsys_ok
+	) else 1
 
 
 if __name__ == "__main__":

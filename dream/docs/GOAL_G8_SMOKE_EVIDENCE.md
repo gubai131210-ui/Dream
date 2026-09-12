@@ -5,6 +5,7 @@
 **Interact activate:** PASS — `GOAL_G8_INTERACT_ACTIVATE_EVIDENCE.md`
 **Interior open FX:** PASS — `GOAL_G8_INTERIOR_OPEN_FX_EVIDENCE.md`
 **Portal cues:** PASS — `GOAL_G8_PORTAL_CUE_EVIDENCE.md`
+**Worldsys activate:** PASS — `GOAL_G8_WORLDSYS_ACTIVATE_EVIDENCE.md`
 
 | Scene | ERRORS | SCRIPT | Status |
 | --- | ---: | ---: | --- |
@@ -85,6 +86,7 @@
 
 - Headless `--quit-after 2` load smoke (not full playthrough).
 - Interact-activate fires C58 `activated` on square kit.
+- Worldsys-activate covers C58+C59+C60 (15 activations); matrix exit requires it.
 - Interior open-FX activates C01 open_fx hotspots.
 - Portal cue smoke asserts DoorFacade / doorstep sprites on square portals.
 - User local Godot QA still required for click/animation fidelity.
