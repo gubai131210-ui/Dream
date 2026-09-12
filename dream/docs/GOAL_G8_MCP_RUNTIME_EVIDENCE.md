@@ -31,7 +31,11 @@
 | C43 bathhouse | `docs/evidence/g8_c43_bathhouse_idle.png` | 浴场室内 props + return portal |
 | C04 tavern | `docs/evidence/g8_c04_tavern_idle.png` | 酒馆室内抽样 |
 | C04 smith | `docs/evidence/g8_c04_smith_idle.png` | 铁匠铺室内抽样 |
+| C07 school | `docs/evidence/g8_c07_school_idle.png` | 学校室内抽样 |
+| C09 library | `docs/evidence/g8_c09_library_idle.png` | 图书馆室内抽样 |
+| C10 church | `docs/evidence/g8_c10_church_idle.png` | 教堂室内抽样 |
 | Square work ring | `docs/evidence/g8_square_work_pose.png` | C53 工作环 InfoPanel（打铁环）+ 铁匠 demo actor |
+| Square C53 buttons | `docs/evidence/g8_square_c53_buttons.png` | TopBar「工作:播种环」「生活:用餐」**visible=true** |
 
 ## Runtime queries
 

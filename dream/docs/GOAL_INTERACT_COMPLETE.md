@@ -143,6 +143,7 @@
 | ~~hover 仅 draw_line 角标~~ | `interactable_hotspot.gd` | **DONE** → `fx/focus_corners_00.png` + 修复 enter 时 `queue_redraw` |
 | ~~农夫 walk 不透明白底盘~~ | `assets/sprites/npc/farmer` | **DONE** → 提升 `farmer_v2`；`qa_npc_white_plates` GREEN |
 | ~~室内 actor 缺 mayor/miller 包~~ | `interior_profiles` | **DONE** → `npc/mayor` + `npc/miller`（recolor 正式包） |
+| ~~C53/C54 按钮被 demo 开关隐藏~~ | square/market/farmland controllers | **DONE** → TopBar 工作/生活环常显；仅 status strip 仍 demo 门控 |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
 | Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
 | 姿态/摊位 ArtGen 抛光 | work_poses / market | **部分加深**（farmer 调色板姿态）；还可继续 |
@@ -156,6 +157,7 @@
 - [`GOAL_G8_INTERIOR_OPEN_FX_EVIDENCE.md`](GOAL_G8_INTERIOR_OPEN_FX_EVIDENCE.md) — C01 衣柜 drawer_open  
 - [`GOAL_G8_PORTAL_CUE_EVIDENCE.md`](GOAL_G8_PORTAL_CUE_EVIDENCE.md) — 广场门户 façade/门阶  
 - [`GOAL_G8_ANIM_FX_EVIDENCE.md`](GOAL_G8_ANIM_FX_EVIDENCE.md) — 工作姿态×4 + 摇树 leaf_fall  
+- [`GOAL_G8_BATH_PORTAL_EVIDENCE.md`](GOAL_G8_BATH_PORTAL_EVIDENCE.md) — 浴场 façade + SceneRouter 进门  
 - `tools/qa_interaction_frames.py` — 12 groups GREEN  
 - `tools/qa_no_placeholder_visuals.py` — GREEN  
 - `tools/qa_interact_sprite_inventory.py` — GREEN（kits + focus/open FX）  
@@ -170,7 +172,7 @@
 
 | 区 | 场景 | 交互/门面要点 | Agent MCP | 用户勾选 |
 | --- | --- | --- | --- | --- |
-| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、工作环姿态 | [x] idle+井/灯；activate；worldsys；**anim FX pose+leaf PASS**；K 循环已修 | [ ] |
+| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、工作环姿态 | [x] idle+井/灯；activate；worldsys；anim FX；**C53 按钮常显**；浴场 portal enter PASS | [ ] |
 | 市集 | `market_street` | 木棚摊位、DistrictInteract | [x] `g8_market_idle.png` 木棚可见 | [ ] |
 | 农田 | `farmland` | 垄线、栅栏、DistrictInteract | [x] `g8_farmland_idle.png`；farmer 白底盘已替换 | [ ] |
 | 住宅 | `village_residential` | 门阶/拱门、DistrictInteract | [x] `g8_residential_idle.png` | [ ] |
@@ -186,8 +188,8 @@
 | --- | --- | --- | --- |
 | C01 家 | dresser/chest 开合帧、返回门 | [x] idle + dresser OpenFX | [ ] |
 | C06 议事厅 | 门户进出 | [x] `g8_c06_town_hall_idle.png`；镇长 walk 帧已补 | [ ] |
-| C40/C43 博物/浴 | 立面可发现 → 进门 | [x] 博物馆进门；浴场室内 `g8_c43_bathhouse_idle.png`（立面 portal 有 facade_bath） | [ ] |
-| Wave A2–F 其余已锁室 | 按 PHASE5 进出各一次 | [ ] 72/72 load；未逐室 MCP | [ ] |
+| C40/C43 博物/浴 | 立面可发现 → 进门 | [x] 博物馆进门；浴场 `facade_bath` + SceneRouter enter PASS；室内 idle | [ ] |
+| Wave A2–F 其余已锁室 | 按 PHASE5 进出各一次 | [x] 抽检 C04/C07/C09/C10 idle；72/72 load | [ ] |
 
 ### 本机 QA 步骤（请你跑，避免中文路径 CLI 损文件）
 

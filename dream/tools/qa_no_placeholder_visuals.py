@@ -45,9 +45,15 @@ def main() -> None:
     controller = read("scripts/areas/village_square_controller.gd")
     require(controller, 'debug/show_demo_overlays', "NPC demo setting")
     require(controller, 'NpcRingDemoStatus', "NPC status visibility")
-    require(controller, 'CycleWorkRing', "work button visibility")
-    require(controller, 'CycleLifeState', "life button visibility")
     require(controller, 'info.hide_info()', "initial NPC demo dialog suppression")
+    # C53/C54 are player-facing — must not be hidden with the demo status strip.
+    if 'for control_name in ["CycleWorkRing", "CycleLifeState"]' in controller:
+        raise AssertionError("CycleWorkRing/CycleLifeState must stay visible (player-facing C53/C54)")
+    routine = read("scripts/npc/npc_routine_demo.gd")
+    require(routine, "CycleWorkRing", "work button mount")
+    require(routine, "CycleLifeState", "life button mount")
+    require(routine, "work_poses", "C53 work pose sheet path")
+    require(routine, "WorkPoseAnim", "C53 work pose AnimatedSprite")
 
     seasonal = read("scripts/env/seasonal_decor.gd")
     require(seasonal, '_layer.visible = true', "seasonal layer always visible (G3)")
@@ -77,10 +83,6 @@ def main() -> None:
     gates = read("scripts/world/progress_gates.gd")
     require(gates, "gate_log_00.png", "C60 fallen log sprite")
     require(gates, "door_facade_00.png", "C60 locked door facade")
-
-    routine = read("scripts/npc/npc_routine_demo.gd")
-    require(routine, "work_poses", "C53 work pose sheet path")
-    require(routine, "WorkPoseAnim", "C53 work pose AnimatedSprite")
 
     breakables = read("scripts/world/breakables_kit.gd")
     require(breakables, "breakable_stake_00.png", "C59 stake sprite")

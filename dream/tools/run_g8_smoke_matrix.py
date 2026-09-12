@@ -158,6 +158,15 @@ def smoke_anim_fx(godot: str) -> bool:
 	)
 
 
+def smoke_bath_portal(godot: str) -> bool:
+	return _run_script_smoke(
+		godot,
+		"res://tools/g8_bath_portal_smoke.gd",
+		"G8_BATH_PORTAL",
+		ROOT / "docs" / "GOAL_G8_BATH_PORTAL_EVIDENCE.md",
+	)
+
+
 def main() -> int:
 	godot = find_godot()
 	print(
@@ -181,6 +190,7 @@ def main() -> int:
 	portal_ok = smoke_portal_cues(godot)
 	worldsys_ok = smoke_worldsys_activate(godot)
 	anim_ok = smoke_anim_fx(godot)
+	bath_ok = smoke_bath_portal(godot)
 	lines = [
 		"# Goal G8 smoke evidence",
 		"",
@@ -191,6 +201,7 @@ def main() -> int:
 		f"**Portal cues:** {'PASS' if portal_ok else 'FAIL'} — `GOAL_G8_PORTAL_CUE_EVIDENCE.md`",
 		f"**Worldsys activate:** {'PASS' if worldsys_ok else 'FAIL'} — `GOAL_G8_WORLDSYS_ACTIVATE_EVIDENCE.md`",
 		f"**Anim FX (pose+leaf):** {'PASS' if anim_ok else 'FAIL'} — `GOAL_G8_ANIM_FX_EVIDENCE.md`",
+		f"**Bath portal enter:** {'PASS' if bath_ok else 'FAIL'} — `GOAL_G8_BATH_PORTAL_EVIDENCE.md`",
 		"",
 		"| Scene | ERRORS | SCRIPT | Status |",
 		"| --- | ---: | ---: | --- |",
@@ -206,6 +217,7 @@ def main() -> int:
 			"- Interact-activate fires C58 `activated` on square kit.",
 			"- Worldsys-activate covers C58+C59+C60 (15 activations).",
 			"- Anim-FX asserts WorkPoseAnim ≥4 frames + shake_tree leaf_fall FX.",
+			"- Bath portal smoke asserts facade_bath cues + SceneRouter enter C43.",
 			"- Interior open-FX activates C01 open_fx hotspots.",
 			"- Portal cue smoke asserts DoorFacade / doorstep sprites on square portals.",
 			"- User local Godot QA still required for click/animation fidelity.",
@@ -222,6 +234,7 @@ def main() -> int:
 		and portal_ok
 		and worldsys_ok
 		and anim_ok
+		and bath_ok
 	) else 1
 
 

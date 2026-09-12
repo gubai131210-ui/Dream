@@ -47,12 +47,6 @@ func _ready() -> void:
 		var info_panel := get_node_or_null("InfoPanel") as InfoPanel
 		if info_panel:
 			info_panel.hide_info()
-		for control_name in ["CycleWorkRing", "CycleLifeState"]:
-			var control: Control = null
-			if top_bar:
-				control = top_bar.get_node_or_null(control_name) as Control
-			if control:
-				control.visible = false
 
 
 func _wire_portals(node: Node) -> void:

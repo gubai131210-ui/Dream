@@ -7,6 +7,7 @@
 **Portal cues:** PASS — `GOAL_G8_PORTAL_CUE_EVIDENCE.md`
 **Worldsys activate:** PASS — `GOAL_G8_WORLDSYS_ACTIVATE_EVIDENCE.md`
 **Anim FX (pose+leaf):** PASS — `GOAL_G8_ANIM_FX_EVIDENCE.md`
+**Bath portal enter:** PASS — `GOAL_G8_BATH_PORTAL_EVIDENCE.md`
 
 | Scene | ERRORS | SCRIPT | Status |
 | --- | ---: | ---: | --- |
