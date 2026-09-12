@@ -102,33 +102,68 @@ func setup(host: Node2D, site_id: String, _top_bar: Control = null) -> void:
 		d["pos"] as Vector2,
 		Vector2(60, 48),
 		Color(0.95, 0.78, 0.28, 0.95),
+		CHEST_TEX,
+		0.55,
 	)
-	_attach_chest_sprite(hs)
-	hs.activated.connect(func(_h: InteractableHotspot) -> void:
-		_open_chest(str(d["title"]), str(d["loot"]))
+	hs.activated.connect(func(h: InteractableHotspot) -> void:
+		_open_chest(str(d["title"]), str(d["loot"]), h)
 	)
 
 
-func _attach_chest_sprite(hs: InteractableHotspot) -> void:
-	if not ResourceLoader.exists(CHEST_TEX):
-		return
-	var visual := hs.get_node_or_null("Visual") as Node2D
-	if visual == null:
-		return
-	var spr := Sprite2D.new()
-	spr.name = "ChestSprite"
-	spr.texture = load(CHEST_TEX) as Texture2D
-	spr.scale = Vector2(0.55, 0.55)
-	spr.position = Vector2(0, 4)
-	visual.add_child(spr)
-
-
-func _open_chest(title: String, loot: String) -> void:
+func _open_chest(title: String, loot: String, hs: InteractableHotspot = null) -> void:
 	if _opened:
 		if _info:
 			_info.show_info(title, "箱子已经空了。")
 		return
 	_opened = true
+	_play_lid_open(hs)
 	if _info:
 		_info.show_info(title, loot)
 	opened.emit(_site_id)
+
+
+func _play_lid_open(hs: InteractableHotspot) -> void:
+	if hs == null:
+		return
+	var visual := hs.get_node_or_null("Visual") as Node2D
+	if visual == null:
+		return
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("open")
+	frames.set_animation_loop("open", false)
+	frames.set_animation_speed("open", 8.0)
+	var n := 0
+	for i in range(4):
+		var path := "res://assets/sprites/props/chest_lid_%02d.png" % i
+		var tex: Texture2D = null
+		if ResourceLoader.exists(path):
+			tex = load(path) as Texture2D
+		if tex == null:
+			var abs_path := ProjectSettings.globalize_path(path)
+			if FileAccess.file_exists(abs_path):
+				var img := Image.load_from_file(abs_path)
+				if img != null:
+					tex = ImageTexture.create_from_image(img)
+		if tex == null:
+			continue
+		frames.add_frame("open", tex)
+		n += 1
+	if n == 0:
+		var spr := visual.get_node_or_null("PropSprite") as CanvasItem
+		if spr:
+			spr.modulate = Color(0.75, 0.75, 0.7, 0.85)
+		return
+	var anim := AnimatedSprite2D.new()
+	anim.name = "ChestLidFX"
+	anim.sprite_frames = frames
+	anim.position = Vector2(0, -14)
+	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	anim.z_index = 8
+	anim.centered = true
+	visual.add_child(anim)
+	anim.play("open")
+	var body := visual.get_node_or_null("PropSprite") as CanvasItem
+	if body:
+		body.modulate = Color(0.85, 0.85, 0.8, 0.95)
