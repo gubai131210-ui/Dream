@@ -44,6 +44,15 @@
 | Station track band | `docs/evidence/g8_station_track_band.png` | 站台轨道 `PropSprite` + SleeperCue |
 | Lake ferry boat | `docs/evidence/g8_lake_ferry_boat.png` | C24 登岛渡口 `boat_skiff_00` |
 | C62 secret portal | `docs/evidence/g8_c62_secret_portal.png` | 深林 `WorldPortal_树洞密道` + `ruin_arch` façade cues |
+| C16 cave entry | `docs/evidence/g8_c16_cave_entry_idle.png` | C62 链上洞穴入口室内 |
+| C40 museum idle | `docs/evidence/g8_c40_museum_idle.png` | 博物馆室内（进门后 idle） |
+| C11 station int | `docs/evidence/g8_c11_station_idle.png` | 车站候车厅室内 |
+| C12 lighthouse int | `docs/evidence/g8_c12_lighthouse_idle.png` | 灯塔内部 |
+| C17 mine | `docs/evidence/g8_c17_mine_idle.png` | 矿洞入口层 |
+| C28 giant tree | `docs/evidence/g8_c28_giant_tree_idle.png` | 巨树洞室内 |
+| C29 ruins | `docs/evidence/g8_c29_ruins_idle.png` | 遗迹主殿 |
+| C30 cemetery | `docs/evidence/g8_c30_cemetery_idle.png` | 墓地区 |
+| C44 inn | `docs/evidence/g8_c44_inn_idle.png` | 旅馆大厅 |
 
 ## Runtime queries
 
@@ -65,6 +74,7 @@
 - Station `站台轨道` + Lake `登岛渡口` boat skiff; lake house building reparented into hotspot Visual
 - `tools/qa_orphan_hotspot_visuals.py` GREEN (assembler hotspot Visual ownership)
 - Landmark StyleQA: reed/ruin/grave/boat/door_facade/awning repainted to painted-grade uniq colors (`qa_landmark_style` GREEN)
+- C62 full-chain headless smoke PASS (forest→cave→waterfall→lake); cave/museum/station/lighthouse/mine/tree/ruins/cemetery/inn MCP idles added 2026-09-13
 
 ## Agent reviews this batch
 

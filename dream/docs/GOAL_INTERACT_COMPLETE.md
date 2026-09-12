@@ -106,7 +106,7 @@
 | --- | ---:|
 | P0 | **用户 Godot QA Waves A2–F + §7 勾选** |
 | P1 | 姿态/摊位 ArtGen 继续抛光（非阻塞） |
-| P2 | tomyud1 MCP 截图证据（**本轮已覆盖全户外 + C01/C06/C43**；仍不代替 §7 用户手感） |
+| P2 | tomyud1 MCP 截图证据（**全户外 + C01/C06/C11/C12/C16/C17/C28–C30/C40/C43/C44**；C62 全链冒烟 PASS；仍不代替 §7） |
 
 ---
 
@@ -199,8 +199,8 @@
 | --- | --- | --- | --- |
 | C01 家 | dresser/chest 开合帧、返回门 | [x] idle + dresser OpenFX | [ ] |
 | C06 议事厅 | 门户进出 | [x] `g8_c06_town_hall_idle.png`；镇长 walk 帧已补 | [ ] |
-| C40/C43 博物/浴 | 立面可发现 → 进门 | [x] 博物馆进门；浴场 `facade_bath` + SceneRouter enter PASS；室内 idle | [ ] |
-| Wave A2–F 其余已锁室 | 按 PHASE5 进出各一次 | [x] 抽检 C04/C07/C09/C10 idle；72/72 load | [ ] |
+| C40/C43 博物/浴 | 立面可发现 → 进门 | [x] 博物馆进门 + `g8_c40_museum_idle`；浴场 façade enter PASS；室内 idle | [ ] |
+| Wave A2–F 其余已锁室 | 按 PHASE5 进出各一次 | [x] 抽检 C04/C07/C09–C12/C16–C17/C28–C30/C44 idle；72/72 load；**C62 全链 PASS** | [ ] |
 
 ### 本机 QA 步骤（请你跑，避免中文路径 CLI 损文件）
 

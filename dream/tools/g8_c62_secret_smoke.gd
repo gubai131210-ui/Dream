@@ -1,16 +1,35 @@
 extends SceneTree
 
-## C62 secret chain: forest_deep secret portal has façade cues + enters cave.
+## C62 secret chain full hop: forest → cave → waterfall → lake.
+## Each hop: secret_chain portal, Sprite2D DoorFacade/step/arch, SceneRouter enter.
 ## godot --path dream --headless -s res://tools/g8_c62_secret_smoke.gd
 
 const FOREST := "res://scenes/areas/forest_deep/forest_deep.tscn"
-const CAVE_NEEDLE := "c16_cave_entry"
+
+const HOPS := [
+	{
+		"expect_facade": "ruin_arch",
+		"to_needle": "c16_cave_entry",
+		"name_alt": "Cave",
+	},
+	{
+		"expect_facade": "door_facade",
+		"to_needle": "waterfall",
+		"name_alt": "Waterfall",
+	},
+	{
+		"expect_facade": "door_facade",
+		"to_needle": "lake",
+		"name_alt": "Lake",
+	},
+]
 
 var _failures: PackedStringArray = []
+var _hop_i: int = 0
 
 
 func _initialize() -> void:
-	print("G8_C62: start")
+	print("G8_C62: start full chain")
 	call_deferred("_boot")
 
 
@@ -23,60 +42,71 @@ func _boot() -> void:
 	var host := packed.instantiate() as Node2D
 	root.add_child(host)
 	create_timer(1.1).timeout.connect(func() -> void:
-		_probe(host)
+		_probe_hop(host)
 	)
 
 
-func _probe(host: Node2D) -> void:
+func _probe_hop(host: Node) -> void:
+	if _hop_i >= HOPS.size():
+		if _failures.is_empty():
+			print("G8_C62: PASS full chain")
+			_finish(0)
+		else:
+			_finish(1)
+		return
+	var hop: Dictionary = HOPS[_hop_i]
 	var portal := _find_secret_portal(host)
 	if portal == null:
-		_fail("secret portal missing")
+		_fail("hop%d secret portal missing on %s" % [_hop_i, host.name if host else "?"])
 		_finish(1)
 		return
 	if not bool(portal.get_meta("secret_chain", false)):
-		_fail("secret_chain meta missing")
+		_fail("hop%d secret_chain meta missing" % _hop_i)
 	var path := str(portal.get_meta("scene_path", ""))
-	if path.findn(CAVE_NEEDLE) < 0:
-		_fail("secret path=%s" % path)
+	var needle := str(hop["to_needle"])
+	if path.findn(needle) < 0:
+		_fail("hop%d path=%s expected %s" % [_hop_i, path, needle])
 		_finish(1)
 		return
 	for cue in ["DoorFacade", "DoorstepCue", "DoorArchCue"]:
 		var node := portal.get_node_or_null(cue)
 		if node == null:
-			_fail("missing cue %s" % cue)
+			_fail("hop%d missing cue %s" % [_hop_i, cue])
 		elif not (node is Sprite2D):
-			_fail("cue %s is %s not Sprite2D" % [cue, node.get_class()])
+			_fail("hop%d cue %s is %s not Sprite2D" % [_hop_i, cue, node.get_class()])
 	var facade := portal.get_node_or_null("DoorFacade") as Sprite2D
 	if facade == null or facade.texture == null:
-		_fail("DoorFacade texture null")
+		_fail("hop%d DoorFacade texture null" % _hop_i)
 	else:
 		var tex_path := str(facade.texture.resource_path)
 		if tex_path.is_empty() and facade.has_meta("facade_path"):
 			tex_path = str(facade.get_meta("facade_path"))
-		print("G8_C62: facade=", tex_path)
-		# Forest hop must use CHAIN_A ruin_arch — not default door_facade.
-		if tex_path.findn("ruin_arch") < 0:
-			_fail("expected ruin_arch facade, got %s" % tex_path)
-	print("G8_C62: path=", path)
+		print("G8_C62: hop%d facade=%s" % [_hop_i, tex_path])
+		var expect_facade := str(hop["expect_facade"])
+		if tex_path.findn(expect_facade) < 0:
+			_fail("hop%d expected facade %s, got %s" % [_hop_i, expect_facade, tex_path])
+	print("G8_C62: hop%d path=%s" % [_hop_i, path])
 	SceneRouter.change_to(self, path)
-	create_timer(0.8).timeout.connect(func() -> void:
+	create_timer(0.9).timeout.connect(func() -> void:
 		var cur := current_scene
 		var cur_path := ""
 		if cur != null:
 			cur_path = str(cur.scene_file_path)
-		var ok := cur_path.findn(CAVE_NEEDLE) >= 0
-		if not ok and cur != null and str(cur.name).findn("Cave") >= 0:
+		var ok := cur_path.findn(needle) >= 0
+		var alt := str(hop.get("name_alt", ""))
+		if not ok and cur != null and not alt.is_empty() and str(cur.name).findn(alt) >= 0:
 			ok = true
 		if not ok:
-			_fail("after change_to current=%s name=%s" % [cur_path, cur.name if cur else "?"])
+			_fail("hop%d after change_to current=%s name=%s" % [
+				_hop_i, cur_path, cur.name if cur else "?"
+			])
 			_finish(1)
 			return
-		print("G8_C62: entered ", cur_path if not cur_path.is_empty() else cur.name)
-		if _failures.is_empty():
-			print("G8_C62: PASS")
-			_finish(0)
-		else:
-			_finish(1)
+		print("G8_C62: hop%d entered %s" % [
+			_hop_i, cur_path if not cur_path.is_empty() else str(cur.name)
+		])
+		_hop_i += 1
+		_probe_hop(cur)
 	)
 
 
