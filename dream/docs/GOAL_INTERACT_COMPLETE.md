@@ -96,18 +96,15 @@
 
 ---
 
-## 5. 当前缺口快照（2026-09-13）
+## 5. 当前缺口快照（2026-09-13 晚）
 
-详见会话 inventory（explore）：广场 WorldSys **逻辑已通、美术不足**；室内 Wave A–F **desk 丰富、用户 QA 未清**；真正缺的是 **动层 + 全区 G + 入口可发现性**。
+代码侧 G0–G7 与大部分 G8 残留已关；**权威阻塞**仍是用户本机 Godot QA（§7）。
 
 | 优先级 | 缺口 |
 | --- | ---:|
-| P0 | C58/C59/C60 正式精灵与反馈 |
-| P0 | 交互动画层 idle/focus/action/result |
-| P1 | C55 季节真素材 |
-| P1 | 入口立面 / 传送可发现 |
-| P1 | 用户 Godot QA Waves A2–F |
-| P2 | C53 职业姿态；钓鱼 C22；全区 G |
+| P0 | **用户 Godot QA Waves A2–F + §7 勾选** |
+| P1 | 姿态/摊位 ArtGen 继续抛光（非阻塞） |
+| P2 | tomyud1 MCP 截图证据（可选；headless smoke 已有） |
 
 ---
 
@@ -123,7 +120,7 @@
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
 | G7 | **DONE (code)** — bobber；C22；pose×4；drawer StyleQA；C05 摊位默认真棚 PNG |
-| G8 | **IN PROGRESS** — headless smoke **13/13 PASS**；姿态/叶/鸟 StyleQA；`fish_ring` 像素水环；**用户 Godot QA 仍待** |
+| G8 | **IN PROGRESS** — smoke 扩至 ≥20 场景；窗光精灵；`fish_ring`；**用户 Godot QA 仍待** |
 
 ### G8 已知残留（不可假装清零）
 
@@ -142,6 +139,7 @@
 | ~~C59 木桩/杂草错用桶袋~~ | BreakablesKit | **DONE** → `breakable_stake/weed` |
 | ~~C05 摊位 ColorRect 棚~~ | MarketStall | **DONE** → 默认 `stall_open_wood_00`（ColorRect 仅 fallback） |
 | ~~钓鱼浮漂下 Polygon 水环~~ | `fishing_spot.gd` / `fish_cage.gd` | **DONE** → `fx/fish_ring_00.png`（Polygon 仅 fallback） |
+| ~~室内窗光 Polygon 光柱~~ | `interior_craft.gd` | **DONE** → `fx/window_light_shaft_00.png`（Polygon 仅 fallback） |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
 | Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
 | 姿态/摊位 ArtGen 抛光 | work_poses / market | **部分加深**（farmer 调色板姿态）；还可继续 |

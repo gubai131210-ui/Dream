@@ -2,6 +2,7 @@
 """Headless smoke matrix for G8 evidence — writes markdown report."""
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 import time
@@ -14,16 +15,23 @@ SCENES = [
 	"res://scenes/areas/village_square/village_square.tscn",
 	"res://scenes/areas/market_street/market_street.tscn",
 	"res://scenes/areas/farmland/farmland.tscn",
+	"res://scenes/areas/farm_residential/farm_residential.tscn",
 	"res://scenes/areas/forest_deep/forest_deep.tscn",
+	"res://scenes/areas/forest_entrance/forest_entrance.tscn",
 	"res://scenes/areas/river/river.tscn",
 	"res://scenes/areas/lake/lake.tscn",
+	"res://scenes/areas/lake_house/lake_house.tscn",
 	"res://scenes/areas/station/station.tscn",
 	"res://scenes/areas/waterfall/waterfall.tscn",
 	"res://scenes/areas/lighthouse/lighthouse.tscn",
 	"res://scenes/areas/hill_farm/hill_farm.tscn",
 	"res://scenes/areas/village_residential/village_residential.tscn",
 	"res://scenes/interiors/c01_home/c01_home.tscn",
+	"res://scenes/interiors/c04_smith/c04_smith.tscn",
 	"res://scenes/interiors/c06_town_hall/c06_town_hall.tscn",
+	"res://scenes/interiors/c11_station/c11_station.tscn",
+	"res://scenes/interiors/c40_museum/c40_museum.tscn",
+	"res://scenes/interiors/c43_bathhouse/c43_bathhouse.tscn",
 ]
 
 
@@ -35,17 +43,20 @@ def find_godot() -> str:
 				"powershell",
 				"-NoProfile",
 				"-Command",
-				"(Get-Process | Where-Object { $_.ProcessName -match 'Godot' } | Select-Object -First 1).Path",
+				"Get-Process | Where-Object { $_.ProcessName -match 'Godot' } | Select-Object -First 1 -ExpandProperty Path",
 			],
 			capture_output=True,
 			text=True,
 			check=False,
 		)
 		path = (ps.stdout or "").strip()
-		if path:
+		if path and Path(path).exists():
 			return path
 	except OSError:
 		pass
+	env = Path(os.environ.get("GODOT", "") or os.environ.get("GODOT_PATH", ""))
+	if env and env.exists():
+		return str(env)
 	raise SystemExit("Godot process not found — open the editor once, then re-run.")
 
 

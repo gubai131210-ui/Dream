@@ -195,17 +195,28 @@ func _paint_door_and_window(parent: Node2D) -> void:
 			spr.z_index = 3
 			parent.add_child(spr)
 		var mid := int(_room_w / 2.0)
-		var shaft := Polygon2D.new()
-		shaft.name = "WindowLightShaft"
-		shaft.color = Color(1.0, 0.92, 0.65, 0.12)
-		shaft.polygon = PackedVector2Array([
-			_tile_center(mid - 2, 2) + Vector2(-16, -8),
-			_tile_center(mid + 2, 2) + Vector2(16, -8),
-			_tile_center(mid + 3, 7) + Vector2(8, 0),
-			_tile_center(mid - 3, 7) + Vector2(-8, 0),
-		])
-		shaft.z_index = -3
-		parent.add_child(shaft)
+		var shaft_tex := _load_texture("res://assets/sprites/fx/window_light_shaft_00.png")
+		if shaft_tex != null:
+			var shaft_spr := Sprite2D.new()
+			shaft_spr.name = "WindowLightShaft"
+			shaft_spr.texture = shaft_tex
+			shaft_spr.centered = true
+			shaft_spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			shaft_spr.position = _tile_center(mid, 4) + Vector2(16, 8)
+			shaft_spr.z_index = -3
+			parent.add_child(shaft_spr)
+		else:
+			var shaft := Polygon2D.new()
+			shaft.name = "WindowLightShaft"
+			shaft.color = Color(1.0, 0.92, 0.65, 0.12)
+			shaft.polygon = PackedVector2Array([
+				_tile_center(mid - 2, 2) + Vector2(-16, -8),
+				_tile_center(mid + 2, 2) + Vector2(16, -8),
+				_tile_center(mid + 3, 7) + Vector2(8, 0),
+				_tile_center(mid - 3, 7) + Vector2(-8, 0),
+			])
+			shaft.z_index = -3
+			parent.add_child(shaft)
 
 
 func _paint_rug(parent: Node2D) -> void:

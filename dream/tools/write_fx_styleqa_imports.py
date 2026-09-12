@@ -37,6 +37,7 @@ def main() -> None:
 		"fish_bubble_00",
 		"fish_splash_00",
 		"fish_ring_00",
+		"window_light_shaft_00",
 		"leaf_fall_00",
 		"leaf_fall_01",
 		"leaf_fall_02",

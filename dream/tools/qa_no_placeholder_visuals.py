@@ -34,6 +34,7 @@ def main() -> None:
     require(interior, 'marker.visible = show_marker', "interior return marker visibility")
     require(interior, 'label.visible = show_marker', "interior return label visibility")
     require(interior, 'lbl.visible = show_marker', "interior extra label visibility")
+    require(interior, "window_light_shaft_00.png", "interior window light shaft sprite")
 
     square = read("scripts/areas/village_square_assembler.gd")
     if 'rock_g := "res://assets/sprites/props/rock_02.png"' in square:
