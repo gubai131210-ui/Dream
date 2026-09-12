@@ -38,6 +38,8 @@
 | Square C53 buttons | `docs/evidence/g8_square_c53_buttons.png` | TopBar「工作:播种环」「生活:用餐」**visible=true** |
 | Square outdoor UI | `docs/evidence/g8_square_outdoor_work_season.png` | 工作/生活环 + 春花季节 TopBar；室外 Genre 路径后的广场 idle |
 | Square WorkPoseCue | `docs/evidence/g8_square_work_pose_cue.png` | C53 `WorkPoseCue` + `WorkPoseAnim` + outdoor `PropSprite`（6s hold） |
+| Forest deep landmarks | `docs/evidence/g8_forest_deep_landmarks.png` | C28 巨树 / C29 遗迹 `Visual/PropSprite` |
+| River reed landmark | `docs/evidence/g8_river_reed_landmark.png` | C25 芦苇岔口 `Visual/PropSprite` |
 
 ## Runtime queries
 
@@ -55,6 +57,7 @@
 - Demo actor keeps `NpcRingDemoActor` after `PatrolActor.setup` (no clash with plaza `摊主`/`铁匠` Area2D)
 - Outdoor Genre: DIK / seasonal / work cues / hidden_chests use `sprites/props/` only (`qa_no_placeholder` bans `interior/props`)
 - Live `WorkPoseCue`: children `WorkPoseAnim` + `PropSprite` + `ContactShadow`; `modulate.a=1`; hold ~6s for QA/MCP
+- Landmark hotspots own `Visual/PropSprite`: 巨树/遗迹残垣/芦苇岔口 (queried live); market bridge + cemetery + mine/cave/渡口 wired similarly
 
 ## Agent reviews this batch
 

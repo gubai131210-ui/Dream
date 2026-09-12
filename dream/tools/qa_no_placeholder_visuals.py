@@ -118,6 +118,17 @@ def main() -> None:
     if "interior/props" in chests:
         raise AssertionError("hidden_chests must use outdoor props/ coin_chest (Genre cohesion)")
 
+    forest = read("scripts/areas/forest_deep_assembler.gd")
+    require(forest, "ruin_arch_00.png", "C29 ruins landmark prop")
+    require(forest, "tree_04.png", "C28 giant-tree landmark prop")
+    require(forest, "attach_hotspot_prop", "forest landmarks use attach_hotspot_prop")
+    river = read("scripts/areas/river_assembler.gd")
+    require(river, "reed_clump_00.png", "C25 reed landmark prop")
+    market_dress = read("scripts/areas/market_street_dressing.gd")
+    require(market_dress, "bridge_plank_00.png", "market bridge plank prop")
+    square = read("scripts/areas/village_square_assembler.gd")
+    require(square, "grave_marker_00.png", "C30 cemetery landmark prop")
+
     print("GREEN production-placeholder QA (facades, poses, gates, breakables, stall, districts)")
 
 

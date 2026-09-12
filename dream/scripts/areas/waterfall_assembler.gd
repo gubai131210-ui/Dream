@@ -30,10 +30,7 @@ func assemble(root: Node2D) -> void:
 	craft.paint_dirt_spurs(ground)
 	craft.paint_water(water, ground)
 	craft.paint_paths(path)
-	_spawn_cliff_rocks(ysort)
 	_spawn_waterfall(ysort)
-	_spawn_rim_rocks(ysort)
-	_spawn_mist(ysort)
 	_spawn_trees(ysort)
 	_spawn_actors(ysort)
 	craft.spawn_water_overlay(ysort)
@@ -239,10 +236,16 @@ func _spawn_waterfall(ysort: Node2D) -> void:
 	if fall == null and ResourceLoader.exists(mid):
 		fall = _spawn_scaled_prop(ysort, mid, foot, 0.68, 4, 1, 1, true, true)
 	if fall:
-		craft.make_hotspot(
+		var hs_fall := craft.make_hotspot(
 			ysort, "瀑布", "岩壁倾泻入潭，水雾弥漫。",
 			fall.position + Vector2(0, 28), Vector2(110, 80)
 		)
+		# Interact owns its pixel — reparent cascade into hotspot Visual.
+		var vis := hs_fall.get_node_or_null("Visual") as Node2D
+		if vis:
+			var world_pos := fall.global_position
+			fall.reparent(vis)
+			fall.global_position = world_pos
 
 
 func _spawn_rim_rocks(ysort: Node2D) -> void:

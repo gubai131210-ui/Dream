@@ -200,5 +200,6 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 900), Vector2(96, 48))
 	# Wave C C25 — west-bank reed fork (append-only).
 	var reed := Vector2(220, 380)
-	craft.make_hotspot(ysort, "芦苇岔口", "西岸芦苇掩映的隐藏岔路。", reed, Vector2(72, 56))
+	var hs_reed := craft.make_hotspot(ysort, "芦苇岔口", "西岸芦苇掩映的隐藏岔路。", reed, Vector2(72, 56))
+	craft.attach_hotspot_prop(hs_reed, "res://assets/sprites/props/reed_clump_00.png", 0.65)
 	craft.make_portal(ysort, "进入芦苇岔", SceneRouter.C25_RIVER_HIDE_PATH, reed + Vector2(0, 12), Vector2(100, 52))

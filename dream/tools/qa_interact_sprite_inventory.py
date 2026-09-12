@@ -54,6 +54,17 @@ def main() -> int:
 		if not (ROOT / p).exists():
 			missing.append(f"fx: res://{p}")
 
+	# Landmark props for Wave C investigate hotspots (must own PropSprite).
+	for p in (
+		"assets/sprites/props/reed_clump_00.png",
+		"assets/sprites/props/ruin_arch_00.png",
+		"assets/sprites/props/grave_marker_00.png",
+		"assets/sprites/props/bridge_plank_00.png",
+		"assets/sprites/trees/grounded/tree_04.png",
+	):
+		if not (ROOT / p).exists():
+			missing.append(f"landmark: res://{p}")
+
 	if missing:
 		print("FAIL interact sprite inventory")
 		for m in missing:

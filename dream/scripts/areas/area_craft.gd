@@ -552,6 +552,16 @@ func make_hotspot(parent: Node2D, title: String, desc: String, pos: Vector2, siz
 	return hs
 
 
+## Attach a formal prop sprite into hotspot Visual (G8 landmark fidelity).
+func attach_hotspot_prop(hs: InteractableHotspot, path: String, scale_f: float = 0.55) -> Sprite2D:
+	if hs == null or path.is_empty():
+		return null
+	var visual := hs.get_node_or_null("Visual") as Node2D
+	if visual == null:
+		return null
+	return WorldSpawnUtil.attach_prop_sprite(visual, path, scale_f)
+
+
 func make_portal(
 	parent: Node2D,
 	title: String,

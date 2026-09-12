@@ -182,25 +182,19 @@ func _spawn_portals(ysort: Node2D) -> void:
 	# C17 mine mouth — NW hillside cut (append-only; no layout rewrite).
 	var mine_mouth := Vector2(180, 200)
 	var rock_path := "res://assets/sprites/props/rock_02.png"
-	if ResourceLoader.exists(rock_path):
-		craft.add_contact_shadow(ysort, mine_mouth, Vector2(28, 10))
-		var rock := craft.spawn_sprite(ysort, rock_path, mine_mouth)
-		rock.scale = Vector2(0.7, 0.7)
-	craft.make_hotspot(
+	var hs_mine := craft.make_hotspot(
 		ysort, "矿洞口", "山坡切入的矿洞入口，通向入口层。", mine_mouth, Vector2(80, 64)
 	)
+	craft.attach_hotspot_prop(hs_mine, rock_path, 0.7)
 	craft.make_portal(
 		ysort, "进入矿洞", SceneRouter.C17_MINE_PATH, mine_mouth + Vector2(0, 12), Vector2(96, 52)
 	)
 	# Wave C C16 — ordinary cave mouth (east hillside; not the NW mine).
 	var cave_mouth := Vector2(1000, 240)
-	if ResourceLoader.exists(rock_path):
-		craft.add_contact_shadow(ysort, cave_mouth, Vector2(28, 10))
-		var cave_rock := craft.spawn_sprite(ysort, rock_path, cave_mouth)
-		cave_rock.scale = Vector2(0.65, 0.65)
-	craft.make_hotspot(
+	var hs_cave := craft.make_hotspot(
 		ysort, "山洞口", "东坡普通洞穴入口，通向入口层。", cave_mouth, Vector2(80, 64)
 	)
+	craft.attach_hotspot_prop(hs_cave, rock_path, 0.65)
 	craft.make_portal(
 		ysort, "进入洞穴", SceneRouter.C16_CAVE_ENTRY_PATH, cave_mouth + Vector2(0, 12), Vector2(96, 52)
 	)

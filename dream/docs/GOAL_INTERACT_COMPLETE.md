@@ -146,6 +146,7 @@
 | ~~C53/C54 按钮被 demo 开关隐藏~~ | square/market/farmland controllers | **DONE** → TopBar 工作/生活环常显；仅 status strip 仍 demo 门控 |
 | ~~DistrictInteract 串用 interior/props~~ | `district_interact_kit.gd` | **DONE** → 拷贝至 `sprites/props/`；QA 禁 interior 路径 |
 | ~~工作姿态/季节/藏宝箱室外串味~~ | routine / seasonal / hidden_chests | **DONE** → anvil/stove/花床/灯串/粮垛/coin_chest 进 outdoor props；QA 禁 interior |
+| ~~地标热区空 Visual~~ | 巨树/遗迹/芦苇/墓园/市集桥/瀑/洞口/渡口 | **DONE** → `attach_hotspot_prop` + reed/ruin/grave 精灵；瀑 cascade reparent |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
 | Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
 | 姿态/摊位 ArtGen 抛光 | work_poses / market | **StyleQA GREEN**（32×48×4）；ArtGen 还可继续 |

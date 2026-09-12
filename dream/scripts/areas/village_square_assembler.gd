@@ -595,7 +595,12 @@ func _spawn_buildings(ysort: Node2D) -> void:
 			)
 	# Wave C C30 — cemetery pocket south of church (append-only).
 	var grave := Vector2(1000, 360)
-	_make_hotspot(ysort, "教堂墓园", "教堂南侧墓区，可下墓穴。", grave, Vector2(96, 64))
+	var hs_grave := _make_hotspot(ysort, "教堂墓园", "教堂南侧墓区，可下墓穴。", grave, Vector2(96, 64))
+	WorldSpawnUtil.attach_prop_sprite(
+		hs_grave.get_node("Visual") as Node2D,
+		"res://assets/sprites/props/grave_marker_00.png",
+		0.7,
+	)
 	craft.make_portal(
 		ysort, "进入墓园", SceneRouter.C30_CEMETERY_PATH, grave + Vector2(0, 14), Vector2(100, 52)
 	)
