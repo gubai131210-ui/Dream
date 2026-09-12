@@ -59,6 +59,11 @@ def main() -> None:
     require(spawn, "door_facade_00.png", "portal door façade sprite")
     require(spawn, 'DoorFacade', "portal DoorFacade node")
 
+    hotspot = read("scripts/interact/interactable_hotspot.gd")
+    require(hotspot, "focus_corners_00.png", "hover focus corner sprite")
+    require(hotspot, "queue_redraw()", "hover redraw for focus frame")
+    require(hotspot, "_ensure_focus_corners", "pixel focus corner helper")
+
     fishing = read("scripts/fishing/fishing_spot.gd")
     require(fishing, "fish_bubble_00.png", "fishing bubble sprite")
     require(fishing, "fish_splash_00.png", "fishing splash sprite")

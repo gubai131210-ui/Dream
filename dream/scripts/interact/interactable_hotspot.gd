@@ -15,8 +15,8 @@ signal activated(hotspot: InteractableHotspot)
 var _default_modulate: Color = Color.WHITE
 var _visual: CanvasItem
 var _hovered := false
-var _hover_time := 0.0
 var _marker_size := Vector2(24, 24)
+var _visual_top_y := -16.0
 var _prompt: Label
 var _prompt_shown := false
 ## Physics bodies currently overlapping that count as the player.
@@ -39,6 +39,7 @@ func _ready() -> void:
 	if _visual:
 		_default_modulate = _visual.modulate
 	_cache_marker_size()
+	_cache_visual_bounds()
 	_ensure_prompt()
 	queue_redraw()
 
@@ -73,31 +74,45 @@ func _ensure_prompt() -> void:
 	_layout_prompt()
 
 
+func _cache_visual_bounds() -> void:
+	# Prompt placement must use stable animation bounds, not the currently
+	# displayed frame. Otherwise a frame with a different transparent margin
+	# makes the prompt jump or overlap the target while the animation plays.
+	_visual_top_y = -maxf(_marker_size.y, 16.0)
+	var visual_node := get_node_or_null("Visual") as Node2D
+	if visual_node == null:
+		return
+	for child in visual_node.get_children():
+		if child is Sprite2D:
+			var spr := child as Sprite2D
+			if spr.texture == null:
+				continue
+			var h := float(spr.texture.get_height()) * absf(spr.scale.y)
+			var top := spr.position.y + spr.offset.y
+			if spr.centered:
+				top -= h * 0.5
+			_visual_top_y = minf(_visual_top_y, top)
+		elif child is AnimatedSprite2D:
+			var anim := child as AnimatedSprite2D
+			if anim.sprite_frames == null:
+				continue
+			for animation_name in anim.sprite_frames.get_animation_names():
+				var frame_count := anim.sprite_frames.get_frame_count(animation_name)
+				for frame_index in range(frame_count):
+					var frame_tex := anim.sprite_frames.get_frame_texture(animation_name, frame_index)
+					if frame_tex == null:
+						continue
+					var h := float(frame_tex.get_height()) * absf(anim.scale.y)
+					var top := anim.position.y + anim.offset.y
+					if anim.centered:
+						top -= h * 0.5
+					_visual_top_y = minf(_visual_top_y, top)
+
+
 func _layout_prompt() -> void:
 	if _prompt == null:
 		return
-	var top_y := -maxf(_marker_size.y, 16.0)
-	var visual_node := get_node_or_null("Visual") as Node2D
-	if visual_node:
-		for child in visual_node.get_children():
-			if child is Sprite2D:
-				var spr := child as Sprite2D
-				if spr.texture == null:
-					continue
-				var h := float(spr.texture.get_height()) * absf(spr.scale.y)
-				var spr_top := spr.position.y - h * 0.5
-				top_y = minf(top_y, spr_top)
-			elif child is AnimatedSprite2D:
-				var anim := child as AnimatedSprite2D
-				var frame_tex: Texture2D = null
-				if anim.sprite_frames and anim.sprite_frames.has_animation(anim.animation):
-					frame_tex = anim.sprite_frames.get_frame_texture(anim.animation, anim.frame)
-				if frame_tex == null:
-					continue
-				var ah := float(frame_tex.get_height()) * absf(anim.scale.y)
-				var anim_top := anim.position.y - ah * 0.5
-				top_y = minf(top_y, anim_top)
-	_prompt.position = Vector2(-28.0, top_y - prompt_clearance_px - 20.0)
+	_prompt.position = Vector2(-28.0, _visual_top_y - prompt_clearance_px - 20.0)
 	_prompt.size = Vector2(56, 22)
 	_prompt.text = prompt_text
 
@@ -106,6 +121,7 @@ func set_proximity_prompt_shown(shown: bool) -> void:
 	_ensure_prompt()
 	if shown:
 		_cache_marker_size()
+		_cache_visual_bounds()
 		_layout_prompt()
 	if _prompt_shown == shown and _prompt.visible == shown:
 		return
@@ -160,23 +176,64 @@ func _on_mouse_entered() -> void:
 			_default_modulate = _visual.modulate
 	if _visual:
 		_visual.modulate = highlight_modulate
+	_ensure_focus_corners()
+	queue_redraw()
 
 
 func _on_mouse_exited() -> void:
 	_hovered = false
 	if _visual:
 		_visual.modulate = _default_modulate
+	_set_focus_corners_visible(false)
 	queue_redraw()
 
 
-func _process(delta: float) -> void:
-	if _hovered:
-		_hover_time += delta
-		queue_redraw()
+func _ensure_focus_corners() -> void:
+	## Prefer pixel corner marks; _draw() lines remain as fallback.
+	if get_node_or_null("FocusCorners") != null:
+		_set_focus_corners_visible(true)
+		return
+	var path := "res://assets/sprites/fx/focus_corners_00.png"
+	var tex := WorldSpawnUtil.load_prop_texture(path)
+	if tex == null:
+		return
+	var root := Node2D.new()
+	root.name = "FocusCorners"
+	root.z_index = 15
+	var half := Vector2(maxf(_marker_size.x, 18.0), maxf(_marker_size.y, 16.0))
+	var pad := 6.0
+	var positions := [
+		Vector2(-half.x - pad, -half.y - pad),
+		Vector2(half.x + pad, -half.y - pad),
+		Vector2(-half.x - pad, half.y + pad),
+		Vector2(half.x + pad, half.y + pad),
+	]
+	var flips := [
+		Vector2(1, 1), Vector2(-1, 1), Vector2(1, -1), Vector2(-1, -1),
+	]
+	for i in range(4):
+		var spr := Sprite2D.new()
+		spr.texture = tex
+		spr.centered = true
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		spr.position = positions[i]
+		spr.scale = flips[i]
+		spr.z_index = 15
+		root.add_child(spr)
+	add_child(root)
+
+
+func _set_focus_corners_visible(shown: bool) -> void:
+	var root := get_node_or_null("FocusCorners") as CanvasItem
+	if root:
+		root.visible = shown
 
 
 func _draw() -> void:
 	if not _hovered:
+		return
+	# Skip procedural lines when pixel focus corners are present.
+	if get_node_or_null("FocusCorners") != null:
 		return
 	var half := Vector2(maxf(_marker_size.x, 18.0), maxf(_marker_size.y, 16.0))
 	var pad := 5.0
@@ -184,7 +241,9 @@ func _draw() -> void:
 	var right := half.x + pad
 	var top := -half.y - pad
 	var bottom := half.y + pad
-	var c := Color(1.0, 0.87, 0.4, 0.86 + sin(_hover_time * 5.0) * 0.12)
+	# A stable focus frame is easier to read than an always-pulsing frame and
+	# cannot be mistaken for a broken animation or duplicated sprite.
+	var c := Color(1.0, 0.87, 0.4, 0.88)
 	var arm := 12.0
 	draw_line(Vector2(left, top), Vector2(left + arm, top), c, 2.0)
 	draw_line(Vector2(left, top), Vector2(left, top + arm), c, 2.0)

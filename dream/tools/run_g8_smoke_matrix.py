@@ -27,10 +27,16 @@ SCENES = [
 	"res://scenes/areas/hill_farm/hill_farm.tscn",
 	"res://scenes/areas/village_residential/village_residential.tscn",
 	"res://scenes/interiors/c01_home/c01_home.tscn",
+	"res://scenes/interiors/c02_farmer/c02_farmer.tscn",
+	"res://scenes/interiors/c03_barn/c03_barn.tscn",
 	"res://scenes/interiors/c04_smith/c04_smith.tscn",
+	"res://scenes/interiors/c04_tavern/c04_tavern.tscn",
 	"res://scenes/interiors/c06_town_hall/c06_town_hall.tscn",
 	"res://scenes/interiors/c11_station/c11_station.tscn",
+	"res://scenes/interiors/c12_lighthouse/c12_lighthouse.tscn",
+	"res://scenes/interiors/c14_well/c14_well.tscn",
 	"res://scenes/interiors/c40_museum/c40_museum.tscn",
+	"res://scenes/interiors/c42_hotspring/c42_hotspring.tscn",
 	"res://scenes/interiors/c43_bathhouse/c43_bathhouse.tscn",
 ]
 
