@@ -312,7 +312,8 @@ func _spawn_crop_visuals(ysort: Node2D) -> void:
 
 
 func _spawn_bed_fences(ysort: Node2D) -> void:
-	# Low post fence around each crop bed (visual only).
+	# Low post fence around each crop bed (visual only) — sprite posts (G8).
+	const POST := "res://assets/sprites/props/fence_post_00.png"
 	for b in _crop_beds:
 		var x0: int = int(b["x0"])
 		var y0: int = int(b["y0"])
@@ -338,14 +339,10 @@ func _spawn_bed_fences(ysort: Node2D) -> void:
 			var t := craft.world_to_tile(pos)
 			if craft.is_water(t.x, t.y):
 				continue
-			var post := ColorRect.new()
-			post.size = Vector2(6, 14)
-			post.position = Vector2(-3, -12)
-			post.color = Color(0.4, 0.26, 0.12, 0.8)
 			var hs := craft.make_hotspot(
-				ysort, "ç¦æ ", "%så´æ " % str(b["title"]), pos, Vector2(18, 22)
+				ysort, "田埂桩", "%s围桩" % str(b["title"]), pos, Vector2(18, 22)
 			)
-			hs.get_node("Visual").add_child(post)
+			WorldSpawnUtil.attach_prop_sprite(hs.get_node("Visual") as Node2D, POST, 0.45)
 
 
 func _spawn_props(ysort: Node2D) -> void:
@@ -378,16 +375,17 @@ func _spawn_props(ysort: Node2D) -> void:
 
 
 func _spawn_perimeter_fence(ysort: Node2D) -> void:
+	const POST := "res://assets/sprites/props/fence_post_00.png"
 	var left := FARM_ZONE.position.x + 8.0
 	var right := FARM_ZONE.end.x - 8.0
 	var top := FARM_ZONE.position.y + 8.0
 	var bottom := FARM_ZONE.end.y - 8.0
 	var step := 40.0
 	var segments: Array[Dictionary] = [
-		{"origin": Vector2(left, top), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "åå´æ "},
-		{"origin": Vector2(left, bottom), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "åå´æ "},
-		{"origin": Vector2(left, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "è¥¿å´æ "},
-		{"origin": Vector2(right, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "ä¸å´æ "},
+		{"origin": Vector2(left, top), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "北围栏"},
+		{"origin": Vector2(left, bottom), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "南围栏"},
+		{"origin": Vector2(left, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "西围栏"},
+		{"origin": Vector2(right, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "东围栏"},
 	]
 	for seg in segments:
 		var origin: Vector2 = seg["origin"]
@@ -398,14 +396,10 @@ func _spawn_perimeter_fence(ysort: Node2D) -> void:
 			var t := craft.world_to_tile(pos)
 			if craft.is_water(t.x, t.y):
 				continue
-			var post := ColorRect.new()
-			post.size = Vector2(8, 22)
-			post.position = Vector2(-4, -18)
-			post.color = Color(0.42, 0.28, 0.14, 0.85)
 			var hs := craft.make_hotspot(
-				ysort, str(seg["title"]), "åç°å¤åå´æ ï¼å»ºç­ä¸èç¦åå¨å´æ åä¾§ã", pos, Vector2(24, 32)
+				ysort, str(seg["title"]), "农田外圈围栏：建筑与菜田均在围栏内侧。", pos, Vector2(24, 32)
 			)
-			hs.get_node("Visual").add_child(post)
+			WorldSpawnUtil.attach_prop_sprite(hs.get_node("Visual") as Node2D, POST, 0.55)
 
 
 func _spawn_trees(ysort: Node2D) -> void:

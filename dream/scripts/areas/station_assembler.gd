@@ -132,7 +132,7 @@ func _paint_platform_and_tracks() -> void:
 	_fill_path(PLATFORM_TX0, PLATFORM_TY0, PLATFORM_TX1, PLATFORM_TY1)
 	# Stairs / mid access from south dirt up onto platform.
 	_fill_path(18, 12, 21, 12)
-	# Track ballast as dirt band parallel to platform (ColorRect sleepers on top).
+	# Track ballast as dirt band parallel to platform (sprite sleepers on top).
 	_fill_dirt(TRACK_TX0, TRACK_TY0, TRACK_TX1, TRACK_TY1, true)
 
 
@@ -151,7 +151,9 @@ func _paint_dirt_approaches() -> void:
 
 
 func _spawn_track_proxy(ysort: Node2D) -> void:
-	# Dark sleeper / rail posts along track band — readable at 1/8 silhouette.
+	# Sleeper / rail sprites along track band (G8 — no ColorRect proxies).
+	const SLEEPER := "res://assets/sprites/props/track_sleeper_00.png"
+	const RAIL := "res://assets/sprites/props/track_rail_00.png"
 	var band_top := float(TRACK_TY0) * float(craft.tile)
 	var band_bottom := float(TRACK_TY1 + 1) * float(craft.tile)
 	var mid_y := (band_top + band_bottom) * 0.5
@@ -162,33 +164,27 @@ func _spawn_track_proxy(ysort: Node2D) -> void:
 	var i := 0
 	while x <= right + 0.5:
 		var pos := Vector2(x, mid_y)
-		var sleeper := ColorRect.new()
-		sleeper.size = Vector2(18, 8)
-		sleeper.position = Vector2(-9, -4)
-		sleeper.color = Color(0.18, 0.14, 0.1, 0.88)
 		var hs := craft.make_hotspot(
 			ysort,
 			"铁轨枕木",
-			"站台南侧轨道代理：枕木与道砟带构成交通脊。",
+			"站台南侧轨道：枕木与道砟带构成交通脊。",
 			pos,
 			Vector2(24, 16)
 		)
-		hs.get_node("Visual").add_child(sleeper)
-		# Thin rail lines (dark posts every other sleeper).
+		var visual := hs.get_node("Visual") as Node2D
+		WorldSpawnUtil.attach_prop_sprite(visual, SLEEPER, 0.7)
 		if i % 2 == 0:
-			var rail_n := ColorRect.new()
-			rail_n.size = Vector2(22, 3)
-			rail_n.position = Vector2(-11, -8)
-			rail_n.color = Color(0.12, 0.12, 0.14, 0.92)
-			hs.get_node("Visual").add_child(rail_n)
-			var rail_s := ColorRect.new()
-			rail_s.size = Vector2(22, 3)
-			rail_s.position = Vector2(-11, 4)
-			rail_s.color = Color(0.12, 0.12, 0.14, 0.92)
-			hs.get_node("Visual").add_child(rail_s)
+			var rail_holder := Node2D.new()
+			rail_holder.name = "Rails"
+			rail_holder.position = Vector2(0, -6)
+			visual.add_child(rail_holder)
+			WorldSpawnUtil.attach_prop_sprite(rail_holder, RAIL, 0.85)
+			var rail_s := Node2D.new()
+			rail_s.position = Vector2(0, 10)
+			visual.add_child(rail_s)
+			WorldSpawnUtil.attach_prop_sprite(rail_s, RAIL, 0.85)
 		x += step
 		i += 1
-	# Landmark hotspot for the whole track band.
 	var mid := Vector2(
 		float(TRACK_TX0 + TRACK_TX1 + 1) * 0.5 * float(craft.tile),
 		mid_y

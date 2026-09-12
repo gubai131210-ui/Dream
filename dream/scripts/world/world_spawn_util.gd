@@ -70,21 +70,26 @@ static func make_hotspot(
 
 
 ## Feet-anchored outdoor prop (Nearest). Skips quietly if path missing.
+## Prefer imported texture only when `.ctex` exists; else raw PNG (avoids import ERROR spam).
 static func attach_prop_sprite(visual: Node2D, path: String, scale_f: float = 0.55) -> Sprite2D:
 	if visual == null or path.is_empty():
 		return null
-	if not ResourceLoader.exists(path) and not FileAccess.file_exists(ProjectSettings.globalize_path(path)):
-		push_warning("WorldSpawnUtil: missing prop sprite %s" % path)
-		return null
+	var abs_path := ProjectSettings.globalize_path(path)
 	var tex: Texture2D = null
-	if ResourceLoader.exists(path):
+	var can_use_import := false
+	var import_path := abs_path + ".import"
+	if FileAccess.file_exists(import_path):
+		var cfg := ConfigFile.new()
+		if cfg.load(import_path) == OK:
+			var dest := str(cfg.get_value("remap", "path", ""))
+			if not dest.is_empty():
+				can_use_import = FileAccess.file_exists(ProjectSettings.globalize_path(dest))
+	if can_use_import:
 		tex = load(path) as Texture2D
-	if tex == null:
-		var abs_path := ProjectSettings.globalize_path(path)
-		if FileAccess.file_exists(abs_path):
-			var img := Image.load_from_file(abs_path)
-			if img != null:
-				tex = ImageTexture.create_from_image(img)
+	if tex == null and FileAccess.file_exists(abs_path):
+		var img := Image.load_from_file(abs_path)
+		if img != null:
+			tex = ImageTexture.create_from_image(img)
 	if tex == null:
 		push_warning("WorldSpawnUtil: failed load %s" % path)
 		return null
@@ -103,7 +108,6 @@ static func attach_prop_sprite(visual: Node2D, path: String, scale_f: float = 0.
 	spr.centered = true
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	spr.scale = Vector2(scale_f, scale_f)
-	# Foot pivot: sprite bottom near ground contact (same contract as InteriorCraft).
 	var h := float(tex.get_height()) * scale_f
 	spr.position = Vector2(0, -h * 0.5 + 4.0)
 	spr.z_index = 1

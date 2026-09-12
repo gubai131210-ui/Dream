@@ -595,11 +595,6 @@ func _spawn_buildings(ysort: Node2D) -> void:
 			)
 	# Wave C C30 — cemetery pocket south of church (append-only).
 	var grave := Vector2(1000, 360)
-	_add_contact_shadow(ysort, grave, Vector2(20, 8))
-	var rock_g := "res://assets/sprites/props/rock_02.png"
-	if ResourceLoader.exists(rock_g):
-		var gspr := _spawn_sprite(ysort, rock_g, grave)
-		gspr.scale = Vector2(0.5, 0.5)
 	_make_hotspot(ysort, "教堂墓园", "教堂南侧墓区，可下墓穴。", grave, Vector2(96, 64))
 	craft.make_portal(
 		ysort, "进入墓园", SceneRouter.C30_CEMETERY_PATH, grave + Vector2(0, 14), Vector2(100, 52)
@@ -653,7 +648,7 @@ func _spawn_props(ysort: Node2D) -> void:
 
 
 func _spawn_bridge_prop(ysort: Node2D) -> void:
-	# Landmark on the authored bridge band (deck is path tiles; prop sells the crossing).
+	# Landmark on the authored bridge band (deck is path tiles; plank sprite sells the crossing).
 	var br := _bridge_water_range()
 	var mid_x := int((br.x + br.y) * 0.5)
 	var pos := _tile_center(mid_x, BRIDGE_TY0)
@@ -664,12 +659,11 @@ func _spawn_bridge_prop(ysort: Node2D) -> void:
 		pos,
 		Vector2(96, 48)
 	)
-	# Simple plank readout if no bridge sprite: tinted stone strip already on Path.
-	var label_proxy := ColorRect.new()
-	label_proxy.size = Vector2(72, 18)
-	label_proxy.position = Vector2(-36, -8)
-	label_proxy.color = Color(0.45, 0.32, 0.18, 0.55)
-	hs.get_node("Visual").add_child(label_proxy)
+	WorldSpawnUtil.attach_prop_sprite(
+		hs.get_node("Visual") as Node2D,
+		"res://assets/sprites/props/bridge_plank_00.png",
+		0.85,
+	)
 
 
 func _make_craft() -> AreaCraft:
@@ -770,11 +764,9 @@ func _spawn_water_overlay(ysort: Node2D) -> void:
 			spr.modulate = Color(1, 1, 1, 0.42)
 			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			overlay.add_child(spr)
-			var phase: float = 0.2 * float((tx + ty) % 4)
-			var tw := spr.create_tween().set_loops()
-			tw.tween_interval(phase)
-			tw.tween_property(spr, "modulate:a", 0.22, 0.9).set_trans(Tween.TRANS_SINE)
-			tw.tween_property(spr, "modulate:a", 0.5, 0.9).set_trans(Tween.TRANS_SINE)
+			# The shared ticker below is the only water animation clock. A
+			# per-cell alpha Tween here caused texture and brightness to drift
+			# out of phase and made nearby water appear to flicker.
 			var frame_i: int = (tx + ty) % frames.size()
 			spr.set_meta("frame_i", frame_i)
 			spr.set_meta("frames", frames)

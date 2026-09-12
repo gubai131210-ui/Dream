@@ -246,17 +246,18 @@ func _spawn_props(ysort: Node2D) -> void:
 
 
 func _spawn_fences(ysort: Node2D) -> void:
-	# Fence follows FARM_ZONE outer edge â buildings stay strictly inside, never straddling.
+	# Fence follows FARM_ZONE outer edge — buildings stay strictly inside.
+	const POST := "res://assets/sprites/props/fence_post_00.png"
 	var left := FARM_ZONE.position.x + 8.0
 	var right := FARM_ZONE.end.x - 8.0
 	var top := FARM_ZONE.position.y + 8.0
 	var bottom := FARM_ZONE.end.y - 8.0
 	var step := 40.0
 	var segments: Array[Dictionary] = [
-		{"origin": Vector2(left, top), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "åå´æ "},
-		{"origin": Vector2(left, bottom), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "åå´æ "},
-		{"origin": Vector2(left, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "è¥¿å´æ "},
-		{"origin": Vector2(right, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "ä¸å´æ "},
+		{"origin": Vector2(left, top), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "北围栏"},
+		{"origin": Vector2(left, bottom), "count": int((right - left) / step), "step": Vector2(step, 0), "title": "南围栏"},
+		{"origin": Vector2(left, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "西围栏"},
+		{"origin": Vector2(right, top), "count": int((bottom - top) / step), "step": Vector2(0, step), "title": "东围栏"},
 	]
 	for seg in segments:
 		var origin: Vector2 = seg["origin"]
@@ -264,16 +265,11 @@ func _spawn_fences(ysort: Node2D) -> void:
 		var count: int = int(seg["count"])
 		for i in range(count):
 			var pos: Vector2 = origin + st * float(i)
-			# Skip fence posts that would sit on portals / pond water tiles.
 			var t := craft.world_to_tile(pos)
 			if craft.is_water(t.x, t.y):
 				continue
-			var post := ColorRect.new()
-			post.size = Vector2(8, 22)
-			post.position = Vector2(-4, -18)
-			post.color = Color(0.42, 0.28, 0.14, 0.85)
-			var hs := craft.make_hotspot(ysort, str(seg["title"]), "ååºå´æ ï¼åèç­å»ºç­åå¨å´æ åä¾§ã", pos, Vector2(24, 32))
-			hs.get_node("Visual").add_child(post)
+			var hs := craft.make_hotspot(ysort, str(seg["title"]), "农场围栏：农舍等建筑均在围栏内侧。", pos, Vector2(24, 32))
+			WorldSpawnUtil.attach_prop_sprite(hs.get_node("Visual") as Node2D, POST, 0.55)
 
 
 func _spawn_trees(ysort: Node2D) -> void:
