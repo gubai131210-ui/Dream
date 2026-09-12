@@ -166,6 +166,7 @@
 - [`GOAL_G8_PORTAL_CUE_EVIDENCE.md`](GOAL_G8_PORTAL_CUE_EVIDENCE.md) — 广场门户 façade/门阶  
 - [`GOAL_G8_ANIM_FX_EVIDENCE.md`](GOAL_G8_ANIM_FX_EVIDENCE.md) — 工作姿态×4 + 摇树 leaf_fall  
 - [`GOAL_G8_BATH_PORTAL_EVIDENCE.md`](GOAL_G8_BATH_PORTAL_EVIDENCE.md) — 浴场 façade + SceneRouter 进门  
+- [`GOAL_G8_C62_SECRET_EVIDENCE.md`](GOAL_G8_C62_SECRET_EVIDENCE.md) — 密道门脸 + 进洞冒烟 + MCP 截图  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 12 groups GREEN  
 - `tools/qa_no_placeholder_visuals.py` — GREEN  
@@ -187,7 +188,7 @@
 | 农田 | `farmland` | 垄线、栅栏、DistrictInteract | [x] `g8_farmland_idle.png`；farmer 白底盘已替换 | [ ] |
 | 住宅 | `village_residential` | 门阶/拱门、DistrictInteract | [x] `g8_residential_idle.png` | [ ] |
 | 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [x] `g8_farm_residential_idle.png` | [ ] |
-| 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract | [x] `g8_forest_entrance_idle.png` + `g8_forest_deep_idle.png` | [ ] |
+| 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract；C62 树洞密道 | [x] idle + landmarks；**C62** `g8_c62_secret_portal.png` + smoke PASS | [ ] |
 | 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] `g8_river_*` + `g8_lake_idle.png`；笼 place→ready | [ ] |
 | 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 | [x] `g8_waterfall/lighthouse/hill_farm_idle.png` | [ ] |
 | 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png` + `g8_lake_house_idle.png` | [ ] |

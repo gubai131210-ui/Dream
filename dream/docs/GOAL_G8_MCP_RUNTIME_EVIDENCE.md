@@ -43,6 +43,7 @@
 | River reed landmark | `docs/evidence/g8_river_reed_landmark.png` | C25 芦苇岔口 `Visual/PropSprite` |
 | Station track band | `docs/evidence/g8_station_track_band.png` | 站台轨道 `PropSprite` + SleeperCue |
 | Lake ferry boat | `docs/evidence/g8_lake_ferry_boat.png` | C24 登岛渡口 `boat_skiff_00` |
+| C62 secret portal | `docs/evidence/g8_c62_secret_portal.png` | 深林 `WorldPortal_树洞密道` + `ruin_arch` façade cues |
 
 ## Runtime queries
 

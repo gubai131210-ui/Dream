@@ -12,18 +12,21 @@ const CHAIN_A := [
 		"label": "树洞密道",
 		"to_path": "res://scenes/interiors/c16_cave_entry/c16_cave_entry.tscn",
 		"pos": Vector2(480, 360),
+		"facade": "res://assets/sprites/props/ruin_arch_00.png",
 	},
 	{
 		"from": "c16_cave_entry",
 		"label": "暗河出口",
 		"to_path": "res://scenes/areas/waterfall/waterfall.tscn",
 		"pos": Vector2(240, 528),
+		"facade": "res://assets/sprites/props/door_facade_00.png",
 	},
 	{
 		"from": "waterfall",
 		"label": "瀑后回湖",
 		"to_path": "res://scenes/areas/lake/lake.tscn",
 		"pos": Vector2(860, 560),
+		"facade": "res://assets/sprites/props/door_facade_00.png",
 	},
 ]
 
@@ -83,6 +86,7 @@ func setup(host: Node2D, links: Array) -> void:
 		var label := str(link["label"])
 		var to_path := str(link["to_path"])
 		var pos: Vector2 = link["pos"] as Vector2
+		var facade_path := str(link.get("facade", WorldSpawnUtil.DOOR_FACADE))
 		var portal := WorldSpawnUtil.make_portal(
 			_root,
 			label,
@@ -90,12 +94,14 @@ func setup(host: Node2D, links: Array) -> void:
 			pos,
 			Vector2(100, 56),
 			Color(0.45, 0.85, 0.95, 0.95),
+			facade_path,
 		)
-		WorldSpawnUtil.wire_portal_click(portal, host.get_tree())
 		portal.set_meta("secret_chain", true)
 		var captured_label := label
 		var captured_path := to_path
+		# Emit before SceneRouter navigate so listeners always observe the click.
 		portal.input_event.connect(func(_vp: Node, event: InputEvent, _si: int) -> void:
 			if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 				portal_used.emit(captured_label, captured_path)
 		)
+		WorldSpawnUtil.wire_portal_click(portal, host.get_tree())

@@ -215,6 +215,7 @@ static func make_portal(
 	pos: Vector2,
 	size: Vector2 = Vector2(88, 52),
 	marker_color: Color = Color(0.55, 0.82, 0.95, 0.9),
+	facade_path: String = "",
 ) -> Area2D:
 	var area := Area2D.new()
 	area.name = "WorldPortal_%s" % title.replace(" ", "")
@@ -225,7 +226,7 @@ static func make_portal(
 	rect.size = size
 	shape.shape = rect
 	area.add_child(shape)
-	var cues := attach_portal_cues(area, size)
+	var cues := attach_portal_cues(area, size, facade_path if not facade_path.is_empty() else DOOR_FACADE)
 	var cue: CanvasItem = cues.get("cue")
 	var arch: CanvasItem = cues.get("arch")
 	var hint := Polygon2D.new()
