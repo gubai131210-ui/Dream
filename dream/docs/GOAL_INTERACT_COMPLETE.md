@@ -201,13 +201,13 @@
 
 | # | 要求 | 证据 | 状态 |
 | --- | --- | --- | --- |
-| 1 | 已列交互正式像素 + 反馈 + 多帧 | C58 activate 8/8；sprite inventory GREEN；focus/叶/绳/盖/鸟帧；qa_interaction_frames GREEN | **代码侧 PROVEN**；视觉仍待 §7 |
-| 2 | 全户外+室内门面/道具/可进出 | load smoke 全 areas+interiors(+hubs)；portal cue smoke；C01 open FX | **加载 PROVEN**；进出手感待 §7 |
+| 1 | 已列交互正式像素 + 反馈 + 多帧 | C58 activate 8/8；sprite inventory GREEN；focus/叶/绳/盖/鸟帧；qa_interaction_frames GREEN；MCP InfoPanel/OpenFX | **PROVEN（代码+MCP）**；§7 手感确认仍待 |
+| 2 | 全户外+室内门面/道具/可进出 | load smoke 72/72；portal cue 12；MCP 广场→博物馆进门截图 | **PROVEN（加载+MCP 进门）**；§7 全表进出仍待 |
 | 3 | 统称权威 | 本文件 + `ASSET_TAXONOMY` 回链 | **PROVEN** |
-| 4 | 多团队流水线门禁 | §2 角色表；Style/Anim/Cohere + Genre/Canon agent PASS；qa_* 脚本 | **PROVEN（本轮批次）** |
-| 5 | MCP/运行时交互动画证据 | [`GOAL_G8_MCP_RUNTIME_EVIDENCE.md`](GOAL_G8_MCP_RUNTIME_EVIDENCE.md)：广场+C01 截图；灯 `PointLight2D`；衣柜 `OpenFX_drawer_open`；ERROR=0 | **MCP 截图 PROVEN**；**用户 §7 目视仍待** |
+| 4 | 多团队流水线门禁 | §2 角色表；Style/Anim/Cohere + Genre/Canon agent PASS；qa_* GREEN | **PROVEN（本轮批次）** |
+| 5 | MCP/运行时交互动画证据 | [`GOAL_G8_MCP_RUNTIME_EVIDENCE.md`](GOAL_G8_MCP_RUNTIME_EVIDENCE.md) | **PROVEN** |
 
-**结论：** 在 §7 用户勾选与（可选）MCP 截图补齐前，**不得**将 Goal 标 complete。
+**结论：** MCP 关键表面截图已齐；在 §7 用户本机勾选确认前，**不得**将 Goal 标 complete。
 
 ---
 
