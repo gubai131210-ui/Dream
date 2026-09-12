@@ -142,6 +142,7 @@
 | ~~室内窗光 Polygon 光柱~~ | `interior_craft.gd` | **DONE** → `fx/window_light_shaft_00.png`（Polygon 仅 fallback） |
 | ~~hover 仅 draw_line 角标~~ | `interactable_hotspot.gd` | **DONE** → `fx/focus_corners_00.png` + 修复 enter 时 `queue_redraw` |
 | ~~农夫 walk 不透明白底盘~~ | `assets/sprites/npc/farmer` | **DONE** → 提升 `farmer_v2`；`qa_npc_white_plates` GREEN |
+| ~~室内 actor 缺 mayor/miller 包~~ | `interior_profiles` | **DONE** → `npc/mayor` + `npc/miller`（recolor 正式包） |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
 | Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
 | 姿态/摊位 ArtGen 抛光 | work_poses / market | **部分加深**（farmer 调色板姿态）；还可继续 |
@@ -172,19 +173,19 @@
 | 市集 | `market_street` | 木棚摊位、DistrictInteract | [x] `g8_market_idle.png` 木棚可见 | [ ] |
 | 农田 | `farmland` | 垄线、栅栏、DistrictInteract | [x] `g8_farmland_idle.png`；farmer 白底盘已替换 | [ ] |
 | 住宅 | `village_residential` | 门阶/拱门、DistrictInteract | [x] `g8_residential_idle.png` | [ ] |
-| 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [ ] load smoke only | [ ] |
-| 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract | [x] `g8_forest_entrance_idle.png` | [ ] |
+| 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [x] `g8_farm_residential_idle.png` | [ ] |
+| 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract | [x] `g8_forest_entrance_idle.png` + `g8_forest_deep_idle.png` | [ ] |
 | 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] `g8_river_*` + `g8_lake_idle.png`；笼 place→ready | [ ] |
-| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 | [x] `g8_waterfall_idle.png`（灯塔/坡田仍 load-only） | [ ] |
-| 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png`（湖屋仍 load-only） | [ ] |
+| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 | [x] `g8_waterfall/lighthouse/hill_farm_idle.png` | [ ] |
+| 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png` + `g8_lake_house_idle.png` | [ ] |
 
 ### 室内（抽样必测）
 
 | 室 | 要点 | Agent MCP | 用户勾选 |
 | --- | --- | --- | --- |
 | C01 家 | dresser/chest 开合帧、返回门 | [x] idle + dresser OpenFX | [ ] |
-| C06 议事厅 | 门户进出 | [ ] load smoke only | [ ] |
-| C40/C43 博物/浴 | 立面可发现 → 进门 | [x] 广场→博物馆进门截图 | [ ] |
+| C06 议事厅 | 门户进出 | [x] `g8_c06_town_hall_idle.png`；镇长 walk 帧已补 | [ ] |
+| C40/C43 博物/浴 | 立面可发现 → 进门 | [x] 博物馆进门；浴场室内 `g8_c43_bathhouse_idle.png`（立面 portal 有 facade_bath） | [ ] |
 | Wave A2–F 其余已锁室 | 按 PHASE5 进出各一次 | [ ] 72/72 load；未逐室 MCP | [ ] |
 
 ### 本机 QA 步骤（请你跑，避免中文路径 CLI 损文件）

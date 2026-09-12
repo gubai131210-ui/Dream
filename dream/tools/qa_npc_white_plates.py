@@ -11,7 +11,15 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 NPC = ROOT / "assets" / "sprites" / "npc"
 THR = 235
-PACKS = ("farmer", "blacksmith", "elder_woman", "merchant", "station_master")
+PACKS = (
+	"farmer",
+	"blacksmith",
+	"elder_woman",
+	"merchant",
+	"station_master",
+	"mayor",
+	"miller",
+)
 MAX_EDGE_WHITE = 8
 
 

@@ -1,0 +1,14 @@
+{
+  "id": "mayor",
+  "title": "镇长",
+  "source": "recolor from station_master (C06 formal pack)",
+  "height_px": 56,
+  "canvas_width_px": 48,
+  "columns": 4,
+  "dirs": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ]
+}

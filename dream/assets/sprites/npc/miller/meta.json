@@ -1,0 +1,14 @@
+{
+  "id": "miller",
+  "title": "磨坊主",
+  "source": "recolor from farmer (mill interior actor)",
+  "height_px": 56,
+  "canvas_width_px": 48,
+  "columns": 4,
+  "dirs": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ]
+}

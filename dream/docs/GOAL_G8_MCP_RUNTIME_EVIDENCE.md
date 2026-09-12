@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-13  
 **MCP:** tomyud1 `godot-mcp-server` 0.6.0 · Godot connected · `MCPRuntime` OK  
-**Errors:** 0 hard errors on key surfaces (square / C01 / museum / market / river)
+**Errors:** 0 hard errors on key outdoor/interior surfaces after mayor/miller packs
 
 ## Captures
 
@@ -18,19 +18,34 @@
 | River cage ready | `docs/evidence/g8_river_fish_cage_ready.png` | place → soak ~6s → title「可收」+ `fish_cage_full` path |
 | Lake idle | `docs/evidence/g8_lake_idle.png` | 湖泊岸边渔笼/浮漂区 + 门户 |
 | Farmland idle | `docs/evidence/g8_farmland_idle.png` | 垄线/栅栏/DistrictInteract；farmer 无白底盘 |
+| Farm residential idle | `docs/evidence/g8_farm_residential_idle.png` | 院内 DistrictInteract |
 | Residential idle | `docs/evidence/g8_residential_idle.png` | 住宅区门阶/DistrictInteract |
 | Forest entrance idle | `docs/evidence/g8_forest_entrance_idle.png` | 林口 DistrictInteract |
+| Forest deep idle | `docs/evidence/g8_forest_deep_idle.png` | 深林区可玩壳 |
 | Waterfall idle | `docs/evidence/g8_waterfall_idle.png` | 瀑布动画层 + DistrictInteract |
+| Lighthouse idle | `docs/evidence/g8_lighthouse_idle.png` | 灯塔 DistrictInteract |
+| Hill farm idle | `docs/evidence/g8_hill_farm_idle.png` | 坡田 DistrictInteract |
 | Station idle | `docs/evidence/g8_station_idle.png` | 轨枕精灵站台 + DistrictInteract |
+| Lake house idle | `docs/evidence/g8_lake_house_idle.png` | 湖屋 DistrictInteract |
+| C06 town hall | `docs/evidence/g8_c06_town_hall_idle.png` | 议事厅室内 + 镇长 Anim + Portal_Return cues |
+| C43 bathhouse | `docs/evidence/g8_c43_bathhouse_idle.png` | 浴场室内 props + return portal |
 
 ## Runtime queries
 
 - Museum portal children: `DoorFacade` + `DoorstepCue` + `DoorArchCue`
+- Bath portal on square: `DoorFacade` (`facade_bath_00`) + doorstep/arch (queried live)
 - Well hotspot `Visual/Marker.visible = false`; `PropSprite` present
 - Lamp `Visual` includes `PropSprite` + `PointLight2D` (`LampLight`)
 - Dresser after click: `FocusCorners` + `OpenFX_drawer_open` (`AnimatedSprite2D`)
 - Portal click at museum cue → scene change to museum interior (header「博物馆」)
 - River `FishCage_river_west_bend_cage`: after soak → `prompt_text=收取渔获` / fish_name 河鲦；collect resets empty
+- C06 `镇长/Visual/Anim` present after `npc/mayor` pack; prior `no walk frames for 'mayor'` cleared
+- Interior profile actor ids: **0 missing** packs (`list_missing_npc_packs.py`)
+
+## Agent reviews this batch
+
+- GenreQA + CanonQA: **PASS** (code) — [Review](6cdb8564-9291-4ed2-8feb-c26216bd21df)
+- AnimQA mayor/miller: mayor PASS; miller foot metric disputed (alpha bbox foot_y=55 all frames)
 
 ## Still required for Goal complete
 
