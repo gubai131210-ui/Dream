@@ -15,7 +15,8 @@
 | Node | `/root/Waterfall/YSortRoot/瀑布/Visual/WaterfallAnim` class `AnimatedSprite2D` |
 | Animation | `fall` loop @ 8 fps; frames `waterfall_water_00..05` |
 | Playing | `is_playing() == true`; `get_frame()` observed advancing (e.g. frame 5) |
-| Hotspot | `瀑布` at ~(656, 396); Visual owns cascade |
+| Hotspot | `瀑布` at ~(656, 396); Visual owns cascade **and splash** |
+| Scale | `WaterfallAnim.scale = (0.55, 0.55)` after review widen |
 | Capture | `docs/evidence/g8_waterfall_anim.png` |
 
 ## Assets / QA

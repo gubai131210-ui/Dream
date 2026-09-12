@@ -239,9 +239,10 @@ func _spawn_waterfall(ysort: Node2D) -> void:
 			fall = _spawn_scaled_prop(ysort, mid, foot, 0.68, 4, 1, 1, true, true)
 	if fall == null:
 		return
+	var splash: Node2D = null
 	var splash_path := "res://assets/sprites/props/waterfall_splash_00.png"
 	if ResourceLoader.exists(splash_path):
-		var splash := craft.spawn_sprite(ysort, splash_path, foot + Vector2(0, 36), 5)
+		splash = craft.spawn_sprite(ysort, splash_path, foot + Vector2(0, 36), 5)
 		splash.scale = Vector2(0.55, 0.55)
 		splash.modulate = Color(0.92, 0.96, 1.0, 0.85)
 		splash.z_index = 5
@@ -249,12 +250,16 @@ func _spawn_waterfall(ysort: Node2D) -> void:
 		ysort, "瀑布", "岩壁倾泻入潭，水雾弥漫。",
 		fall.position + Vector2(0, 28), Vector2(110, 80)
 	)
-	# Interact owns its pixel — reparent cascade (+ optional splash sibling) into hotspot Visual.
+	# Interact owns its pixel — reparent cascade + splash into hotspot Visual.
 	var vis := hs_fall.get_node_or_null("Visual") as Node2D
 	if vis:
-		var world_pos := fall.global_position
+		var fall_world := fall.global_position
 		fall.reparent(vis)
-		fall.global_position = world_pos
+		fall.global_position = fall_world
+		if splash != null:
+			var splash_world := splash.global_position
+			splash.reparent(vis)
+			splash.global_position = splash_world
 
 
 func _spawn_waterfall_anim(ysort: Node2D, foot: Vector2) -> Node2D:
@@ -283,8 +288,8 @@ func _spawn_waterfall_anim(ysort: Node2D, foot: Vector2) -> Node2D:
 	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	anim.position = foot
 	anim.z_index = 4
-	# Match prior tall cascade on-screen scale (~0.72 of ~666px ≈ keep readable).
-	anim.scale = Vector2(0.42, 0.42)
+	# 232×666 frames: ~0.55 ≈ on-screen ~128×366 (closer to prior tall width, still tall column).
+	anim.scale = Vector2(0.55, 0.55)
 	anim.play("fall")
 	ysort.add_child(anim)
 	return anim
