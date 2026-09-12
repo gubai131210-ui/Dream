@@ -120,7 +120,7 @@
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
 | G7 | **DONE (code)** — bobber；C22；pose×4；drawer StyleQA；C05 摊位默认真棚 PNG |
-| G8 | **IN PROGRESS** — smoke **72/72**；C58 8/8；门户 cue 12；C01 open FX；§8 审计；**用户 Godot QA 仍待** |
+| G8 | **IN PROGRESS** — smoke 72/72；activate/portal/open FX；**MCP 截图已落**；**用户 Godot QA 仍待** |
 
 ### G8 已知残留（不可假装清零）
 
@@ -148,6 +148,7 @@
 
 ## G8 证据
 
+- [`GOAL_G8_MCP_RUNTIME_EVIDENCE.md`](GOAL_G8_MCP_RUNTIME_EVIDENCE.md) — 广场/C01 MCP 截图 + 运行时节点  
 - [`GOAL_G8_SMOKE_EVIDENCE.md`](GOAL_G8_SMOKE_EVIDENCE.md) — headless load matrix（全户外 + 全 C 室内 + hubs）  
 - [`GOAL_G8_INTERACT_ACTIVATE_EVIDENCE.md`](GOAL_G8_INTERACT_ACTIVATE_EVIDENCE.md) — 广场 C58×8 激活冒烟  
 - [`GOAL_G8_INTERIOR_OPEN_FX_EVIDENCE.md`](GOAL_G8_INTERIOR_OPEN_FX_EVIDENCE.md) — C01 衣柜 drawer_open  
@@ -203,8 +204,8 @@
 | 1 | 已列交互正式像素 + 反馈 + 多帧 | C58 activate 8/8；sprite inventory GREEN；focus/叶/绳/盖/鸟帧；qa_interaction_frames GREEN | **代码侧 PROVEN**；视觉仍待 §7 |
 | 2 | 全户外+室内门面/道具/可进出 | load smoke 全 areas+interiors(+hubs)；portal cue smoke；C01 open FX | **加载 PROVEN**；进出手感待 §7 |
 | 3 | 统称权威 | 本文件 + `ASSET_TAXONOMY` 回链 | **PROVEN** |
-| 4 | 多团队流水线门禁 | §2 角色表；Style/Anim/Cohere agent PASS；qa_* 脚本 | **PROVEN（本轮批次）** |
-| 5 | MCP/运行时交互动画证据 | headless activate + open FX + portal cues；MCP 插件编译已修（去根 `.gdignore`）；tomyud1 **6506 需 Cursor 重开或本地起 server** | **部分**：激活日志 PROVEN；**截图仍待 MCP server** |
+| 4 | 多团队流水线门禁 | §2 角色表；Style/Anim/Cohere + Genre/Canon agent PASS；qa_* 脚本 | **PROVEN（本轮批次）** |
+| 5 | MCP/运行时交互动画证据 | [`GOAL_G8_MCP_RUNTIME_EVIDENCE.md`](GOAL_G8_MCP_RUNTIME_EVIDENCE.md)：广场+C01 截图；灯 `PointLight2D`；衣柜 `OpenFX_drawer_open`；ERROR=0 | **MCP 截图 PROVEN**；**用户 §7 目视仍待** |
 
 **结论：** 在 §7 用户勾选与（可选）MCP 截图补齐前，**不得**将 Goal 标 complete。
 
