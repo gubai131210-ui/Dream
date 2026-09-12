@@ -225,27 +225,69 @@ func _spawn_cliff_rocks(ysort: Node2D) -> void:
 
 
 func _spawn_waterfall(ysort: Node2D) -> void:
-	var tall := "res://assets/sprites/props/waterfall_tall_00.png"
-	var mid := "res://assets/sprites/props/waterfall_mid_00.png"
-	# Foot on north pool rim (ty≈11 notch into pool) so cascade reads into the pond.
-	# allow_water_foot — never place a dirt road under the fall column.
+	## Prefer sliced water loop frames (INTERACTION_DESIGN P0); fall back to static tall/mid.
 	var foot := craft.tile_center(int(POOL_CX), 11)
-	var fall: Sprite2D = null
-	if ResourceLoader.exists(tall):
-		fall = _spawn_scaled_prop(ysort, tall, foot, 0.72, 4, 1, 1, true, true)
-	if fall == null and ResourceLoader.exists(mid):
-		fall = _spawn_scaled_prop(ysort, mid, foot, 0.68, 4, 1, 1, true, true)
-	if fall:
-		var hs_fall := craft.make_hotspot(
-			ysort, "瀑布", "岩壁倾泻入潭，水雾弥漫。",
-			fall.position + Vector2(0, 28), Vector2(110, 80)
-		)
-		# Interact owns its pixel — reparent cascade into hotspot Visual.
-		var vis := hs_fall.get_node_or_null("Visual") as Node2D
-		if vis:
-			var world_pos := fall.global_position
-			fall.reparent(vis)
-			fall.global_position = world_pos
+	var fall: Node2D = _spawn_waterfall_anim(ysort, foot)
+	if fall == null:
+		var tall := "res://assets/sprites/props/waterfall_tall_00.png"
+		var mid := "res://assets/sprites/props/waterfall_mid_00.png"
+		# Foot on north pool rim (ty≈11 notch into pool) so cascade reads into the pond.
+		# allow_water_foot — never place a dirt road under the fall column.
+		if ResourceLoader.exists(tall):
+			fall = _spawn_scaled_prop(ysort, tall, foot, 0.72, 4, 1, 1, true, true)
+		if fall == null and ResourceLoader.exists(mid):
+			fall = _spawn_scaled_prop(ysort, mid, foot, 0.68, 4, 1, 1, true, true)
+	if fall == null:
+		return
+	var splash_path := "res://assets/sprites/props/waterfall_splash_00.png"
+	if ResourceLoader.exists(splash_path):
+		var splash := craft.spawn_sprite(ysort, splash_path, foot + Vector2(0, 36), 5)
+		splash.scale = Vector2(0.55, 0.55)
+		splash.modulate = Color(0.92, 0.96, 1.0, 0.85)
+		splash.z_index = 5
+	var hs_fall := craft.make_hotspot(
+		ysort, "瀑布", "岩壁倾泻入潭，水雾弥漫。",
+		fall.position + Vector2(0, 28), Vector2(110, 80)
+	)
+	# Interact owns its pixel — reparent cascade (+ optional splash sibling) into hotspot Visual.
+	var vis := hs_fall.get_node_or_null("Visual") as Node2D
+	if vis:
+		var world_pos := fall.global_position
+		fall.reparent(vis)
+		fall.global_position = world_pos
+
+
+func _spawn_waterfall_anim(ysort: Node2D, foot: Vector2) -> Node2D:
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("fall")
+	frames.set_animation_speed("fall", 8.0)
+	frames.set_animation_loop("fall", true)
+	var loaded := 0
+	for i in range(6):
+		var path := "res://assets/sprites/props/waterfall_water_%02d.png" % i
+		if not ResourceLoader.exists(path):
+			continue
+		var tex := load(path) as Texture2D
+		if tex == null:
+			continue
+		frames.add_frame("fall", tex)
+		loaded += 1
+	if loaded < 4:
+		return null
+	var anim := AnimatedSprite2D.new()
+	anim.name = "WaterfallAnim"
+	anim.sprite_frames = frames
+	anim.centered = true
+	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	anim.position = foot
+	anim.z_index = 4
+	# Match prior tall cascade on-screen scale (~0.72 of ~666px ≈ keep readable).
+	anim.scale = Vector2(0.42, 0.42)
+	anim.play("fall")
+	ysort.add_child(anim)
+	return anim
 
 
 func _spawn_rim_rocks(ysort: Node2D) -> void:

@@ -159,6 +159,7 @@
 | ~~提示A/点击B 目标分裂~~ | InteriorRoomController | **DONE** → hover 优先 + click sync；`g8_interact_target_smoke` PASS |
 | ~~C05 EMPTY/LOCKED 代理图~~ | MarketStall | **DONE** → `stall_empty_bay_00` / `stall_locked_board_00` |
 | ~~B11-02 货箱名实~~ | market dressing | **DONE** → produce/stall_face/lumber/bin aliases；蔬果禁 `_04` |
+| ~~瀑布仅静态 tall/mid~~ | `waterfall_assembler.gd` | **DONE** → `waterfall_water_00..05` `WaterfallAnim` 循环；MCP `g8_waterfall_anim.png` |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据
@@ -173,8 +174,9 @@
 - [`GOAL_G8_C62_SECRET_EVIDENCE.md`](GOAL_G8_C62_SECRET_EVIDENCE.md) — 密道门脸 + 进洞冒烟 + MCP 截图  
 - [`GOAL_G8_SEMANTIC_INTERIOR_EVIDENCE.md`](GOAL_G8_SEMANTIC_INTERIOR_EVIDENCE.md) — 室内语义专用 prop  
 - [`GOAL_G8_INTERACT_TARGET_EVIDENCE.md`](GOAL_G8_INTERACT_TARGET_EVIDENCE.md) — 室内提示/点击共享目标  
+- [`GOAL_G8_WATERFALL_ANIM_EVIDENCE.md`](GOAL_G8_WATERFALL_ANIM_EVIDENCE.md) — 瀑布水体 AnimatedSprite 循环 + MCP  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
-- `tools/qa_interaction_frames.py` — 12 groups GREEN  
+- `tools/qa_interaction_frames.py` — 13 groups GREEN  
 - `tools/qa_no_placeholder_visuals.py` — GREEN  
 - `tools/qa_interact_sprite_inventory.py` — GREEN（kits + focus/open FX）  
 - `tools/qa_work_pose_style.py` — GREEN（C53 pose sheets）  
@@ -197,7 +199,7 @@
 | 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [x] `g8_farm_residential_idle.png` | [ ] |
 | 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract；C62 树洞密道 | [x] idle + landmarks；**C62** `g8_c62_secret_portal.png` + smoke PASS | [ ] |
 | 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] `g8_river_*` + `g8_lake_idle.png`；笼 place→ready | [ ] |
-| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 | [x] `g8_waterfall/lighthouse/hill_farm_idle.png` | [ ] |
+| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 + 瀑水循环 | [x] idle + **`g8_waterfall_anim.png`**（`WaterfallAnim` playing） | [ ] |
 | 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png` + `g8_lake_house_idle.png` | [ ] |
 
 ### 室内（抽样必测）

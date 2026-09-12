@@ -74,6 +74,7 @@ def main() -> int:
         "work_pose_smith": sorted((ROOT / "assets/sprites/npc/work_poses/smith").glob("pose_*.png")),
         "work_pose_stall": sorted((ROOT / "assets/sprites/npc/work_poses/stall").glob("pose_*.png")),
         "work_pose_cook": sorted((ROOT / "assets/sprites/npc/work_poses/cook").glob("pose_*.png")),
+        "waterfall_water": sorted((ROOT / "assets/sprites/props").glob("waterfall_water_*.png")),
     }
     for label, paths in groups.items():
         assert_normalized_contract(paths, label)
@@ -106,8 +107,13 @@ def main() -> int:
         raise AssertionError("waterfall still spawns standalone rocks")
     if "_spawn_mist(ysort)" in waterfall:
         raise AssertionError("waterfall still spawns mist")
+    if "WaterfallAnim" not in waterfall or "waterfall_water_%02d" not in waterfall:
+        raise AssertionError("waterfall missing animated water loop wiring")
 
-    print(f"GREEN interaction-frame QA ({len(groups)} groups, single water clock, fixed waterfall layers)")
+    print(
+        f"GREEN interaction-frame QA ({len(groups)} groups, single water clock, "
+        "fixed waterfall layers + anim loop)"
+    )
     return 0
 
 

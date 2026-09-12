@@ -13,7 +13,7 @@
 | Continuity / science (Canon) | C58–C60 / C22 state explainable | Genre+Canon agent **PASS** |
 | Genre reference | Portals façade/doorstep; outdoor hosts ban `interior/props` | Genre **PASS**; QA blocks DIK / routine / seasonal / hidden_chests |
 | Imported-style consistency | NPC edge-white gate; farmer promote | `qa_npc_white_plates.py` **GREEN** (7 packs) |
-| Animation-frame QA | leaf/rope/lid/bird/waterfall/drawer; WorkPose+leaf smoke | `qa_interaction_frames.py` **GREEN**; `g8_anim_fx_smoke` **PASS** |
+| Animation-frame QA | leaf/rope/lid/bird/waterfall/drawer; WorkPose+leaf smoke; **瀑布 WaterfallAnim** | `qa_interaction_frames.py` **GREEN**; `g8_anim_fx_smoke` **PASS**; MCP `g8_waterfall_anim.png` |
 | Semantic interior | altar/bench/board/desk/reed/pipe | `qa_semantic_interior_props` **GREEN** + MCP shots |
 | Interact target sync | hover/click shared selector | `g8_interact_target_smoke` **PASS** |
 

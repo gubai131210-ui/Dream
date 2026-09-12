@@ -132,10 +132,10 @@ Dream 下一阶段的交互不能继续采用“找到一张图 → 放到场景
 
 | 文件/区域 | 风险 | 处理顺序 |
 |---|---|---:|
-| `scripts/actors/patrol_actor.gd` 的 `_build_frames()` | 直接加载 NPC 原始帧；如果透明边距不同，人物脚底可能上下跳或滑步。 | P0 |
-| `scripts/actors/ambient_critter.gd` | 已有统一画布/底部对齐方向，但图片底边不一定等于真实脚底；要补类别级 `foot_anchor`。 | P0 |
-| `scripts/interiors/interior_craft.gd` 的 `_spawn_anim_fx()` | `fire_00..03`、`forge_00..03` 直接进入 `SpriteFrames`；若源帧主体偏移，火焰会整体跳动。 | P0 |
-| `scripts/areas/waterfall_assembler.gd` 的瀑布装配 | 需确认专用动态资源是否真正接入，而不是只使用 `waterfall_tall_00` / `waterfall_mid_00` 和通用水面。 | P0 |
+| `scripts/actors/patrol_actor.gd` 的 `_build_frames()` | ~~透明边距脚底跳动~~ **DONE** — `get_used_rect` 归一化到固定脚底 canvas。 | ~~P0~~ |
+| `scripts/actors/ambient_critter.gd` | ~~底边≠脚底~~ **DONE** — 同类 `get_used_rect` 归一化 + `TARGET_HEIGHT_PX`。 | ~~P0~~ |
+| `scripts/interiors/interior_craft.gd` 的 `_spawn_anim_fx()` | ~~火焰帧主体偏移~~ **DONE** — fire/forge 按 used_rect 归一化。 | ~~P0~~ |
+| `scripts/areas/waterfall_assembler.gd` 的瀑布装配 | ~~仅静态 tall/mid~~ **DONE** — `waterfall_water_00..05` AnimatedSprite2D 循环 + splash。 | ~~P0~~ |
 | `scripts/areas/area_craft.gd` 的 `spawn_water_overlay()` | ~~双时钟叠加~~ **DONE** — 共享 Timer 驱动换帧；`qa_interaction_frames` 断言 single water clock。 | ~~P0~~ |
 | `scripts/interact/interactable_hotspot.gd` 的 `_layout_prompt()` | ~~按当前帧高度抖动~~ **DONE** — `_cache_visual_bounds()` 用稳定 sprite/anim 包围盒。 | ~~P0~~ |
 | `scripts/interact/interactable_hotspot.gd` + `InteriorRoomController` | ~~提示 A、点击 B~~ **DONE** — hover 优先 + 点击同步（`g8_interact_target_smoke`）。 | ~~P1~~ |

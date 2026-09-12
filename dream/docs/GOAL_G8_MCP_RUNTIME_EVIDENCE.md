@@ -22,7 +22,8 @@
 | Residential idle | `docs/evidence/g8_residential_idle.png` | 住宅区门阶/DistrictInteract |
 | Forest entrance idle | `docs/evidence/g8_forest_entrance_idle.png` | 林口 DistrictInteract |
 | Forest deep idle | `docs/evidence/g8_forest_deep_idle.png` | 深林区可玩壳 |
-| Waterfall idle | `docs/evidence/g8_waterfall_idle.png` | 瀑布动画层 + DistrictInteract |
+| Waterfall idle | `docs/evidence/g8_waterfall_idle.png` | 瀑布区 + DistrictInteract |
+| Waterfall water anim | `docs/evidence/g8_waterfall_anim.png` | `瀑布/Visual/WaterfallAnim` playing `fall`（00..05） |
 | Lighthouse idle | `docs/evidence/g8_lighthouse_idle.png` | 灯塔 DistrictInteract |
 | Hill farm idle | `docs/evidence/g8_hill_farm_idle.png` | 坡田 DistrictInteract |
 | Station idle | `docs/evidence/g8_station_idle.png` | 轨枕精灵站台 + DistrictInteract |
@@ -83,6 +84,7 @@
 - `tools/qa_orphan_hotspot_visuals.py` GREEN (assembler hotspot Visual ownership)
 - Landmark StyleQA: reed/ruin/grave/boat/door_facade/awning repainted to painted-grade uniq colors (`qa_landmark_style` GREEN)
 - C62 full-chain headless smoke PASS (forest→cave→waterfall→lake); cave/museum/station/lighthouse/mine/tree/ruins/cemetery/inn MCP idles added 2026-09-13
+- Waterfall `Visual/WaterfallAnim` (`AnimatedSprite2D`) `is_playing=true`; frames advance; see `GOAL_G8_WATERFALL_ANIM_EVIDENCE.md`
 
 ## Agent reviews this batch
 
