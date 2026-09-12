@@ -173,6 +173,8 @@ func _spawn_or_replace_actor(entry: Dictionary) -> void:
 		route,
 		null
 	)
+	# PatrolActor.setup renames to actor_title — keep a stable name so K-cycle can find/replace.
+	actor.name = DEMO_ACTOR_NAME
 	if actor.has_signal("activated") and _info != null and _info.has_method("show_info"):
 		actor.activated.connect(func(h: InteractableHotspot) -> void:
 			_info.call("show_info", h.title, h.description)
@@ -216,7 +218,7 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 	var tw := cue.create_tween()
 	tw.tween_property(cue, "modulate:a", 0.35, 0.12)
 	tw.tween_property(cue, "modulate:a", 1.0, 0.18)
-	tw.tween_interval(1.35)
+	tw.tween_interval(2.0)
 	tw.tween_property(cue, "modulate:a", 0.0, 0.4)
 	tw.tween_callback(cue.queue_free)
 
