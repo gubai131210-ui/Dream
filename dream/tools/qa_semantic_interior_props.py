@@ -19,6 +19,7 @@ FORBIDDEN = {
 	"hall": ["table_dining"],
 	"climb": ["tool_rack"],
 	"roots": ["hay_"],
+	"nave": ["notice_00"],
 	"reed": ["hay_00"],
 	"pipe_run": ["barrel_"],
 }
@@ -35,6 +36,9 @@ REQUIRED_ASSETS = [
 	"assets/sprites/interior/props/root_table_00.png",
 	"assets/sprites/interior/props/peg_ladder_00.png",
 	"assets/sprites/interior/props/root_mass_00.png",
+	"assets/sprites/interior/props/fare_board_00.png",
+	"assets/sprites/interior/props/ruin_stele_00.png",
+	"assets/sprites/interior/props/bark_glyph_00.png",
 	"assets/sprites/interior/props/sewer_pipe_00.png",
 	"assets/sprites/interior/props/reed_clump_00.png",
 ]
@@ -44,6 +48,9 @@ TITLE_CONST = {
 	"会议桌": "P_MEETING_TABLE",
 	"公告板": "P_CIVIC_BOARD",
 	"时刻表": "P_TIMETABLE",
+	"票价牌": "P_FARE_BOARD",
+	"碑刻": "P_RUIN_STELE",
+	"树皮符": "P_BARK_GLYPH",
 	"根桌": "P_ROOT_TABLE",
 	"木钉梯": "P_PEG_LADDER",
 	"根须垛": "P_ROOT_MASS",
@@ -75,6 +82,9 @@ def main() -> int:
 		"P_MEETING_TABLE",
 		"P_CIVIC_BOARD",
 		"P_TIMETABLE",
+		"P_FARE_BOARD",
+		"P_RUIN_STELE",
+		"P_BARK_GLYPH",
 		"P_ROOT_TABLE",
 		"P_PEG_LADDER",
 		"P_ROOT_MASS",
@@ -92,7 +102,7 @@ def main() -> int:
 		for f in fails:
 			print(" -", f)
 		return 1
-	print("GREEN semantic-interior proxy QA (civic+C28 + signature clusters)")
+	print("GREEN semantic-interior proxy QA (stele/fare/bark + civic+C28 + signature)")
 	return 0
 
 

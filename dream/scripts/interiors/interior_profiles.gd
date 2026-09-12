@@ -34,6 +34,9 @@ const P_BASKET := DIR_INTERIOR_PROP + "/basket_00.png"
 const P_NOTICE := DIR_INTERIOR_PROP + "/notice_00.png"
 const P_CIVIC_BOARD := DIR_INTERIOR_PROP + "/civic_board_00.png"
 const P_TIMETABLE := DIR_INTERIOR_PROP + "/timetable_00.png"
+const P_FARE_BOARD := DIR_INTERIOR_PROP + "/fare_board_00.png"
+const P_RUIN_STELE := DIR_INTERIOR_PROP + "/ruin_stele_00.png"
+const P_BARK_GLYPH := DIR_INTERIOR_PROP + "/bark_glyph_00.png"
 const P_MUG_SHELF := DIR_INTERIOR_PROP + "/mug_shelf_00.png"
 const P_ROOST := DIR_INTERIOR_PROP + "/roost_00.png"
 const P_COIN := DIR_INTERIOR_PROP + "/coin_chest_00.png"
@@ -1368,7 +1371,7 @@ static func _all() -> Dictionary:
 					_m(P_LEDGER, -1, -1, "行车簿", "站长日志与班次簿。", 0.7),
 					_m(P_LAMP_SHOP, 2, -1, "票窗灯", "售票台灯。", PROP),
 					_m(P_COIN, 2, 1, "票箱", "零钱与票根匣。", 0.55),
-					_m(P_NOTICE, 1, -3, "票价牌", "票价与托运须知。", 0.7),
+					_m(P_FARE_BOARD, 1, -3, "票价牌", "票价与托运须知（非 notice 代理）。", 0.75),
 				]),
 				# Verb: 货运体量 — crate mass east of ticket (not in door aisle).
 				_cluster("freight", 25, 9, [
@@ -1684,7 +1687,7 @@ static func _all() -> Dictionary:
 					_m(P_STOOL, -2, 1, "木墩", "桌西坐墩（同 sheet）。", 0.7),
 					_m(P_STOOL, 2, 1, "木墩", "桌东坐墩（东留站位）。", 0.7),
 					_m(P_PEW, 0, 3, "原木长凳", "桌南原木长凳（南站位可坐）。", 0.75),
-					_m(P_NOTICE, 0, -2, "树皮符", "北壁刻纹符板。", 0.65),
+					_m(P_BARK_GLYPH, 0, -2, "树皮符", "北壁刻纹符板（非 notice 代理）。", 0.7),
 					_m(P_LAMP_INDOOR, 2, -2, "洞厅灯", "暖黄树心灯（非农场仓灯）。", PROP),
 					_m(P_BASKET, -2, -1, "果篮", "厅角野果篮。", 0.55),
 				]),
@@ -1746,7 +1749,7 @@ static func _all() -> Dictionary:
 					_m(P_ROCK1, 0, -1, "塌顶石", "祭台北塌落顶石。", 0.65),
 					_m(P_ROCK2, -3, 1, "侧廊残垣", "西廊坍塌残垣（西于门轴）。", 0.55),
 					_m(P_ROCK3, 3, 1, "侧廊残垣", "东廊坍塌残垣（东于门轴）。", 0.55),
-					_m(P_NOTICE, 0, -2, "碑刻", "祭台北壁残碑刻文。", 0.75),
+					_m(P_RUIN_STELE, 0, -2, "碑刻", "祭台北壁残碑刻文（非 notice 代理）。", 0.85),
 					_m(P_LAMP_INDOOR, 2, -1, "残灯", "壁龛冷白灯。", PROP),
 					_m(P_CRATE0, 0, 2, "清理箱", "祭台南清理碎石箱（南可站）。", 0.65),
 				]),

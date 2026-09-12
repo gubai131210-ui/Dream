@@ -105,7 +105,7 @@
 | 优先级 | 缺口 |
 | --- | ---:|
 | P0 | **用户 Godot QA Waves A2–F + §7 勾选** |
-| P1 | 姿态/摊位 ArtGen 继续抛光（非阻塞）；C29 碑刻等次级 notice 语义可继续收敛 |
+| P1 | 姿态/摊位 ArtGen 继续抛光（非阻塞）；其余通用 `notice` 告示牌可按场景继续特化 |
 | P2 | tomyud1 MCP 截图证据（**全户外 + 多室内**；C62/C58 FX 冒烟 PASS；仍不代替 §7） |
 
 ---
@@ -165,6 +165,7 @@
 | ~~C04 候坐 / C07 讲台代理~~ | smith wait / school lectern | **DONE** → `waiting_bench` / `lectern_00`；QA 扩 wait+lectern |
 | ~~C06 会议桌/公告板 · C11 时刻表~~ | town hall / station | **DONE** → `meeting_table` / `civic_board` / `timetable` |
 | ~~C28 根桌/木钉梯/根须垛代理~~ | giant tree interior | **DONE** → `root_table` / `peg_ladder` / `root_mass` |
+| ~~C29 碑刻 / C28 树皮符 / C11 票价牌~~ | ruins / tree / station | **DONE** → `ruin_stele` / `bark_glyph` / `fare_board` |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据

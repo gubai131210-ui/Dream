@@ -68,6 +68,9 @@
 | C06 civic + meeting | `docs/evidence/g8_c06_civic_meeting.png` | 公告板=`civic_board`；会议桌=`meeting_table` |
 | C11 timetable | `docs/evidence/g8_c11_timetable.png` | 时刻表=`timetable_00` |
 | C28 root semantics | `docs/evidence/g8_c28_root_semantics.png` | 根桌/木钉梯/根须垛专用 prop |
+| C28 bark glyph | `docs/evidence/g8_c28_bark_glyph.png` | 树皮符=`bark_glyph_00` |
+| C29 ruin stele | `docs/evidence/g8_c29_ruin_stele.png` | 碑刻=`ruin_stele_00` |
+| C11 fare board | `docs/evidence/g8_c11_fare_board.png` | 票价牌=`fare_board_00` |
 
 ## Runtime queries
 
