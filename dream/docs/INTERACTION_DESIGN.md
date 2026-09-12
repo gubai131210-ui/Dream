@@ -136,9 +136,9 @@ Dream 下一阶段的交互不能继续采用“找到一张图 → 放到场景
 | `scripts/actors/ambient_critter.gd` | 已有统一画布/底部对齐方向，但图片底边不一定等于真实脚底；要补类别级 `foot_anchor`。 | P0 |
 | `scripts/interiors/interior_craft.gd` 的 `_spawn_anim_fx()` | `fire_00..03`、`forge_00..03` 直接进入 `SpriteFrames`；若源帧主体偏移，火焰会整体跳动。 | P0 |
 | `scripts/areas/waterfall_assembler.gd` 的瀑布装配 | 需确认专用动态资源是否真正接入，而不是只使用 `waterfall_tall_00` / `waterfall_mid_00` 和通用水面。 | P0 |
-| `scripts/areas/area_craft.gd` 的 `spawn_water_overlay()` | 如果每个水格子既有自己的透明 Tween，又由统一 Timer 换纹理，会出现两个时钟互相叠加，造成亮度/纹理/邻格不同步。 | P0 |
-| `scripts/interact/interactable_hotspot.gd` 的 `_layout_prompt()` | 根据当前帧高度计算提示上方位置；若动画帧高度不同，提示可能抖动。提示应以固定 manifest bounds 或稳定 anchor 布局。 | P0 |
-| `scripts/interact/interactable_hotspot.gd` + `InteriorRoomController` | ~~鼠标可直接触发任意热点，而最近提示由 Controller 选择，可能出现“提示 A、点击 B”。~~ **DONE** — hover 优先 + 点击同步 `get_executable_interact_target()`（`g8_interact_target_smoke`）。 | ~~P1~~ |
+| `scripts/areas/area_craft.gd` 的 `spawn_water_overlay()` | ~~双时钟叠加~~ **DONE** — 共享 Timer 驱动换帧；`qa_interaction_frames` 断言 single water clock。 | ~~P0~~ |
+| `scripts/interact/interactable_hotspot.gd` 的 `_layout_prompt()` | ~~按当前帧高度抖动~~ **DONE** — `_cache_visual_bounds()` 用稳定 sprite/anim 包围盒。 | ~~P0~~ |
+| `scripts/interact/interactable_hotspot.gd` + `InteriorRoomController` | ~~提示 A、点击 B~~ **DONE** — hover 优先 + 点击同步（`g8_interact_target_smoke`）。 | ~~P1~~ |
 | `scripts/areas/area_craft.gd` 的传送点提示 | 传送点长期脉冲/文字与普通热点的最近提示并存，可能让场景交互层级过多。 | P1 |
 
 在开始大批量增加新动画前，先关闭或隔离上述风险。否则新素材即使单帧画得正确，也会被运行时的双时钟、错误锚点或重复提示破坏。

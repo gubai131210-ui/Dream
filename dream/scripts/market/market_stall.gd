@@ -24,12 +24,13 @@ var base_title: String = "市集摊"
 var base_desc: String = ""
 var stripe_a: Color = Color(0.85, 0.2, 0.2, 0.92)
 var stripe_b: Color = Color(0.95, 0.95, 0.92, 0.92)
-var crate_path: String = "res://assets/sprites/props/B11-02_crates_boxes_06.png"
+var crate_path: String = "res://assets/sprites/props/produce_crate_00.png"
 var barrel_path: String = "res://assets/sprites/props/B11-01_barrels_03.png"
 var body_path: String = "res://assets/sprites/market/stall_open_wood_00.png"
 var state: State = State.OPEN
 
 const DEFAULT_BODY := "res://assets/sprites/market/stall_open_wood_00.png"
+const DEFAULT_PRODUCE_CRATE := "res://assets/sprites/props/produce_crate_00.png"
 const LOCKED_BOARD := "res://assets/sprites/market/stall_locked_board_00.png"
 const EMPTY_MARK := "res://assets/sprites/market/stall_empty_bay_00.png"
 const AWNING_TEX := "res://assets/sprites/market/stall_awning_00.png"

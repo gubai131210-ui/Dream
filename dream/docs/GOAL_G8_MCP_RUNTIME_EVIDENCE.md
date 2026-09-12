@@ -60,6 +60,7 @@
 | C31 sewer pipes | `docs/evidence/g8_c31_sewer_pipes.png` | 管道段专用 prop（非 barrel） |
 | Market EMPTY | `docs/evidence/g8_market_stall_empty.png` | C05 空位专用 bay |
 | Market LOCKED | `docs/evidence/g8_market_stall_locked.png` | C05 锁定专用板 |
+| Market OPEN produce | `docs/evidence/g8_market_stall_produce.png` | 蔬果箱 `produce_crate_00`（非 stall_face） |
 
 ## Runtime queries
 

@@ -158,6 +158,7 @@
 | ~~室内语义代理（祭坛/课桌/候车椅/黑板/芦苇/管道）~~ | C07/C10/C11/C25/C31 | **DONE** → dedicated props + `qa_semantic_interior_props` GREEN |
 | ~~提示A/点击B 目标分裂~~ | InteriorRoomController | **DONE** → hover 优先 + click sync；`g8_interact_target_smoke` PASS |
 | ~~C05 EMPTY/LOCKED 代理图~~ | MarketStall | **DONE** → `stall_empty_bay_00` / `stall_locked_board_00` |
+| ~~B11-02 货箱名实~~ | market dressing | **DONE** → produce/stall_face/lumber/bin aliases；蔬果禁 `_04` |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据
