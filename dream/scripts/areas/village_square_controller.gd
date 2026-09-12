@@ -43,6 +43,20 @@ func _ready() -> void:
 	DayNightWeather.attach_to(self, top_bar)
 	# Wave F NpcRing C53/C54: work rings + life states (TopBar + K/L).
 	NpcRoutineDemo.attach_to(self, top_bar, NpcRoutineRings.HOST_SQUARE)
+	# Work/life ring is a development showcase; keep its NPC actor, but hide
+	# the status strip and cycle buttons in the normal presentation.
+	# Season TopBar stays visible — C55 is player-facing (G3).
+	if not bool(ProjectSettings.get_setting("debug/show_demo_overlays", false)):
+		var routine_status := get_node_or_null("NpcRingDemoStatus") as CanvasLayer
+		if routine_status:
+			routine_status.visible = false
+		info.hide_info()
+		for control_name in ["CycleWorkRing", "CycleLifeState"]:
+			var control: Control = null
+			if top_bar:
+				control = top_bar.get_node_or_null(control_name) as Control
+			if control:
+				control.visible = false
 	# Wave F WorldSys — C55 season + C58–C61 plaza mounts (Env-H thin attach).
 	SeasonalDecor.attach_to(self, top_bar)
 	WorldInteractKit.attach_to(self, top_bar)

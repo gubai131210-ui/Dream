@@ -128,6 +128,24 @@ static func make_portal(
 	rect.size = size
 	shape.shape = rect
 	area.add_child(shape)
+	var cue := Polygon2D.new()
+	cue.name = "DoorstepCue"
+	cue.color = Color(0.55, 0.85, 0.95, 0.4)
+	var hw := size.x * 0.22
+	cue.polygon = PackedVector2Array([
+		Vector2(-hw, 4), Vector2(hw, 4), Vector2(hw * 0.7, 14), Vector2(-hw * 0.7, 14),
+	])
+	cue.position = Vector2(0, size.y * 0.12)
+	cue.z_index = -1
+	area.add_child(cue)
+	var arch := Polygon2D.new()
+	arch.name = "DoorArchCue"
+	arch.color = Color(0.65, 0.9, 1.0, 0.38)
+	arch.polygon = PackedVector2Array([
+		Vector2(-10, 2), Vector2(10, 2), Vector2(8, -16), Vector2(0, -22), Vector2(-8, -16),
+	])
+	arch.position = Vector2(0, -size.y * 0.18)
+	area.add_child(arch)
 	var hint := Polygon2D.new()
 	hint.name = "PortalMarker"
 	hint.color = marker_color
@@ -154,12 +172,23 @@ static func make_portal(
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.visible = show_debug_markers()
 	area.add_child(label)
-	area.mouse_entered.connect(func(): label.visible = true)
-	area.mouse_exited.connect(func(): label.visible = show_debug_markers())
+	area.mouse_entered.connect(func():
+		label.visible = true
+		cue.modulate = Color(1.15, 1.2, 1.25, 1.0)
+		arch.modulate = Color(1.2, 1.25, 1.3, 1.0)
+	)
+	area.mouse_exited.connect(func():
+		label.visible = show_debug_markers()
+		cue.modulate = Color.WHITE
+		arch.modulate = Color.WHITE
+	)
+	var pulse := arch.create_tween().set_loops()
+	pulse.tween_property(arch, "modulate:a", 0.22, 0.8).set_trans(Tween.TRANS_SINE)
+	pulse.tween_property(arch, "modulate:a", 0.55, 0.8).set_trans(Tween.TRANS_SINE)
 	if show_debug_markers():
-		var pulse := hint.create_tween().set_loops()
-		pulse.tween_property(hint, "modulate:a", 0.4, 0.7).set_trans(Tween.TRANS_SINE)
-		pulse.tween_property(hint, "modulate:a", 1.0, 0.7).set_trans(Tween.TRANS_SINE)
+		var pulse_m := hint.create_tween().set_loops()
+		pulse_m.tween_property(hint, "modulate:a", 0.4, 0.7).set_trans(Tween.TRANS_SINE)
+		pulse_m.tween_property(hint, "modulate:a", 1.0, 0.7).set_trans(Tween.TRANS_SINE)
 	area.set_meta("scene_path", scene_path)
 	area.set_meta("worldsys_secret", true)
 	parent.add_child(area)

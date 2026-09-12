@@ -78,8 +78,9 @@ All hops are real `scene_path` portals (clickable). Cave hop is mounted by `Secr
 ## How to toggle / QA
 
 1. **广场** (`village_square.tscn`)
-   - Season: TopBar 春花… / **S** (see [`SEASON_C55.md`](./SEASON_C55.md))
-   - Click ≥8 WorldInteract diamonds; clear ≥4 breakables; unlock ≥3 gates; open 井边宝箱
+   - Season: TopBar 春花… / **S**（真 prop 簇）
+   - Click ≥8 WorldInteract **props**；clear ≥4 breakables；unlock ≥3 gates；open 井边宝箱
+   - 传送门应见常显门阶/拱门 cue（无需开 debug 菱形）
 2. **密道链**
    - Hub → 深林 → click **树洞密道** → 洞穴 → **暗河出口** → 瀑布 → **瀑后回湖** → 湖泊
 3. **隐藏箱**

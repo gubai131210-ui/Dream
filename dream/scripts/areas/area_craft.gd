@@ -343,7 +343,7 @@ func spawn_crop_rows(
 	row_color: Color = Color(0.45, 0.72, 0.28, 0.9),
 	rows: int = 4
 ) -> void:
-	var hs := make_hotspot(parent, title, desc, bed.get_center(), bed.size)
+	var hs := make_hotspot(parent, repair_user_text(title), repair_user_text(desc), bed.get_center(), bed.size)
 	var visual: Node2D = hs.get_node("Visual")
 	var inset := 8.0
 	var inner := Rect2(bed.position + Vector2(inset, inset), bed.size - Vector2(inset, inset) * 2.0)
@@ -497,7 +497,31 @@ func add_contact_shadow(parent: Node2D, at: Vector2, radius: Vector2 = Vector2(1
 	parent.add_child(shadow)
 
 
+## Repair legacy labels that were saved after UTF-8 was decoded as Latin-1.
+## Keep this at the presentation boundary so old scene assembly data remains
+## usable while the player still sees readable Chinese labels.
+static func repair_user_text(value: String) -> String:
+	var looks_mojibake := false
+	for ch in value:
+		var probe := ch.unicode_at(0)
+		if probe >= 128 and probe <= 255:
+			looks_mojibake = true
+			break
+	if not looks_mojibake:
+		return value
+	var bytes := PackedByteArray()
+	for ch in value:
+		var code := ch.unicode_at(0)
+		if code > 255:
+			return value
+		bytes.append(code)
+	var repaired := bytes.get_string_from_utf8()
+	return repaired if not repaired.is_empty() else value
+
+
 func make_hotspot(parent: Node2D, title: String, desc: String, pos: Vector2, size: Vector2) -> InteractableHotspot:
+	title = repair_user_text(title)
+	desc = repair_user_text(desc)
 	var hs := InteractableHotspot.new()
 	hs.name = title.replace(" ", "")
 	hs.title = title
@@ -516,6 +540,8 @@ func make_hotspot(parent: Node2D, title: String, desc: String, pos: Vector2, siz
 
 
 func make_portal(parent: Node2D, title: String, scene_path: String, pos: Vector2, size: Vector2 = Vector2(80, 48)) -> Area2D:
+	title = repair_user_text(title)
+	var show_marker := bool(ProjectSettings.get_setting("debug/show_interaction_markers", false))
 	var area := Area2D.new()
 	area.name = "Portal_" + title
 	area.position = pos
@@ -525,19 +551,69 @@ func make_portal(parent: Node2D, title: String, scene_path: String, pos: Vector2
 	rect.size = size
 	shape.shape = rect
 	area.add_child(shape)
-	var hint := Polygon2D.new()
-	hint.color = Color(0.3, 0.7, 1.0, 0.25)
-	hint.polygon = PackedVector2Array([
-		Vector2(-size.x * 0.5, -size.y * 0.5),
-		Vector2(size.x * 0.5, -size.y * 0.5),
-		Vector2(size.x * 0.5, size.y * 0.5),
-		Vector2(-size.x * 0.5, size.y * 0.5),
+	# G5: always-visible soft doorstep cue (not debug diamond).
+	var cue := Polygon2D.new()
+	cue.name = "DoorstepCue"
+	cue.color = Color(0.95, 0.82, 0.4, 0.42)
+	var hw := size.x * 0.22
+	cue.polygon = PackedVector2Array([
+		Vector2(-hw, 4), Vector2(hw, 4), Vector2(hw * 0.7, 14), Vector2(-hw * 0.7, 14),
 	])
+	cue.position = Vector2(0, size.y * 0.12)
+	cue.z_index = -1
+	area.add_child(cue)
+	var arch := Polygon2D.new()
+	arch.name = "DoorArchCue"
+	arch.color = Color(0.98, 0.9, 0.55, 0.35)
+	arch.polygon = PackedVector2Array([
+		Vector2(-10, 2), Vector2(10, 2), Vector2(8, -16), Vector2(0, -22), Vector2(-8, -16),
+	])
+	arch.position = Vector2(0, -size.y * 0.18)
+	area.add_child(arch)
+	var hint := Polygon2D.new()
+	hint.name = "PortalMarker"
+	hint.color = Color(0.95, 0.72, 0.28, 0.86)
+	hint.polygon = PackedVector2Array([
+		Vector2(0, -9),
+		Vector2(11, 0),
+		Vector2(0, 9),
+		Vector2(-11, 0),
+	])
+	hint.position = Vector2(0, -size.y * 0.26)
+	hint.visible = show_marker
 	area.add_child(hint)
 	var label := Label.new()
+	label.name = "PortalLabel"
 	label.text = title
-	label.position = Vector2(-36, -10)
+	label.position = Vector2(-size.x * 0.5, -size.y * 0.5 - 8)
+	label.size = Vector2(size.x, 24)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_color_override("font_color", Color("#fff4c7"))
+	label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.75))
+	label.add_theme_constant_override("shadow_offset_x", 1)
+	label.add_theme_constant_override("shadow_offset_y", 1)
+	label.add_theme_font_size_override("font_size", 13)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.visible = show_marker
 	area.add_child(label)
+	area.mouse_entered.connect(func():
+		label.visible = true
+		cue.modulate = Color(1.2, 1.15, 0.9, 1.0)
+		arch.modulate = Color(1.25, 1.2, 0.95, 1.0)
+	)
+	area.mouse_exited.connect(func():
+		label.visible = show_marker
+		cue.modulate = Color.WHITE
+		arch.modulate = Color.WHITE
+	)
+	var pulse := arch.create_tween().set_loops()
+	pulse.tween_property(arch, "modulate:a", 0.22, 0.85).set_trans(Tween.TRANS_SINE)
+	pulse.tween_property(arch, "modulate:a", 0.55, 0.85).set_trans(Tween.TRANS_SINE)
+	if show_marker:
+		var pulse_m := hint.create_tween().set_loops()
+		pulse_m.tween_property(hint, "modulate:a", 0.45, 0.65).set_trans(Tween.TRANS_SINE)
+		pulse_m.tween_property(hint, "modulate:a", 1.0, 0.65).set_trans(Tween.TRANS_SINE)
 	area.set_meta("scene_path", scene_path)
 	parent.add_child(area)
 	return area
@@ -547,12 +623,12 @@ func snap_patrol_route(waypoints: Array) -> Array[Vector2]:
 	var route: Array[Vector2] = []
 	for wp in waypoints:
 		var ideal: Vector2 = wp
-		var snapped := find_walk_near(ideal, 6)
-		if snapped == Vector2.ZERO:
+		var candidate := find_walk_near(ideal, 6)
+		if candidate == Vector2.ZERO:
 			continue
-		if route.size() > 0 and route[route.size() - 1].distance_to(snapped) < 4.0:
+		if route.size() > 0 and route[route.size() - 1].distance_to(candidate) < 4.0:
 			continue
-		route.append(snapped)
+		route.append(candidate)
 	if route.size() == 1:
 		var t: Vector2i = world_to_tile(route[0])
 		var dirs: Array[Vector2i] = [Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)]
@@ -594,6 +670,8 @@ func spawn_patrol_actor(
 	desc: String,
 	waypoints: Array
 ) -> PatrolActor:
+	title = repair_user_text(title)
+	desc = repair_user_text(desc)
 	var route: Array[Vector2] = snap_patrol_route(waypoints)
 	if route.is_empty():
 		push_warning("AreaCraft: no walk route for %s" % title)
@@ -634,11 +712,9 @@ func spawn_water_overlay(parent: Node2D) -> void:
 			spr.modulate = Color(1, 1, 1, 0.42)
 			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			overlay.add_child(spr)
-			var phase: float = 0.2 * float((tx + ty) % 4)
-			var tw := spr.create_tween().set_loops()
-			tw.tween_interval(phase)
-			tw.tween_property(spr, "modulate:a", 0.22, 0.9).set_trans(Tween.TRANS_SINE)
-			tw.tween_property(spr, "modulate:a", 0.5, 0.9).set_trans(Tween.TRANS_SINE)
+			# One shared Timer below owns water animation timing. A per-sprite
+			# alpha Tween here used to create a second clock, so texture changes
+			# and brightness changes could disagree and make adjacent water flicker.
 			spr.set_meta("frame_i", (tx + ty) % frames.size())
 			spr.set_meta("frames", frames)
 			idx += 1
@@ -658,6 +734,45 @@ func spawn_water_overlay(parent: Node2D) -> void:
 					c.set_meta("frame_i", fi)
 					(c as Sprite2D).texture = fr[fi]
 		)
+	_spawn_shoreline_overlay(parent)
+
+
+func _spawn_shoreline_overlay(parent: Node2D) -> void:
+	## Draw only along exposed water-cell edges so ponds and pools do not read as
+	## raw blue rectangles. The line follows the same mask as collision/painting.
+	var shore := Node2D.new()
+	shore.name = "ShorelineOverlay"
+	shore.z_index = 2
+	parent.add_child(shore)
+	var edge_color := Color(0.20, 0.60, 0.58, 0.48)
+	var foam_color := Color(0.74, 0.87, 0.67, 0.42)
+	for ty in range(map_h):
+		for tx in range(map_w):
+			if not is_water(tx, ty) or is_path(tx, ty):
+				continue
+			var left := float(tx * tile)
+			var top := float(ty * tile)
+			var right := left + float(tile)
+			var bottom := top + float(tile)
+			if not is_water(tx, ty - 1):
+				_add_shore_segment(shore, Vector2(left + 2.0, top + 2.0), Vector2(right - 2.0, top + 2.0), edge_color, 2.0)
+				if (tx + ty) % 3 == 0:
+					_add_shore_segment(shore, Vector2(left + 7.0, top + 3.0), Vector2(minf(right - 6.0, left + 15.0), top + 3.0), foam_color, 1.0)
+			if not is_water(tx, ty + 1):
+				_add_shore_segment(shore, Vector2(left + 2.0, bottom - 2.0), Vector2(right - 2.0, bottom - 2.0), edge_color, 2.0)
+			if not is_water(tx - 1, ty):
+				_add_shore_segment(shore, Vector2(left + 2.0, top + 2.0), Vector2(left + 2.0, bottom - 2.0), edge_color, 2.0)
+			if not is_water(tx + 1, ty):
+				_add_shore_segment(shore, Vector2(right - 2.0, top + 2.0), Vector2(right - 2.0, bottom - 2.0), edge_color, 2.0)
+
+
+func _add_shore_segment(parent: Node2D, from: Vector2, to: Vector2, color: Color, width: float) -> void:
+	var line := Line2D.new()
+	line.width = width
+	line.default_color = color
+	line.antialiased = false
+	line.points = PackedVector2Array([from, to])
+	parent.add_child(line)
 
 
 func _path_distance_field() -> Array:

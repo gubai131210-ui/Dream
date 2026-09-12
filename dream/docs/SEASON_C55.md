@@ -12,21 +12,9 @@
 
 | ID | Intent | Shipped |
 | --- | --- | --- |
-| C55 | 广场四季装饰层可切换 | 春花 / 夏海 / 秋收 / 冬雪 prop clusters + soft grade veil + particles |
+| C55 | 广场四季装饰层可切换 | 春花 / 夏海 / 秋收 / 冬雪 **真实 prop**（花床/草药/灯串/草垛等）+ soft grade veil + particles |
 
-## API
-
-`scripts/env/seasonal_decor.gd` — `class_name SeasonalDecor` (Node, **not** Autoload)
-
-```gdscript
-SeasonalDecor.attach_to(host: Node2D, top_bar: Control = null) -> SeasonalDecor
-env.cycle_season()          # 春 → 夏 → 秋 → 冬 → 春
-env.set_season(SeasonalDecor.Season.AUTUMN)
-```
-
-Signals: `season_changed(season)`
-
-Visuals live on `SeasonalDecorLayer` + `SeasonalGradeLayer` (ColorRect, layer 7). Does **not** create a second `CanvasModulate`.
+Visuals live on `SeasonalDecorLayer` (always visible) + `SeasonalGradeLayer`. TopBar 季节按钮默认可见。不再依赖 `debug/show_demo_overlays` 才显示装饰。
 
 ## How to toggle (village_square)
 

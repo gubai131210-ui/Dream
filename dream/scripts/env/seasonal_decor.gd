@@ -5,6 +5,7 @@ extends Node
 ## Not Autoload. Cycles 春/夏/秋/冬 via TopBar + key S. No new festival megamap.
 
 const NODE_NAME := "SeasonalDecor"
+const DEMO_OVERLAY_SETTING := "debug/show_demo_overlays"
 
 enum Season { SPRING, SUMMER, AUTUMN, WINTER }
 
@@ -19,6 +20,10 @@ var _grade: CanvasItem
 var _particles: CPUParticles2D
 var _btn_season: Button
 var _status: Label
+
+
+static func show_demo_overlay() -> bool:
+	return bool(ProjectSettings.get_setting(DEMO_OVERLAY_SETTING, false))
 
 
 static func attach_to(host: Node2D, top_bar: Control = null) -> SeasonalDecor:
@@ -41,6 +46,8 @@ func setup(host: Node2D, top_bar: Control = null) -> void:
 	_layer.z_index = 3
 	_layer.y_sort_enabled = true
 	host.add_child(_layer)
+	# Season props are gameplay art — always visible (S / TopBar still cycle).
+	_layer.visible = true
 	_ensure_grade_overlay()
 	_ensure_particles()
 	_rebuild()
@@ -152,62 +159,83 @@ func _rebuild() -> void:
 func _spawn_season_props() -> void:
 	match _season:
 		Season.SPRING:
-			_add_cluster("春花簇", Color(0.95, 0.55, 0.72, 0.92), [
-				Vector2(180, 360), Vector2(240, 420), Vector2(980, 340), Vector2(1080, 400),
+			_add_prop_cluster([
+				{"path": "res://assets/sprites/interior/props/flower_bed_00.png", "pos": Vector2(180, 360), "scale": 0.5},
+				{"path": "res://assets/sprites/interior/props/flower_bed_00.png", "pos": Vector2(240, 420), "scale": 0.45},
+				{"path": "res://assets/sprites/interior/props/herbs_00.png", "pos": Vector2(980, 340), "scale": 0.5},
+				{"path": "res://assets/sprites/interior/props/herbs_00.png", "pos": Vector2(1080, 400), "scale": 0.45},
 			])
-			_add_banner("春灯", Color(1.0, 0.78, 0.86, 0.95), Vector2(640, 220))
+			_add_prop_banner(
+				"res://assets/sprites/interior/props/lantern_string_00.png",
+				"春灯",
+				Vector2(640, 220),
+				0.55,
+			)
 		Season.SUMMER:
-			_add_cluster("夏海旗", Color(0.35, 0.72, 0.95, 0.92), [
-				Vector2(200, 520), Vector2(320, 560), Vector2(960, 540), Vector2(1100, 500),
+			_add_prop_cluster([
+				{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(200, 520), "scale": 0.5},
+				{"path": "res://assets/sprites/props/fountain_small.png", "pos": Vector2(320, 560), "scale": 0.45},
+				{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(960, 540), "scale": 0.5},
+				{"path": "res://assets/sprites/interior/props/lantern_string_00.png", "pos": Vector2(1100, 500), "scale": 0.5},
 			])
-			_add_banner("夏浪饰", Color(0.45, 0.88, 0.95, 0.95), Vector2(640, 240))
+			_add_prop_banner(
+				"res://assets/sprites/interior/props/lantern_string_00.png",
+				"夏浪饰",
+				Vector2(640, 240),
+				0.55,
+			)
 		Season.AUTUMN:
-			_add_cluster("秋收垛", Color(0.92, 0.58, 0.22, 0.92), [
-				Vector2(220, 380), Vector2(300, 440), Vector2(1000, 360), Vector2(1120, 430),
+			_add_prop_cluster([
+				{"path": "res://assets/sprites/interior/props/grain_stack_00.png", "pos": Vector2(220, 380), "scale": 0.5},
+				{"path": "res://assets/sprites/interior/props/hay_stack_00.png", "pos": Vector2(300, 440), "scale": 0.5},
+				{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(1000, 360), "scale": 0.5},
+				{"path": "res://assets/sprites/interior/props/fruit_crate_stack_00.png", "pos": Vector2(1120, 430), "scale": 0.45},
 			])
-			_add_banner("秋穗挂", Color(0.95, 0.7, 0.3, 0.95), Vector2(640, 230))
+			_add_prop_banner(
+				"res://assets/sprites/interior/props/grain_stack_00.png",
+				"秋穗挂",
+				Vector2(640, 230),
+				0.5,
+			)
 		_:
-			_add_cluster("冬雪桩", Color(0.86, 0.92, 1.0, 0.95), [
-				Vector2(190, 400), Vector2(280, 460), Vector2(990, 380), Vector2(1090, 450),
+			_add_prop_cluster([
+				{"path": "res://assets/sprites/props/rock_01.png", "pos": Vector2(190, 400), "scale": 0.5, "mod": Color(0.85, 0.92, 1.0)},
+				{"path": "res://assets/sprites/props/rock_03.png", "pos": Vector2(280, 460), "scale": 0.45, "mod": Color(0.88, 0.94, 1.0)},
+				{"path": "res://assets/sprites/props/lamp_1.png", "pos": Vector2(990, 380), "scale": 0.5},
+				{"path": "res://assets/sprites/interior/props/lantern_string_00.png", "pos": Vector2(1090, 450), "scale": 0.5},
 			])
-			_add_banner("冬灯笼", Color(0.75, 0.88, 1.0, 0.95), Vector2(640, 220))
+			_add_prop_banner(
+				"res://assets/sprites/props/lamp_2.png",
+				"冬灯笼",
+				Vector2(640, 220),
+				0.55,
+			)
 
 
-func _add_cluster(title: String, color: Color, positions: Array) -> void:
-	for i in positions.size():
-		var pos: Vector2 = positions[i]
-		var marker := Polygon2D.new()
-		marker.name = "%s_%d" % [title, i]
-		marker.color = color
-		marker.position = pos
-		marker.polygon = PackedVector2Array([
-			Vector2(0, -14), Vector2(12, -4), Vector2(8, 12), Vector2(-8, 12), Vector2(-12, -4),
-		])
-		_layer.add_child(marker)
-		var tag := Label.new()
-		tag.text = title if i == 0 else ""
-		tag.position = pos + Vector2(-28, -28)
-		tag.add_theme_font_size_override("font_size", 11)
-		tag.add_theme_color_override("font_color", Color("#fff6e8"))
-		tag.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
-		tag.add_theme_constant_override("shadow_offset_x", 1)
-		tag.add_theme_constant_override("shadow_offset_y", 1)
-		tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_layer.add_child(tag)
+func _add_prop_cluster(entries: Array) -> void:
+	for i in entries.size():
+		var e: Dictionary = entries[i]
+		var path := str(e.get("path", ""))
+		var pos: Vector2 = e.get("pos", Vector2.ZERO)
+		var scale_f := float(e.get("scale", 0.5))
+		var holder := Node2D.new()
+		holder.name = "SeasonProp_%d" % i
+		holder.position = pos
+		_layer.add_child(holder)
+		var spr := WorldSpawnUtil.attach_prop_sprite(holder, path, scale_f)
+		if spr != null and e.has("mod"):
+			spr.modulate = e["mod"] as Color
 
 
-func _add_banner(title: String, color: Color, pos: Vector2) -> void:
-	var banner := Polygon2D.new()
-	banner.name = "SeasonBanner"
-	banner.color = color
-	banner.position = pos
-	banner.polygon = PackedVector2Array([
-		Vector2(-40, -8), Vector2(40, -8), Vector2(32, 18), Vector2(0, 28), Vector2(-32, 18),
-	])
-	_layer.add_child(banner)
+func _add_prop_banner(path: String, title: String, pos: Vector2, scale_f: float) -> void:
+	var holder := Node2D.new()
+	holder.name = "SeasonBanner"
+	holder.position = pos
+	_layer.add_child(holder)
+	WorldSpawnUtil.attach_prop_sprite(holder, path, scale_f)
 	var label := Label.new()
 	label.text = "%s · %s" % [SEASON_LABELS[_season], title]
-	label.position = pos + Vector2(-70, -30)
+	label.position = Vector2(-70, -42)
 	label.size = Vector2(140, 22)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.add_theme_font_size_override("font_size", 13)
@@ -216,7 +244,16 @@ func _add_banner(title: String, color: Color, pos: Vector2) -> void:
 	label.add_theme_constant_override("shadow_offset_x", 1)
 	label.add_theme_constant_override("shadow_offset_y", 1)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_layer.add_child(label)
+	holder.add_child(label)
+
+
+func _add_cluster(_title: String, _color: Color, _positions: Array) -> void:
+	## Legacy polygon clusters removed — use _add_prop_cluster.
+	pass
+
+
+func _add_banner(_title: String, _color: Color, _pos: Vector2) -> void:
+	pass
 
 
 func _apply_veil_and_particles() -> void:
@@ -252,7 +289,9 @@ func _apply_veil_and_particles() -> void:
 func _refresh_button_labels() -> void:
 	var label: String = SEASON_LABELS[_season]
 	if _btn_season:
+		_btn_season.visible = true
 		_btn_season.text = label
 		_btn_season.tooltip_text = "循环季节 (S)：春花→夏海→秋收→冬雪"
 	if _status:
+		_status.visible = true
 		_status.text = "季节·%s" % label

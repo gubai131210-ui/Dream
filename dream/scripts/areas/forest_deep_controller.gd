@@ -34,6 +34,9 @@ func _ready() -> void:
 	# Wave F WorldSys — C61 tree chest + C62 forest→cave secret portal.
 	HiddenChests.attach_site(self, "tree_behind")
 	SecretPassageChain.attach_for_host(self, "forest_deep")
+	# G4 — district prop interacts.
+	var _dik = load("res://scripts/world/district_interact_kit.gd")
+	_dik.attach_to(self, "forest_deep")
 
 
 func _wire_portals(node: Node) -> void:

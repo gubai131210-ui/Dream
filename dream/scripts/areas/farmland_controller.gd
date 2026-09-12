@@ -34,6 +34,22 @@ func _ready() -> void:
 	# Wave F NpcRing: farmland sow work ring demo (TopBar + K/L).
 	var top_bar := get_node_or_null("UI/TopBar") as Control
 	NpcRoutineDemo.attach_to(self, top_bar, NpcRoutineRings.HOST_FARMLAND)
+	# G4 — district prop interacts.
+	var _dik = load("res://scripts/world/district_interact_kit.gd")
+	_dik.attach_to(self, "farmland", top_bar)
+	if not bool(ProjectSettings.get_setting("debug/show_demo_overlays", false)):
+		var routine_status := get_node_or_null("NpcRingDemoStatus") as CanvasLayer
+		if routine_status:
+			routine_status.visible = false
+		var info := get_node_or_null("InfoPanel") as InfoPanel
+		if info:
+			info.hide_info()
+		for control_name in ["CycleWorkRing", "CycleLifeState"]:
+			var control: Control = null
+			if top_bar:
+				control = top_bar.get_node_or_null(control_name) as Control
+			if control:
+				control.visible = false
 
 
 func _wire_portals(node: Node) -> void:

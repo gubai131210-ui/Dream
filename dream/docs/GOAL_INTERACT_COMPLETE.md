@@ -117,8 +117,11 @@
 | --- | --- |
 | G0 | **DONE** — 本统称落地；缺口 inventory 完成 |
 | G1 | **DONE (code)** — C58/C59/C60 prop 精灵 + 灯/脉冲；广场 MCP smoke 无 ERROR |
-| G2 | **IN PROGRESS** — `leaf_fall` / `well_rope` / `crate_lid` / `bird_peck` 固定画布帧已生成并接线；待 StyleQA 人工抛光与用户目视 |
-| G3–G8 | PENDING |
+| G2 | **DONE (code)** — `leaf_fall` / `well_rope` / `crate_lid` / `bird_peck` 固定画布帧已接线；StyleQA 抛光仍开放 |
+| G3 | **DONE (code)** — C55 四季改用真实 prop；层与 TopBar 默认可见（不依赖 demo overlay） |
+| G4 | **DONE (code)** — 市集/农田/深林各 ≥2 DistrictInteractKit prop 交互 |
+| G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
+| G6–G8 | PENDING |
 
 ## Related
 

@@ -420,16 +420,41 @@ func _spawn_anim_fx(parent: Node2D, prefix: String, pos: Vector2, fps: float) ->
 	frames.add_animation("loop")
 	frames.set_animation_speed("loop", fps)
 	frames.set_animation_loop("loop", true)
-	var n := 0
+	var sources: Array[Dictionary] = []
+	var canvas_w := 1
+	var anchor_y := 1
 	for i in range(4):
 		var path := "%s/%s_%02d.png" % [FX_DIR, prefix, i]
 		var frame_tex := _load_texture(path)
 		if frame_tex == null:
 			continue
-		frames.add_frame("loop", frame_tex)
-		n += 1
-	if n == 0:
+		var image := frame_tex.get_image()
+		if image == null:
+			continue
+		var used := image.get_used_rect()
+		if used.size == Vector2i.ZERO:
+			continue
+		sources.append({"image": image, "used": used})
+		canvas_w = maxi(canvas_w, image.get_width())
+		anchor_y = maxi(anchor_y, used.position.y + used.size.y)
+	if sources.is_empty():
 		return
+	var canvas_h := 1
+	for source in sources:
+		var image: Image = source["image"]
+		var used: Rect2i = source["used"]
+		canvas_h = maxi(canvas_h, image.get_height() + anchor_y - (used.position.y + used.size.y))
+	for source in sources:
+		var image: Image = source["image"]
+		var used: Rect2i = source["used"]
+		var normalized := Image.create(canvas_w, canvas_h, false, Image.FORMAT_RGBA8)
+		normalized.fill(Color.TRANSPARENT)
+		var dst := Vector2i(
+			floori(float(canvas_w - image.get_width()) * 0.5),
+			anchor_y - (used.position.y + used.size.y)
+		)
+		normalized.blend_rect(image, Rect2i(Vector2i.ZERO, image.get_size()), dst)
+		frames.add_frame("loop", ImageTexture.create_from_image(normalized))
 	var anim := AnimatedSprite2D.new()
 	anim.name = "FX_%s" % prefix
 	anim.sprite_frames = frames
@@ -542,6 +567,7 @@ func _spawn_actor(parent: Node2D) -> void:
 
 
 func _spawn_return_portal(parent: Node2D) -> void:
+	var show_marker := bool(ProjectSettings.get_setting("debug/show_interaction_markers", false))
 	var portal := Area2D.new()
 	portal.name = "Portal_Return"
 	portal.position = _tile_center(int((_door_tx0 + _door_tx1) * 0.5), _room_h - 1) + Vector2(0, 28)
@@ -551,10 +577,27 @@ func _spawn_return_portal(parent: Node2D) -> void:
 	rect.size = Vector2(128, 56)
 	shape.shape = rect
 	portal.add_child(shape)
+	var cue := Polygon2D.new()
+	cue.name = "DoorstepCue"
+	cue.color = Color(0.95, 0.82, 0.4, 0.42)
+	cue.polygon = PackedVector2Array([
+		Vector2(-28, 4), Vector2(28, 4), Vector2(20, 14), Vector2(-20, 14),
+	])
+	cue.z_index = -1
+	portal.add_child(cue)
+	var arch := Polygon2D.new()
+	arch.name = "DoorArchCue"
+	arch.color = Color(0.98, 0.9, 0.55, 0.38)
+	arch.polygon = PackedVector2Array([
+		Vector2(-12, 2), Vector2(12, 2), Vector2(10, -18), Vector2(0, -26), Vector2(-10, -18),
+	])
+	arch.position = Vector2(0, -12)
+	portal.add_child(arch)
 	var marker := Polygon2D.new()
 	marker.color = Color(0.95, 0.72, 0.28, 0.75)
 	marker.polygon = PackedVector2Array([Vector2(0, -8), Vector2(10, 0), Vector2(0, 8), Vector2(-10, 0)])
 	marker.position = Vector2(0, -18)
+	marker.visible = show_marker
 	portal.add_child(marker)
 	var label := Label.new()
 	label.text = "← 返回"
@@ -566,7 +609,21 @@ func _spawn_return_portal(parent: Node2D) -> void:
 	label.add_theme_constant_override("shadow_offset_x", 1)
 	label.add_theme_constant_override("shadow_offset_y", 1)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.visible = show_marker
 	portal.add_child(label)
+	portal.mouse_entered.connect(func():
+		label.visible = true
+		cue.modulate = Color(1.2, 1.15, 0.9)
+		arch.modulate = Color(1.25, 1.2, 0.95)
+	)
+	portal.mouse_exited.connect(func():
+		label.visible = show_marker
+		cue.modulate = Color.WHITE
+		arch.modulate = Color.WHITE
+	)
+	var pulse := arch.create_tween().set_loops()
+	pulse.tween_property(arch, "modulate:a", 0.22, 0.85).set_trans(Tween.TRANS_SINE)
+	pulse.tween_property(arch, "modulate:a", 0.55, 0.85).set_trans(Tween.TRANS_SINE)
 	portal.set_meta("scene_path", str(_profile.get("return_path", SceneRouter.RESIDENTIAL_PATH)))
 	parent.add_child(portal)
 
@@ -576,6 +633,7 @@ func _spawn_extra_portals(parent: Node2D) -> void:
 	var extras: Array = _profile.get("extra_portals", [])
 	if extras.is_empty():
 		return
+	var show_marker := bool(ProjectSettings.get_setting("debug/show_interaction_markers", false))
 	for i in extras.size():
 		var ep: Dictionary = extras[i]
 		var path := str(ep.get("path", ""))
@@ -593,10 +651,27 @@ func _spawn_extra_portals(parent: Node2D) -> void:
 		rect.size = Vector2(96, 48)
 		shape.shape = rect
 		portal.add_child(shape)
+		var cue := Polygon2D.new()
+		cue.name = "DoorstepCue"
+		cue.color = Color(0.55, 0.85, 0.95, 0.4)
+		cue.polygon = PackedVector2Array([
+			Vector2(-22, 4), Vector2(22, 4), Vector2(16, 12), Vector2(-16, 12),
+		])
+		cue.z_index = -1
+		portal.add_child(cue)
+		var arch := Polygon2D.new()
+		arch.name = "DoorArchCue"
+		arch.color = Color(0.65, 0.9, 1.0, 0.38)
+		arch.polygon = PackedVector2Array([
+			Vector2(-10, 2), Vector2(10, 2), Vector2(8, -16), Vector2(0, -22), Vector2(-8, -16),
+		])
+		arch.position = Vector2(0, -10)
+		portal.add_child(arch)
 		var marker := Polygon2D.new()
 		marker.color = Color(0.55, 0.78, 0.95, 0.8)
 		marker.polygon = PackedVector2Array([Vector2(0, -8), Vector2(10, 0), Vector2(0, 8), Vector2(-10, 0)])
 		marker.position = Vector2(0, -16)
+		marker.visible = show_marker
 		portal.add_child(marker)
 		var lbl := Label.new()
 		lbl.text = label
@@ -608,7 +683,21 @@ func _spawn_extra_portals(parent: Node2D) -> void:
 		lbl.add_theme_constant_override("shadow_offset_x", 1)
 		lbl.add_theme_constant_override("shadow_offset_y", 1)
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		lbl.visible = show_marker
 		portal.add_child(lbl)
+		portal.mouse_entered.connect(func():
+			lbl.visible = true
+			cue.modulate = Color(1.15, 1.2, 1.25)
+			arch.modulate = Color(1.2, 1.25, 1.3)
+		)
+		portal.mouse_exited.connect(func():
+			lbl.visible = show_marker
+			cue.modulate = Color.WHITE
+			arch.modulate = Color.WHITE
+		)
+		var pulse := arch.create_tween().set_loops()
+		pulse.tween_property(arch, "modulate:a", 0.22, 0.8).set_trans(Tween.TRANS_SINE)
+		pulse.tween_property(arch, "modulate:a", 0.55, 0.8).set_trans(Tween.TRANS_SINE)
 		portal.set_meta("scene_path", path)
 		parent.add_child(portal)
 
