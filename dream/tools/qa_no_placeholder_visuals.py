@@ -70,7 +70,26 @@ def main() -> None:
     require(routine, "work_poses", "C53 work pose sheet path")
     require(routine, "WorkPoseAnim", "C53 work pose AnimatedSprite")
 
-    print("GREEN production-placeholder QA (markers, facades, tree, fish FX, poses, gates)")
+    breakables = read("scripts/world/breakables_kit.gd")
+    require(breakables, "breakable_stake_00.png", "C59 stake sprite")
+    require(breakables, "breakable_weed_00.png", "C59 weed sprite")
+
+    stall = read("scripts/market/market_stall.gd")
+    require(stall, "stall_open_wood_00.png", "C05 default stall body PNG")
+    require(stall, "DEFAULT_BODY", "C05 body default constant")
+
+    dik = read("scripts/world/district_interact_kit.gd")
+    for host in (
+        "waterfall",
+        "lighthouse",
+        "hill_farm",
+        "forest_entrance",
+        "farm_residential",
+        "lake_house",
+    ):
+        require(dik, f'"{host}"', f"DistrictInteractKit host {host}")
+
+    print("GREEN production-placeholder QA (facades, poses, gates, breakables, stall, districts)")
 
 
 if __name__ == "__main__":

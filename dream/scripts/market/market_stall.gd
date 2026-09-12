@@ -26,8 +26,12 @@ var stripe_a: Color = Color(0.85, 0.2, 0.2, 0.92)
 var stripe_b: Color = Color(0.95, 0.95, 0.92, 0.92)
 var crate_path: String = "res://assets/sprites/props/B11-02_crates_boxes_06.png"
 var barrel_path: String = "res://assets/sprites/props/B11-01_barrels_03.png"
-var body_path: String = ""  # optional full stall PNG from sprites/market/
+var body_path: String = "res://assets/sprites/market/stall_open_wood_00.png"
 var state: State = State.OPEN
+
+const DEFAULT_BODY := "res://assets/sprites/market/stall_open_wood_00.png"
+const LOCKED_BOARD := "res://assets/sprites/props/door_facade_00.png"
+const EMPTY_MARK := "res://assets/sprites/props/furrow_line_00.png"
 
 var _layer: Node2D
 
@@ -57,6 +61,8 @@ func configure(cfg: Dictionary) -> void:
 	crate_path = str(cfg.get("crate", crate_path))
 	barrel_path = str(cfg.get("barrel", barrel_path))
 	body_path = str(cfg.get("body", body_path))
+	if body_path.is_empty():
+		body_path = DEFAULT_BODY
 	var st = cfg.get("state", State.OPEN)
 	if typeof(st) == TYPE_STRING:
 		state = _parse_state(str(st))
@@ -83,16 +89,19 @@ func apply_state(next: State) -> void:
 		c.queue_free()
 	match state:
 		State.EMPTY:
-			_add_bay_mark()
+			if not _add_sprite(EMPTY_MARK, Vector2(0, 4), 1.2, Color(1, 1, 1, 0.7)):
+				_add_bay_mark()
 		State.LOCKED:
-			_add_poles()
-			_add_board()
+			if not _add_sprite(LOCKED_BOARD, Vector2(0, -10), 0.55):
+				_add_poles()
+				_add_board()
 		State.SETUP:
-			_add_poles()
-			_add_awning(0.55, 4)
+			if not _try_body_sprite(0.48, false, Color(1, 1, 1, 0.75)):
+				_add_poles()
+				_add_awning(0.55, 4)
 			_add_goods(true, false)
 		State.OPEN:
-			# Body PNG or procedural awning — goods always beside (MARKET_POLISH ≤0.5).
+			# Body PNG preferred — goods always beside (MARKET_POLISH ≤0.5).
 			if not _try_body_sprite(0.55):
 				_add_poles()
 				_add_awning(1.0, 6)
@@ -116,11 +125,18 @@ func _try_body_sprite(scale_f: float, prefer_drape: bool = false, modulate: Colo
 	var path := body_path
 	if prefer_drape:
 		path = "res://assets/sprites/market/awning_drape_cream_00.png"
-	if path.is_empty() or not ResourceLoader.exists(path):
+	if path.is_empty():
+		path = DEFAULT_BODY
+	return _add_sprite(path, Vector2(0, -8), scale_f, modulate)
+
+
+func _add_sprite(path: String, pos: Vector2, scale_f: float, modulate: Color = Color.WHITE) -> bool:
+	var tex := WorldSpawnUtil.load_prop_texture(path)
+	if tex == null:
 		return false
 	var spr := Sprite2D.new()
-	spr.texture = load(path) as Texture2D
-	spr.position = Vector2(0, -8)
+	spr.texture = tex
+	spr.position = pos
 	spr.scale = Vector2(scale_f, scale_f)
 	spr.modulate = modulate
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST

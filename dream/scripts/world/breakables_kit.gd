@@ -7,8 +7,8 @@ const NODE_NAME := "BreakablesKit"
 
 const KIND_DEFS := [
 	{"id": "rock", "title": "碎石堆", "desc": "砸开碎石，清出小路。", "pos": Vector2(150, 680), "color": Color(0.55, 0.55, 0.58, 0.95), "sprite": "res://assets/sprites/props/rock_02.png", "scale": 0.55},
-	{"id": "stake", "title": "木桩", "desc": "拔起旧木桩。", "pos": Vector2(1180, 360), "color": Color(0.62, 0.42, 0.28, 0.95), "sprite": "res://assets/sprites/props/barrel_2.png", "scale": 0.45},
-	{"id": "weed", "title": "杂草丛", "desc": "割净杂草。", "pos": Vector2(760, 720), "color": Color(0.4, 0.7, 0.35, 0.95), "sprite": "res://assets/sprites/props/sack_1.png", "scale": 0.4},
+	{"id": "stake", "title": "木桩", "desc": "拔起旧木桩。", "pos": Vector2(1180, 360), "color": Color(0.62, 0.42, 0.28, 0.95), "sprite": "res://assets/sprites/props/breakable_stake_00.png", "scale": 0.7},
+	{"id": "weed", "title": "杂草丛", "desc": "割净杂草。", "pos": Vector2(760, 720), "color": Color(0.4, 0.7, 0.35, 0.95), "sprite": "res://assets/sprites/props/breakable_weed_00.png", "scale": 0.65},
 	{"id": "crate", "title": "破箱", "desc": "砸开废弃破箱。", "pos": Vector2(1040, 240), "color": Color(0.7, 0.48, 0.3, 0.95), "sprite": "res://assets/sprites/props/crate_2.png", "scale": 0.55},
 ]
 

@@ -119,11 +119,11 @@
 | G1 | **DONE (code)** — C58/C59/C60 prop 精灵 + 灯/脉冲；广场 MCP smoke 无 ERROR |
 | G2 | **DONE (code)** — `leaf_fall` / `well_rope` / `crate_lid` / `bird_peck` 固定画布帧已接线；StyleQA 抛光仍开放 |
 | G3 | **DONE (code)** — C55 四季改用真实 prop；层与 TopBar 默认可见（不依赖 demo overlay） |
-| G4 | **DONE (code)** — 市集/农田/深林 + 河/湖/站/住宅各 ≥2 DistrictInteractKit prop |
+| G4 | **DONE (code)** — 全区 ≥2 DistrictInteractKit（含瀑/灯塔/坡田/林口/农场住宅/湖屋） |
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
-| G7 | **DONE (code)** — bobber；C22 渔笼；工作环 **pose sheet×4**（sow/smith/stall/cook）；drawer StyleQA |
-| G8 | **IN PROGRESS** — façade DONE；季节罩仍开放；drawer/chest/pose StyleQA 批次已加深 |
+| G7 | **DONE (code)** — bobber；C22；pose×4；drawer StyleQA；C05 摊位默认真棚 PNG |
+| G8 | **IN PROGRESS** — 破损物真图 DONE；季节罩 / ArtGen 抛光仍开放 |
 
 ### G8 已知残留（不可假装清零）
 
@@ -139,8 +139,11 @@
 | ~~完整独立建筑 façade sheet~~ | 博物馆/浴场 | **DONE** → `facade_museum_00` / `facade_bath_00` |
 | ~~drawer_open PIL~~ | interior dresser | **DONE** → StyleQA 48×40 开合帧 |
 | ~~NPC 职业姿态 sheet~~ | C53 work rings | **DONE (minimal)** → `npc/work_poses/{sow,smith,stall,cook}` |
+| ~~C59 木桩/杂草错用桶袋~~ | BreakablesKit | **DONE** → `breakable_stake/weed` |
+| ~~C05 摊位 ColorRect 棚~~ | MarketStall | **DONE** → 默认 `stall_open_wood_00`（ColorRect 仅 fallback） |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
-| 姿态 sheet 深度抛光 | work_poses / NPC walk | ArtGen 继续（非占位） |
+| Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
+| 姿态/摊位 ArtGen 抛光 | work_poses / market | 深度像素继续 |
 
 ## Related
 

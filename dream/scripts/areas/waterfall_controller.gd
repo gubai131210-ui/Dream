@@ -34,6 +34,9 @@ func _ready() -> void:
 	# Wave F WorldSys — C61 waterfall chest + C62 waterfall→lake secret portal.
 	HiddenChests.attach_site(self, "waterfall")
 	SecretPassageChain.attach_for_host(self, "waterfall")
+	var top_bar := get_node_or_null("UI/TopBar") as Control
+	var _dik = load("res://scripts/world/district_interact_kit.gd")
+	_dik.attach_to(self, "waterfall", top_bar)
 
 
 func _wire_portals(node: Node) -> void:
