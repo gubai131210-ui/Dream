@@ -41,9 +41,9 @@ func _ready() -> void:
 		var routine_status := get_node_or_null("NpcRingDemoStatus") as CanvasLayer
 		if routine_status:
 			routine_status.visible = false
-		var info := get_node_or_null("InfoPanel") as InfoPanel
-		if info:
-			info.hide_info()
+		var info_panel := get_node_or_null("InfoPanel") as InfoPanel
+		if info_panel:
+			info_panel.hide_info()
 		for control_name in ["CycleWorkRing", "CycleLifeState"]:
 			var control: Control = null
 			if top_bar:

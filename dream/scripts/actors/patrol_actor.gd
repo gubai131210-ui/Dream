@@ -4,11 +4,14 @@ extends InteractableHotspot
 ## Directional walk-cycle patrol using sliced NPC frames under assets/sprites/npc/{id}/.
 
 const DIRS: Array[String] = ["down", "left", "right", "up"]
-const SPEED_PX := 42.0
+## One 32px tile per second keeps an 8fps / 4-frame walk cycle at 4px per frame.
+## This avoids the fractional 4.5px stride that made the old cycle read as sliding.
+const SPEED_PX := 32.0
 const PAUSE_SEC := 0.35
 const AVOID_PAUSE_SEC := 0.45
-const FRAME_FPS := 7.0
+const FRAME_FPS := 8.0
 const SNAP_MAX_R := 8
+const FOOT_CONTACT_Y := 0.0
 
 var _anim: AnimatedSprite2D
 var _route: Array[Vector2] = []
@@ -56,7 +59,7 @@ func setup(
 	shadow.polygon = PackedVector2Array([
 		Vector2(-12, 0), Vector2(0, -5), Vector2(12, 0), Vector2(0, 5),
 	])
-	shadow.position = Vector2(0, 10)
+	shadow.position = Vector2(0, FOOT_CONTACT_Y + 3.0)
 	shadow.z_index = -1
 	visual.add_child(shadow)
 
@@ -65,8 +68,12 @@ func setup(
 	_anim.centered = true
 	_anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_anim.sprite_frames = _build_frames(character_id)
-	_anim.offset = Vector2(0, -28)
 	visual.add_child(_anim)
+	var foot_y := 28.0
+	var anchor_texture := _anim.sprite_frames.get_frame_texture("idle_down", 0)
+	if anchor_texture:
+		foot_y = float(anchor_texture.get_height()) * 0.5
+	_anim.offset = Vector2(0, -foot_y + FOOT_CONTACT_Y)
 	_set_anim(false)
 
 
@@ -88,7 +95,13 @@ func _build_frames(character_id: String) -> SpriteFrames:
 	if frames.has_animation("default"):
 		frames.remove_animation("default")
 	var base := "res://assets/sprites/npc/%s" % character_id
-	var loaded_any := false
+	var sources: Array[Dictionary] = []
+	var canvas_w := 1
+	var anchor_y := 1
+	var frame_count := 4
+	# Prefer longer cycles when present (legacy 8-frame farmer packs).
+	if character_id == "farmer" and ResourceLoader.exists("%s/walk_down_4.png" % base):
+		frame_count = 8
 	for d in DIRS:
 		var walk_name := "walk_%s" % d
 		var idle_name := "idle_%s" % d
@@ -98,19 +111,59 @@ func _build_frames(character_id: String) -> SpriteFrames:
 		frames.add_animation(idle_name)
 		frames.set_animation_speed(idle_name, 1.0)
 		frames.set_animation_loop(idle_name, true)
-		for i in range(4):
+		for i in range(frame_count):
 			var path := "%s/walk_%s_%d.png" % [base, d, i]
 			if not ResourceLoader.exists(path):
 				continue
 			var tex := load(path) as Texture2D
 			if tex == null:
 				continue
-			frames.add_frame(walk_name, tex)
-			if i == 0:
-				frames.add_frame(idle_name, tex)
-			loaded_any = true
-	if not loaded_any:
+			var image := tex.get_image()
+			if image == null:
+				continue
+			var used := image.get_used_rect()
+			if used.size == Vector2i.ZERO:
+				continue
+			sources.append({
+				"dir": d,
+				"index": i,
+				"image": image,
+				"used": used,
+			})
+			canvas_w = maxi(canvas_w, image.get_width())
+			anchor_y = maxi(anchor_y, used.position.y + used.size.y)
+
+	if sources.is_empty():
 		push_warning("PatrolActor: no walk frames for '%s'" % character_id)
+		return frames
+
+	# NPC source frames are not guaranteed to have identical transparent margins
+	# (for example 30/31/32px-wide farmer frames). Normalize them before they
+	# enter SpriteFrames so the world Node2D remains the only movement anchor.
+	var canvas_h := 1
+	for source in sources:
+		var image: Image = source["image"]
+		var used: Rect2i = source["used"]
+		canvas_h = maxi(canvas_h, image.get_height() + anchor_y - (used.position.y + used.size.y))
+
+	for source in sources:
+		var image: Image = source["image"]
+		var used: Rect2i = source["used"]
+		var normalized := Image.create(canvas_w, canvas_h, false, Image.FORMAT_RGBA8)
+		normalized.fill(Color.TRANSPARENT)
+		var dst := Vector2i(
+			floori(float(canvas_w - image.get_width()) * 0.5),
+			anchor_y - (used.position.y + used.size.y)
+		)
+		normalized.blend_rect(image, Rect2i(Vector2i.ZERO, image.get_size()), dst)
+		var texture := ImageTexture.create_from_image(normalized)
+		var dir: String = source["dir"]
+		var index: int = source["index"]
+		var walk_name := "walk_%s" % dir
+		var idle_name := "idle_%s" % dir
+		frames.add_frame(walk_name, texture)
+		if index == 0:
+			frames.add_frame(idle_name, texture)
 	return frames
 
 
@@ -123,9 +176,9 @@ func _snap_blocked_waypoints() -> void:
 		var t: Vector2i = craft.world_to_tile(_route[i])
 		if craft.is_npc_walkable(t.x, t.y):
 			continue
-		var snapped := _find_npc_walkable_near(craft, t, SNAP_MAX_R)
-		if snapped != Vector2.ZERO:
-			_route[i] = snapped
+		var candidate := _find_npc_walkable_near(craft, t, SNAP_MAX_R)
+		if candidate != Vector2.ZERO:
+			_route[i] = candidate
 
 
 func _find_npc_walkable_near(craft: AreaCraft, origin: Vector2i, max_r: int) -> Vector2:

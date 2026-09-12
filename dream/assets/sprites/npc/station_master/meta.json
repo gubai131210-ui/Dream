@@ -3,6 +3,7 @@
   "title": "\u7ad9\u957f",
   "source": "B14_npc_02.png",
   "height_px": 56,
+  "canvas_width_px": 48,
   "dirs": [
     "down",
     "left",

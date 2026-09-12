@@ -266,10 +266,10 @@ func _spawn_platform_benches_and_props(ysort: Node2D) -> void:
 		var t := craft.world_to_tile(pos)
 		if not craft.is_path(t.x, t.y):
 			# Snap onto platform if slightly off.
-			var snapped := craft.find_clear_near(pos, 1, 1, 4, true)
-			if snapped == Vector2.ZERO:
+			var snapped_pos := craft.find_clear_near(pos, 1, 1, 4, true)
+			if snapped_pos == Vector2.ZERO:
 				continue
-			pos = snapped
+			pos = snapped_pos
 			t = craft.world_to_tile(pos)
 			if not craft.is_path(t.x, t.y):
 				continue

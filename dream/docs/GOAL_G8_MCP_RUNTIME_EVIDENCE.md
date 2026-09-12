@@ -17,6 +17,11 @@
 | River idle | `docs/evidence/g8_river_idle.png` | bobber + fish cage sprite on shore |
 | River cage ready | `docs/evidence/g8_river_fish_cage_ready.png` | place → soak ~6s → title「可收」+ `fish_cage_full` path |
 | Lake idle | `docs/evidence/g8_lake_idle.png` | 湖泊岸边渔笼/浮漂区 + 门户 |
+| Farmland idle | `docs/evidence/g8_farmland_idle.png` | 垄线/栅栏/DistrictInteract；farmer 无白底盘 |
+| Residential idle | `docs/evidence/g8_residential_idle.png` | 住宅区门阶/DistrictInteract |
+| Forest entrance idle | `docs/evidence/g8_forest_entrance_idle.png` | 林口 DistrictInteract |
+| Waterfall idle | `docs/evidence/g8_waterfall_idle.png` | 瀑布动画层 + DistrictInteract |
+| Station idle | `docs/evidence/g8_station_idle.png` | 轨枕精灵站台 + DistrictInteract |
 
 ## Runtime queries
 

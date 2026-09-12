@@ -3,6 +3,7 @@
   "title": "\u5546\u8d29",
   "source": "gen_npc_merchant.png",
   "height_px": 56,
+  "canvas_width_px": 48,
   "dirs": [
     "down",
     "left",

@@ -1,39 +1,14 @@
 {
   "id": "farmer",
-  "title": "\u519c\u592b",
-  "source": "gen_npc_farmer.png",
+  "title": "农夫",
+  "source": "promoted from farmer_v2 (removed opaque white plate)",
   "height_px": 56,
+  "canvas_width_px": 48,
+  "columns": 4,
   "dirs": [
     "down",
     "left",
     "right",
     "up"
-  ],
-  "frames": {
-    "down": [
-      "walk_down_0.png",
-      "walk_down_1.png",
-      "walk_down_2.png",
-      "walk_down_3.png"
-    ],
-    "left": [
-      "walk_left_0.png",
-      "walk_left_1.png",
-      "walk_left_2.png",
-      "walk_left_3.png"
-    ],
-    "right": [
-      "walk_right_0.png",
-      "walk_right_1.png",
-      "walk_right_2.png",
-      "walk_right_3.png"
-    ],
-    "up": [
-      "walk_up_0.png",
-      "walk_up_1.png",
-      "walk_up_2.png",
-      "walk_up_3.png"
-    ]
-  },
-  "filter": "NEAREST"
+  ]
 }
