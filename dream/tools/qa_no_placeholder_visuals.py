@@ -47,8 +47,14 @@ def main() -> None:
     require(controller, 'NpcRingDemoStatus', "NPC status visibility")
     require(controller, 'info.hide_info()', "initial NPC demo dialog suppression")
     # C53/C54 are player-facing — must not be hidden with the demo status strip.
-    if 'for control_name in ["CycleWorkRing", "CycleLifeState"]' in controller:
-        raise AssertionError("CycleWorkRing/CycleLifeState must stay visible (player-facing C53/C54)")
+    hide_loop = 'for control_name in ["CycleWorkRing", "CycleLifeState"]'
+    for rel in (
+        "scripts/areas/village_square_controller.gd",
+        "scripts/areas/market_street_controller.gd",
+        "scripts/areas/farmland_controller.gd",
+    ):
+        if hide_loop in read(rel):
+            raise AssertionError(f"{rel}: CycleWorkRing/CycleLifeState must stay visible (player-facing C53/C54)")
     routine = read("scripts/npc/npc_routine_demo.gd")
     require(routine, "CycleWorkRing", "work button mount")
     require(routine, "CycleLifeState", "life button mount")
