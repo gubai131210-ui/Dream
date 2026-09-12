@@ -89,6 +89,9 @@ static func load_prop_texture(path: String) -> Texture2D:
 		var img := Image.load_from_file(abs_path)
 		if img != null:
 			tex = ImageTexture.create_from_image(img)
+			# Preserve path for QA/smokes when import cache is stale after art regen.
+			if tex != null:
+				tex.take_over_path(path)
 	return tex
 
 
@@ -138,6 +141,7 @@ static func attach_portal_cues(area: Area2D, size: Vector2, facade_path: String 
 		var spr_f := Sprite2D.new()
 		spr_f.name = "DoorFacade"
 		spr_f.texture = facade_tex
+		spr_f.set_meta("facade_path", facade_path if not facade_path.is_empty() else DOOR_FACADE)
 		spr_f.centered = true
 		spr_f.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		var target_h := maxf(size.y * 0.95, 36.0)

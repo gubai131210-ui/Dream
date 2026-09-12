@@ -1,6 +1,6 @@
-# Goal G8 interact-activate evidence
+# Goal evidence — G8_INTERACT_SMOKE
 
-**Runner:** `tools/g8_interact_activate_smoke.gd`
+**Runner:** `res://tools/g8_interact_activate_smoke.gd`
 **Result:** PASS (exit=0)
 
 ## Log excerpt
@@ -17,9 +17,13 @@ G8_INTERACT_SMOKE: activated lamp_toggle
 G8_INTERACT_SMOKE: activated feed_critter
 G8_INTERACT_SMOKE: activated read_sign
 G8_INTERACT_SMOKE: post-ok shake_tree
+G8_INTERACT_SMOKE: fx-cleared-ok shake_tree
 G8_INTERACT_SMOKE: post-ok well_water
+G8_INTERACT_SMOKE: fx-cleared-ok well_water
 G8_INTERACT_SMOKE: post-ok crate_search
+G8_INTERACT_SMOKE: fx-cleared-ok crate_search
 G8_INTERACT_SMOKE: post-ok feed_critter
+G8_INTERACT_SMOKE: fx-cleared-ok feed_critter
 G8_INTERACT_SMOKE: post-ok lamp_toggle
 G8_INTERACT_SMOKE: ok=8 failures=0
 G8_INTERACT_SMOKE: PASS

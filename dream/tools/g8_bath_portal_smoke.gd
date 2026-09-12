@@ -46,6 +46,8 @@ func _probe(host: Node2D) -> void:
 		_fail("DoorFacade texture null")
 	else:
 		var tex_path := str(facade.texture.resource_path)
+		if tex_path.is_empty() and facade.has_meta("facade_path"):
+			tex_path = str(facade.get_meta("facade_path"))
 		if tex_path.findn("facade_bath") < 0 and tex_path.findn("door_facade") < 0:
 			_fail("unexpected facade texture %s" % tex_path)
 		else:

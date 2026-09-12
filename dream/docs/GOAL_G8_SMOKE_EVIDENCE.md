@@ -7,7 +7,7 @@
 **Portal cues:** PASS — `GOAL_G8_PORTAL_CUE_EVIDENCE.md`
 **Worldsys activate:** PASS — `GOAL_G8_WORLDSYS_ACTIVATE_EVIDENCE.md`
 **Anim FX (pose+leaf):** PASS — `GOAL_G8_ANIM_FX_EVIDENCE.md`
-**Bath portal enter:** PASS — `GOAL_G8_BATH_PORTAL_EVIDENCE.md`
+**Bath portal enter:** FAIL — `GOAL_G8_BATH_PORTAL_EVIDENCE.md`
 
 | Scene | ERRORS | SCRIPT | Status |
 | --- | ---: | ---: | --- |
@@ -88,7 +88,9 @@
 
 - Headless `--quit-after 2` load smoke (not full playthrough).
 - Interact-activate fires C58 `activated` on square kit.
-- Worldsys-activate covers C58+C59+C60 (15 activations); matrix exit requires it.
+- Worldsys-activate covers C58+C59+C60 (15 activations).
+- Anim-FX asserts WorkPoseAnim ≥4 frames + shake_tree leaf_fall FX.
+- Bath portal smoke asserts facade_bath cues + SceneRouter enter C43.
 - Interior open-FX activates C01 open_fx hotspots.
 - Portal cue smoke asserts DoorFacade / doorstep sprites on square portals.
 - User local Godot QA still required for click/animation fidelity.

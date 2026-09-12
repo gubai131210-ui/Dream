@@ -6,6 +6,7 @@
 ## Log excerpt
 
 ```
+G8_WORLDSYS: start
 G8_WORLDSYS: activated sit_bench
 G8_WORLDSYS: activated well_water
 G8_WORLDSYS: activated shake_tree
