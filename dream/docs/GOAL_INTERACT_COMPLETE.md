@@ -160,6 +160,9 @@
 | ~~C05 EMPTY/LOCKED 代理图~~ | MarketStall | **DONE** → `stall_empty_bay_00` / `stall_locked_board_00` |
 | ~~B11-02 货箱名实~~ | market dressing | **DONE** → produce/stall_face/lumber/bin aliases；蔬果禁 `_04` |
 | ~~瀑布仅静态 tall/mid~~ | `waterfall_assembler.gd` | **DONE** → `waterfall_water_00..05` `WaterfallAnim` 循环；MCP `g8_waterfall_anim.png` |
+| ~~传送门常驻 arch 脉冲~~ | area_craft / WorldSpawnUtil / interior_craft | **DONE** → hover 高亮 only；`qa_portal_hover_only` GREEN |
+| ~~户外无邻近「互动」~~ | outdoor controllers | **DONE** → `AreaInteractHost` + smoke/MCP |
+| ~~C04 候坐 / C07 讲台代理~~ | smith wait / school lectern | **DONE** → `waiting_bench` / `lectern_00`；QA 扩 wait+lectern |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据
@@ -175,8 +178,11 @@
 - [`GOAL_G8_SEMANTIC_INTERIOR_EVIDENCE.md`](GOAL_G8_SEMANTIC_INTERIOR_EVIDENCE.md) — 室内语义专用 prop  
 - [`GOAL_G8_INTERACT_TARGET_EVIDENCE.md`](GOAL_G8_INTERACT_TARGET_EVIDENCE.md) — 室内提示/点击共享目标  
 - [`GOAL_G8_WATERFALL_ANIM_EVIDENCE.md`](GOAL_G8_WATERFALL_ANIM_EVIDENCE.md) — 瀑布水体 AnimatedSprite 循环 + MCP  
+- [`GOAL_G8_OUTDOOR_PROMPT_EVIDENCE.md`](GOAL_G8_OUTDOOR_PROMPT_EVIDENCE.md) — 户外邻近「互动」+ hover 胜出  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 13 groups GREEN  
+- `tools/qa_portal_hover_only.py` — GREEN  
+- `tools/qa_semantic_interior_props.py` — GREEN（含 wait + lectern）  
 - `tools/qa_no_placeholder_visuals.py` — GREEN  
 - `tools/qa_interact_sprite_inventory.py` — GREEN（kits + focus/open FX）  
 - `tools/qa_work_pose_style.py` — GREEN（C53 pose sheets）  

@@ -698,10 +698,7 @@ func _spawn_return_portal(parent: Node2D) -> void:
 		if arch:
 			arch.modulate = Color.WHITE
 	)
-	if arch:
-		var pulse := arch.create_tween().set_loops()
-		pulse.tween_property(arch, "modulate:a", 0.22, 0.85).set_trans(Tween.TRANS_SINE)
-		pulse.tween_property(arch, "modulate:a", 0.55, 0.85).set_trans(Tween.TRANS_SINE)
+	# No always-on arch pulse — hover brighten above is the only door affordance cue.
 	portal.set_meta("scene_path", str(_profile.get("return_path", SceneRouter.RESIDENTIAL_PATH)))
 	parent.add_child(portal)
 
@@ -764,10 +761,7 @@ func _spawn_extra_portals(parent: Node2D) -> void:
 			if arch:
 				arch.modulate = Color.WHITE
 		)
-		if arch:
-			var pulse := arch.create_tween().set_loops()
-			pulse.tween_property(arch, "modulate:a", 0.22, 0.8).set_trans(Tween.TRANS_SINE)
-			pulse.tween_property(arch, "modulate:a", 0.55, 0.8).set_trans(Tween.TRANS_SINE)
+		# No always-on arch pulse — hover brighten above is the only door affordance cue.
 		portal.set_meta("scene_path", path)
 		parent.add_child(portal)
 

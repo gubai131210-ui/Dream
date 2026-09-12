@@ -62,6 +62,9 @@
 | Market EMPTY | `docs/evidence/g8_market_stall_empty.png` | C05 空位专用 bay |
 | Market LOCKED | `docs/evidence/g8_market_stall_locked.png` | C05 锁定专用板 |
 | Market OPEN produce | `docs/evidence/g8_market_stall_produce.png` | 蔬果箱 `produce_crate_00`（非 stall_face） |
+| Square outdoor prompt | `docs/evidence/g8_square_outdoor_prompt.png` | 户外 `ProximityPrompt`「互动」visible |
+| C04 smith wait bench | `docs/evidence/g8_c04_smith_wait_bench.png` | 候坐=`waiting_bench_00` |
+| C07 school lectern | `docs/evidence/g8_c07_school_lectern.png` | 讲台=`lectern_00` |
 
 ## Runtime queries
 
@@ -85,6 +88,9 @@
 - Landmark StyleQA: reed/ruin/grave/boat/door_facade/awning repainted to painted-grade uniq colors (`qa_landmark_style` GREEN)
 - C62 full-chain headless smoke PASS (forest→cave→waterfall→lake); cave/museum/station/lighthouse/mine/tree/ruins/cemetery/inn MCP idles added 2026-09-13
 - Waterfall `Visual/WaterfallAnim` (`AnimatedSprite2D`) `is_playing=true`; frames advance; see `GOAL_G8_WATERFALL_ANIM_EVIDENCE.md`
+- Outdoor `AreaInteractHost` on plaza; `水井/ProximityPrompt` visible「互动」; `g8_outdoor_prompt_smoke` PASS
+- Portal arch always-on tween removed (`qa_portal_hover_only` GREEN); hover modulate remains
+- C04 `候坐` texture=`waiting_bench_00`; C07 `讲台` texture=`lectern_00`
 
 ## Agent reviews this batch
 

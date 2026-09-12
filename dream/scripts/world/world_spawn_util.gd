@@ -269,10 +269,7 @@ static func make_portal(
 		if arch:
 			arch.modulate = Color.WHITE
 	)
-	if arch:
-		var pulse := arch.create_tween().set_loops()
-		pulse.tween_property(arch, "modulate:a", 0.22, 0.8).set_trans(Tween.TRANS_SINE)
-		pulse.tween_property(arch, "modulate:a", 0.55, 0.8).set_trans(Tween.TRANS_SINE)
+	# No always-on arch pulse — hover brighten above is the only door affordance pulse.
 	if show_debug_markers():
 		var pulse_m := hint.create_tween().set_loops()
 		pulse_m.tween_property(hint, "modulate:a", 0.4, 0.7).set_trans(Tween.TRANS_SINE)

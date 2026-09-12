@@ -56,7 +56,8 @@ func _ready() -> void:
 	BreakablesKit.attach_to(self, top_bar)
 	ProgressGates.attach_to(self, top_bar)
 	HiddenChests.attach_site(self, "well", top_bar)
-
+	# Outdoor proximity 「互动」parity with interiors.
+	AreaInteractHost.attach_to(self, ysort_root, camera)
 
 func _wire_portals(node: Node) -> void:
 	if node is Area2D and node.has_meta("scene_path"):
@@ -85,4 +86,7 @@ func _wire_hotspots(node: Node) -> void:
 
 
 func _on_hotspot(hotspot: InteractableHotspot) -> void:
+	var host := get_node_or_null(AreaInteractHost.NODE_NAME) as AreaInteractHost
+	if host:
+		host.sync_click(hotspot)
 	info.show_info(hotspot.title, hotspot.description)

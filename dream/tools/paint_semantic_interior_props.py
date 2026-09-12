@@ -230,6 +230,51 @@ def paint_sewer_pipe(metal: list, rust: list) -> Image.Image:
 	return im.filter(ImageFilter.SMOOTH_MORE)
 
 
+def paint_lectern(wood: list, top: list, ink: list) -> Image.Image:
+	"""Raised teacher lectern — taller apron + slanted book shelf, distinct from school_desk."""
+	w, h = 64, 56
+	im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+	px = im.load()
+	# Pedestal / legs
+	for lx in (14, 44):
+		for y in range(28, h - 2):
+			for dx in range(6):
+				put(px, lx + dx, y, jitter(wood[(lx + y + dx) % len(wood)], lx, y, 9))
+	# Cross brace
+	for y in range(40, 44):
+		for x in range(16, 48):
+			put(px, x, y, jitter(wood[(x + y) % len(wood)], x, y, 8))
+	# Raised desk top (slanted read: thicker front)
+	for y in range(10, 22):
+		for x in range(8, w - 8):
+			c = top[(x + y * 3) % len(top)]
+			if (x + y * 2) % 6 == 0:
+				c = wood[(x * 2) % len(wood)]
+			put(px, x, y, jitter(c, x, y, 10))
+	# Front apron taller than desk
+	for y in range(22, 34):
+		for x in range(10, w - 10):
+			put(px, x, y, jitter(wood[(x + y * 2) % len(wood)], x, y, 9))
+	# Side panels
+	for y in range(12, 34):
+		for x in (8, 9, 54, 55):
+			put(px, x, y, jitter(wood[(x + y) % len(wood)], x, y, 8))
+	# Open book on top
+	for y in range(8, 14):
+		for x in range(22, 42):
+			put(px, x, y, jitter((220, 210, 190), x, y, 6), 245)
+	for y in range(9, 13):
+		put(px, 31, y, jitter((90, 70, 50), 31, y, 3), 230)
+	# Ink pot
+	for y in range(12, 17):
+		for x in range(14, 18):
+			put(px, x, y, jitter(ink[y % len(ink)], x, y, 4), 250)
+	# Quill tip
+	put(px, 18, 11, (40, 40, 45), 255)
+	put(px, 19, 10, (200, 190, 160), 255)
+	return im.filter(ImageFilter.SMOOTH_MORE)
+
+
 def main() -> None:
 	counter = sample_palette(IPROPS / "counter_00.png", 64)
 	pew = sample_palette(IPROPS / "pew_00.png", 48)
@@ -261,6 +306,7 @@ def main() -> None:
 		("blackboard_00.png", paint_blackboard(frame, chalk)),
 		("school_desk_00.png", paint_school_desk(wood, top)),
 		("sewer_pipe_00.png", paint_sewer_pipe(metal, rust)),
+		("lectern_00.png", paint_lectern(wood, top, [(35, 35, 45), (50, 45, 40), (25, 25, 30)])),
 	]
 	for name, im in jobs:
 		im = ImageEnhance.Contrast(im).enhance(1.1)

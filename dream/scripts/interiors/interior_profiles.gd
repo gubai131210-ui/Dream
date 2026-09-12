@@ -113,6 +113,7 @@ const P_ALTAR := DIR_INTERIOR_PROP + "/altar_00.png"
 const P_WAITING_BENCH := DIR_INTERIOR_PROP + "/waiting_bench_00.png"
 const P_BLACKBOARD := DIR_INTERIOR_PROP + "/blackboard_00.png"
 const P_SCHOOL_DESK := DIR_INTERIOR_PROP + "/school_desk_00.png"
+const P_LECTERN := DIR_INTERIOR_PROP + "/lectern_00.png"
 const P_SEWER_PIPE := DIR_INTERIOR_PROP + "/sewer_pipe_00.png"
 const P_REED_CLUMP := DIR_INTERIOR_PROP + "/reed_clump_00.png"
 
@@ -654,7 +655,7 @@ static func _all() -> Dictionary:
 				]),
 				# East of corridor — stools approach from west aisle without blocking door.
 				_cluster("wait", 20, 12, [
-					_m(P_TABLE_DINING, 0, 0, "候坐", "顾客等候桌（cozy_dining）。", 0.9),
+					_m(P_WAITING_BENCH, 0, 0, "候坐", "顾客等候长椅（非饭桌代理）。", 0.9),
 					_m(P_STOOL, -2, 1, "凳", "候坐西凳（同 sheet；西站位）。", 0.85),
 					_m(P_STOOL, 2, 1, "凳", "候坐东凳（同 sheet）。", 0.85),
 				]),
@@ -1105,7 +1106,7 @@ static func _all() -> Dictionary:
 					_m(P_BLACKBOARD, 0, 0, "黑板", "北壁黑板（授课锚）。", 1.05),
 					_m(P_LAMP_INDOOR, -4, 0, "西壁灯", "黑板西侧教室灯。", PROP),
 					_m(P_LAMP_INDOOR, 4, 0, "东壁灯", "黑板东侧教室灯。", PROP),
-					_m(P_SCHOOL_DESK, -4, 2, "讲台", "偏西讲台（让出中轴通廊）。", 0.8),
+					_m(P_LECTERN, -4, 2, "讲台", "偏西讲台（非课桌代理；让出中轴通廊）。", 0.85),
 					_m(P_STOOL, -4, 3, "教凳", "讲台南教凳（面向课桌）。", 0.5),
 					_m(P_LEDGER, -3, 1, "教案", "讲台旁教案册。", 0.65),
 				]),

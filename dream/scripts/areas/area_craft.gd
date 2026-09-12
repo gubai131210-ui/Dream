@@ -631,10 +631,7 @@ func make_portal(
 		if facade_node:
 			facade_node.modulate = Color.WHITE
 	)
-	if arch:
-		var pulse := arch.create_tween().set_loops()
-		pulse.tween_property(arch, "modulate:a", 0.22, 0.85).set_trans(Tween.TRANS_SINE)
-		pulse.tween_property(arch, "modulate:a", 0.55, 0.85).set_trans(Tween.TRANS_SINE)
+	# Arch pulse only via mouse_entered modulate (no always-on tween — INTERACTION_DESIGN P1).
 	if show_marker:
 		var pulse_m := hint.create_tween().set_loops()
 		pulse_m.tween_property(hint, "modulate:a", 0.45, 0.65).set_trans(Tween.TRANS_SINE)

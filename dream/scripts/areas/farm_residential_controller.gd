@@ -37,7 +37,8 @@ func _ready() -> void:
 	var top_bar := get_node_or_null("UI/TopBar") as Control
 	var _dik = load("res://scripts/world/district_interact_kit.gd")
 	_dik.attach_to(self, "farm_residential", top_bar)
-
+	# Outdoor proximity 「互动」parity with interiors.
+	AreaInteractHost.attach_to(self, ysort_root, camera)
 
 func _wire_portals(node: Node) -> void:
 	if node is Area2D and (node as Area2D).has_meta("scene_path"):
@@ -66,4 +67,7 @@ func _wire_hotspots(node: Node) -> void:
 
 
 func _on_hotspot(hotspot: InteractableHotspot) -> void:
+	var host := get_node_or_null(AreaInteractHost.NODE_NAME) as AreaInteractHost
+	if host:
+		host.sync_click(hotspot)
 	info.show_info(hotspot.title, hotspot.description)

@@ -28,6 +28,7 @@ func _ready() -> void:
 	monitoring = true
 	monitorable = true
 	collision_mask = maxi(collision_mask, 1)
+	add_to_group("interactable_hotspots")
 	if not body_entered.is_connected(_on_body_entered):
 		body_entered.connect(_on_body_entered)
 	if not body_exited.is_connected(_on_body_exited):

@@ -14,8 +14,9 @@
 | Genre reference | Portals façade/doorstep; outdoor hosts ban `interior/props` | Genre **PASS**; QA blocks DIK / routine / seasonal / hidden_chests |
 | Imported-style consistency | NPC edge-white gate; farmer promote | `qa_npc_white_plates.py` **GREEN** (7 packs) |
 | Animation-frame QA | leaf/rope/lid/bird/waterfall/drawer; WorkPose+leaf smoke; **瀑布 WaterfallAnim** | `qa_interaction_frames.py` **GREEN**; `g8_anim_fx_smoke` **PASS**; MCP `g8_waterfall_anim.png` |
-| Semantic interior | altar/bench/board/desk/reed/pipe | `qa_semantic_interior_props` **GREEN** + MCP shots |
-| Interact target sync | hover/click shared selector | `g8_interact_target_smoke` **PASS** |
+| Interact target sync | hover/click shared selector (interior + **outdoor**) | `g8_interact_target_smoke` + `g8_outdoor_prompt_smoke` **PASS** |
+| Portal affordance | no always-on arch pulse | `qa_portal_hover_only` **GREEN** |
+| Semantic interior | altar/bench/board/desk/reed/pipe + **wait/lectern** | `qa_semantic_interior_props` **GREEN** + MCP shots |
 
 ## Automated gates (must stay GREEN)
 
@@ -27,7 +28,9 @@
 - `tools/qa_orphan_hotspot_visuals.py`
 - `tools/qa_landmark_style.py`
 - `tools/qa_semantic_interior_props.py`
-- G8 smoke matrix scripts (interact / interior FX / portal / worldsys / anim FX / bath / C62 / **interact target**)
+- G8 smoke matrix scripts (interact / interior FX / portal / worldsys / anim FX / bath / C62 / interact target / **outdoor prompt**)
+- `tools/qa_portal_hover_only.py`
+- `tools/qa_semantic_interior_props.py` (wait + lectern)
 
 ## Still open for Goal complete
 

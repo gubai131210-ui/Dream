@@ -139,7 +139,7 @@ Dream 下一阶段的交互不能继续采用“找到一张图 → 放到场景
 | `scripts/areas/area_craft.gd` 的 `spawn_water_overlay()` | ~~双时钟叠加~~ **DONE** — 共享 Timer 驱动换帧；`qa_interaction_frames` 断言 single water clock。 | ~~P0~~ |
 | `scripts/interact/interactable_hotspot.gd` 的 `_layout_prompt()` | ~~按当前帧高度抖动~~ **DONE** — `_cache_visual_bounds()` 用稳定 sprite/anim 包围盒。 | ~~P0~~ |
 | `scripts/interact/interactable_hotspot.gd` + `InteriorRoomController` | ~~提示 A、点击 B~~ **DONE** — hover 优先 + 点击同步（`g8_interact_target_smoke`）。 | ~~P1~~ |
-| `scripts/areas/area_craft.gd` 的传送点提示 | 传送点长期脉冲/文字与普通热点的最近提示并存，可能让场景交互层级过多。 | P1 |
+| `scripts/areas/area_craft.gd` 的传送点提示 | ~~传送点长期脉冲与普通热点提示并存~~ **DONE** — arch 仅 hover 高亮；户外 `AreaInteractHost` 共享邻近「互动」。 | ~~P1~~ |
 
 在开始大批量增加新动画前，先关闭或隔离上述风险。否则新素材即使单帧画得正确，也会被运行时的双时钟、错误锚点或重复提示破坏。
 
