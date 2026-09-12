@@ -122,7 +122,7 @@
 | G4 | **DONE (code)** — 市集/农田/深林各 ≥2 DistrictInteractKit prop 交互 |
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
-| G7 | **IN PROGRESS** — 钓点 bobber 精灵优先；NPC 工作环短 prop cue；完整职业姿态 sheet / C22 渔笼仍缺 |
+| G7 | **IN PROGRESS** — bobber 精灵优先；NPC 工作环短 cue；C22 渔笼河/湖已接线（演示 6s soak）；完整职业姿态 sheet 仍缺 |
 | G8 | **IN PROGRESS** — 门阶/拱门/作物垄 sprite 已接线；StyleQA + 季节罩仍开放 |
 
 ### G8 已知残留（不可假装清零）

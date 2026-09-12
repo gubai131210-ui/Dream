@@ -175,6 +175,26 @@ func _spawn_fishing_spots(ysort: Node2D) -> void:
 			"title": s["title"],
 			"desc": s["desc"],
 		})
+	_spawn_fish_cages(ysort)
+
+
+func _spawn_fish_cages(ysort: Node2D) -> void:
+	## C22 append-only: one dock cage near east_dock.
+	var pos := Vector2(1040, 520)
+	var cleared := craft.find_clear_near(pos, 1, 1, 6, true)
+	if cleared != Vector2.ZERO:
+		pos = cleared
+	var t := craft.world_to_tile(pos)
+	if craft.is_water(t.x, t.y):
+		return
+	craft.add_contact_shadow(ysort, pos, Vector2(12, 5))
+	const FishCageScript := preload("res://scripts/fishing/fish_cage.gd")
+	FishCageScript.spawn(ysort, pos, Vector2(52, 48), {
+		"site_id": "lake",
+		"cage_id": "east_dock_cage",
+		"title": "东码头渔笼",
+		"desc": "系缆旁的竹笼，可下放隔潮收货。",
+	})
 
 
 func _spawn_portals(ysort: Node2D) -> void:

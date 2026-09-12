@@ -126,17 +126,11 @@ func _build_marker_visual() -> void:
 	for c in _bobber.get_children():
 		c.queue_free()
 	var icon_path := "res://assets/sprites/fishing/bobber_00.png"
-	var has_sprite := ResourceLoader.exists(icon_path) or FileAccess.file_exists(ProjectSettings.globalize_path(icon_path))
-	if has_sprite:
-		# Soft water ring only — no ColorRect buoy when bobber art exists (G7).
+	var tex := WorldSpawnUtil.load_prop_texture(icon_path)
+	if tex != null:
 		_add_ellipse_ring(_bobber, Vector2(0, 4), 14.0, Color(0.45, 0.7, 0.85, 0.35))
 		var spr := Sprite2D.new()
-		if ResourceLoader.exists(icon_path):
-			spr.texture = load(icon_path) as Texture2D
-		else:
-			var img := Image.load_from_file(ProjectSettings.globalize_path(icon_path))
-			if img != null:
-				spr.texture = ImageTexture.create_from_image(img)
+		spr.texture = tex
 		spr.position = Vector2(0, -20)
 		spr.scale = Vector2(0.9, 0.9)
 		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST

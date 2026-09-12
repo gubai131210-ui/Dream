@@ -15,7 +15,7 @@ Outdoor **cast → wait → bite → reel → catch** at ≥2 water sites, with 
 | C19 | Spot FX: ripple ring / bubbles / splash (+ optional water_frame) |
 | C20 | `FishingSession` phase loop + bite-window QTE (click 收杆) |
 | C21 | 竹竿 + 铁竿 (`FishingCatalog`, session 换竿) |
-| C22 | Deferred (cage/net) — not required for Wave A2 Done-when |
+| C22 | Shore fish cage place→soak→collect at river + lake (≥1 cage/site, empty/full sprites) |
 
 ## Ownership
 
@@ -23,6 +23,7 @@ Outdoor **cast → wait → bite → reel → catch** at ≥2 water sites, with 
 | --- | --- |
 | Catalog | `scripts/fishing/fishing_catalog.gd` |
 | Spot hotspot | `scripts/fishing/fishing_spot.gd` |
+| Cage hotspot | `scripts/fishing/fish_cage.gd` |
 | Minigame UI | `scripts/fishing/fishing_session.gd` |
 | Package doc | `docs/FISH_E.md` |
 | Art | `assets/sprites/fishing/*.png` |
@@ -35,10 +36,10 @@ Outdoor **cast → wait → bite → reel → catch** at ≥2 water sites, with 
 
 | Scene | Hub | Spot ids | Fish pool highlights |
 | --- | --- | --- | --- |
-| `scenes/areas/river/river.tscn` | 总览 → 河流 | `west_bend`, `bridge_south` | 河鲦 / 溪鳟 / 水草 |
-| `scenes/areas/lake/lake.tscn` | 总览 → 湖泊 | `east_dock`, `south_shore` | 湖鲈 / 锦鲤 / 水草 |
+| `scenes/areas/river/river.tscn` | 总览 → 河流 | `west_bend`, `bridge_south` + cage `west_bend_cage` | 河鲦 / 溪鳟 / 水草 |
+| `scenes/areas/lake/lake.tscn` | 总览 → 湖泊 | `east_dock`, `south_shore` + cage `east_dock_cage` | 湖鲈 / 锦鲤 / 水草 |
 
-Spots sit on **bank dirt** (assembler clears water cells). Visual: buoy post + idle ring.
+Spots sit on **bank dirt** (assembler clears water cells). Visual: buoy post + idle ring. Cages: empty/full bamboo lattice sprites.
 
 ## Rods
 
@@ -77,6 +78,7 @@ Switch with **竿：…（点换）** before cast or after result. Selection per
 5. 确认弹出渔获名（河鲦/溪鳟/水草）  
 6. Hub → **湖泊**，东码头或南岸再钓一轮，确认湖鲈/锦鲤池不同  
 7. 故意不收杆一次，确认 **脱钩**  
+8. 河湾 / 东码头旁 **渔笼**：点击下放 → 等约 6 秒（演示加速）→ 再点查看至「可收」→ 收取渔获  
 
 中文路径下请用户本机测；agent 不强制 Godot CLI。
 
@@ -85,5 +87,6 @@ Switch with **竿：…（点换）** before cast or after result. Selection per
 - [x] ≥2 outdoor sites (river + lake)  
 - [x] Cast → bite → catch (or miss)  
 - [x] ≥2 rods  
+- [x] C22 cage place→soak→collect (river + lake)  
 - [x] `docs/FISH_E.md`  
 - [ ] User Godot QA (pending)

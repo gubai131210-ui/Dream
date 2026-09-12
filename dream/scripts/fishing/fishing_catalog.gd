@@ -105,3 +105,54 @@ static func roll_fish(site_id: String, rod_id: String) -> Dictionary:
 		if roll <= acc:
 			return pool[i]
 	return pool[pool.size() - 1]
+
+
+## --- C22 fish cages (run-persisted; demo soak via ticks) ---
+static var _cage_states: Dictionary = {}
+
+
+static func _cage_key(site_id: String, cage_id: String) -> String:
+	return "%s::%s" % [site_id, cage_id]
+
+
+static func cage_state(site_id: String, cage_id: String) -> Dictionary:
+	var key := _cage_key(site_id, cage_id)
+	if not _cage_states.has(key):
+		_cage_states[key] = {"phase": "empty"}
+	return _cage_states[key]
+
+
+static func cage_place(site_id: String, cage_id: String) -> void:
+	_cage_states[_cage_key(site_id, cage_id)] = {
+		"phase": "soaking",
+		"placed_at": Time.get_ticks_msec(),
+		"ready_at": Time.get_ticks_msec() + 6000,
+	}
+
+
+static func cage_try_ripen(site_id: String, cage_id: String, soak_msec: int = 6000) -> bool:
+	var st := cage_state(site_id, cage_id)
+	if str(st.get("phase", "")) != "soaking":
+		return false
+	var ready_at := int(st.get("ready_at", 0))
+	if ready_at <= 0:
+		ready_at = int(st.get("placed_at", 0)) + soak_msec
+	if Time.get_ticks_msec() < ready_at:
+		st["ready_at"] = ready_at
+		return false
+	var fish := roll_fish(site_id, current_rod_id)
+	_cage_states[_cage_key(site_id, cage_id)] = {
+		"phase": "ready",
+		"fish_id": str(fish.get("id", "")),
+		"fish_name": str(fish.get("name", "渔获")),
+		"fish_sprite": str(fish.get("sprite", "")),
+	}
+	return true
+
+
+static func cage_collect(site_id: String, cage_id: String) -> Dictionary:
+	var st := cage_state(site_id, cage_id)
+	var out := st.duplicate(true)
+	_cage_states[_cage_key(site_id, cage_id)] = {"phase": "empty"}
+	return out
+
