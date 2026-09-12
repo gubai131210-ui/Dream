@@ -77,6 +77,10 @@ def main() -> int:
         "waterfall_water": sorted(
             (ROOT / "assets/sprites/props").glob("waterfall_water_0[0-5].png")
         ),
+        "well_rope": sorted((ROOT / "assets/sprites/props").glob("well_rope_*.png")),
+        "crate_lid": sorted((ROOT / "assets/sprites/props").glob("crate_lid_*.png")),
+        "leaf_fall": sorted((ROOT / "assets/sprites/fx").glob("leaf_fall_*.png")),
+        "bird_peck": sorted((ROOT / "assets/sprites/fx").glob("bird_peck_*.png")),
     }
     for label, paths in groups.items():
         assert_normalized_contract(paths, label)

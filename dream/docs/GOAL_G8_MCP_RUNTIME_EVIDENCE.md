@@ -65,6 +65,9 @@
 | Square outdoor prompt | `docs/evidence/g8_square_outdoor_prompt.png` | 户外 `ProximityPrompt`「互动」visible |
 | C04 smith wait bench | `docs/evidence/g8_c04_smith_wait_bench.png` | 候坐=`waiting_bench_00` |
 | C07 school lectern | `docs/evidence/g8_c07_school_lectern.png` | 讲台=`lectern_00` |
+| C06 civic + meeting | `docs/evidence/g8_c06_civic_meeting.png` | 公告板=`civic_board`；会议桌=`meeting_table` |
+| C11 timetable | `docs/evidence/g8_c11_timetable.png` | 时刻表=`timetable_00` |
+| C28 root semantics | `docs/evidence/g8_c28_root_semantics.png` | 根桌/木钉梯/根须垛专用 prop |
 
 ## Runtime queries
 
@@ -91,6 +94,9 @@
 - Outdoor `AreaInteractHost` on plaza; `水井/ProximityPrompt` visible「互动」; `g8_outdoor_prompt_smoke` PASS
 - Portal arch always-on tween removed (`qa_portal_hover_only` GREEN); hover modulate remains
 - C04 `候坐` texture=`waiting_bench_00`; C07 `讲台` texture=`lectern_00`
+- C06 `公告板`=`civic_board_00` + `会议桌`=`meeting_table_00`; C11 `时刻表`=`timetable_00`
+- C28 `根桌`/`木钉梯`/`根须垛` = root_table / peg_ladder / root_mass
+- Headless `g8_c58_fx_smoke` PASS (well_rope / crate_lid / leaf_fall ×4)
 
 ## Agent reviews this batch
 

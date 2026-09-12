@@ -20,7 +20,7 @@ Acceptance (Wave B StationInt):
 
 | Zone | Cluster | Anchor (tx,ty) | Role |
 | --- | --- | --- | --- |
-| West waiting | `waiting` | 6, 7 | Long bench rows (`table_dining` proxy) + 时刻表 + 站厅灯 |
+| West waiting | `waiting` | 6, 7 | Long bench rows (`waiting_bench_00`) + `timetable_00` + 站厅灯 |
 | East ticket | `ticket` | 22, 6 | 售票窗 counter (客南主北) + 行车簿 + 票价牌 + 票箱 |
 | East freight | `freight` | 25, 9 | Crate / sack / barrel mass (货运体量) |
 | Corridor | door 13–16 | — | ≥2-tile aisle south→north; benches tx≤12, ticket/freight tx≥20 |
@@ -29,7 +29,7 @@ Acceptance (Wave B StationInt):
 - **Rug:** under waiting seats (`ox/oy` 7, 9)  
 - **Actor:** `station_master` via waiting → ticket (staff side) → freight  
 - **Lights:** waiting bay + ticket bay PointLights  
-- **Art:** reuse `counter` / `notice` / `ledger` / `crate_*` / `lamp_shop` / `table_dining` / `coin_chest` / `sack` / `barrel` — no new prop sheet
+- **Art:** `waiting_bench_00` / `timetable_00` / `counter` / `ledger` / `crate_*` / `lamp_shop` / `coin_chest` / `sack` / `barrel`
 
 ## Portal host (Lead-seeded; do NOT edit assembler)
 

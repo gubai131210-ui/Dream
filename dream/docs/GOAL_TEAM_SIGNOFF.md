@@ -16,7 +16,8 @@
 | Animation-frame QA | leaf/rope/lid/bird/waterfall/drawer; WorkPose+leaf smoke; **瀑布 WaterfallAnim** | `qa_interaction_frames.py` **GREEN**; `g8_anim_fx_smoke` **PASS**; MCP `g8_waterfall_anim.png` |
 | Interact target sync | hover/click shared selector (interior + **outdoor**) | `g8_interact_target_smoke` + `g8_outdoor_prompt_smoke` **PASS** |
 | Portal affordance | no always-on arch pulse | `qa_portal_hover_only` **GREEN** |
-| Semantic interior | altar/bench/board/desk/reed/pipe + **wait/lectern** | `qa_semantic_interior_props` **GREEN** + MCP shots |
+| Semantic interior | altar/bench/board/desk/reed/pipe + wait/lectern + **civic/C28** | `qa_semantic_interior_props` **GREEN** + MCP |
+| C58 FX | well_rope / crate_lid / leaf_fall oneshots | `g8_c58_fx_smoke` **PASS** |
 
 ## Automated gates (must stay GREEN)
 

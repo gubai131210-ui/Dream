@@ -105,8 +105,8 @@
 | 优先级 | 缺口 |
 | --- | ---:|
 | P0 | **用户 Godot QA Waves A2–F + §7 勾选** |
-| P1 | 姿态/摊位 ArtGen 继续抛光（非阻塞）；室内语义代理本轮已关 |
-| P2 | tomyud1 MCP 截图证据（**全户外 + C01/C06/C11/C12/C16/C17/C28–C30/C40/C43/C44**；C62 全链冒烟 PASS；仍不代替 §7） |
+| P1 | 姿态/摊位 ArtGen 继续抛光（非阻塞）；C29 碑刻等次级 notice 语义可继续收敛 |
+| P2 | tomyud1 MCP 截图证据（**全户外 + 多室内**；C62/C58 FX 冒烟 PASS；仍不代替 §7） |
 
 ---
 
@@ -163,6 +163,8 @@
 | ~~传送门常驻 arch 脉冲~~ | area_craft / WorldSpawnUtil / interior_craft | **DONE** → hover 高亮 only；`qa_portal_hover_only` GREEN |
 | ~~户外无邻近「互动」~~ | outdoor controllers | **DONE** → `AreaInteractHost` + smoke/MCP |
 | ~~C04 候坐 / C07 讲台代理~~ | smith wait / school lectern | **DONE** → `waiting_bench` / `lectern_00`；QA 扩 wait+lectern |
+| ~~C06 会议桌/公告板 · C11 时刻表~~ | town hall / station | **DONE** → `meeting_table` / `civic_board` / `timetable` |
+| ~~C28 根桌/木钉梯/根须垛代理~~ | giant tree interior | **DONE** → `root_table` / `peg_ladder` / `root_mass` |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据
@@ -179,10 +181,11 @@
 - [`GOAL_G8_INTERACT_TARGET_EVIDENCE.md`](GOAL_G8_INTERACT_TARGET_EVIDENCE.md) — 室内提示/点击共享目标  
 - [`GOAL_G8_WATERFALL_ANIM_EVIDENCE.md`](GOAL_G8_WATERFALL_ANIM_EVIDENCE.md) — 瀑布水体 AnimatedSprite 循环 + MCP  
 - [`GOAL_G8_OUTDOOR_PROMPT_EVIDENCE.md`](GOAL_G8_OUTDOOR_PROMPT_EVIDENCE.md) — 户外邻近「互动」+ hover 胜出  
+- [`GOAL_G8_C58_FX_EVIDENCE.md`](GOAL_G8_C58_FX_EVIDENCE.md) — C58 well_rope/crate_lid/leaf_fall 多帧  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
-- `tools/qa_interaction_frames.py` — 13 groups GREEN  
+- `tools/qa_interaction_frames.py` — 17 groups GREEN  
 - `tools/qa_portal_hover_only.py` — GREEN  
-- `tools/qa_semantic_interior_props.py` — GREEN（含 wait + lectern）  
+- `tools/qa_semantic_interior_props.py` — GREEN（civic+C28 + signature）  
 - `tools/qa_no_placeholder_visuals.py` — GREEN  
 - `tools/qa_interact_sprite_inventory.py` — GREEN（kits + focus/open FX）  
 - `tools/qa_work_pose_style.py` — GREEN（C53 pose sheets）  

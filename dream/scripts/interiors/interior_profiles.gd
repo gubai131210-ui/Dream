@@ -18,6 +18,7 @@ const P_COUNTER := DIR_INTERIOR_PROP + "/counter_00.png"
 const P_BAR := DIR_INTERIOR_PROP + "/bar_00.png"
 const P_TABLE_R := DIR_INTERIOR_PROP + "/table_round_00.png"
 const P_TABLE_DINING := DIR_INTERIOR_PROP + "/table_dining_00.png"
+const P_MEETING_TABLE := DIR_INTERIOR_PROP + "/meeting_table_00.png"
 const P_STOOL := DIR_INTERIOR_PROP + "/stool_00.png"
 const P_STOOL_TEA := DIR_INTERIOR_PROP + "/stool_tea_00.png"
 const P_STOOL_BAR := DIR_INTERIOR_PROP + "/stool_bar_00.png"
@@ -31,6 +32,8 @@ const P_MEDICINE := DIR_INTERIOR_PROP + "/medicine_00.png"
 const P_LEDGER := DIR_INTERIOR_PROP + "/ledger_00.png"
 const P_BASKET := DIR_INTERIOR_PROP + "/basket_00.png"
 const P_NOTICE := DIR_INTERIOR_PROP + "/notice_00.png"
+const P_CIVIC_BOARD := DIR_INTERIOR_PROP + "/civic_board_00.png"
+const P_TIMETABLE := DIR_INTERIOR_PROP + "/timetable_00.png"
 const P_MUG_SHELF := DIR_INTERIOR_PROP + "/mug_shelf_00.png"
 const P_ROOST := DIR_INTERIOR_PROP + "/roost_00.png"
 const P_COIN := DIR_INTERIOR_PROP + "/coin_chest_00.png"
@@ -116,6 +119,9 @@ const P_SCHOOL_DESK := DIR_INTERIOR_PROP + "/school_desk_00.png"
 const P_LECTERN := DIR_INTERIOR_PROP + "/lectern_00.png"
 const P_SEWER_PIPE := DIR_INTERIOR_PROP + "/sewer_pipe_00.png"
 const P_REED_CLUMP := DIR_INTERIOR_PROP + "/reed_clump_00.png"
+const P_ROOT_TABLE := DIR_INTERIOR_PROP + "/root_table_00.png"
+const P_PEG_LADDER := DIR_INTERIOR_PROP + "/peg_ladder_00.png"
+const P_ROOT_MASS := DIR_INTERIOR_PROP + "/root_mass_00.png"
 
 const RES := "res://scenes/areas/village_residential/village_residential.tscn"
 const FARM := "res://scenes/areas/farm_residential/farm_residential.tscn"
@@ -1050,8 +1056,8 @@ static func _all() -> Dictionary:
 			"clusters": [
 				# Public hall — notice + meeting seating; east stools stop before door aisle (tx11–14).
 				_cluster("hall", 7, 9, [
-					_m(P_NOTICE, -1, -4, "公告板", "村务与告示栏（南侧留读位）。", 0.85),
-					_m(P_TABLE_DINING, 0, 0, "会议桌", "议事长桌。", 0.9),
+					_m(P_CIVIC_BOARD, -1, -4, "公告板", "村务与告示栏（非 notice 代理；南侧留读位）。", 0.9),
+					_m(P_MEETING_TABLE, 0, 0, "会议桌", "议事长桌（非饭桌代理）。", 0.95),
 					_m(P_STOOL, -2, 0, "议事凳", "西席（对桌）。", 0.55),
 					_m(P_STOOL, 2, 0, "议事凳", "东席（对桌，不侵中轴通廊）。", 0.55),
 					_m(P_STOOL, 0, 2, "旁听凳", "南向旁听席。", 0.55),
@@ -1352,7 +1358,7 @@ static func _all() -> Dictionary:
 					_m(P_WAITING_BENCH, 6, 0, "候车长椅", "北排东座（贴通廊西缘）。", 0.85),
 					_m(P_WAITING_BENCH, 0, 3, "候车长椅", "南排西座（候车）。", 0.85),
 					_m(P_WAITING_BENCH, 3, 3, "候车长椅", "南排中座（候车）。", 0.85),
-					_m(P_NOTICE, 3, -3, "时刻表", "班次与站台告示。", 0.85),
+					_m(P_TIMETABLE, 3, -3, "时刻表", "班次与站台告示（非 notice 代理）。", 0.9),
 					_m(P_LAMP_SHOP, 5, -2, "站厅灯", "候车厅壁灯。", PROP),
 					_m(P_STOOL, -2, 1, "边座", "长椅端头短坐。", 0.55),
 				]),
@@ -1674,7 +1680,7 @@ static func _all() -> Dictionary:
 			"clusters": [
 				# Verb: 树洞厅聚会 — stump table + log bench; south approach clear.
 				_cluster("hall", 10, 8, [
-					_m(P_TABLE_DINING, 0, 0, "根桌", "树心刨平的粗根桌（厅锚）。", 0.9),
+					_m(P_ROOT_TABLE, 0, 0, "根桌", "树心刨平的粗根桌（非饭桌代理）。", 0.95),
 					_m(P_STOOL, -2, 1, "木墩", "桌西坐墩（同 sheet）。", 0.7),
 					_m(P_STOOL, 2, 1, "木墩", "桌东坐墩（东留站位）。", 0.7),
 					_m(P_PEW, 0, 3, "原木长凳", "桌南原木长凳（南站位可坐）。", 0.75),
@@ -1684,7 +1690,7 @@ static func _all() -> Dictionary:
 				]),
 				# Verb: 攀梯 — west trunk pegs + stump steps (≠ hunt gear rack).
 				_cluster("climb", 4, 7, [
-					_m(P_TOOL_RACK, 0, -2, "木钉梯", "西干壁攀钉/梯档。", 0.85),
+					_m(P_PEG_LADDER, 0, -2, "木钉梯", "西干壁攀钉/梯档（非工具架代理）。", 0.9),
 					_m(P_CRATE0, 0, 1, "树墩踏", "攀梯脚底树墩踏级。", 0.75),
 					_m(P_CRATE1, 0, 2, "树墩踏", "下层踏级（南可站）。", 0.7),
 					_m(P_SHELF, 2, -1, "攀具搁板", "绳索与钉楔搁板。", 0.65),
@@ -1692,7 +1698,7 @@ static func _all() -> Dictionary:
 				]),
 				# Verb: 根系窖 — SE mass; stays east of door aisle 9–12.
 				_cluster("roots", 17, 13, [
-					_m(P_HAY_STACK, 0, -1, "根须垛", "缠结根须/枯纤维高垛（体量锚）。", 0.8),
+					_m(P_ROOT_MASS, 0, -1, "根须垛", "缠结根须高垛（非干草代理）。", 0.9),
 					_m(P_CRATE0, 0, 1, "根窖箱", "根系储物底箱。", PROP),
 					_m(P_CRATE1, 2, 1, "根窖箱", "叠高根窖箱。", 0.75),
 					_m(P_HERBS, 2, -2, "洞苔", "根壁苔藓挂簇。", 0.55),
