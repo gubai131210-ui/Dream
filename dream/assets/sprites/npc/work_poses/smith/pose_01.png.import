@@ -2,7 +2,7 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://45dmry1lrd24"
+uid="uid://62fcc8c14ed48"
 path="res://.godot/imported/pose_01.png-7a807314d0f4f1ea256035517b74a570.ctex"
 metadata={
 "vram_texture": false
@@ -14,6 +14,7 @@ source_file="res://assets/sprites/npc/work_poses/smith/pose_01.png"
 dest_files=["res://.godot/imported/pose_01.png-7a807314d0f4f1ea256035517b74a570.ctex"]
 
 [params]
+
 
 compress/mode=0
 compress/high_quality=false

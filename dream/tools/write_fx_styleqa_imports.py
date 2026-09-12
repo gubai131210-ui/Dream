@@ -33,7 +33,18 @@ def write_import(png: Path, template_import: Path) -> None:
 
 def main() -> None:
 	fx_tpl = ROOT / "assets/sprites/fx/leaf_fall_00.png.import"
-	for name in ("fish_bubble_00", "fish_splash_00", "leaf_fall_00", "leaf_fall_01", "leaf_fall_02", "leaf_fall_03"):
+	for name in (
+		"fish_bubble_00",
+		"fish_splash_00",
+		"leaf_fall_00",
+		"leaf_fall_01",
+		"leaf_fall_02",
+		"leaf_fall_03",
+		"bird_peck_00",
+		"bird_peck_01",
+		"bird_peck_02",
+		"bird_peck_03",
+	):
 		png = ROOT / "assets/sprites/fx" / f"{name}.png"
 		if png.exists():
 			write_import(png, fx_tpl)

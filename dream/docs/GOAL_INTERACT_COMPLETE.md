@@ -123,7 +123,7 @@
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
 | G7 | **DONE (code)** — bobber；C22；pose×4；drawer StyleQA；C05 摊位默认真棚 PNG |
-| G8 | **IN PROGRESS** — 破损物真图 DONE；季节罩 / ArtGen 抛光仍开放 |
+| G8 | **IN PROGRESS** — headless smoke **13/13 PASS**（见 `GOAL_G8_SMOKE_EVIDENCE.md`）；姿态/叶/鸟 StyleQA 加深；**用户 Godot QA 仍待** |
 
 ### G8 已知残留（不可假装清零）
 
@@ -143,9 +143,14 @@
 | ~~C05 摊位 ColorRect 棚~~ | MarketStall | **DONE** → 默认 `stall_open_wood_00`（ColorRect 仅 fallback） |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
 | Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
-| 姿态/摊位 ArtGen 抛光 | work_poses / market | 深度像素继续 |
+| 姿态/摊位 ArtGen 抛光 | work_poses / market | **部分加深**（farmer 调色板姿态）；还可继续 |
+| 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认** |
 
-## Related
+## G8 证据
+
+- [`GOAL_G8_SMOKE_EVIDENCE.md`](GOAL_G8_SMOKE_EVIDENCE.md) — headless load matrix  
+- `tools/qa_interaction_frames.py` — 12 groups GREEN  
+- `tools/qa_no_placeholder_visuals.py` — GREEN  
 
 - [`INTERACTION_DESIGN.md`](INTERACTION_DESIGN.md)  
 - [`WORLD_C58_C62.md`](WORLD_C58_C62.md)  

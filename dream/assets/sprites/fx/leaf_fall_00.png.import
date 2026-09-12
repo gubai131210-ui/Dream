@@ -2,7 +2,7 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6rfixn4qo5bw"
+uid="uid://631d8e049b5d1"
 path="res://.godot/imported/leaf_fall_00.png-479da50f5c47b70168af9550c47a37cd.ctex"
 metadata={
 "vram_texture": false
@@ -14,6 +14,8 @@ source_file="res://assets/sprites/fx/leaf_fall_00.png"
 dest_files=["res://.godot/imported/leaf_fall_00.png-479da50f5c47b70168af9550c47a37cd.ctex"]
 
 [params]
+
+
 
 compress/mode=0
 compress/high_quality=false
