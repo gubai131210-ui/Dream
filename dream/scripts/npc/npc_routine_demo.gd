@@ -105,6 +105,7 @@ func apply_current() -> void:
 		entry = rings[_work_idx]
 		kind = "work"
 	_spawn_or_replace_actor(entry)
+	_spawn_work_pose_cue(kind, entry)
 	_update_status(kind, entry)
 	_refresh_button_labels()
 	_announce(kind, entry)
@@ -175,6 +176,44 @@ func _spawn_or_replace_actor(entry: Dictionary) -> void:
 			_info.call("show_info", h.title, h.description)
 		)
 	_demo_actor = actor
+
+
+func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
+	## G7: short occupational prop flash near demo actor (not full pose sheets yet).
+	if _ysort == null or kind != "work":
+		return
+	var old := _ysort.get_node_or_null("WorkPoseCue")
+	if old:
+		old.queue_free()
+	var work_id := str(entry.get("id", ""))
+	var prop_path := ""
+	match work_id:
+		"sow":
+			prop_path = "res://assets/sprites/interior/props/hay_00.png"
+		"smith":
+			prop_path = "res://assets/sprites/interior/props/anvil_00.png"
+		"stall":
+			prop_path = "res://assets/sprites/interior/props/basket_00.png"
+		"cook":
+			prop_path = "res://assets/sprites/interior/props/stove_00.png"
+		_:
+			return
+	var cue := Node2D.new()
+	cue.name = "WorkPoseCue"
+	var anchor: Vector2 = Vector2(640, 480)
+	var wps: Array = entry.get("waypoints", [])
+	if not wps.is_empty():
+		anchor = wps[0] as Vector2
+	cue.position = anchor + Vector2(18, -28)
+	cue.z_index = 8
+	_ysort.add_child(cue)
+	WorldSpawnUtil.attach_prop_sprite(cue, prop_path, 0.35)
+	var tw := cue.create_tween()
+	tw.tween_property(cue, "modulate:a", 0.35, 0.15)
+	tw.tween_property(cue, "modulate:a", 1.0, 0.2)
+	tw.tween_interval(1.2)
+	tw.tween_property(cue, "modulate:a", 0.0, 0.45)
+	tw.tween_callback(cue.queue_free)
 
 
 func _ensure_status_label() -> void:

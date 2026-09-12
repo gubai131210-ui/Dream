@@ -121,8 +121,9 @@
 | G3 | **DONE (code)** — C55 四季改用真实 prop；层与 TopBar 默认可见（不依赖 demo overlay） |
 | G4 | **DONE (code)** — 市集/农田/深林各 ≥2 DistrictInteractKit prop 交互 |
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
-| G6 | **IN PROGRESS** — C61 隐藏箱 `chest_lid_*` 开盖 oneshot；室内抽屉/柜门开合与 fire/forge 全量仍待 |
-| G7–G8 | PENDING |
+| G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
+| G7 | **IN PROGRESS** — 钓点 bobber 精灵优先（无 ColorRect 浮标）；NPC 工作环短 prop 姿态 cue（sow/smith/stall/cook） |
+| G8 | PENDING — 全场景零占位审计 + 用户 Godot QA |
 
 ## Related
 

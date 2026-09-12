@@ -129,8 +129,19 @@ static func get_profile(profile_id: String) -> Dictionary:
 	return all["c01_home"]
 
 
-static func _m(path: String, dx: int, dy: int, title: String, desc: String, scale: float = PROP) -> Dictionary:
-	return {"path": path, "dx": dx, "dy": dy, "scale": scale, "title": title, "desc": desc}
+static func _m(
+	path: String,
+	dx: int,
+	dy: int,
+	title: String,
+	desc: String,
+	scale: float = PROP,
+	open_fx: String = "",
+) -> Dictionary:
+	var d := {"path": path, "dx": dx, "dy": dy, "scale": scale, "title": title, "desc": desc}
+	if not open_fx.is_empty():
+		d["open_fx"] = open_fx
+	return d
 
 
 static func _cluster(id: String, ax: int, ay: int, members: Array) -> Dictionary:
@@ -728,7 +739,7 @@ static func _all() -> Dictionary:
 		# ── Wave A2 stubs (teams enrich; do not polish C01–C04) ──
 		"c12_lighthouse": {
 			"title": "灯塔内部",
-			"hint": "灯塔 · 底层储物 / 中层楼梯 / 顶层灯室（占位）",
+			"hint": "灯塔 · 底层储物 / 中层楼梯 / 顶层灯室",
 			"return_path": "res://scenes/areas/lighthouse/lighthouse.tscn",
 			"room_w": 18,
 			"room_h": 22,
@@ -745,7 +756,7 @@ static func _all() -> Dictionary:
 					_m(P_TOOL_RACK, 0, -2, "工具架", "检修工具。", 0.7),
 				]),
 				_cluster("lamp_room", 12, 6, [
-					_m(P_LAMP_FARM, 0, 0, "航标灯", "顶层灯具占位。", PROP),
+					_m(P_LAMP_FARM, 0, 0, "航标灯", "顶层航标灯具。", PROP),
 					_m(P_CRATE1, 2, 2, "零件箱", "灯室零件。", 0.75),
 				]),
 			],
@@ -756,7 +767,7 @@ static func _all() -> Dictionary:
 			],
 			"actor": {},
 		},
-		# ── C14 井底：积水池 · 井壁龛 · 隐藏缝占位 ──
+		# ── C14 井底：积水池 · 井壁龛 · 隐藏缝 ──
 		"c14_well": {
 			"title": "井底",
 			"hint": "井底 · 潮湿石室 · 返回住宅区",
@@ -781,7 +792,7 @@ static func _all() -> Dictionary:
 					_m(P_BASKET, 2, 1, "吊篮", "上下井用的绳篮。", 0.7),
 				]),
 				_cluster("secret_mark", 12, 5, [
-					_m(P_COIN, 0, 0, "湿石缝", "石缝里隐约有物（隐藏入口占位）。", 0.55),
+					_m(P_COIN, 0, 0, "湿石缝", "石缝里隐约有物，似可探入。", 0.55),
 				]),
 			],
 			"fx": [],

@@ -125,22 +125,43 @@ func _build_marker_visual() -> void:
 	_ensure_fx()
 	for c in _bobber.get_children():
 		c.queue_free()
-	# Shore post
-	_add_rect(_bobber, Vector2(4, 22), Vector2(-2, -18), Color(0.42, 0.28, 0.14, 0.95), 1)
-	# Buoy / float
-	_add_rect(_bobber, Vector2(10, 10), Vector2(-5, -28), Color(0.92, 0.35, 0.28, 0.95), 2)
-	_add_rect(_bobber, Vector2(10, 4), Vector2(-5, -18), Color(0.95, 0.95, 0.9, 0.9), 2)
-	# Soft water ring (C19 cue idle)
-	_add_rect(_bobber, Vector2(28, 8), Vector2(-14, 2), Color(0.45, 0.7, 0.85, 0.35), 0)
 	var icon_path := "res://assets/sprites/fishing/bobber_00.png"
-	if ResourceLoader.exists(icon_path):
+	var has_sprite := ResourceLoader.exists(icon_path) or FileAccess.file_exists(ProjectSettings.globalize_path(icon_path))
+	if has_sprite:
+		# Soft water ring only — no ColorRect buoy when bobber art exists (G7).
+		_add_ellipse_ring(_bobber, Vector2(0, 4), 14.0, Color(0.45, 0.7, 0.85, 0.35))
 		var spr := Sprite2D.new()
-		spr.texture = load(icon_path) as Texture2D
-		spr.position = Vector2(0, -24)
+		if ResourceLoader.exists(icon_path):
+			spr.texture = load(icon_path) as Texture2D
+		else:
+			var img := Image.load_from_file(ProjectSettings.globalize_path(icon_path))
+			if img != null:
+				spr.texture = ImageTexture.create_from_image(img)
+		spr.position = Vector2(0, -20)
 		spr.scale = Vector2(0.9, 0.9)
 		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		spr.z_index = 3
 		_bobber.add_child(spr)
+		return
+	# Fallback procedural buoy if sprite missing.
+	_add_rect(_bobber, Vector2(4, 22), Vector2(-2, -18), Color(0.42, 0.28, 0.14, 0.95), 1)
+	_add_rect(_bobber, Vector2(10, 10), Vector2(-5, -28), Color(0.92, 0.35, 0.28, 0.95), 2)
+	_add_rect(_bobber, Vector2(10, 4), Vector2(-5, -18), Color(0.95, 0.95, 0.9, 0.9), 2)
+	_add_rect(_bobber, Vector2(28, 8), Vector2(-14, 2), Color(0.45, 0.7, 0.85, 0.35), 0)
+
+
+func _add_ellipse_ring(parent: Node2D, pos: Vector2, radius: float, color: Color) -> void:
+	var ring := Polygon2D.new()
+	ring.name = "WaterRing"
+	ring.color = color
+	ring.position = pos
+	var pts: PackedVector2Array = []
+	for i in range(12):
+		var a := TAU * float(i) / 12.0
+		pts.append(Vector2(cos(a) * radius, sin(a) * radius * 0.35))
+	ring.polygon = pts
+	ring.z_index = 0
+	parent.add_child(ring)
 
 
 func _add_rect(parent: Node2D, size: Vector2, pos: Vector2, color: Color, z: int) -> void:

@@ -239,6 +239,7 @@ func _spawn_furniture(parent: Node2D) -> void:
 					float(m.get("scale", PROP_SCALE)),
 					str(m.get("title", "物件")),
 					str(m.get("desc", "")),
+					str(m.get("open_fx", "")),
 				)
 		return
 	# Legacy flat props (avoid in new rooms — see INTERIOR_COMPOSITION.md).
@@ -251,6 +252,7 @@ func _spawn_furniture(parent: Node2D) -> void:
 			float(p.get("scale", PROP_SCALE)),
 			str(p.get("title", "物件")),
 			str(p.get("desc", "")),
+			str(p.get("open_fx", "")),
 		)
 
 
@@ -261,7 +263,15 @@ func _cluster_anchor(cluster_id: String) -> Vector2i:
 			return Vector2i(int(a[0]), int(a[1]))
 	return Vector2i(-1, -1)
 
-func _spawn_prop(parent: Node2D, path: String, pos: Vector2, scale_f: float, title: String, desc: String) -> void:
+func _spawn_prop(
+	parent: Node2D,
+	path: String,
+	pos: Vector2,
+	scale_f: float,
+	title: String,
+	desc: String,
+	open_fx: String = "",
+) -> void:
 	var tex := _load_texture(path)
 	if tex == null:
 		return
@@ -275,12 +285,77 @@ func _spawn_prop(parent: Node2D, path: String, pos: Vector2, scale_f: float, tit
 	shadow.z_index = -1
 	hs.get_node("Visual").add_child(shadow)
 	var spr := Sprite2D.new()
+	spr.name = "PropSprite"
 	spr.texture = tex
 	spr.centered = true
 	spr.position = _feet_sprite_offset(float(tex.get_height()), scale_f)
 	spr.scale = Vector2(scale_f, scale_f)
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	hs.get_node("Visual").add_child(spr)
+	if open_fx.is_empty():
+		open_fx = _infer_open_fx(path)
+	if not open_fx.is_empty():
+		hs.set_meta("open_fx", open_fx)
+		hs.activated.connect(func(h: InteractableHotspot) -> void:
+			_play_prop_open_fx(h, open_fx)
+		)
+
+
+func _infer_open_fx(path: String) -> String:
+	var base := path.get_file()
+	if base.begins_with("coin_chest") or base.begins_with("chest"):
+		return "chest_lid"
+	if base.begins_with("dresser"):
+		return "drawer_open"
+	return ""
+
+
+func _play_prop_open_fx(hs: InteractableHotspot, open_fx: String) -> void:
+	if hs == null or open_fx.is_empty():
+		return
+	if bool(hs.get_meta("_open_fx_played", false)):
+		return
+	hs.set_meta("_open_fx_played", true)
+	var visual := hs.get_node_or_null("Visual") as Node2D
+	if visual == null:
+		return
+	var dir := "res://assets/sprites/props"
+	var prefix := open_fx
+	if open_fx == "drawer_open":
+		dir = "res://assets/sprites/interior/props"
+	elif open_fx == "chest_lid":
+		dir = "res://assets/sprites/props"
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("open")
+	frames.set_animation_loop("open", false)
+	frames.set_animation_speed("open", 8.0)
+	var n := 0
+	for i in range(4):
+		var fpath := "%s/%s_%02d.png" % [dir, prefix, i]
+		var ftex := _load_texture(fpath)
+		if ftex == null:
+			continue
+		frames.add_frame("open", ftex)
+		n += 1
+	if n == 0:
+		var body := visual.get_node_or_null("PropSprite") as CanvasItem
+		if body:
+			body.modulate = Color(1.15, 1.1, 0.9)
+		return
+	var anim := AnimatedSprite2D.new()
+	anim.name = "OpenFX_%s" % prefix
+	anim.sprite_frames = frames
+	anim.position = Vector2(0, -16)
+	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	anim.z_index = 8
+	anim.centered = true
+	visual.add_child(anim)
+	anim.play("open")
+	var prop := visual.get_node_or_null("PropSprite") as CanvasItem
+	if prop:
+		prop.modulate = Color(0.92, 0.9, 0.85)
 
 
 ## Territory grammar (INTERIOR_TERRITORY.md): enclosure rings + aisle rails.
