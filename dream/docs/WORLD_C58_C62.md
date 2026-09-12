@@ -11,24 +11,26 @@
 
 | ID | Min | Delivered | Live hooks |
 | --- | --- | --- | --- |
-| C58 | ≥8 interact types | **8** | plaza hotspots |
-| C59 | ≥4 clearable | **4** | plaza click-remove |
-| C60 | ≥3 progress gates | **3** | plaza unlock stub |
+| C58 | ≥8 interact types | **8** | plaza hotspots + **prop sprites** + pulse/FX |
+| C59 | ≥4 clearable | **4** | plaza click-remove + prop sprites |
+| C60 | ≥3 progress gates | **3** | plaza unlock stub + prop sprites |
 | C61 | ≥5 hidden chests | **5** | square / forest / waterfall / hill / lake |
 | C62 | ≥1 chain ≥2 outdoor | **1** (3 hops) | forest → cave → waterfall → lake |
 
 ## C58 interact types (plaza)
 
-| id | Title | Action |
-| --- | --- | --- |
-| sit_bench | 长椅 | Info |
-| well_water | 井水 | Info |
-| shake_tree | 摇树 | Info |
-| notice_board | 公告栏 | Info |
-| crate_search | 木箱 | Info |
-| lamp_toggle | 路灯 | Toggle state + Info |
-| feed_critter | 喂鸟 | Info |
-| read_sign | 路牌 | Info |
+| id | Title | Action | Visual |
+| --- | --- | --- | --- |
+| sit_bench | 长椅 | Info + pulse | `bench_0.png` |
+| well_water | 井水 | Info + pulse | `well_0.png` |
+| shake_tree | 摇树 | Info + leaf burst | canopy/trunk cue |
+| notice_board | 公告栏 | Info + pulse | `B11-06_mailbox_board_02` |
+| crate_search | 木箱 | Info + pulse | `crate_1.png` |
+| lamp_toggle | 路灯 | Toggle light + modulate | `lamp_0.png` + PointLight2D |
+| feed_critter | 喂鸟 | Info + grain burst | `sack_0.png` |
+| read_sign | 路牌 | Info + pulse | `B11-06_mailbox_board_00` |
+
+Art pass tracked in [`GOAL_INTERACT_COMPLETE.md`](./GOAL_INTERACT_COMPLETE.md) Wave **G1**.
 
 ## C59 breakables (plaza)
 

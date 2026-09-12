@@ -3,6 +3,14 @@ extends RefCounted
 
 ## Shared hotspot / portal makers for WorldSys (C58–C62). Runtime visuals only.
 
+const INTERACTION_MARKERS_SETTING := "debug/show_interaction_markers"
+
+
+static func show_debug_markers() -> bool:
+	# Marker diamonds/tags are editor scaffolding, not part of the game art.
+	# Keep the opt-in setting so layout work can still enable them deliberately.
+	return bool(ProjectSettings.get_setting(INTERACTION_MARKERS_SETTING, false))
+
 
 static func make_hotspot(
 	parent: Node2D,
@@ -11,6 +19,8 @@ static func make_hotspot(
 	pos: Vector2,
 	size: Vector2,
 	marker_color: Color = Color(0.85, 0.75, 0.35, 0.9),
+	sprite_path: String = "",
+	sprite_scale: float = 0.55,
 ) -> InteractableHotspot:
 	var hs := InteractableHotspot.new()
 	hs.name = "WorldHS_%s" % title.replace(" ", "")
@@ -36,6 +46,7 @@ static func make_hotspot(
 		Vector2(0, hy),
 		Vector2(-hx, 0),
 	])
+	poly.visible = show_debug_markers()
 	visual.add_child(poly)
 	var tag := Label.new()
 	tag.name = "Tag"
@@ -49,10 +60,55 @@ static func make_hotspot(
 	tag.add_theme_constant_override("shadow_offset_x", 1)
 	tag.add_theme_constant_override("shadow_offset_y", 1)
 	tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tag.visible = show_debug_markers()
 	visual.add_child(tag)
+	if not sprite_path.is_empty():
+		attach_prop_sprite(visual, sprite_path, sprite_scale)
 	hs.add_child(visual)
 	parent.add_child(hs)
 	return hs
+
+
+## Feet-anchored outdoor prop (Nearest). Skips quietly if path missing.
+static func attach_prop_sprite(visual: Node2D, path: String, scale_f: float = 0.55) -> Sprite2D:
+	if visual == null or path.is_empty():
+		return null
+	if not ResourceLoader.exists(path) and not FileAccess.file_exists(ProjectSettings.globalize_path(path)):
+		push_warning("WorldSpawnUtil: missing prop sprite %s" % path)
+		return null
+	var tex: Texture2D = null
+	if ResourceLoader.exists(path):
+		tex = load(path) as Texture2D
+	if tex == null:
+		var abs_path := ProjectSettings.globalize_path(path)
+		if FileAccess.file_exists(abs_path):
+			var img := Image.load_from_file(abs_path)
+			if img != null:
+				tex = ImageTexture.create_from_image(img)
+	if tex == null:
+		push_warning("WorldSpawnUtil: failed load %s" % path)
+		return null
+	var shadow := Polygon2D.new()
+	shadow.name = "ContactShadow"
+	shadow.color = Color(0, 0, 0, 0.22)
+	shadow.polygon = PackedVector2Array([
+		Vector2(-12, 0), Vector2(0, -4), Vector2(12, 0), Vector2(0, 4),
+	])
+	shadow.position = Vector2(0, 6)
+	shadow.z_index = -1
+	visual.add_child(shadow)
+	var spr := Sprite2D.new()
+	spr.name = "PropSprite"
+	spr.texture = tex
+	spr.centered = true
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	spr.scale = Vector2(scale_f, scale_f)
+	# Foot pivot: sprite bottom near ground contact (same contract as InteriorCraft).
+	var h := float(tex.get_height()) * scale_f
+	spr.position = Vector2(0, -h * 0.5 + 4.0)
+	spr.z_index = 1
+	visual.add_child(spr)
+	return spr
 
 
 static func make_portal(
@@ -82,6 +138,7 @@ static func make_portal(
 		Vector2(-12, 0),
 	])
 	hint.position = Vector2(0, -size.y * 0.22)
+	hint.visible = show_debug_markers()
 	area.add_child(hint)
 	var label := Label.new()
 	label.name = "PortalLabel"
@@ -95,10 +152,14 @@ static func make_portal(
 	label.add_theme_constant_override("shadow_offset_y", 1)
 	label.add_theme_font_size_override("font_size", 12)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.visible = show_debug_markers()
 	area.add_child(label)
-	var pulse := hint.create_tween().set_loops()
-	pulse.tween_property(hint, "modulate:a", 0.4, 0.7).set_trans(Tween.TRANS_SINE)
-	pulse.tween_property(hint, "modulate:a", 1.0, 0.7).set_trans(Tween.TRANS_SINE)
+	area.mouse_entered.connect(func(): label.visible = true)
+	area.mouse_exited.connect(func(): label.visible = show_debug_markers())
+	if show_debug_markers():
+		var pulse := hint.create_tween().set_loops()
+		pulse.tween_property(hint, "modulate:a", 0.4, 0.7).set_trans(Tween.TRANS_SINE)
+		pulse.tween_property(hint, "modulate:a", 1.0, 0.7).set_trans(Tween.TRANS_SINE)
 	area.set_meta("scene_path", scene_path)
 	area.set_meta("worldsys_secret", true)
 	parent.add_child(area)

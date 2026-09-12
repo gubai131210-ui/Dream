@@ -13,6 +13,8 @@ const GATE_DEFS := [
 		"unlocked": "倒木已移开，小路通畅。",
 		"pos": Vector2(200, 780),
 		"color": Color(0.5, 0.35, 0.22, 0.95),
+		"sprite": "res://assets/sprites/props/barrel_0.png",
+		"scale": 0.6,
 	},
 	{
 		"id": "boulder",
@@ -21,6 +23,8 @@ const GATE_DEFS := [
 		"unlocked": "巨石滚到路旁，捷径打开。",
 		"pos": Vector2(1120, 760),
 		"color": Color(0.5, 0.52, 0.55, 0.95),
+		"sprite": "res://assets/sprites/props/rock_04.png",
+		"scale": 0.7,
 	},
 	{
 		"id": "locked_door",
@@ -29,6 +33,8 @@ const GATE_DEFS := [
 		"unlocked": "锁已打开，门扇轻推即入。",
 		"pos": Vector2(80, 480),
 		"color": Color(0.55, 0.45, 0.65, 0.95),
+		"sprite": "res://assets/sprites/interior/props/crypt_door_00.png",
+		"scale": 0.45,
 	},
 ]
 
@@ -102,6 +108,9 @@ func unlock(gate_id: String) -> void:
 			var tag := hs.get_node_or_null("Visual/Tag") as Label
 			if tag:
 				tag.text = hs.title + "·通"
+			var spr := hs.get_node_or_null("Visual/PropSprite") as Sprite2D
+			if spr:
+				spr.modulate = Color(0.7, 0.9, 0.7, 0.45)
 			break
 
 
@@ -117,6 +126,8 @@ func _spawn_one(d: Dictionary) -> void:
 		d["pos"] as Vector2,
 		Vector2(64, 52),
 		d["color"] as Color,
+		str(d.get("sprite", "")),
+		float(d.get("scale", 0.55)),
 	)
 	hs.set_meta("gate_id", gate_id)
 	hs.activated.connect(func(h: InteractableHotspot) -> void:
@@ -127,6 +138,5 @@ func _spawn_one(d: Dictionary) -> void:
 		unlock(gate_id)
 		if _info:
 			_info.show_info(title, unlocked_msg)
-		# Soft-clear: hide collision feel by freeing after short beat.
 		h.modulate = Color(1, 1, 1, 0.35)
 	)
