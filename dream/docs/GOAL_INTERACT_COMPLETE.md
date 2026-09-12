@@ -122,8 +122,19 @@
 | G4 | **DONE (code)** — 市集/农田/深林各 ≥2 DistrictInteractKit prop 交互 |
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
-| G7 | **IN PROGRESS** — 钓点 bobber 精灵优先（无 ColorRect 浮标）；NPC 工作环短 prop 姿态 cue（sow/smith/stall/cook） |
-| G8 | PENDING — 全场景零占位审计 + 用户 Godot QA |
+| G7 | **IN PROGRESS** — 钓点 bobber 精灵优先；NPC 工作环短 prop cue；完整职业姿态 sheet / C22 渔笼仍缺 |
+| G8 | **IN PROGRESS** — 玩家向「占位」文案已 scrub 一批；仍有车站轨枕 ColorRect、农场栅栏柱 ColorRect、季节 grade 罩等结构性残留 |
+
+### G8 已知残留（不可假装清零）
+
+| 残留 | 位置 | 处理方向 |
+| --- | --- | --- |
+| ColorRect 轨枕/铁轨 | `station_assembler.gd` | 换成 ballast/rail sprites |
+| ColorRect 栅栏柱 | farmland / farm_residential | 换成 fence posts |
+| bridge label_proxy | village_square | 去掉或换真牌 |
+| 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
+| 程序门阶多边形 | area_craft portals | 换成门脸立面 sprite |
+| G2/G6 PIL 帧 | leaf/drawer/chest | StyleQA 重绘 |
 
 ## Related
 

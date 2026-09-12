@@ -258,7 +258,7 @@ func _spawn_buildings(ysort: Node2D) -> void:
 			"pos": Vector2(720, 400),
 			"hw": 2, "hh": 1,
 			"title": "磨坊",
-			"desc": "枢纽东侧磨坊（风车占位），整栋在围栏内侧。",
+			"desc": "枢纽东侧磨坊风车，整栋在围栏内侧。",
 			"enter_title": "进入磨坊",
 			"enter_scene": SceneRouter.C13_MILL_PATH,
 		},
