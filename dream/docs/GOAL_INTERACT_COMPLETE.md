@@ -177,7 +177,7 @@
 - [`GOAL_G8_MCP_RUNTIME_EVIDENCE.md`](GOAL_G8_MCP_RUNTIME_EVIDENCE.md) — 广场/C01 MCP 截图 + 运行时节点  
 - [`GOAL_G8_SMOKE_EVIDENCE.md`](GOAL_G8_SMOKE_EVIDENCE.md) — headless load matrix（全户外 + 全 C 室内 + hubs）  
 - [`GOAL_G8_INTERACT_ACTIVATE_EVIDENCE.md`](GOAL_G8_INTERACT_ACTIVATE_EVIDENCE.md) — 广场 C58×8 激活冒烟  
-- [`GOAL_G8_INTERIOR_OPEN_FX_EVIDENCE.md`](GOAL_G8_INTERIOR_OPEN_FX_EVIDENCE.md) — C01 衣柜 drawer_open  
+- [`GOAL_G8_INTERIOR_OPEN_FX_EVIDENCE.md`](GOAL_G8_INTERIOR_OPEN_FX_EVIDENCE.md) — C01 衣柜 drawer_open（headless + `mcp_play_open_fx` live）  
 - [`GOAL_G8_PORTAL_CUE_EVIDENCE.md`](GOAL_G8_PORTAL_CUE_EVIDENCE.md) — 广场门户 façade/门阶  
 - [`GOAL_G8_ANIM_FX_EVIDENCE.md`](GOAL_G8_ANIM_FX_EVIDENCE.md) — 工作姿态×4 + 摇树 leaf_fall  
 - [`GOAL_G8_BATH_PORTAL_EVIDENCE.md`](GOAL_G8_BATH_PORTAL_EVIDENCE.md) — 浴场 façade + SceneRouter 进门  
