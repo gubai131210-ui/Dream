@@ -134,7 +134,7 @@ func is_night() -> bool:
 	return time_grade == TimeGrade.NIGHT
 
 
-func pulse_dusk_for_lamps(_duration_sec: float = 2.5) -> Dictionary:
+func pulse_dusk_for_lamps() -> Dictionary:
 	## Daytime lamp-on: switch to sticky night grade (same path as mcp_set_night).
 	## Player returns to day with N / 白天 button — no auto-restore timer (was racing).
 	if time_grade == TimeGrade.NIGHT:

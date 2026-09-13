@@ -7,8 +7,8 @@
 
 - `tools/paint_pose_deep.py` → `paint_pillow_prop()` — denser `props/pillow_00.png` (uniq≥40; seam/stitch/shadow)
 - `qa_interact_fx_coverage.py` asserts pillow uniq≥40
-- Daytime lamp Info (plaza `WorldInteractKit` + District lamps): append `（白天请按 N 查看光晕）` when turning on while Env-H is day
-- `DayNightWeather.pulse_dusk_for_lamps(duration_sec:=0)` — MCP sticky night helper (default no auto-restore; prior auto-timer could race)
+- Daytime lamp Info (plaza `WorldInteractKit` + District lamps): on day lamp-on → sticky night via `pulse_dusk_for_lamps()`; copy `（已切夜间观灯；按 N 回白天）`
+- `DayNightWeather.pulse_dusk_for_lamps()` — sticky `set_time_grade(NIGHT)` (no auto-restore)
 
 ## Gates / MCP
 
