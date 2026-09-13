@@ -105,7 +105,7 @@
 | 优先级 | 缺口 |
 | --- | ---:|
 | P0 | **用户 Godot QA Waves A2–F + §7 勾选** |
-| P1 | 姿态/摊位 ArtGen 继续抛光（非阻塞） |
+| P1 | 姿态 ArtGen 继续抛光（非阻塞）；摊位状态切换已有多帧 FX（`GOAL_G8_C05_STALL_FX_EVIDENCE`） |
 | P2 | tomyud1 MCP 截图证据（**全户外 + 多室内**；C62/C58 FX 冒烟 PASS；仍不代替 §7） |
 
 ---
@@ -200,6 +200,7 @@
 - [`GOAL_G8_DISTRICT_FX_EVIDENCE.md`](GOAL_G8_DISTRICT_FX_EVIDENCE.md) — 全区 DistrictInteract 多帧 FX（复用 C58 sheets）  
 - [`GOAL_G8_C59_C61_FX_EVIDENCE.md`](GOAL_G8_C59_C61_FX_EVIDENCE.md) — C59 清除碎屑 FX + C61 `mcp_open` 箱盖  
 - [`GOAL_G8_C60_C61_FULL_EVIDENCE.md`](GOAL_G8_C60_C61_FULL_EVIDENCE.md) — C60 解锁 FX×3 + C61 五站点全开（截图+smoke）  
+- [`GOAL_G8_C05_STALL_FX_EVIDENCE.md`](GOAL_G8_C05_STALL_FX_EVIDENCE.md) — C05 摊位状态切换多帧 FX  
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 17 groups GREEN  

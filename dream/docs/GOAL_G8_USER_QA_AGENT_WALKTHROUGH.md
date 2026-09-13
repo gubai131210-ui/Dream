@@ -25,6 +25,7 @@
 | C61 well chest | `HiddenChests_well.mcp_open` | ChestLidFX frames=4; `g8_c61_well_chest_open.png` |
 | C60 unlock FX | `mcp_unlock` door/log/boulder | board_rustle / leaf_fall / bench_dust; `g8_c60_unlock_fx_door.png` |
 | C61 all sites | tree/waterfall/cave/island `mcp_open` + shots | 5/5 lids; smoke `g8_c61_chests_smoke.gd` |
+| C05 stall cycle | `MarketStall.mcp_cycle` | crate_lid/board_rustle/leaf_fall; `g8_c05_stall_cycle_fx.png` |
 | lighthouse / hill_farm / lake_house | runtime idle + DistrictInteractKit | shots `g8_walkthrough_lighthouse_idle` / `hill_farm_idle` / `lake_house_idle` |
 | §7 checklist UI | `user_qa_checklist.tscn` | **21** rows（户外全表+室内抽样）；复制「§7 已勾」；`g8_user_qa_checklist_v2.png` |
 | portals D/E | prior `g8_wave_de_portal_smoke` + live enter | PASS (separate evidence) |

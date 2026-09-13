@@ -23,7 +23,7 @@
 | C58 FX | well/crate/tree/bird oneshots + pause-on-end + MCP live ×4 | smoke held_ok；`g8_c58_*_live.png` |
 | C59 Breakables | stake/weed sprites + `mcp_clear` + **clear FX** | `GOAL_G8_C59_BREAKABLES_EVIDENCE.md`；`GOAL_G8_C59_C61_FX_EVIDENCE.md` |
 | C61 Hidden chests | coin_chest + lid + `mcp_open` **5/5 sites** | `GOAL_G8_C60_C61_FULL_EVIDENCE.md`；well + tree/waterfall/cave/island MCP |
-| C60 Gates | locked_door unlock soften + fallen log + **unlock FX×3** | `mcp_unlock`；`GOAL_G8_C60_C61_FULL_EVIDENCE.md` |
+| C05 stall cycle FX | state tap → crate_lid / board_rustle / leaf_fall | `GOAL_G8_C05_STALL_FX_EVIDENCE.md`；`mcp_cycle` |
 
 ## Automated gates (must stay GREEN)
 

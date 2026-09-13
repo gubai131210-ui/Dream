@@ -82,7 +82,107 @@ func cycle_next() -> State:
 		idx = 0
 	idx = (idx + 1) % STATE_ORDER.size()
 	apply_state(STATE_ORDER[idx])
+	_play_cycle_fx()
 	return state
+
+
+func mcp_cycle() -> Dictionary:
+	## Sync probe: advance stall state once and report FX.
+	var before := state_name()
+	cycle_next()
+	var fx_name := ""
+	var fx_playing := false
+	var fx_frames := 0
+	var visual := get_node_or_null("Visual") as Node
+	if visual:
+		for c in visual.get_children():
+			if c is AnimatedSprite2D and str(c.name).begins_with("FX_"):
+				var anim := c as AnimatedSprite2D
+				fx_name = str(anim.name)
+				fx_playing = anim.is_playing()
+				var sf := anim.sprite_frames
+				if sf != null and sf.has_animation("oneshot"):
+					fx_frames = sf.get_frame_count("oneshot")
+				break
+	return {
+		"ok": true,
+		"stall_id": stall_id,
+		"from": before,
+		"to": state_name(),
+		"fx": fx_name,
+		"fx_playing": fx_playing,
+		"fx_frames": fx_frames,
+	}
+
+
+func _play_cycle_fx() -> void:
+	## Short multi-frame tap feedback when cycling stall states (C05).
+	var dir := "res://assets/sprites/fx"
+	var prefix := "board_rustle"
+	var local := Vector2(0, -22)
+	var fps := 10.0
+	match state:
+		State.OPEN, State.SETUP, State.SOLD_OUT:
+			dir = "res://assets/sprites/props"
+			prefix = "crate_lid"
+			local = Vector2(10, -14)
+			fps = 8.0
+		State.CLOSED:
+			dir = "res://assets/sprites/fx"
+			prefix = "leaf_fall"
+			local = Vector2(0, -12)
+			fps = 12.0
+		_:
+			pass
+	var visual := get_node_or_null("Visual") as Node2D
+	if visual == null:
+		return
+	var prior := visual.get_node_or_null("FX_%s" % prefix)
+	if prior != null:
+		prior.free()
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("oneshot")
+	frames.set_animation_loop("oneshot", false)
+	frames.set_animation_speed("oneshot", fps)
+	var n := 0
+	for i in range(4):
+		var path := "%s/%s_%02d.png" % [dir, prefix, i]
+		var tex: Texture2D = null
+		if ResourceLoader.exists(path):
+			tex = load(path) as Texture2D
+		if tex == null:
+			var abs_path := ProjectSettings.globalize_path(path)
+			if FileAccess.file_exists(abs_path):
+				var img := Image.load_from_file(abs_path)
+				if img != null:
+					tex = ImageTexture.create_from_image(img)
+		if tex == null:
+			continue
+		frames.add_frame("oneshot", tex)
+		n += 1
+	if n == 0:
+		return
+	var anim := AnimatedSprite2D.new()
+	anim.name = "FX_%s" % prefix
+	anim.sprite_frames = frames
+	anim.position = local
+	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	anim.z_index = 10
+	anim.centered = true
+	visual.add_child(anim)
+	anim.play("oneshot")
+	anim.animation_finished.connect(func() -> void:
+		if not is_instance_valid(anim):
+			return
+		anim.pause()
+		var sf2 := anim.sprite_frames
+		if sf2 != null and sf2.has_animation("oneshot"):
+			var last := sf2.get_frame_count("oneshot") - 1
+			if last >= 0:
+				anim.frame = last
+	)
 
 
 func apply_state(next: State) -> void:
