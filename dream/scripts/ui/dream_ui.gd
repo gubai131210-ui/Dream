@@ -223,15 +223,22 @@ static func _add_user_qa_brief(ui: CanvasLayer) -> void:
 	card.anchor_right = 1.0
 	card.anchor_top = 0.0
 	card.anchor_bottom = 0.0
-	card.offset_left = -340.0
+	card.offset_left = -360.0
 	card.offset_right = -22.0
 	card.offset_top = 120.0
-	card.offset_bottom = 248.0
+	card.offset_bottom = 120.0
+	card.custom_minimum_size = Vector2(330, 0)
 	card.add_theme_stylebox_override("panel", _panel_style(Color("#243229f0"), GOLD, 2, 10, 8))
 	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 10)
+	margin.add_theme_constant_override("margin_right", 10)
+	margin.add_theme_constant_override("margin_top", 8)
+	margin.add_theme_constant_override("margin_bottom", 8)
+	card.add_child(margin)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 4)
-	card.add_child(v)
+	margin.add_child(v)
 	var head := Label.new()
 	head.text = "§7 手测 · %s" % str(brief.get("title", ""))
 	head.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
