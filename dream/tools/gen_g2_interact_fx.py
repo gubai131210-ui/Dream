@@ -84,11 +84,53 @@ def bird_peck() -> None:
 		save(im, FX / f"bird_peck_{i:02d}.png")
 
 
+def board_rustle() -> None:
+	# 32x32 — paper corner lifts on notice/sign; fixed canvas, pivot ~center.
+	for i in range(4):
+		im = blank(32, 32)
+		d = ImageDraw.Draw(im)
+		# board plate (static anchor — not part of motion body beyond slight shade)
+		d.rectangle([6, 8, 25, 26], fill=(150, 118, 70, 255))
+		d.rectangle([8, 10, 23, 24], fill=(210, 200, 165, 255))
+		# paper flap lifts up-right
+		lift = i * 2
+		d.polygon(
+			[
+				(18, 12 - lift // 2),
+				(26, 10 - lift),
+				(26, 18 - lift // 2),
+				(20, 18),
+			],
+			fill=(235, 225, 190, 255),
+		)
+		if i >= 2:
+			d.line([20, 14, 25, 12 - lift // 2], fill=(120, 100, 70, 200))
+		save(im, FX / f"board_rustle_{i:02d}.png")
+
+
+def bench_dust() -> None:
+	# 32x24 — soft dust puff under seat; bottoms aligned.
+	for i in range(4):
+		im = blank(32, 24)
+		d = ImageDraw.Draw(im)
+		# rising motes
+		base = [
+			(10, 18 - i),
+			(16, 16 - i * 2),
+			(22, 18 - i),
+			(13, 14 - i),
+		]
+		for j, (x, y) in enumerate(base):
+			r = 1 + (i + j) % 2
+			a = 180 - i * 30
+			d.ellipse([x, y, x + r * 2, y + r * 2], fill=(190, 175, 140, max(40, a)))
+		save(im, FX / f"bench_dust_{i:02d}.png")
+
+
 def main() -> None:
-	leaf_fall()
-	well_rope()
-	crate_lid()
-	bird_peck()
+	# Append-only helpers: do not rewrite shipped leaf/well/crate/bird by default.
+	board_rustle()
+	bench_dust()
 
 
 if __name__ == "__main__":

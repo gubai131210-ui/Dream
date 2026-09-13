@@ -217,12 +217,12 @@
 
 | 区 | 场景 | 交互/门面要点 | Agent MCP | 用户勾选 |
 | --- | --- | --- | --- | --- |
-| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、工作环姿态 | [x] idle+井/灯；activate；worldsys；anim FX；**C53 按钮常显**；浴场 portal enter PASS；walkthrough crate/bird +「互动」prompt | [ ] |
+| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、工作环姿态 | [x] idle+井/灯；activate；worldsys；anim FX；**C53 按钮常显**；浴场 portal enter PASS；walkthrough crate/bird/bench/board +「互动」prompt | [ ] |
 | 市集 | `market_street` | 木棚摊位、DistrictInteract | [x] `g8_market_idle.png` 木棚可见 | [ ] |
 | 农田 | `farmland` | 垄线、栅栏、DistrictInteract | [x] `g8_farmland_idle.png`；farmer 白底盘已替换 | [ ] |
 | 住宅 | `village_residential` | 门阶/拱门、DistrictInteract | [x] `g8_residential_idle.png` | [ ] |
 | 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [x] `g8_farm_residential_idle.png` | [ ] |
-| 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract；C62 树洞密道 | [x] idle + landmarks；**C62** smoke PASS；walkthrough portal+facade `g8_walkthrough_c62_portal.png` | [ ] |
+| 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract；C62 树洞密道 | [x] idle + landmarks；**C62** smoke PASS；walkthrough portal+facade + `g8_walkthrough_forest_entrance_idle` | [ ] |
 | 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] river+lake ready 截图；`g8_c22_fish_cage_smoke` river+lake **ok=6 PASS**；walkthrough 湖笼 `mcp_cycle_to_ready` | [ ] |
 | 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 + 瀑水循环 | [x] idle + **`g8_waterfall_anim.png`**；walkthrough `g8_walkthrough_lighthouse_idle` / `hill_farm_idle` | [ ] |
 | 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png`；walkthrough `g8_walkthrough_lake_house_idle` | [ ] |

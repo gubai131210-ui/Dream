@@ -219,6 +219,7 @@ func _handle_interact(interact_id: String, title: String, desc: String) -> void:
 		"sit_bench":
 			body = "长椅微微晃动，广场闲谈声近了。"
 			_pulse_visual(hs)
+			_play_fx_clip(hs, "res://assets/sprites/fx", "bench_dust", 4, Vector2(0, 6), 10.0)
 		"crate_search":
 			body = "木箱里只有干草与空瓶。"
 			_pulse_visual(hs)
@@ -226,9 +227,11 @@ func _handle_interact(interact_id: String, title: String, desc: String) -> void:
 		"notice_board":
 			body = "告示：周末秋收市集，广场张灯。"
 			_pulse_visual(hs)
+			_play_fx_clip(hs, "res://assets/sprites/fx", "board_rustle", 4, Vector2(0, -20), 10.0)
 		"read_sign":
 			body = "路牌：东市集 · 西农舍 · 北教堂。"
 			_pulse_visual(hs)
+			_play_fx_clip(hs, "res://assets/sprites/fx", "board_rustle", 4, Vector2(0, -18), 10.0)
 	if _info:
 		_info.show_info(title, body)
 	interacted.emit(interact_id)
@@ -248,6 +251,10 @@ func mcp_spawn_c58_fx(interact_id: String) -> Dictionary:
 			_spawn_leaf_burst(hs)
 		"feed_critter":
 			_spawn_grain_burst(hs)
+		"sit_bench":
+			_play_fx_clip(hs, "res://assets/sprites/fx", "bench_dust", 4, Vector2(0, 6), 10.0)
+		"notice_board", "read_sign":
+			_play_fx_clip(hs, "res://assets/sprites/fx", "board_rustle", 4, Vector2(0, -20), 10.0)
 		_:
 			return {"ok": false, "reason": "unsupported_id", "id": interact_id}
 	var visual := hs.get_node_or_null("Visual") as Node
@@ -263,6 +270,10 @@ func mcp_spawn_c58_fx(interact_id: String) -> Dictionary:
 			fx_name = "FX_leaf_fall"
 		"feed_critter":
 			fx_name = "FX_bird_peck"
+		"sit_bench":
+			fx_name = "FX_bench_dust"
+		"notice_board", "read_sign":
+			fx_name = "FX_board_rustle"
 	var fx := visual.get_node_or_null(fx_name) as AnimatedSprite2D
 	if fx == null:
 		return {"ok": false, "reason": "fx_not_spawned", "id": interact_id, "visual_children": visual.get_child_count()}

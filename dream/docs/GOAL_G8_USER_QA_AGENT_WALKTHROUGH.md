@@ -9,6 +9,8 @@
 | square C58 | `mcp_spawn_c58_fx(well_water)` | ok, FX_well_rope frames=4 playing |
 | square C58 | `mcp_spawn_c58_fx(crate_search)` | ok, FX_crate_lid frames=4 playing |
 | square C58 | `mcp_spawn_c58_fx(feed_critter)` | ok, FX_bird_peck frames=4 playing |
+| square C58 | `mcp_spawn_c58_fx(sit_bench)` | ok, FX_bench_dust frames=4 playing |
+| square C58 | `mcp_spawn_c58_fx(notice_board)` / `read_sign` | ok, FX_board_rustle frames=4; `g8_c58_board_rustle_live.png` |
 | square outdoor | hover `WorldHS_木箱` → AreaInteractHost | target=crate; `ProximityPrompt` text「互动」visible; `g8_walkthrough_outdoor_prompt.png` |
 | square C59 | `BreakablesKit.mcp_clear(weed)` | ok, cleared=1 |
 | square C60 | `ProgressGates.mcp_unlock(locked_door)` | ok, sprite_alpha≈0.45 |

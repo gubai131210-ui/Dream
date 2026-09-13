@@ -45,6 +45,8 @@ def main() -> int:
 		"assets/sprites/fx/fish_ring_00.png",
 		"assets/sprites/fx/leaf_fall_00.png",
 		"assets/sprites/fx/bird_peck_00.png",
+		"assets/sprites/fx/board_rustle_00.png",
+		"assets/sprites/fx/bench_dust_00.png",
 		"assets/sprites/fx/window_light_shaft_00.png",
 		"assets/sprites/interior/props/drawer_open_00.png",
 		"assets/sprites/props/chest_lid_00.png",
