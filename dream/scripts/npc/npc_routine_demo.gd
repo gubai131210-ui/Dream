@@ -223,14 +223,8 @@ func _on_life_pressed() -> void:
 func _spawn_or_replace_actor(entry: Dictionary) -> void:
 	if _ysort == null:
 		return
-	if _demo_actor != null and is_instance_valid(_demo_actor):
-		_demo_actor.name = "NpcRingDemoActor_dying"
-		_demo_actor.queue_free()
-		_demo_actor = null
-	var old := _ysort.get_node_or_null(DEMO_ACTOR_NAME)
-	if old:
-		old.name = "NpcRingDemoActor_dying"
-		old.queue_free()
+	_clear_demo_actors()
+	_demo_actor = null
 
 	var route: Array[Vector2] = []
 	for p in entry.get("waypoints", []):
@@ -255,6 +249,19 @@ func _spawn_or_replace_actor(entry: Dictionary) -> void:
 			_info.call("show_info", h.title, h.description)
 		)
 	_demo_actor = actor
+
+
+func _clear_demo_actors() -> void:
+	## Immediate free so rapid K/L never leaves NpcRingDemoActor_dying stubs.
+	if _ysort == null:
+		return
+	var doomed: Array[Node] = []
+	for child in _ysort.get_children():
+		var n := str(child.name)
+		if n == DEMO_ACTOR_NAME or n.begins_with("NpcRingDemoActor_dying"):
+			doomed.append(child)
+	for node in doomed:
+		node.free()
 
 
 func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
@@ -286,7 +293,7 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 			"eat":
 				prop_path = "res://assets/sprites/props/bowl_00.png"
 			"sleep":
-				prop_path = "res://assets/sprites/props/hay_00.png"
+				prop_path = "res://assets/sprites/props/pillow_00.png"
 			"read":
 				prop_path = "res://assets/sprites/props/book_open_00.png"
 			"laundry":

@@ -118,8 +118,14 @@ def main() -> int:
         raise AssertionError("C54 read cue should use book_open_00 (not flower_bed)")
     if 'bowl_00.png' not in routine:
         raise AssertionError("C54 eat cue should use bowl_00 (not stove)")
+    if 'pillow_00.png' not in routine:
+        raise AssertionError("C54 sleep cue should use pillow_00 (not hay)")
+    if not (ROOT / "assets" / "sprites" / "props" / "pillow_00.png").is_file():
+        raise AssertionError("props/pillow_00.png missing")
     if "_clear_work_pose_cues" not in routine:
         raise AssertionError("WorkPoseCue must clear dying stubs via _clear_work_pose_cues")
+    if "_clear_demo_actors" not in routine:
+        raise AssertionError("NpcRingDemoActor must clear dying stubs via _clear_demo_actors")
     if not (ROOT / "assets" / "sprites" / "props" / "book_open_00.png").is_file():
         raise AssertionError("props/book_open_00.png missing")
     if not (ROOT / "assets" / "sprites" / "props" / "bowl_00.png").is_file():
