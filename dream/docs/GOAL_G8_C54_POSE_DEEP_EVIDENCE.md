@@ -21,7 +21,7 @@
 
 Shots:
 
-- `docs/evidence/g8_c53_work_pose_deep.png`
-- `docs/evidence/g8_c54_life_pose_read_deep.png`
+- `docs/evidence/g8_c53_work_pose_deep.png` — 工作:打铁环 + deep-paint smith cue  
+- `docs/evidence/g8_c54_life_pose_read_deep.png` — 生活:阅读 + book_open cue  
 
 User §7 still open (K/L hand-feel).
