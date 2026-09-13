@@ -37,6 +37,10 @@ func _ready() -> void:
 	_dik.attach_to(self, "station", top_bar)
 	# Outdoor proximity 「互动」parity with interiors.
 	AreaInteractHost.attach_to(self, ysort_root, camera)
+	StationTrainRuntime.attach_to(self, ysort_root)
+	var board := ysort_root.find_child("行车牌", true, false)
+	if board:
+		_wire_hotspots(board)
 
 func _wire_portals(node: Node) -> void:
 	if node is Area2D and (node as Area2D).has_meta("scene_path"):
@@ -44,6 +48,9 @@ func _wire_portals(node: Node) -> void:
 		area.input_event.connect(func(_vp: Node, event: InputEvent, _si: int) -> void:
 			if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 				var path: String = str(area.get_meta("scene_path"))
+				if path == SceneRouter.C36_TRAIN_CAR_PATH and not TrainService.can_board_car():
+					info.show_info("车厢门", TrainService.board_hint())
+					return
 				if not path.is_empty():
 					SceneRouter.change_to(get_tree(), path)
 		)
@@ -68,4 +75,17 @@ func _on_hotspot(hotspot: InteractableHotspot) -> void:
 	var host := get_node_or_null(AreaInteractHost.NODE_NAME) as AreaInteractHost
 	if host:
 		host.sync_click(hotspot)
+	var title := hotspot.title
+	if "行车牌" in title or "售票" in title or "车票" in title:
+		var buy := TrainService.try_buy_ticket_from_booth()
+		var body := TrainService.timetable_text() + "\n\n" + str(buy.get("msg", ""))
+		info.show_info(title, body)
+		return
+	if "站长" in title or "站务" in title:
+		var favor := TrainService.try_favor_ticket()
+		info.show_info(title, hotspot.description + "\n\n" + str(favor.get("msg", "")))
+		return
+	if "车厢" in title or "火车" in title:
+		info.show_info(title, TrainService.board_hint())
+		return
 	info.show_info(hotspot.title, hotspot.description)

@@ -436,5 +436,15 @@ func _spawn_portals(ysort: Node2D) -> void:
 		Vector2(640, 320),
 		Vector2(120, 56)
 	)
-	# Wave F
-	craft.make_portal(ysort, "进入车厢", SceneRouter.C36_TRAIN_CAR_PATH, Vector2(900, 360), Vector2(110, 52))
+	# Wave F — enter coach only while docked with a ticket (runtime gates clicks).
+	craft.make_portal(ysort, "进入车厢", SceneRouter.C36_TRAIN_CAR_PATH, Vector2(820, 400), Vector2(120, 56))
+	# Outdoor ticket booth cue near platform (live TrainService).
+	var booth := craft.make_hotspot(
+		ysort,
+		"站台售票窗",
+		"停靠时才卖票；车次少，余座更少。",
+		Vector2(560, 360),
+		Vector2(80, 56)
+	)
+	if ResourceLoader.exists("res://assets/sprites/props/train_ticket_00.png"):
+		craft.attach_hotspot_prop(booth, "res://assets/sprites/props/train_ticket_00.png", 1.1)

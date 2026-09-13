@@ -51,6 +51,15 @@ func _frame_room(room_rect: Rect2) -> void:
 	# Wave F WorldSys C62 — append-only secret chain hop (e.g. c16_cave_entry → waterfall).
 	# Portal click is wired inside SecretPassageChain (avoid double _wire_portals).
 	SecretPassageChain.try_attach_interior(self)
+	if profile_id == "c36_train_car":
+		TrainCarWindowRide.attach_to(self)
+		# Auto-depart shortly after boarding with a ticket so the ride is visible.
+		if TrainService.can_board_car() or TrainService.has_ticket_for_active():
+			var t := get_tree().create_timer(2.8)
+			t.timeout.connect(func() -> void:
+				if TrainService.get_state() == TrainService.State.DOCKED and TrainService.has_ticket_for_active():
+					TrainService.request_early_depart()
+			)
 
 
 func _process(_delta: float) -> void:
@@ -69,7 +78,11 @@ func _wire_portals(node: Node) -> void:
 		var area := node as Area2D
 		area.input_event.connect(func(_vp: Node, event: InputEvent, _si: int) -> void:
 			if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-				SceneRouter.change_to(get_tree(), str(area.get_meta("scene_path")))
+				var path: String = str(area.get_meta("scene_path"))
+				if path == SceneRouter.C36_TRAIN_CAR_PATH and not TrainService.can_board_car():
+					info.show_info("车厢门", TrainService.board_hint())
+					return
+				SceneRouter.change_to(get_tree(), path)
 		)
 	for child in node.get_children():
 		_wire_portals(child)
@@ -77,6 +90,18 @@ func _wire_portals(node: Node) -> void:
 
 func _on_hotspot(hotspot: InteractableHotspot) -> void:
 	_director.sync_click(hotspot)
+	var title := hotspot.title
+	if profile_id == "c11_station" and ("售票" in title or "时刻表" in title or "行车" in title or "票" in title):
+		var buy := TrainService.try_buy_ticket_from_booth()
+		info.show_info(title, TrainService.timetable_text() + "\n\n" + str(buy.get("msg", "")))
+		return
+	if profile_id == "c11_station" and ("站长" in title):
+		var favor := TrainService.try_favor_ticket()
+		info.show_info(title, hotspot.description + "\n\n" + str(favor.get("msg", "")))
+		return
+	if profile_id == "c36_train_car":
+		info.show_info(title, hotspot.description + "\n\n" + TrainService.board_hint())
+		return
 	info.show_info(hotspot.title, hotspot.description)
 
 
