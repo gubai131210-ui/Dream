@@ -215,6 +215,7 @@
 - [`GOAL_G8_USER_QA_LOAD_SMOKE_EVIDENCE.md`](GOAL_G8_USER_QA_LOAD_SMOKE_EVIDENCE.md) — §7 21 场景加载冒烟 21/21  
 - [`GOAL_G8_PILLOW_LAMP_HINT_EVIDENCE.md`](GOAL_G8_PILLOW_LAMP_HINT_EVIDENCE.md) — C54 pillow 深绘 + 白天路灯按 N 提示  
 - [`GOAL_G8_LAMP_STICKY_NIGHT_EVIDENCE.md`](GOAL_G8_LAMP_STICKY_NIGHT_EVIDENCE.md) — 点灯切粘性夜间观灯（无竞态 Timer）  
+- [`GOAL_G8_LIFE_POSE_HOLD_EVIDENCE.md`](GOAL_G8_LIFE_POSE_HOLD_EVIDENCE.md) — `mcp_force_life_pose` 持握睡眠枕头近景  
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — **26 groups** GREEN  

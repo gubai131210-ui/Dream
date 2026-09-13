@@ -393,24 +393,6 @@ func _play_fx_clip(hs: Node, dir_path: String, prefix: String, frame_count: int,
 
 func _spawn_leaf_burst(hs: Node) -> void:
 	_play_fx_clip(hs, "res://assets/sprites/fx", "leaf_fall", 4, Vector2(0, -18), 12.0)
-	# Keep a couple of drifting diamonds as secondary dust if clip missing.
-	if hs == null or _root == null:
-		return
-	if ResourceLoader.exists("res://assets/sprites/fx/leaf_fall_00.png"):
-		return
-	for i in range(5):
-		var leaf := Polygon2D.new()
-		leaf.color = Color(0.45, 0.75, 0.35, 0.95)
-		leaf.polygon = PackedVector2Array([
-			Vector2(0, -4), Vector2(3, 0), Vector2(0, 4), Vector2(-3, 0),
-		])
-		leaf.position = hs.global_position + Vector2(randf_range(-8, 8), -20)
-		_root.add_child(leaf)
-		var tw := leaf.create_tween()
-		var end := leaf.position + Vector2(randf_range(-24, 24), randf_range(28, 48))
-		tw.tween_property(leaf, "position", end, 0.55).set_trans(Tween.TRANS_SINE)
-		tw.parallel().tween_property(leaf, "modulate:a", 0.0, 0.55)
-		tw.tween_callback(leaf.queue_free)
 
 
 func _spawn_grain_burst(hs: Node) -> void:
@@ -422,20 +404,3 @@ func _spawn_grain_burst(hs: Node) -> void:
 			var fx := visual.get_node_or_null("FX_bird_peck") as AnimatedSprite2D
 			if fx:
 				fx.scale = Vector2(1.75, 1.75)
-	if hs == null or _root == null:
-		return
-	if ResourceLoader.exists("res://assets/sprites/fx/bird_peck_00.png"):
-		return
-	for i in range(6):
-		var grain := Polygon2D.new()
-		grain.color = Color(0.9, 0.78, 0.4, 0.95)
-		grain.polygon = PackedVector2Array([
-			Vector2(-2, -1), Vector2(2, -1), Vector2(2, 1), Vector2(-2, 1),
-		])
-		grain.position = hs.global_position + Vector2(randf_range(-6, 6), -4)
-		_root.add_child(grain)
-		var tw := grain.create_tween()
-		var end := grain.position + Vector2(randf_range(-18, 18), randf_range(8, 22))
-		tw.tween_property(grain, "position", end, 0.4)
-		tw.parallel().tween_property(grain, "modulate:a", 0.0, 0.4)
-		tw.tween_callback(grain.queue_free)

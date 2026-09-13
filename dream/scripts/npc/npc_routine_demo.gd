@@ -130,6 +130,42 @@ func current_life_id() -> String:
 	return str(states[clampi(_life_idx, 0, states.size() - 1)].get("id", ""))
 
 
+## QA / MCP: force a life pose by id and hold cue (no auto fade) for screenshots.
+func mcp_force_life_pose(life_id: String) -> Dictionary:
+	var states := NpcRoutineRings.life_demo_states(host_key)
+	if states.is_empty():
+		return {"ok": false, "reason": "no_life_states"}
+	var idx := -1
+	for i in range(states.size()):
+		if str(states[i].get("id", "")) == life_id:
+			idx = i
+			break
+	if idx < 0:
+		return {"ok": false, "reason": "unknown_id", "id": life_id}
+	_showing_life = true
+	_life_idx = idx
+	var entry: Dictionary = states[idx]
+	_spawn_or_replace_actor(entry)
+	_spawn_work_pose_cue("life", entry, true)
+	_update_status("life", entry)
+	_refresh_button_labels()
+	var cue := _ysort.get_node_or_null("WorkPoseCue") if _ysort else null
+	var prop := cue.get_node_or_null("PropSprite") as Sprite2D if cue else null
+	var tex_path := ""
+	if prop and prop.texture:
+		tex_path = str(prop.texture.resource_path)
+	return {
+		"ok": cue != null,
+		"id": life_id,
+		"cue": cue != null,
+		"prop": prop != null,
+		"prop_path": tex_path,
+		"prop_scale": prop.scale.x if prop else 0.0,
+		"cue_pos": cue.global_position if cue else Vector2.ZERO,
+		"dying": 0,
+	}
+
+
 ## QA / MCP: force spawn pose cue and report id + presence.
 func debug_force_work_pose() -> String:
 	var rings := NpcRoutineRings.work_demo_waypoints(host_key)
@@ -264,7 +300,7 @@ func _clear_demo_actors() -> void:
 		node.free()
 
 
-func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
+func _spawn_work_pose_cue(kind: String, entry: Dictionary, hold_for_mcp: bool = false) -> void:
 	## G7/G8: occupational or life pose sheet flash (4 frames) + prop cue near demo actor.
 	if _ysort == null:
 		return
@@ -319,6 +355,8 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 		elif kind == "life" and ring_id in ["eat", "read"]:
 			prop_scale = 0.42
 		WorldSpawnUtil.attach_prop_sprite(cue, prop_path, prop_scale)
+	if hold_for_mcp:
+		return
 	# Hold long enough for player QA / MCP round-trips; next cycle replaces this node.
 	var tw := cue.create_tween()
 	tw.tween_property(cue, "modulate:a", 0.35, 0.12)

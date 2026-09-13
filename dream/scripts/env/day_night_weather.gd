@@ -30,11 +30,6 @@ var _veil: ColorRect
 var _rain: CPUParticles2D
 var _btn_night: Button
 var _btn_weather: Button
-var _dusk_pulse_token: int = 0
-var _dusk_pulse_tween: Tween
-var _dusk_hold_until_msec: int = 0
-var _dusk_hold_color: Color = Color(0.50, 0.54, 0.68, 1.0)
-var _restore_timer: Timer
 
 
 static func find_on(host: Node) -> DayNightWeather:
@@ -86,7 +81,6 @@ func mount_top_bar(top_bar: Control) -> void:
 
 
 func toggle_night() -> void:
-	_cancel_dusk_pulse()
 	time_grade = TimeGrade.DAY if time_grade == TimeGrade.NIGHT else TimeGrade.NIGHT
 	_apply_visuals()
 	state_changed.emit(time_grade, weather)
@@ -105,7 +99,6 @@ func cycle_weather() -> void:
 
 
 func set_time_grade(grade: TimeGrade) -> void:
-	_cancel_dusk_pulse()
 	time_grade = grade
 	_apply_visuals()
 	state_changed.emit(time_grade, weather)
@@ -119,7 +112,6 @@ func set_weather(kind: WeatherKind) -> void:
 
 func mcp_set_night(on: bool) -> Dictionary:
 	## Sync MCP probe: force day/night grade for lamp-glow / Env-H evidence.
-	_cancel_dusk_pulse()
 	set_time_grade(TimeGrade.NIGHT if on else TimeGrade.DAY)
 	return {
 		"ok": true,
@@ -163,19 +155,6 @@ func _live_modulate() -> CanvasModulate:
 			if child is CanvasModulate:
 				return child as CanvasModulate
 	return _modulate
-
-
-func _cancel_dusk_pulse() -> void:
-	_dusk_pulse_token += 1
-	_dusk_hold_until_msec = 0
-	set_process(false)
-	if _restore_timer != null and is_instance_valid(_restore_timer):
-		_restore_timer.stop()
-		_restore_timer.queue_free()
-	_restore_timer = null
-	if _dusk_pulse_tween and _dusk_pulse_tween.is_valid():
-		_dusk_pulse_tween.kill()
-	_dusk_pulse_tween = null
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -270,9 +249,6 @@ func _apply_visuals() -> void:
 		if time_grade == TimeGrade.NIGHT:
 			# Night grade over baseline (keeps forest canopy relative cool if present).
 			mod.color = _day_baseline * night_color
-		elif Time.get_ticks_msec() < _dusk_hold_until_msec:
-			# Keep lamp dusk preview even if something re-applies day visuals.
-			mod.color = _day_baseline * _dusk_hold_color
 		else:
 			mod.color = _day_baseline
 	if _veil:

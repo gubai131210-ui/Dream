@@ -8,7 +8,7 @@ const SAVE_PATH := "user://goal_user_qa.cfg"
 ## Mirrors GOAL_INTERACT_COMPLETE §7 outdoor rows + indoor sample rows (full user gate).
 ## expect = pass criteria shown under hint (hand-feel only; Agent MCP never auto-checks).
 const ITEMS := [
-	{"id": "square", "group": "户外", "title": "广场 C58–C60 / K·L姿态 / 门脸", "hint": "点井/树/箱/灯/喂鸟；N夜间看灯晕；桩草；锁门；K工作；L生活；「互动」", "expect": "通过：多帧 FX 可见；夜间灯开关；K/L 姿态无卡死", "path": SceneRouter.SQUARE_PATH},
+	{"id": "square", "group": "户外", "title": "广场 C58–C60 / K·L姿态 / 门脸", "hint": "点井/树/箱/灯/喂鸟；白天点灯会切夜间观灯（N 回白天）；桩草；锁门；K工作；L睡眠看枕头；「互动」", "expect": "通过：多帧 FX；点灯夜间粘性；L 睡眠枕头可见；K/L 无卡死", "path": SceneRouter.SQUARE_PATH},
 	{"id": "market", "group": "户外", "title": "市集摊位木棚", "hint": "默认木棚可见；点摊切换状态看 FX；可进市场后台/夜市", "expect": "通过：木棚非色块；摊位状态 FX；可进出后台", "path": SceneRouter.MARKET_PATH},
 	{"id": "farmland", "group": "户外", "title": "农田垄线/栅栏/农夫", "hint": "无白底盘；DistrictInteract；N 可用", "expect": "通过：垄线/栅栏精灵；农夫无白边盘", "path": SceneRouter.FARMLAND_PATH},
 	{"id": "residential", "group": "户外", "title": "住宅区门阶", "hint": "门阶/拱门；可进后院", "expect": "通过：门阶可辨；进出后院正常", "path": SceneRouter.RESIDENTIAL_PATH},
