@@ -18,7 +18,7 @@ const SITE_DEFS := {
 		"title": "瀑后宝箱",
 		"desc": "水帘后的石龛里有一只潮湿木箱。",
 		"host": "waterfall",
-		"pos": Vector2(700, 420),
+		"pos": Vector2(820, 700),
 		"loot": "找到瀑后宝箱：发光贝壳。",
 	},
 	"cave": {
@@ -39,7 +39,7 @@ const SITE_DEFS := {
 		"title": "岛岸宝箱",
 		"desc": "湖心岛渡口旁半埋的宝箱。",
 		"host": "lake",
-		"pos": Vector2(900, 620),
+		"pos": Vector2(700, 760),
 		"loot": "找到岛岸宝箱：潮汐玻璃珠。",
 	},
 }

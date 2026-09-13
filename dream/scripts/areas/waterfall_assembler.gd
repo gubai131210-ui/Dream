@@ -294,18 +294,19 @@ func _spawn_bridge_banks(ysort: Node2D, foot: Vector2) -> void:
 		right.name = "BridgeAbutmentR"
 		right.scale = Vector2(-0.95, 0.95)
 	var specs := [
-		{"i": 0, "pos": foot + Vector2(-150, -10), "s": 0.42, "z": 1},
-		{"i": 1, "pos": foot + Vector2(150, -5), "s": 0.4, "z": 1},
-		{"i": 3, "pos": foot + Vector2(-120, 55), "s": 0.36, "z": 2},
-		{"i": 5, "pos": foot + Vector2(125, 60), "s": 0.35, "z": 2},
-		{"i": 2, "pos": foot + Vector2(-70, 90), "s": 0.32, "z": 2},
-		{"i": 4, "pos": foot + Vector2(80, 95), "s": 0.32, "z": 2},
+		{"i": 0, "pos": foot + Vector2(-150, -10), "s": 0.34, "z": 1},
+		{"i": 1, "pos": foot + Vector2(150, -5), "s": 0.32, "z": 1},
+		{"i": 2, "pos": foot + Vector2(-120, 55), "s": 0.3, "z": 2},
+		{"i": 0, "pos": foot + Vector2(125, 60), "s": 0.3, "z": 2},
+		# South-rim bank rocks (was mid-pool); staggered feet, small scale.
+		{"i": 1, "pos": foot + Vector2(-110, 270), "s": 0.28, "z": 2},
+		{"i": 2, "pos": foot + Vector2(130, 290), "s": 0.3, "z": 2},
 	]
 	for s in specs:
-		var path := "res://assets/sprites/props/rock_%02d.png" % int(s["i"])
+		var path := RockCatalog.path(RockCatalog.FAMILY_RIVER_BANK, int(s["i"]))
 		var spr := _spawn_scaled_prop(ysort, path, s["pos"], float(s["s"]), int(s["z"]), 1, 1, true, false)
 		if spr:
-			spr.modulate = Color(0.82, 0.84, 0.86)
+			spr.modulate = Color(0.88, 0.92, 0.94)
 
 
 func _spawn_cliff_mouth(_ysort: Node2D, _foot: Vector2) -> Node2D:
@@ -393,13 +394,14 @@ func _spawn_splash_ring(ysort: Node2D, pos: Vector2) -> Node2D:
 func _spawn_scenic_props(ysort: Node2D, foot: Vector2) -> void:
 	## Bridge-scene props: reeds, sign, moss rocks, viewing bench.
 	var placements: Array[Dictionary] = [
+		# One bank reed kept; former mid-pool reeds → south rim / banks.
 		{"path": "res://assets/sprites/props/bridge_fall_reed_00.png", "pos": foot + Vector2(-130, 70), "s": 1.15, "z": 3, "sway": "reed"},
-		{"path": "res://assets/sprites/props/bridge_fall_reed_00.png", "pos": foot + Vector2(140, 80), "s": 1.05, "z": 3, "sway": "reed"},
-		{"path": "res://assets/sprites/props/bridge_fall_reed_00.png", "pos": foot + Vector2(-50, 100), "s": 0.9, "z": 3, "sway": "reed"},
+		{"path": "res://assets/sprites/props/bridge_fall_reed_00.png", "pos": foot + Vector2(-80, 300), "s": 1.05, "z": 3, "sway": "reed"},
+		{"path": "res://assets/sprites/props/bridge_fall_reed_00.png", "pos": foot + Vector2(80, 310), "s": 0.9, "z": 3, "sway": "reed"},
 		{"path": "res://assets/sprites/props/bridge_fall_sign_00.png", "pos": foot + Vector2(-170, 30), "s": 0.95, "z": 3, "sway": ""},
-		{"path": "res://assets/sprites/props/cascade_bench_00.png", "pos": foot + Vector2(170, 110), "s": 1.0, "z": 3, "sway": ""},
-		{"path": "res://assets/sprites/props/cascade_moss_rock_00.png", "pos": foot + Vector2(-95, 50), "s": 0.9, "z": 2, "sway": ""},
-		{"path": "res://assets/sprites/props/cascade_moss_rock_00.png", "pos": foot + Vector2(100, 55), "s": 0.85, "z": 2, "sway": ""},
+		{"path": "res://assets/sprites/props/cascade_bench_00.png", "pos": foot + Vector2(170, 340), "s": 1.0, "z": 3, "sway": ""},
+		{"path": "res://assets/sprites/props/cascade_moss_rock_00.png", "pos": foot + Vector2(-150, 80), "s": 0.9, "z": 2, "sway": ""},
+		{"path": "res://assets/sprites/props/cascade_moss_rock_00.png", "pos": foot + Vector2(150, 90), "s": 0.85, "z": 2, "sway": ""},
 		{"path": "res://assets/sprites/props/cascade_fern_00.png", "pos": foot + Vector2(-155, -5), "s": 1.0, "z": 3, "sway": "flower"},
 		{"path": "res://assets/sprites/props/cascade_fern_00.png", "pos": foot + Vector2(160, 5), "s": 0.95, "z": 3, "sway": "flower"},
 	]

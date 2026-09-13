@@ -104,31 +104,34 @@ func _spawn_sheds(ysort: Node2D) -> void:
 
 
 func _spawn_terrace_markers(ysort: Node2D) -> void:
-	# Sparse rock lip markers — no opaque ColorRect terrace walls; rocks ~0.35–0.45.
+	# Dry sandstone terrace lips — RockCatalog.terrace (not forest moss pack).
 	var rocks := [
-		{"path": "res://assets/sprites/props/rock_00.png", "pos": Vector2(300, 310), "s": 0.42},
-		{"path": "res://assets/sprites/props/rock_01.png", "pos": Vector2(520, 305), "s": 0.4},
-		{"path": "res://assets/sprites/props/rock_02.png", "pos": Vector2(740, 315), "s": 0.38},
-		{"path": "res://assets/sprites/props/rock_00.png", "pos": Vector2(260, 500), "s": 0.4},
-		{"path": "res://assets/sprites/props/rock_03.png", "pos": Vector2(480, 495), "s": 0.42},
-		{"path": "res://assets/sprites/props/rock_01.png", "pos": Vector2(700, 505), "s": 0.38},
-		{"path": "res://assets/sprites/props/rock_02.png", "pos": Vector2(220, 690), "s": 0.36},
-		{"path": "res://assets/sprites/props/rock_04.png", "pos": Vector2(440, 685), "s": 0.4},
-		{"path": "res://assets/sprites/props/rock_05.png", "pos": Vector2(660, 695), "s": 0.38},
+		{"i": 0, "pos": Vector2(300, 310)},
+		{"i": 1, "pos": Vector2(400, 310)},
+		{"i": 2, "pos": Vector2(740, 315)},
+		{"i": 0, "pos": Vector2(260, 500)},
+		{"i": 1, "pos": Vector2(480, 495)},
+		{"i": 2, "pos": Vector2(700, 505)},
+		{"i": 0, "pos": Vector2(220, 690)},
+		{"i": 1, "pos": Vector2(440, 685)},
+		{"i": 2, "pos": Vector2(660, 695)},
 	]
 	for r in rocks:
-		if not ResourceLoader.exists(r["path"]):
+		var path := RockCatalog.path(RockCatalog.FAMILY_TERRACE, int(r["i"]))
+		if not ResourceLoader.exists(path):
 			continue
+		var tex := RockCatalog.load_tex(RockCatalog.FAMILY_TERRACE, int(r["i"]))
 		var pos: Vector2 = r["pos"]
 		var cleared := craft.find_clear_near(pos, 1, 1, 5, true)
 		if cleared != Vector2.ZERO:
 			pos = cleared
 		var t := craft.world_to_tile(pos)
-		if craft.is_water(t.x, t.y):
+		if craft.is_water(t.x, t.y) or craft.is_blocked(t.x, t.y):
 			continue
 		craft.add_contact_shadow(ysort, pos, Vector2(10, 4))
-		var spr := craft.spawn_sprite(ysort, r["path"], pos)
-		var sc := float(r.get("s", 0.4))
+		var spr := craft.spawn_sprite(ysort, path, pos)
+		var sc := RockCatalog.scale_for_target_h(tex, RockCatalog.TARGET_H_TERRACE) if tex else 0.3
+		sc = clampf(sc, 0.28, 0.36)
 		spr.scale = Vector2(sc, sc)
 
 
@@ -164,7 +167,9 @@ func _spawn_trees(ysort: Node2D) -> void:
 		Vector2(1140, 220), Vector2(1160, 500), Vector2(1120, 780),
 	]
 	for i in ideals.size():
-		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
+		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % (i % 6)
+		if not ResourceLoader.exists(path):
+			path = "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
 		craft.spawn_tree(ysort, path, ideals[i], zone, 1, 1, 5, false)
 
 
@@ -185,7 +190,7 @@ func _spawn_portals(ysort: Node2D) -> void:
 	var hs_mine := craft.make_hotspot(
 		ysort, "矿洞口", "山坡切入的矿洞入口，通向入口层。", mine_mouth, Vector2(80, 64)
 	)
-	craft.attach_hotspot_prop(hs_mine, rock_path, 0.7)
+	craft.attach_hotspot_prop(hs_mine, rock_path, 0.35)
 	craft.make_portal(
 		ysort, "进入矿洞", SceneRouter.C17_MINE_PATH, mine_mouth + Vector2(0, 12), Vector2(96, 52)
 	)
@@ -194,7 +199,7 @@ func _spawn_portals(ysort: Node2D) -> void:
 	var hs_cave := craft.make_hotspot(
 		ysort, "山洞口", "东坡普通洞穴入口，通向入口层。", cave_mouth, Vector2(80, 64)
 	)
-	craft.attach_hotspot_prop(hs_cave, rock_path, 0.65)
+	craft.attach_hotspot_prop(hs_cave, rock_path, 0.35)
 	craft.make_portal(
 		ysort, "进入洞穴", SceneRouter.C16_CAVE_ENTRY_PATH, cave_mouth + Vector2(0, 12), Vector2(96, 52)
 	)

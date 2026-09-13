@@ -40,6 +40,7 @@ func assemble(root: Node2D) -> void:
 	_spawn_buildings(ysort)
 	_spawn_props(ysort)
 	_spawn_trees(ysort)
+	_spawn_se_pond_rock(ysort)
 	_spawn_actors(ysort)
 	_spawn_portals(ysort)
 	craft.spawn_water_overlay(ysort)
@@ -276,13 +277,14 @@ func _spawn_props(ysort: Node2D) -> void:
 			)
 
 	var yard_props := [
-		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(250, 300), "title": "木桶", "desc": "西宅院落木桶。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(500, 300), "title": "木箱", "desc": "中宅院落货箱。", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(760, 300), "title": "麻袋", "desc": "东宅院落麻袋。", "hw": 1, "hh": 1},
+		# y≥360: clear of north-row house façades (feet ~280).
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(250, 360), "title": "木桶", "desc": "西宅院落木桶。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(500, 360), "title": "木箱", "desc": "中宅院落货箱。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(760, 360), "title": "麻袋", "desc": "东宅院落麻袋。", "hw": 1, "hh": 1},
 		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(360, 200), "title": "长椅", "desc": "北巷旁歇脚长椅。", "hw": 1, "hh": 1},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(620, 480), "title": "路灯", "desc": "主巷路灯。", "hw": 1, "hh": 1, "allow_path": true},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(880, 480), "title": "路灯", "desc": "主巷东段路灯。", "hw": 1, "hh": 1, "allow_path": true},
-		{"path": "res://assets/sprites/props/well_1.png", "pos": Vector2(480, 280), "title": "院井", "desc": "宅院小井；可通下水道。", "hw": 1, "hh": 1, "sewer": true},
+		{"path": "res://assets/sprites/props/well_1.png", "pos": Vector2(560, 360), "title": "院井", "desc": "宅院小井；可通下水道。", "hw": 1, "hh": 1, "sewer": true},
 	]
 	for s in yard_props:
 		if not ResourceLoader.exists(s["path"]):

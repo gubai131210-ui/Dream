@@ -32,6 +32,20 @@ Native B11/AI props are often ~150–230 px tall. Unscaled they read as half-hou
 - **No tree crown/trunk AABB overlap** with rock AABB — nudge rock or tree ideals first.
 - Prefer smaller `rock_0x` variants for yard scatter; reserve large native rocks for scaled landmarks.
 
+### Rock biome families (`RockCatalog`)
+
+Paths: `assets/sprites/props/rocks/{family}/rock_XX.png`, with **fallback** to legacy `props/rock_0X.png` when a family file is missing.
+
+| Family | Use | Target height helper |
+|---|---|---|
+| `forest_moss` | Default / woodland yard (legacy `rock_00`–`rock_05`) | — |
+| `coastal` | Beach / lighthouse / dock banks | `TARGET_H_SHORE` (22) |
+| `terrace` | Hill-farm terrace lip markers | `TARGET_H_TERRACE` (24) |
+| `cobble` | Plaza / lane scatter pebbles | `TARGET_H_COBBLE` (16) |
+| `river_bank` | Stream / pond / waterfall shore clusters | `TARGET_H_SHORE` (22) |
+
+Use `RockCatalog.scale_for_target_h(tex, target_h)` instead of hard-coded giant scales. Terrace lips stay **0.28–0.32**; shore clusters target **18–28 px** tall.
+
 ## Crop bed visuals
 
 - **Forbidden:** opaque green/yellow `ColorRect` slabs covering beds (they hide animals/path/water).
@@ -67,6 +81,7 @@ Tool: `tools/crop_tree_bases.py`. Do not place separate giant `rock_01` under is
 
 ## Shore rocks (separate props)
 
-- Prefer `rock_02`–`rock_05` clusters at **target height 18–28 px** (scale from native ~180–200px).
+- Prefer `river_bank` / `forest_moss` `rock_02`–`rock_05` clusters at **target height 18–28 px** (scale from native ~180–200px via `RockCatalog.TARGET_H_SHORE`).
 - Always contact shadow; never overlap tree AABB.
-- Match district: farm/residential = small bank pebbles; wild water edges may keep island trees instead of fake rocks.
+- Match district: farm/residential = small bank pebbles (`cobble` / small moss); wild water edges may keep island trees instead of fake rocks.
+- Assemblers: resolve paths through `RockCatalog.path(family, index)` so missing family art falls back cleanly.

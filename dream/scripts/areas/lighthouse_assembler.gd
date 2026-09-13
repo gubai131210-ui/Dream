@@ -27,6 +27,7 @@ func assemble(root: Node2D) -> void:
 	craft.paint_water(water, ground)
 	craft.paint_paths(path)
 	_spawn_lighthouse(ysort)
+	_spawn_rocks(ysort)
 	_spawn_props(ysort)
 	_spawn_trees(ysort)
 	_spawn_actors(ysort)
@@ -170,26 +171,26 @@ func _spawn_lighthouse(ysort: Node2D) -> void:
 
 func _spawn_rocks(ysort: Node2D) -> void:
 	var zone := craft.map_play_rect(2.0)
-	# Coast rocks — large sheets, must scale ~0.35–0.45; feet on peninsula dirt only.
+	# Coastal family — cooler flatter stones (not forest moss pack).
 	var specs := [
-		{"i": 0, "pos": Vector2(688, 560), "s": 0.42},
-		{"i": 1, "pos": Vector2(704, 672), "s": 0.4},
-		{"i": 3, "pos": Vector2(480, 688), "s": 0.38},
-		{"i": 5, "pos": Vector2(560, 720), "s": 0.36},
+		{"i": 0, "pos": Vector2(688, 560)},
+		{"i": 1, "pos": Vector2(704, 672)},
+		{"i": 2, "pos": Vector2(720, 640)},
+		{"i": 0, "pos": Vector2(560, 720)},
 	]
 	for s in specs:
-		var path := "res://assets/sprites/props/rock_%02d.png" % int(s["i"])
+		var path := RockCatalog.path(RockCatalog.FAMILY_COASTAL, int(s["i"]))
 		if not ResourceLoader.exists(path):
 			continue
-		var tex := load(path) as Texture2D
+		var tex := RockCatalog.load_tex(RockCatalog.FAMILY_COASTAL, int(s["i"]))
 		if tex == null:
 			continue
-		var scale_f: float = float(s["s"])
+		var scale_f := clampf(RockCatalog.scale_for_target_h(tex, 26.0), 0.28, 0.4)
 		var cleared := _find_scaled_inside(s["pos"], tex, TREE_Y, scale_f, zone, 1, 1, 12, true)
 		if cleared == Vector2.ZERO:
 			continue
 		var t := craft.world_to_tile(cleared)
-		if craft.is_water(t.x, t.y):
+		if craft.is_water(t.x, t.y) or craft.is_blocked(t.x, t.y):
 			continue
 		craft.add_contact_shadow(ysort, cleared, Vector2(14, 6))
 		var spr := craft.spawn_sprite(ysort, path, cleared)
@@ -200,7 +201,7 @@ func _spawn_rocks(ysort: Node2D) -> void:
 func _spawn_props(ysort: Node2D) -> void:
 	var samples := [
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(400, 560), "title": "补给箱", "desc": "灯塔补给木箱。", "scale": 0.55},
-		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(480, 600), "title": "油桶", "desc": "灯油空桶。", "scale": 0.5},
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(380, 620), "title": "油桶", "desc": "灯油空桶。", "scale": 0.5},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):

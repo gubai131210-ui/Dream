@@ -180,11 +180,11 @@ func _spawn_dock_props(ysort: Node2D) -> void:
 
 
 func _spawn_props(ysort: Node2D) -> void:
+	# Dock barrel lives in `_spawn_dock_props` only — avoid inland teleport duplicate.
 	var samples := [
-		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(520, 560), "title": "码头桶", "desc": "小屋码头旁的桶。", "scale": 0.5},
-		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(920, 500), "title": "门前箱", "desc": "湖畔小屋门边木箱。", "scale": 0.55},
+		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(880, 560), "title": "门前箱", "desc": "湖畔小屋门边木箱。", "scale": 0.55},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(820, 560), "title": "廊灯", "desc": "通向码头的小灯。", "scale": 0.55},
-		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(700, 520), "title": "渔网袋", "desc": "码头边晒干的网袋。", "scale": 0.5},
+		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(448, 576), "title": "渔网袋", "desc": "码头边晒干的网袋。", "scale": 0.5},
 	]
 	for s in samples:
 		_place_land_prop(ysort, s)
@@ -194,7 +194,8 @@ func _place_land_prop(ysort: Node2D, s: Dictionary) -> void:
 	if not ResourceLoader.exists(s["path"]):
 		return
 	var pos: Vector2 = s["pos"]
-	var cleared := craft.find_clear_near(pos, 1, 1, 6, true)
+	# half 0,0 — keep dock props on ideal feet (1,1 was shoving them inland).
+	var cleared := craft.find_clear_near(pos, 0, 0, 6, true)
 	if cleared != Vector2.ZERO:
 		pos = cleared
 	var t := craft.world_to_tile(pos)

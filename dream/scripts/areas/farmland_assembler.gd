@@ -420,7 +420,7 @@ func _spawn_trees(ysort: Node2D) -> void:
 
 	# Sparse yard shade trees inside fence on grass gaps (not crop dirt) — AABB â FARM_BUILD_ZONE.
 	var yard := [
-		Vector2(360, 280), Vector2(1000, 280), Vector2(360, 640), Vector2(1000, 640),
+		Vector2(400, 300), Vector2(1000, 280), Vector2(360, 640), Vector2(1000, 640),
 	]
 	for i in yard.size():
 		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % ((i + 3) % 6)
@@ -521,5 +521,5 @@ func _spawn_portals(ysort: Node2D) -> void:
 	craft.make_portal(ysort, "→总览", SceneRouter.HUB_PATH, Vector2(640, 40), Vector2(96, 48))
 	# Wave D: apiary meadow entry (north edge — ≠ mill C13 / processing shed).
 	craft.make_portal(
-		ysort, "进入蜂场", SceneRouter.C51_APIARY_PATH, Vector2(360, 220), Vector2(100, 52)
+		ysort, "进入蜂场", SceneRouter.C51_APIARY_PATH, Vector2(280, 200), Vector2(100, 52)
 	)

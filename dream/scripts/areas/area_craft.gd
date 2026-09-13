@@ -202,7 +202,7 @@ func tile_center(tx: int, ty: int) -> Vector2:
 	return Vector2((tx + 0.5) * tile, (ty + 0.5) * tile)
 
 
-func footprint_ok(center: Vector2, half_w: int, half_h: int, allow_path: bool = false) -> bool:
+func footprint_ok(center: Vector2, half_w: int, half_h: int, allow_path: bool = false, allow_blocked: bool = false) -> bool:
 	var t := world_to_tile(center)
 	for oy in range(-half_h, half_h + 1):
 		for ox in range(-half_w, half_w + 1):
@@ -212,13 +212,15 @@ func footprint_ok(center: Vector2, half_w: int, half_h: int, allow_path: bool = 
 				return false
 			if is_water(nx, ny):
 				return false
+			if not allow_blocked and is_blocked(nx, ny):
+				return false
 			if not allow_path and (is_path(nx, ny) or is_dirt(nx, ny)):
 				return false
 	return true
 
 
-func find_clear_near(ideal: Vector2, half_w: int, half_h: int, max_r: int = 8, allow_path: bool = false) -> Vector2:
-	if footprint_ok(ideal, half_w, half_h, allow_path):
+func find_clear_near(ideal: Vector2, half_w: int, half_h: int, max_r: int = 8, allow_path: bool = false, allow_blocked: bool = false) -> Vector2:
+	if footprint_ok(ideal, half_w, half_h, allow_path, allow_blocked):
 		return ideal
 	var t := world_to_tile(ideal)
 	for r in range(1, max_r + 1):
@@ -227,7 +229,7 @@ func find_clear_near(ideal: Vector2, half_w: int, half_h: int, max_r: int = 8, a
 				if maxi(absi(ox), absi(oy)) != r:
 					continue
 				var cand := tile_center(t.x + ox, t.y + oy)
-				if footprint_ok(cand, half_w, half_h, allow_path):
+				if footprint_ok(cand, half_w, half_h, allow_path, allow_blocked):
 					return cand
 	return Vector2.ZERO
 
