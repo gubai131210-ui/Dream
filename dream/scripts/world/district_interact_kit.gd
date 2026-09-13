@@ -388,7 +388,8 @@ func _toggle_lamp(hs: InteractableHotspot) -> String:
 	if on:
 		var env := DayNightWeather.find_on(get_parent())
 		if env and not env.is_night():
-			body += "（白天请按 N 查看光晕）"
+			env.pulse_dusk_for_lamps(2.5)
+			body += "（已切夜间观灯；按 N 回白天）"
 	return body
 
 

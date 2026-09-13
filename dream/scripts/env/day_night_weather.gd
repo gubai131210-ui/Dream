@@ -34,6 +34,7 @@ var _dusk_pulse_token: int = 0
 var _dusk_pulse_tween: Tween
 var _dusk_hold_until_msec: int = 0
 var _dusk_hold_color: Color = Color(0.50, 0.54, 0.68, 1.0)
+var _restore_timer: Timer
 
 
 static func find_on(host: Node) -> DayNightWeather:
@@ -133,45 +134,23 @@ func is_night() -> bool:
 	return time_grade == TimeGrade.NIGHT
 
 
-func pulse_dusk_for_lamps(duration_sec: float = 0.0) -> Dictionary:
-	## MCP / lamp helper: sticky night grade via same apply path as mcp_set_night.
-	## Auto-restore is opt-in via duration_sec > 0; use 0 to leave night on.
+func pulse_dusk_for_lamps(_duration_sec: float = 2.5) -> Dictionary:
+	## Daytime lamp-on: switch to sticky night grade (same path as mcp_set_night).
+	## Player returns to day with N / 白天 button — no auto-restore timer (was racing).
 	if time_grade == TimeGrade.NIGHT:
 		return {"ok": true, "pulsed": false, "reason": "already_night"}
-	_dusk_pulse_token += 1
-	var token := _dusk_pulse_token
-	time_grade = TimeGrade.NIGHT
-	_apply_visuals()
-	state_changed.emit(time_grade, weather)
+	set_time_grade(TimeGrade.NIGHT)
 	var after_r := -1.0
 	var mod := _live_modulate()
 	if mod:
 		after_r = mod.color.r
-	var hold_sec := maxf(0.0, duration_sec)
-	_dusk_hold_until_msec = Time.get_ticks_msec() + int(hold_sec * 1000.0) if hold_sec > 0.0 else 0
-	if hold_sec > 0.0:
-		var tree := get_tree()
-		if tree:
-			# Deferred one-shot; token must still match when it fires.
-			tree.create_timer(hold_sec).timeout.connect(func() -> void:
-				if token != _dusk_pulse_token:
-					return
-				_dusk_hold_until_msec = 0
-				if time_grade != TimeGrade.NIGHT:
-					return
-				time_grade = TimeGrade.DAY
-				_apply_visuals()
-				state_changed.emit(time_grade, weather)
-			, CONNECT_ONE_SHOT)
 	return {
 		"ok": true,
 		"pulsed": true,
-		"mode": "night_preview",
-		"duration": hold_sec,
-		"token": token,
+		"mode": "sticky_night",
 		"night": true,
 		"after_r": after_r,
-		"hold_until_msec": _dusk_hold_until_msec,
+		"hint": "press_N_for_day",
 	}
 
 
@@ -190,6 +169,10 @@ func _cancel_dusk_pulse() -> void:
 	_dusk_pulse_token += 1
 	_dusk_hold_until_msec = 0
 	set_process(false)
+	if _restore_timer != null and is_instance_valid(_restore_timer):
+		_restore_timer.stop()
+		_restore_timer.queue_free()
+	_restore_timer = null
 	if _dusk_pulse_tween and _dusk_pulse_tween.is_valid():
 		_dusk_pulse_tween.kill()
 	_dusk_pulse_tween = null

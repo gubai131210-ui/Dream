@@ -313,12 +313,17 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 	_ysort.add_child(cue)
 	_attach_pose_anim(cue, pose_dir)
 	if not prop_path.is_empty():
-		WorldSpawnUtil.attach_prop_sprite(cue, prop_path, 0.28)
+		var prop_scale := 0.28
+		if kind == "life" and ring_id == "sleep":
+			prop_scale = 0.55  # pillow must read at §7 zoom
+		elif kind == "life" and ring_id in ["eat", "read"]:
+			prop_scale = 0.42
+		WorldSpawnUtil.attach_prop_sprite(cue, prop_path, prop_scale)
 	# Hold long enough for player QA / MCP round-trips; next cycle replaces this node.
 	var tw := cue.create_tween()
 	tw.tween_property(cue, "modulate:a", 0.35, 0.12)
 	tw.tween_property(cue, "modulate:a", 1.0, 0.18)
-	tw.tween_interval(6.0)
+	tw.tween_interval(12.0)
 	tw.tween_property(cue, "modulate:a", 0.0, 0.45)
 	tw.tween_callback(cue.queue_free)
 

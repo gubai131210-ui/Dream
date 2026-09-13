@@ -205,7 +205,8 @@ func _handle_interact(interact_id: String, title: String, desc: String) -> void:
 			if _lamp_on:
 				var env := DayNightWeather.find_on(get_parent())
 				if env and not env.is_night():
-					body += "（白天请按 N 查看光晕）"
+					env.pulse_dusk_for_lamps(2.5)
+					body += "（已切夜间观灯；按 N 回白天）"
 			_pulse_visual(hs)
 			_play_fx_clip(hs, "res://assets/sprites/fx", "lamp_spark", 4, Vector2(0, -30), 10.0)
 		"shake_tree":
