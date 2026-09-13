@@ -197,13 +197,14 @@ func _physics_process(delta: float) -> void:
 
 func _try_sidestep(craft: AreaCraft, forward: Vector2, move_len: float) -> Vector2:
 	var perp := Vector2(-forward.y, forward.x)
-	for sign_v in [1.0, -1.0]:
-		var candidate := position + perp * sign_v * move_len
+	var signs: Array[float] = [1.0, -1.0]
+	for sign_v in signs:
+		var candidate: Vector2 = position + perp * sign_v * move_len
 		var t: Vector2i = craft.world_to_tile(candidate)
 		if craft.is_npc_walkable(t.x, t.y):
 			return candidate
 		# Also try a full tile nudge.
-		var tile_nudge := position + perp * sign_v * float(craft.tile)
+		var tile_nudge: Vector2 = position + perp * sign_v * float(craft.tile)
 		t = craft.world_to_tile(tile_nudge)
 		if craft.is_npc_walkable(t.x, t.y):
 			return position.move_toward(tile_nudge, move_len)
