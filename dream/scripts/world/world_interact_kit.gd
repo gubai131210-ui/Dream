@@ -231,7 +231,7 @@ func _handle_interact(interact_id: String, title: String, desc: String) -> void:
 		"read_sign":
 			body = "路牌：东市集 · 西农舍 · 北教堂。"
 			_pulse_visual(hs)
-			_play_fx_clip(hs, "res://assets/sprites/fx", "board_rustle", 4, Vector2(0, -18), 10.0)
+			_play_fx_clip(hs, "res://assets/sprites/fx", "board_rustle", 4, Vector2(0, -20), 10.0)
 	if _info:
 		_info.show_info(title, body)
 	interacted.emit(interact_id)
