@@ -219,27 +219,47 @@ func _spawn_or_replace_actor(entry: Dictionary) -> void:
 
 
 func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
-	## G7: occupational pose sheet flash (4 frames) + prop cue near demo actor.
-	if _ysort == null or kind != "work":
+	## G7/G8: occupational or life pose sheet flash (4 frames) + prop cue near demo actor.
+	if _ysort == null:
+		return
+	if kind != "work" and kind != "life":
 		return
 	var old := _ysort.get_node_or_null("WorkPoseCue")
 	if old:
 		# queue_free is deferred — rename so the replacement can reuse the name this frame.
 		old.name = "WorkPoseCue_dying"
 		old.queue_free()
-	var work_id := str(entry.get("id", ""))
+	var ring_id := str(entry.get("id", ""))
 	var prop_path := ""
-	match work_id:
-		"sow":
-			prop_path = "res://assets/sprites/props/hay_00.png"
-		"smith":
-			prop_path = "res://assets/sprites/props/anvil_00.png"
-		"stall":
-			prop_path = "res://assets/sprites/props/sack_0.png"
-		"cook":
-			prop_path = "res://assets/sprites/props/stove_00.png"
-		_:
-			return
+	var pose_dir := ""
+	if kind == "work":
+		pose_dir = "res://assets/sprites/npc/work_poses/%s" % ring_id
+		match ring_id:
+			"sow":
+				prop_path = "res://assets/sprites/props/hay_00.png"
+			"smith":
+				prop_path = "res://assets/sprites/props/anvil_00.png"
+			"stall":
+				prop_path = "res://assets/sprites/props/sack_0.png"
+			"cook":
+				prop_path = "res://assets/sprites/props/stove_00.png"
+			_:
+				return
+	else:
+		pose_dir = "res://assets/sprites/npc/life_poses/%s" % ring_id
+		match ring_id:
+			"eat":
+				prop_path = "res://assets/sprites/props/stove_00.png"
+			"sleep":
+				prop_path = "res://assets/sprites/props/hay_00.png"
+			"read":
+				prop_path = "res://assets/sprites/props/flower_bed_00.png"
+			"laundry":
+				prop_path = "res://assets/sprites/props/trough_00.png"
+			"idle_sit":
+				prop_path = "res://assets/sprites/props/bench_0.png"
+			_:
+				return
 	var cue := Node2D.new()
 	cue.name = "WorkPoseCue"
 	var anchor: Vector2 = Vector2(640, 480)
@@ -249,8 +269,9 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 	cue.position = anchor + Vector2(18, -28)
 	cue.z_index = 8
 	_ysort.add_child(cue)
-	_attach_work_pose_anim(cue, work_id)
-	WorldSpawnUtil.attach_prop_sprite(cue, prop_path, 0.28)
+	_attach_pose_anim(cue, pose_dir)
+	if not prop_path.is_empty():
+		WorldSpawnUtil.attach_prop_sprite(cue, prop_path, 0.28)
 	# Hold long enough for player QA / MCP round-trips; next cycle replaces this node.
 	var tw := cue.create_tween()
 	tw.tween_property(cue, "modulate:a", 0.35, 0.12)
@@ -260,8 +281,7 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 	tw.tween_callback(cue.queue_free)
 
 
-func _attach_work_pose_anim(parent: Node2D, work_id: String) -> void:
-	var dir := "res://assets/sprites/npc/work_poses/%s" % work_id
+func _attach_pose_anim(parent: Node2D, dir: String) -> void:
 	var frames := SpriteFrames.new()
 	if frames.has_animation("default"):
 		frames.remove_animation("default")

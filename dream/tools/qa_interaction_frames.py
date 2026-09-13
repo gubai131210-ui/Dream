@@ -74,6 +74,11 @@ def main() -> int:
         "work_pose_smith": sorted((ROOT / "assets/sprites/npc/work_poses/smith").glob("pose_*.png")),
         "work_pose_stall": sorted((ROOT / "assets/sprites/npc/work_poses/stall").glob("pose_*.png")),
         "work_pose_cook": sorted((ROOT / "assets/sprites/npc/work_poses/cook").glob("pose_*.png")),
+        "life_pose_eat": sorted((ROOT / "assets/sprites/npc/life_poses/eat").glob("pose_*.png")),
+        "life_pose_sleep": sorted((ROOT / "assets/sprites/npc/life_poses/sleep").glob("pose_*.png")),
+        "life_pose_read": sorted((ROOT / "assets/sprites/npc/life_poses/read").glob("pose_*.png")),
+        "life_pose_laundry": sorted((ROOT / "assets/sprites/npc/life_poses/laundry").glob("pose_*.png")),
+        "life_pose_idle_sit": sorted((ROOT / "assets/sprites/npc/life_poses/idle_sit").glob("pose_*.png")),
         "waterfall_water": sorted(
             (ROOT / "assets/sprites/props").glob("waterfall_water_0[0-5].png")
         ),

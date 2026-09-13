@@ -10,7 +10,9 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 POSE_ROOT = ROOT / "assets" / "sprites" / "npc" / "work_poses"
+LIFE_ROOT = ROOT / "assets" / "sprites" / "npc" / "life_poses"
 KINDS = ("sow", "smith", "stall", "cook")
+LIFE_KINDS = ("eat", "sleep", "read", "laundry", "idle_sit")
 EXPECT_W, EXPECT_H = 48, 40  # drawer used 48x40; poses may differ — record actual
 THR = 235
 MAX_EDGE_WHITE = 12
@@ -53,40 +55,46 @@ def edge_white(path: Path) -> int:
 	return n
 
 
-def main() -> None:
-	failures: list[str] = []
-	sizes: set[tuple[int, int]] = set()
-	for kind in KINDS:
-		d = POSE_ROOT / kind
+def check_kinds(root: Path, kinds: tuple[str, ...], label: str, failures: list[str], sizes: set[tuple[int, int]]) -> None:
+	for kind in kinds:
+		d = root / kind
 		frames = sorted(d.glob("pose_*.png"))
 		if len(frames) < 4:
-			failures.append(f"{kind}: need ≥4 frames, got {len(frames)}")
+			failures.append(f"{label}/{kind}: need ≥4 frames, got {len(frames)}")
 			continue
 		for f in frames[:4]:
 			im = Image.open(f).convert("RGBA")
 			sizes.add(im.size)
 			ew = edge_white(f)
 			if ew > MAX_EDGE_WHITE:
-				failures.append(f"{kind}/{f.name}: edge-white={ew}")
+				failures.append(f"{label}/{kind}/{f.name}: edge-white={ew}")
 			uniq = len({c[:3] for c in im.getdata() if c[3] > 200})
 			if uniq < 80:
-				failures.append(f"{kind}/{f.name}: uniq={uniq} < 80 (need painted density)")
+				failures.append(f"{label}/{kind}/{f.name}: uniq={uniq} < 80 (need painted density)")
 			bb = im.getchannel("A").getbbox()
 			if bb is None:
-				failures.append(f"{kind}/{f.name}: empty alpha")
+				failures.append(f"{label}/{kind}/{f.name}: empty alpha")
 			else:
-				# Prefer art resting near bottom of canvas (pose sheets are short).
 				foot = bb[3]
 				if foot < im.height - 4:
-					# soft: allow some float but flag large gap
 					gap = im.height - foot
 					if gap > 8:
-						failures.append(f"{kind}/{f.name}: foot gap={gap}px from canvas bottom")
+						failures.append(f"{label}/{kind}/{f.name}: foot gap={gap}px from canvas bottom")
+
+
+def main() -> None:
+	failures: list[str] = []
+	sizes: set[tuple[int, int]] = set()
+	check_kinds(POSE_ROOT, KINDS, "work", failures, sizes)
+	check_kinds(LIFE_ROOT, LIFE_KINDS, "life", failures, sizes)
 	if len(sizes) > 1:
 		failures.append(f"inconsistent canvas sizes across poses: {sorted(sizes)}")
 	if failures:
-		raise SystemExit("FAIL work-pose StyleQA:\n- " + "\n- ".join(failures))
-	print(f"GREEN work-pose StyleQA ({len(KINDS)} kinds ×4, sizes={sorted(sizes)}, edge-white≤{MAX_EDGE_WHITE})")
+		raise SystemExit("FAIL work/life-pose StyleQA:\n- " + "\n- ".join(failures))
+	print(
+		f"GREEN work/life-pose StyleQA "
+		f"(work {len(KINDS)} + life {len(LIFE_KINDS)} kinds ×4, sizes={sorted(sizes)}, edge-white≤{MAX_EDGE_WHITE})"
+	)
 
 
 if __name__ == "__main__":

@@ -59,6 +59,7 @@ def main() -> None:
     require(routine, "CycleWorkRing", "work button mount")
     require(routine, "CycleLifeState", "life button mount")
     require(routine, "work_poses", "C53 work pose sheet path")
+    require(routine, "life_poses", "C54 life pose sheet path")
     require(routine, "WorkPoseAnim", "C53 work pose AnimatedSprite")
 
     seasonal = read("scripts/env/seasonal_decor.gd")

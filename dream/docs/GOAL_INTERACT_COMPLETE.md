@@ -105,7 +105,7 @@
 | 优先级 | 缺口 |
 | --- | ---:|
 | P0 | **用户 Godot QA Waves A2–F + §7 勾选** |
-| P1 | 姿态 ArtGen 继续抛光（非阻塞）；C22 渔笼多帧 splash 已接线（`GOAL_G8_C22_CAGE_SPLASH_EVIDENCE`） |
+| P1 | 姿态 ArtGen 继续抛光（非阻塞）；C54 life poses 已接线（`GOAL_G8_C54_LIFE_POSE_EVIDENCE`） |
 | P2 | tomyud1 MCP 截图证据（**全户外 + 多室内**；C62/C58 FX 冒烟 PASS；仍不代替 §7） |
 
 ---
@@ -204,7 +204,8 @@
 - [`GOAL_G8_C22_CAGE_SPLASH_EVIDENCE.md`](GOAL_G8_C22_CAGE_SPLASH_EVIDENCE.md) — C22 渔笼 place/collect 多帧 `fish_splash`
 - [`GOAL_G8_C58_LAMP_SPARK_EVIDENCE.md`](GOAL_G8_C58_LAMP_SPARK_EVIDENCE.md) — C58 路灯开关多帧 `lamp_spark`（District 灯同 sheet）
 - [`GOAL_G8_INTERIOR_TAP_FX_EVIDENCE.md`](GOAL_G8_INTERIOR_TAP_FX_EVIDENCE.md) — 室内非开合道具 tap 多帧（复用 C58 sheets）
-- [`GOAL_G8_FISHING_CAST_FX_EVIDENCE.md`](GOAL_G8_FISHING_CAST_FX_EVIDENCE.md) — 钓点施放/收取多帧 `fish_splash`  
+- [`GOAL_G8_FISHING_CAST_FX_EVIDENCE.md`](GOAL_G8_FISHING_CAST_FX_EVIDENCE.md) — 钓点施放/收取多帧 `fish_splash`
+- [`GOAL_G8_C54_LIFE_POSE_EVIDENCE.md`](GOAL_G8_C54_LIFE_POSE_EVIDENCE.md) — C54 生活态多帧 pose cue（eat/sleep/read/laundry/idle_sit）  
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 17 groups GREEN  
@@ -263,7 +264,7 @@
 
 | # | 要求 | 证据 | 状态 |
 | --- | --- | --- | --- |
-| 1 | 已列交互正式像素 + 反馈 + 多帧 | C58 全套；DIK；C05；C22+**钓鱼施放** splash；室内 OpenFX+TapFX；C59–C61；qa frames+tap GREEN | **PROVEN（代码+MCP）**；§7 手感确认仍待 |
+| 1 | 已列交互正式像素 + 反馈 + 多帧 | C58 全套；DIK；C05；C22+钓鱼 splash；室内 Open/Tap；**C54 life poses**；C59–C61；qa frames 26 + pose StyleQA GREEN | **PROVEN（代码+MCP）**；§7 手感确认仍待 |
 | 2 | 全户外+室内门面/道具/可进出 | load smoke 72/72；portal cue 12；MCP 进门+多室内 idle；室内 tap FX；C62 全链 | **PROVEN（加载+MCP 进门）**；§7 全表进出仍待 |
 | 3 | 统称权威 | 本文件 + `ASSET_TAXONOMY` 回链 | **PROVEN** |
 | 4 | 多团队流水线门禁 | §2 角色表；[`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md)；Style/Anim/Cohere + Genre/Canon；qa_* 全套 GREEN（2026-09-13 再跑） | **PROVEN（本轮批次）** |
