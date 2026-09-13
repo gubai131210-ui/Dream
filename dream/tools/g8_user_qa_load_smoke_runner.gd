@@ -98,11 +98,63 @@ func _probe(id: String, host: Node, outdoor: bool) -> void:
 		if host.get_node_or_null("AreaInteractHost") == null:
 			_fail("%s missing AreaInteractHost" % id)
 			return
-	elif host.get_child_count() < 1:
-		_fail("%s empty tree" % id)
-		return
+		match id:
+			"square":
+				if host.get_node_or_null("WorldInteractKit") == null:
+					_fail("%s missing WorldInteractKit" % id)
+					return
+				if host.get_node_or_null("BreakablesKit") == null:
+					_fail("%s missing BreakablesKit" % id)
+					return
+				if host.get_node_or_null("ProgressGates") == null:
+					_fail("%s missing ProgressGates" % id)
+					return
+			"market":
+				if not _has_named_descendant(host, "MarketStall_"):
+					_fail("%s missing MarketStall_*" % id)
+					return
+			"river", "lake":
+				if not _has_named_descendant(host, "FishCage_") and not _has_named_descendant(host, "FishingSpot_"):
+					_fail("%s missing FishCage_/FishingSpot_" % id)
+					return
+			"waterfall":
+				if not _has_named_descendant(host, "WaterfallAnim"):
+					_fail("%s missing WaterfallAnim" % id)
+					return
+			"forest":
+				if host.get_node_or_null("SecretPassageChain") == null and not _has_named_descendant(host, "Secret"):
+					## Secret kit may be nested; require portal into cave chain art at least.
+					if not _has_named_descendant(host, "Portal_"):
+						_fail("%s missing secret/portal affordance" % id)
+						return
+			"farmland", "residential", "farm_home", "forest_entrance", "lighthouse", "hill_farm", "station", "lake_house":
+				if host.get_node_or_null("DistrictInteractKit") == null:
+					_fail("%s missing DistrictInteractKit" % id)
+					return
+	else:
+		if host.get_child_count() < 1:
+			_fail("%s empty tree" % id)
+			return
+		## Interiors must expose a return portal affordance.
+		if not _has_named_descendant(host, "Portal_"):
+			_fail("%s missing Portal_* return/extra" % id)
+			return
 	_ok += 1
 	print("G8_USER_QA_LOAD: PASS ", id)
+
+
+func _has_named_descendant(root: Node, needle: String) -> bool:
+	if root == null or needle.is_empty():
+		return false
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var n: Node = stack.pop_back()
+		var nm := str(n.name)
+		if nm == needle or nm.begins_with(needle) or nm.contains(needle):
+			return true
+		for c in n.get_children():
+			stack.append(c)
+	return false
 
 
 func _fail(msg: String) -> void:
