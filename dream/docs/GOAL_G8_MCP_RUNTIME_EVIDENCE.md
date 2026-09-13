@@ -85,6 +85,7 @@
 | C58 well rope live | `docs/evidence/g8_c58_well_rope_live.png` | 取水 InfoPanel + `mcp_spawn_c58_fx` frames=4 |
 | C58 crate lid live | `docs/evidence/g8_c58_crate_lid_live.png` | 木箱 `FX_crate_lid` frames=4 playing |
 | C58 leaf fall live | `docs/evidence/g8_c58_leaf_fall_live.png` | 摇树 `FX_leaf_fall` frames=4 playing |
+| C58 bird peck live | `docs/evidence/g8_c58_bird_peck_live.png` | 喂鸟 `FX_bird_peck` frames=4 playing |
 | C02 chest lid held | `docs/evidence/g8_c02_chest_lid_held.png` | 钱箱 `OpenFX_chest_lid` 末帧 frame=3 |
 | C60 locked door | `docs/evidence/g8_c60_locked_door.png` | ProgressGates 锁门=`gate_locked_door_00`（非 door_facade） |
 

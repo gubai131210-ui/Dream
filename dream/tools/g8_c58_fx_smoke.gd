@@ -1,6 +1,6 @@
 extends SceneTree
 
-## C58 multi-frame FX: well_rope / crate_lid / leaf_fall appear on activate.
+## C58 multi-frame FX: well_rope / crate_lid / leaf_fall / bird_peck appear on activate.
 ## godot --path dream --headless -s res://tools/g8_c58_fx_smoke.gd
 
 const SQUARE := "res://scenes/areas/village_square/village_square.tscn"
@@ -36,6 +36,7 @@ func _probe(host: Node2D) -> void:
 		{"id": "well_water", "fx": "FX_well_rope", "hs": "WorldHS_井水"},
 		{"id": "crate_search", "fx": "FX_crate_lid", "hs": "WorldHS_木箱"},
 		{"id": "shake_tree", "fx": "FX_leaf_fall", "hs": "WorldHS_摇树"},
+		{"id": "feed_critter", "fx": "FX_bird_peck", "hs": "WorldHS_喂鸟"},
 	]
 	for c in cases:
 		kit.call("_handle_interact", str(c["id"]), "t", "d")
