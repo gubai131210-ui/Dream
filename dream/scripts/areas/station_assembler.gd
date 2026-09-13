@@ -18,8 +18,8 @@ const PLATFORM_TX1 := 33
 ## Track ballast / proxy band (tile Y) — parallel south of platform.
 const TRACK_TY0 := 13
 const TRACK_TY1 := 14
-const TRACK_TX0 := 5
-const TRACK_TX1 := 34
+const TRACK_TX0 := 0
+const TRACK_TX1 := 39  # MAP_W - 1 — rails reach both map edges
 
 ## Door dirt on platform south of station foot (clear of half_h ~ foot ty 8–9).
 const DOOR_LANE_TY0 := 10
@@ -201,7 +201,7 @@ func _spawn_track_proxy(ysort: Node2D) -> void:
 	var hs_band := craft.make_hotspot(
 		ysort,
 		"站台轨道",
-		"东西贯通轨道：道砟、枕木与双轨连续铺满站台脊，中间不断开。",
+		"东西贯通轨道：道砟、枕木与双轨从地图西缘铺到东缘，中间不断开。",
 		mid,
 		Vector2(right - left, 48)
 	)

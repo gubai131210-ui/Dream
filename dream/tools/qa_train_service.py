@@ -29,12 +29,16 @@ def main() -> int:
 	rt = (ROOT / "scripts/areas/station_train_runtime.gd").read_text(encoding="utf-8")
 	if "_seat_wheels_on_rails" not in rt or "RAIL_Y" not in rt:
 		raise AssertionError("train runtime missing wheel-on-rail seating")
+	if "_spawn_driving_wheels" not in rt or "CPUParticles2D" not in rt or "TrailSmoke" not in rt:
+		raise AssertionError("train runtime missing wheel spin / steam plume FX")
 	assets = [
 		"assets/sprites/props/train_loco_00.png",
 		"assets/sprites/props/train_coach_00.png",
 		"assets/sprites/props/train_consist_00.png",
+		"assets/sprites/props/train_wheel_00.png",
 		"assets/sprites/props/track_band_seamless_00.png",
 		"assets/sprites/fx/train_steam_00.png",
+		"assets/sprites/fx/train_steam_trail_00.png",
 		"assets/sprites/fx/train_window_scenery_00.png",
 		"assets/sprites/props/train_ticket_00.png",
 		"assets/sprites/interior/props/train_window_wall_00.png",
@@ -43,6 +47,8 @@ def main() -> int:
 	asm = (ROOT / "scripts/areas/station_assembler.gd").read_text(encoding="utf-8")
 	if "track_band_seamless_00" not in asm or "TrackBandContinuous" not in asm:
 		raise AssertionError("station assembler missing continuous seamless track band")
+	if "TRACK_TX0 := 0" not in asm:
+		raise AssertionError("tracks must start at left map edge (TRACK_TX0 := 0)")
 	prof = (ROOT / "scripts/interiors/interior_profiles.gd").read_text(encoding="utf-8")
 	if "P_TRAIN_WINDOW_WALL" not in prof or "train_window_wall_00" not in prof:
 		raise AssertionError("C36 profile missing train window wall")
