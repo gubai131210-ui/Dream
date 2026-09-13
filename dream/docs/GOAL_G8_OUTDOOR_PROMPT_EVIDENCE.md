@@ -1,21 +1,15 @@
-# Goal G8 outdoor proximity prompt evidence
+# Goal evidence — G8_OUTDOOR_PROMPT
 
-**Date:** 2026-09-13  
-**Runner:** `res://tools/g8_outdoor_prompt_smoke.gd`  
+**Runner:** `res://tools/g8_outdoor_prompt_smoke.gd`
 **Result:** PASS (exit=0)
 
-## What it proves
+## Log excerpt
 
-- Every outdoor area controller mounts `AreaInteractHost` (shared `InteractProximityDirector`)
-- Hover wins executable target; `ProximityPrompt` (`互动`) becomes visible
-- Plaza smoke: hover_wins e.g. `村公所` with prompt text `互动`
+```
+G8_OUTDOOR_PROMPT: start
+G8_OUTDOOR_PROMPT: before=水井
+G8_OUTDOOR_PROMPT: hover_wins=村公所 prompt=互动
+G8_OUTDOOR_PROMPT: PASS
+```
 
-## MCP
-
-- `docs/evidence/g8_square_outdoor_prompt.png` — live `水井/ProximityPrompt` visible=true text=互动  
-- Runtime: `/root/VillageSquare/AreaInteractHost` present
-
-## Related
-
-- Interior parity: `GOAL_G8_INTERACT_TARGET_EVIDENCE.md`  
-- Portal pulse closed: `tools/qa_portal_hover_only.py` GREEN
+User Godot QA still required for visual fidelity.

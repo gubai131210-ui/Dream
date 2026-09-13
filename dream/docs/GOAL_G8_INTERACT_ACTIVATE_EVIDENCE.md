@@ -17,13 +17,13 @@ G8_INTERACT_SMOKE: activated lamp_toggle
 G8_INTERACT_SMOKE: activated feed_critter
 G8_INTERACT_SMOKE: activated read_sign
 G8_INTERACT_SMOKE: post-ok shake_tree
-G8_INTERACT_SMOKE: fx-cleared-ok shake_tree
+G8_INTERACT_SMOKE: fx-present shake_tree
 G8_INTERACT_SMOKE: post-ok well_water
-G8_INTERACT_SMOKE: fx-cleared-ok well_water
+G8_INTERACT_SMOKE: fx-present well_water
 G8_INTERACT_SMOKE: post-ok crate_search
-G8_INTERACT_SMOKE: fx-cleared-ok crate_search
+G8_INTERACT_SMOKE: fx-present crate_search
 G8_INTERACT_SMOKE: post-ok feed_critter
-G8_INTERACT_SMOKE: fx-cleared-ok feed_critter
+G8_INTERACT_SMOKE: fx-present feed_critter
 G8_INTERACT_SMOKE: post-ok lamp_toggle
 G8_INTERACT_SMOKE: ok=8 failures=0
 G8_INTERACT_SMOKE: PASS

@@ -10,6 +10,8 @@
 **Bath portal enter:** PASS — `GOAL_G8_BATH_PORTAL_EVIDENCE.md`
 **C62 secret chain:** PASS — `GOAL_G8_C62_SECRET_EVIDENCE.md`
 **Interact target sync:** PASS — `GOAL_G8_INTERACT_TARGET_EVIDENCE.md`
+**Outdoor proximity prompt:** PASS — `GOAL_G8_OUTDOOR_PROMPT_EVIDENCE.md`
+**C58 multi-frame FX:** PASS — `GOAL_G8_C58_FX_EVIDENCE.md`
 
 | Scene | ERRORS | SCRIPT | Status |
 | --- | ---: | ---: | --- |
@@ -93,6 +95,10 @@
 - Worldsys-activate covers C58+C59+C60 (15 activations).
 - Anim-FX asserts WorkPoseAnim ≥4 frames + shake_tree leaf_fall FX.
 - Bath portal smoke asserts facade_bath cues + SceneRouter enter C43.
+- C62 secret smoke walks forest→cave→waterfall→lake with Sprite2D façades.
+- Interact-target smoke asserts hover/click share one executable hotspot.
+- Outdoor-prompt smoke asserts AreaInteractHost hover shows 「互动」 on plaza.
+- C58 FX smoke asserts well_rope / crate_lid / leaf_fall AnimatedSprite oneshots.
 - Interior open-FX activates C01 open_fx hotspots.
 - Portal cue smoke asserts DoorFacade / doorstep sprites on square portals.
 - User local Godot QA still required for click/animation fidelity.
