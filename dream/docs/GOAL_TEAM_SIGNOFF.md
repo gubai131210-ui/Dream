@@ -28,6 +28,7 @@
 | C22 cage splash | place/collect → fish_splash×4 oneshot | `GOAL_G8_C22_CAGE_SPLASH_EVIDENCE.md`；`mcp_splash` frames=4 |
 | C58 lamp spark | lamp_toggle → lamp_spark×4；DIK lamp 同 sheet | `GOAL_G8_C58_LAMP_SPARK_EVIDENCE.md` |
 | Interior tap FX | non-open props → TapFX_* (C58 sheets) | `GOAL_G8_INTERIOR_TAP_FX_EVIDENCE.md`；C07 blackboard/desk/lamp |
+| Fishing cast splash | cast/catch → fish_splash×4 | `GOAL_G8_FISHING_CAST_FX_EVIDENCE.md`；`mcp_cast_fx` |
 
 ## Automated gates (must stay GREEN)
 
@@ -39,6 +40,7 @@
 - `tools/qa_orphan_hotspot_visuals.py`
 - `tools/qa_landmark_style.py`
 - `tools/qa_semantic_interior_props.py`
+- `tools/qa_interior_tap_fx.py`
 - G8 smoke matrix scripts (interact / interior FX / portal / worldsys / anim FX / bath / C62 / interact target / **outdoor prompt**)
 - `tools/qa_portal_hover_only.py`
 - `tools/qa_semantic_interior_props.py` (wait + lectern)

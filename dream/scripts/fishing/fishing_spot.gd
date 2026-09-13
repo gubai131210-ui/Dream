@@ -189,7 +189,9 @@ func _clear_fx_temp() -> void:
 
 func play_cast_fx() -> void:
 	_clear_fx_temp()
-	_pulse_ring(Color(0.7, 0.85, 1.0, 0.55), 0.5)
+	## Prefer multi-frame shore splash over modulate-only pulse ring.
+	_spawn_splash()
+	_pulse_ring(Color(0.7, 0.85, 1.0, 0.55), 0.45)
 
 
 func play_wait_fx() -> void:
@@ -209,6 +211,7 @@ func play_bite_fx() -> void:
 
 func play_catch_fx(fish: Dictionary) -> void:
 	_clear_fx_temp()
+	_spawn_splash()
 	_pulse_ring(Color(0.55, 0.95, 0.55, 0.65), 0.6)
 	var path := str(fish.get("sprite", ""))
 	if path != "" and ResourceLoader.exists(path):
@@ -227,6 +230,26 @@ func play_catch_fx(fish: Dictionary) -> void:
 func play_miss_fx() -> void:
 	_clear_fx_temp()
 	_pulse_ring(Color(0.7, 0.7, 0.75, 0.4), 0.4)
+
+
+func mcp_cast_fx() -> Dictionary:
+	## Sync probe: cast uses multi-frame fish_splash when sheet present.
+	play_cast_fx()
+	if _fx_layer == null:
+		return {"ok": false, "reason": "no_fx_layer"}
+	var fx := _fx_layer.get_node_or_null("FX_fish_splash") as AnimatedSprite2D
+	if fx == null:
+		return {"ok": false, "reason": "no_splash_anim", "children": _fx_layer.get_child_count()}
+	var sf := fx.sprite_frames
+	var frames := 0
+	if sf != null and sf.has_animation("oneshot"):
+		frames = sf.get_frame_count("oneshot")
+	return {
+		"ok": frames >= 4,
+		"fx": fx.name,
+		"frames": frames,
+		"playing": fx.is_playing(),
+	}
 
 
 func _pulse_ring(color: Color, duration: float) -> void:
@@ -311,9 +334,16 @@ func _spawn_splash() -> void:
 		anim.centered = true
 		_fx_layer.add_child(anim)
 		anim.play("oneshot")
+		# Pause on last frame so MCP/screenshots can observe held splash.
 		anim.animation_finished.connect(func() -> void:
-			if is_instance_valid(anim):
-				anim.queue_free()
+			if not is_instance_valid(anim):
+				return
+			anim.pause()
+			var sf2 := anim.sprite_frames
+			if sf2 != null and sf2.has_animation("oneshot"):
+				var last := sf2.get_frame_count("oneshot") - 1
+				if last >= 0:
+					anim.frame = last
 		)
 		return
 	var splash_tex := WorldSpawnUtil.load_prop_texture("res://assets/sprites/fx/fish_splash_00.png")
