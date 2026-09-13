@@ -762,38 +762,35 @@ func _spawn_water_overlay(ysort: Node2D) -> void:
 		at.atlas = atlas
 		at.region = Rect2(i * TILE, 0, TILE, TILE)
 		frames.append(at)
-	const OVERLAY_CAP := 80
-	var idx := 0
+	var cells: Array[Vector2i] = []
 	for ty in range(MAP_H):
 		for tx in range(MAP_W):
-			if not _is_river_tile(tx, ty):
-				continue
-			if _is_path_tile(tx, ty):
-				continue
-			if idx >= OVERLAY_CAP:
-				break
-			var spr := Sprite2D.new()
-			spr.texture = frames[(tx + ty) % frames.size()]
-			spr.position = _tile_center(tx, ty)
-			spr.modulate = Color(1, 1, 1, 0.42)
-			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			overlay.add_child(spr)
-			# The shared ticker below is the only water animation clock. A
-			# per-cell alpha Tween here caused texture and brightness to drift
-			# out of phase and made nearby water appear to flicker.
-			var frame_i: int = (tx + ty) % frames.size()
-			spr.set_meta("frame_i", frame_i)
-			spr.set_meta("frames", frames)
-			idx += 1
-		if idx >= OVERLAY_CAP:
-			break
+			if _is_river_tile(tx, ty) and not _is_path_tile(tx, ty):
+				cells.append(Vector2i(tx, ty))
+	const OVERLAY_CAP := 280
+	var step := 1
+	if cells.size() > OVERLAY_CAP:
+		step = int(ceil(float(cells.size()) / float(OVERLAY_CAP)))
+	var idx := 0
+	for ci in range(0, cells.size(), step):
+		var cell: Vector2i = cells[ci]
+		var spr := Sprite2D.new()
+		spr.texture = frames[(cell.x + cell.y) % frames.size()]
+		spr.position = _tile_center(cell.x, cell.y)
+		spr.modulate = Color(1, 1, 1, 0.42)
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		overlay.add_child(spr)
+		var frame_i: int = (cell.x + cell.y) % frames.size()
+		spr.set_meta("frame_i", frame_i)
+		spr.set_meta("frames", frames)
+		idx += 1
 	if idx > 0:
 		_start_water_frame_ticker(overlay)
 
 
 func _start_water_frame_ticker(overlay: Node2D) -> void:
 	var timer := Timer.new()
-	timer.wait_time = 0.2
+	timer.wait_time = 0.18
 	timer.autostart = true
 	overlay.add_child(timer)
 	timer.timeout.connect(func():

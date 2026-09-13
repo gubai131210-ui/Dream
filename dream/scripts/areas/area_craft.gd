@@ -371,6 +371,7 @@ func spawn_crop_rows(
 			spr.scale = Vector2(inner.size.x / float(furrow_tex.get_width()), 1.0)
 			spr.modulate = tint.darkened(0.04 * float(i % 2))
 			visual.add_child(spr)
+			WindSway.attach(spr, "crop", float(i) * 0.35)
 		else:
 			push_error("AreaCraft: missing furrow_line_00.png (ColorRect crop rows forbidden)")
 			break
@@ -490,6 +491,7 @@ func spawn_tree(
 	var spr := spawn_sprite(parent, path, cleared, z)
 	spr.offset = offset
 	mark_blocked_footprint(cleared, half_w, half_h)
+	WindSway.attach(spr, "tree")
 	return spr
 
 
@@ -717,31 +719,33 @@ func spawn_water_overlay(parent: Node2D) -> void:
 		at.atlas = atlas
 		at.region = Rect2(i * tile, 0, tile, tile)
 		frames.append(at)
-	const OVERLAY_CAP := 80
-	var idx := 0
+	# Collect all water cells first, then stride so large lakes/rivers still shimmer
+	# across the whole body instead of only the first 80 scan-order tiles.
+	var cells: Array[Vector2i] = []
 	for ty in range(map_h):
 		for tx in range(map_w):
-			if not is_water(tx, ty) or is_path(tx, ty):
-				continue
-			if idx >= OVERLAY_CAP:
-				break
-			var spr := Sprite2D.new()
-			spr.texture = frames[(tx + ty) % frames.size()]
-			spr.position = tile_center(tx, ty)
-			spr.modulate = Color(1, 1, 1, 0.42)
-			spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			overlay.add_child(spr)
-			# One shared Timer below owns water animation timing. A per-sprite
-			# alpha Tween here used to create a second clock, so texture changes
-			# and brightness changes could disagree and make adjacent water flicker.
-			spr.set_meta("frame_i", (tx + ty) % frames.size())
-			spr.set_meta("frames", frames)
-			idx += 1
-		if idx >= OVERLAY_CAP:
-			break
+			if is_water(tx, ty) and not is_path(tx, ty):
+				cells.append(Vector2i(tx, ty))
+	const OVERLAY_CAP := 280
+	var step := 1
+	if cells.size() > OVERLAY_CAP:
+		step = int(ceil(float(cells.size()) / float(OVERLAY_CAP)))
+	var idx := 0
+	for ci in range(0, cells.size(), step):
+		var cell: Vector2i = cells[ci]
+		var spr := Sprite2D.new()
+		spr.texture = frames[(cell.x + cell.y) % frames.size()]
+		spr.position = tile_center(cell.x, cell.y)
+		spr.modulate = Color(1, 1, 1, 0.42)
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		overlay.add_child(spr)
+		# One shared Timer below owns water animation timing.
+		spr.set_meta("frame_i", (cell.x + cell.y) % frames.size())
+		spr.set_meta("frames", frames)
+		idx += 1
 	if idx > 0:
 		var timer := Timer.new()
-		timer.wait_time = 0.2
+		timer.wait_time = 0.18
 		timer.autostart = true
 		overlay.add_child(timer)
 		timer.timeout.connect(func():
@@ -783,6 +787,21 @@ func _spawn_shoreline_overlay(parent: Node2D) -> void:
 				_add_shore_segment(shore, Vector2(left + 2.0, top + 2.0), Vector2(left + 2.0, bottom - 2.0), edge_color, 2.0)
 			if not is_water(tx + 1, ty):
 				_add_shore_segment(shore, Vector2(right - 2.0, top + 2.0), Vector2(right - 2.0, bottom - 2.0), edge_color, 2.0)
+	# Soft foam pulse — shared clock, no second water-frame ticker.
+	if shore.get_child_count() > 0:
+		var foam_timer := Timer.new()
+		foam_timer.wait_time = 0.55
+		foam_timer.autostart = true
+		shore.add_child(foam_timer)
+		foam_timer.timeout.connect(func():
+			for c in shore.get_children():
+				if c is Line2D:
+					var line := c as Line2D
+					# Foam lines are lighter; nudge alpha gently.
+					if line.default_color.g > 0.8:
+						var a := line.default_color.a
+						line.default_color.a = 0.55 if a < 0.5 else 0.32
+		)
 
 
 func _add_shore_segment(parent: Node2D, from: Vector2, to: Vector2, color: Color, width: float) -> void:

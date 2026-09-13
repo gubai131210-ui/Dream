@@ -118,9 +118,21 @@ def main() -> int:
     water_body = function_body(area, "spawn_water_overlay")
     if "create_tween" in water_body:
         raise AssertionError("water overlay has a second per-sprite animation clock")
+    if "OVERLAY_CAP" not in water_body or "step" not in water_body:
+        raise AssertionError("water overlay missing full-map stride coverage")
     square_water_body = function_body(square, "_spawn_water_overlay")
     if "create_tween" in square_water_body:
         raise AssertionError("village-square water overlay has a second per-sprite animation clock")
+    if "OVERLAY_CAP" not in square_water_body or "step" not in square_water_body:
+        raise AssertionError("village-square water overlay missing stride coverage")
+    wind = (ROOT / "scripts/env/wind_sway.gd").read_text(encoding="utf-8")
+    if "class_name WindSway" not in wind or "skew" not in wind:
+        raise AssertionError("WindSway missing")
+    if "WindSway.attach" not in area:
+        raise AssertionError("AreaCraft trees/crops missing WindSway")
+    spawn_util = (ROOT / "scripts/world/world_spawn_util.gd").read_text(encoding="utf-8")
+    if "WindSway.attach" not in spawn_util:
+        raise AssertionError("WorldSpawnUtil plant props missing WindSway")
     if "_hover_time" in hotspot or "sin(" in function_body(hotspot, "_draw"):
         raise AssertionError("hotspot focus frame still has a pulsing/flickering clock")
     if "_spawn_cliff_rocks(ysort)" in waterfall or "_spawn_rim_rocks(ysort)" in waterfall:

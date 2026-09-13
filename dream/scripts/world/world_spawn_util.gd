@@ -122,6 +122,9 @@ static func attach_prop_sprite(visual: Node2D, path: String, scale_f: float = 0.
 	spr.position = Vector2(0, -h * 0.5 + 4.0)
 	spr.z_index = 1
 	visual.add_child(spr)
+	var sway_kind := WindSway.kind_for_path(path)
+	if not sway_kind.is_empty():
+		WindSway.attach(spr, sway_kind)
 	return spr
 
 
