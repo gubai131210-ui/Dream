@@ -30,7 +30,7 @@
 | C58 lamp spark | `mcp_spawn_c58_fx(lamp_toggle)` | lamp_spark×4 held; `g8_c58_lamp_spark_held.png` |
 | interior tap FX | C07 `mcp_play_tap_fx(黑板/课桌/西壁灯)` | board_rustle / crate_lid / lamp_spark; `g8_interior_tap_fx_blackboard.png` |
 | fishing cast | lake `mcp_cast_fx` | fish_splash×4; `g8_fishing_cast_splash_held.png` |
-| C54 life pose | `cycle_life_state` → WorkPoseAnim | sleep pose×4; `g8_c54_life_pose_sleep.png` |
+| C54 life pose | `mcp_probe_life_poses` | 5/5 × frames=4；`g8_c54_life_pose_sleep.png` |
 | integer zoom | plaza `CameraController.zoom=(1,1)` + `cycle_work_ring` | `g8_square_zoom1_work_pose_v3.png`；顶栏「工作:打铁环」 |
 | lighthouse / hill_farm / lake_house | runtime idle + DistrictInteractKit | shots `g8_walkthrough_lighthouse_idle` / `hill_farm_idle` / `lake_house_idle` |
 | §7 checklist UI | `user_qa_checklist.tscn` | **21** rows（户外全表+室内抽样）；复制「§7 已勾」；`g8_user_qa_checklist_v2.png` |

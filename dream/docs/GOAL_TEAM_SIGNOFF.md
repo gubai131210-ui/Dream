@@ -42,6 +42,7 @@
 - `tools/qa_landmark_style.py`
 - `tools/qa_semantic_interior_props.py`
 - `tools/qa_interior_tap_fx.py`
+- `tools/qa_interact_fx_coverage.py`
 - G8 smoke matrix scripts (interact / interior FX / portal / worldsys / anim FX / bath / C62 / interact target / **outdoor prompt**)
 - `tools/qa_portal_hover_only.py`
 - `tools/qa_semantic_interior_props.py` (wait + lectern)

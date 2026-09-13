@@ -17,8 +17,7 @@ C54 life cycle (`cycle_life_state`) spawned actors + InfoPanel but **skipped** p
 
 | Probe | Result |
 | --- | --- |
-| `NpcRoutineDemo.cycle_life_state` | `current_life_id=sleep` |
-| `WorkPoseCue/WorkPoseAnim` | animation=pose, visible |
-| Shot | `docs/evidence/g8_c54_life_pose_sleep.png` |
+| `NpcRoutineDemo.mcp_probe_life_poses` | ok, count=5；eat/sleep/read/laundry/idle_sit each frames=4 playing |
+| Shot (sleep sample) | `docs/evidence/g8_c54_life_pose_sleep.png` |
 
 User §7 still required.

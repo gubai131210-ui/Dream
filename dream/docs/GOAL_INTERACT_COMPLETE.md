@@ -208,13 +208,14 @@
 - [`GOAL_G8_C54_LIFE_POSE_EVIDENCE.md`](GOAL_G8_C54_LIFE_POSE_EVIDENCE.md) — C54 生活态多帧 pose cue（eat/sleep/read/laundry/idle_sit）  
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
-- `tools/qa_interaction_frames.py` — 17 groups GREEN  
+- `tools/qa_interaction_frames.py` — **26 groups** GREEN  
 - `tools/qa_portal_hover_only.py` — GREEN  
 - `tools/qa_semantic_interior_props.py` — GREEN（zero `_m(P_NOTICE)` + full notice taxonomy）  
 - `tools/qa_no_placeholder_visuals.py` — GREEN  
 - `tools/qa_interact_sprite_inventory.py` — GREEN（kits + focus/open FX）  
-- `tools/qa_work_pose_style.py` — GREEN（C53 pose sheets）  
-- `tools/qa_semantic_interior_props.py` — GREEN（祭坛/候车椅/黑板/课桌/芦苇/管道）  
+- `tools/qa_work_pose_style.py` — GREEN（C53 work + **C54 life** pose sheets）  
+- `tools/qa_interior_tap_fx.py` — GREEN  
+- `tools/qa_interact_fx_coverage.py` — GREEN（C58/C59/C60/DIK/cage/cast/tap/life/stall）  
 
 ---
 
@@ -227,13 +228,13 @@
 
 | 区 | 场景 | 交互/门面要点 | Agent MCP | 用户勾选 |
 | --- | --- | --- | --- | --- |
-| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、工作环姿态 | [x] idle+井/灯；activate；worldsys；anim FX；**C53 按钮常显**；浴场 portal enter PASS；walkthrough crate/bird/bench/board +「互动」prompt | [ ] |
+| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、**K工作/L生活**姿态 | [x] idle+井/灯/lamp_spark；activate；C53+**C54 life poses**；walkthrough crate/bird/bench/board +「互动」prompt | [ ] |
 | 市集 | `market_street` | 木棚摊位、DistrictInteract | [x] `g8_market_idle.png` 木棚可见 | [ ] |
 | 农田 | `farmland` | 垄线、栅栏、DistrictInteract | [x] `g8_farmland_idle.png`；farmer 白底盘已替换 | [ ] |
 | 住宅 | `village_residential` | 门阶/拱门、DistrictInteract | [x] `g8_residential_idle.png` | [ ] |
 | 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [x] `g8_farm_residential_idle.png` | [ ] |
 | 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract；C62 树洞密道 | [x] idle + landmarks；**C62** smoke PASS；walkthrough portal+facade + `g8_walkthrough_forest_entrance_idle` | [ ] |
-| 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] river+lake ready 截图；`g8_c22_fish_cage_smoke` river+lake **ok=6 PASS**；walkthrough 湖笼 `mcp_cycle_to_ready` | [ ] |
+| 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 + **施放 splash** | [x] river+lake ready；cage splash；**fishing cast** `g8_fishing_cast_splash_held`；smoke PASS | [ ] |
 | 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 + 瀑水循环 | [x] idle + **`g8_waterfall_anim.png`**；walkthrough `g8_walkthrough_lighthouse_idle` / `hill_farm_idle` | [ ] |
 | 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png`；walkthrough `g8_walkthrough_lake_house_idle` | [ ] |
 

@@ -162,6 +162,39 @@ func debug_work_pose_names() -> PackedStringArray:
 	return out
 
 
+## QA / MCP: cycle every wired life state and report pose anim presence.
+func mcp_probe_life_poses() -> Dictionary:
+	var states := NpcRoutineRings.life_demo_states(host_key)
+	if states.is_empty():
+		return {"ok": false, "reason": "no_life_states"}
+	var probed: Array = []
+	_showing_life = true
+	for i in range(states.size()):
+		_life_idx = i
+		apply_current()
+		var entry: Dictionary = states[i]
+		var cue := _ysort.get_node_or_null("WorkPoseCue") if _ysort else null
+		var anim: AnimatedSprite2D = null
+		if cue:
+			anim = cue.get_node_or_null("WorkPoseAnim") as AnimatedSprite2D
+		var frames := 0
+		if anim != null and anim.sprite_frames != null and anim.sprite_frames.has_animation("pose"):
+			frames = anim.sprite_frames.get_frame_count("pose")
+		probed.append({
+			"id": str(entry.get("id", "")),
+			"cue": cue != null,
+			"anim": anim != null,
+			"frames": frames,
+			"playing": anim.is_playing() if anim != null else false,
+		})
+	var ok := true
+	for row in probed:
+		if not bool(row.get("cue", false)) or int(row.get("frames", 0)) < 4:
+			ok = false
+			break
+	return {"ok": ok, "count": probed.size(), "states": probed}
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
