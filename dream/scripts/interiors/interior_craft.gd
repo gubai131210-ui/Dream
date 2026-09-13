@@ -310,6 +310,14 @@ func _spawn_prop(
 		hs.activated.connect(func(h: InteractableHotspot) -> void:
 			_play_prop_open_fx(h, open_fx)
 		)
+	else:
+		## Non-open props still get multi-frame tap feedback (C58 sheet reuse).
+		var tap: Dictionary = _infer_tap_fx(path, title)
+		if not tap.is_empty():
+			hs.set_meta("tap_fx", tap)
+			hs.activated.connect(func(h: InteractableHotspot) -> void:
+				_play_prop_tap_fx(h)
+			)
 
 
 func _infer_open_fx(path: String) -> String:
@@ -319,6 +327,167 @@ func _infer_open_fx(path: String) -> String:
 	if base.begins_with("dresser"):
 		return "drawer_open"
 	return ""
+
+
+func _infer_tap_fx(path: String, title: String) -> Dictionary:
+	## Map interior prop paths/titles onto shipped multi-frame sheets.
+	var key := ("%s %s" % [path.get_file(), title]).to_lower()
+	if (
+		"notice" in key
+		or "blackboard" in key
+		or "ledger" in key
+		or "plaque" in key
+		or "board" in key
+		or "timetable" in key
+		or "schedule" in key
+		or "sign" in key
+		or "glyph" in key
+		or "stele" in key
+		or "guide" in key
+		or "rules" in key
+		or "price" in key
+		or "fare" in key
+		or "rate" in key
+		or "scripture" in key
+		or "meeting" in key
+	):
+		return {"dir": "res://assets/sprites/fx", "prefix": "board_rustle", "pos": Vector2(0, -18), "fps": 10.0}
+	if (
+		"lamp" in key
+		or "lantern" in key
+		or "candle" in key
+		or "forge" in key
+		or "hearth" in key
+		or "stove" in key
+		or "fire" in key
+		or "altar" in key
+	):
+		return {"dir": "res://assets/sprites/fx", "prefix": "lamp_spark", "pos": Vector2(0, -22), "fps": 10.0}
+	if (
+		"crate" in key
+		or "barrel" in key
+		or "basket" in key
+		or "chest" in key
+		or "box" in key
+		or "bin" in key
+		or "counter" in key
+		or "shelf" in key
+		or "rack" in key
+		or "desk" in key
+		or "table" in key
+	):
+		return {"dir": "res://assets/sprites/props", "prefix": "crate_lid", "pos": Vector2(0, -14), "fps": 8.0}
+	if (
+		"bench" in key
+		or "chair" in key
+		or "stool" in key
+		or "bed" in key
+		or "sofa" in key
+		or "waiting" in key
+	):
+		return {"dir": "res://assets/sprites/fx", "prefix": "bench_dust", "pos": Vector2(0, 4), "fps": 10.0}
+	if (
+		"hay" in key
+		or "plant" in key
+		or "reed" in key
+		or "flower" in key
+		or "nest" in key
+		or "roost" in key
+		or "wood" in key
+		or "trough" in key
+	):
+		return {"dir": "res://assets/sprites/fx", "prefix": "leaf_fall", "pos": Vector2(0, -12), "fps": 12.0}
+	return {}
+
+
+func _play_prop_tap_fx(hs: InteractableHotspot) -> void:
+	if hs == null:
+		return
+	var spec: Dictionary = hs.get_meta("tap_fx", {}) as Dictionary
+	if spec.is_empty():
+		return
+	var visual := hs.get_node_or_null("Visual") as Node2D
+	if visual == null:
+		return
+	var prefix := str(spec.get("prefix", ""))
+	if prefix.is_empty():
+		return
+	var prior := visual.get_node_or_null("TapFX_%s" % prefix)
+	if prior != null:
+		prior.free()
+	var dir := str(spec.get("dir", "res://assets/sprites/fx"))
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("oneshot")
+	frames.set_animation_loop("oneshot", false)
+	frames.set_animation_speed("oneshot", float(spec.get("fps", 10.0)))
+	var n := 0
+	for i in range(4):
+		var fpath := "%s/%s_%02d.png" % [dir, prefix, i]
+		var ftex := _load_texture(fpath)
+		if ftex == null:
+			continue
+		frames.add_frame("oneshot", ftex)
+		n += 1
+	if n == 0:
+		return
+	var anim := AnimatedSprite2D.new()
+	anim.name = "TapFX_%s" % prefix
+	anim.sprite_frames = frames
+	anim.position = spec.get("pos", Vector2(0, -12)) as Vector2
+	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	anim.z_index = 8
+	anim.centered = true
+	visual.add_child(anim)
+	anim.play("oneshot")
+	anim.animation_finished.connect(func() -> void:
+		if not is_instance_valid(anim):
+			return
+		anim.pause()
+		var sf := anim.sprite_frames
+		if sf != null and sf.has_animation("oneshot"):
+			var last := sf.get_frame_count("oneshot") - 1
+			if last >= 0:
+				anim.frame = last
+	)
+
+
+func mcp_play_tap_fx(hotspot_name: String) -> Dictionary:
+	## Sync probe: play tap FX on a named interior hotspot (non-open props).
+	var host := get_parent()
+	if host == null:
+		return {"ok": false, "reason": "no_host"}
+	var world := host.get_node_or_null("InteriorWorld") as Node2D
+	if world == null:
+		return {"ok": false, "reason": "no_interior_world"}
+	var hs := world.get_node_or_null(hotspot_name) as InteractableHotspot
+	if hs == null:
+		return {"ok": false, "reason": "missing_hotspot", "name": hotspot_name}
+	if not hs.has_meta("tap_fx"):
+		return {"ok": false, "reason": "no_tap_fx_meta", "name": hotspot_name}
+	_play_prop_tap_fx(hs)
+	var visual := hs.get_node_or_null("Visual") as Node2D
+	if visual == null:
+		return {"ok": false, "reason": "missing_visual", "name": hotspot_name}
+	var spec: Dictionary = hs.get_meta("tap_fx", {}) as Dictionary
+	var fx_name := "TapFX_%s" % str(spec.get("prefix", ""))
+	var fx := visual.get_node_or_null(fx_name) as AnimatedSprite2D
+	if fx == null:
+		return {"ok": false, "reason": "fx_not_spawned", "name": hotspot_name, "fx": fx_name}
+	var sf := fx.sprite_frames
+	var frames := 0
+	if sf != null and sf.has_animation("oneshot"):
+		frames = sf.get_frame_count("oneshot")
+	return {
+		"ok": true,
+		"name": hotspot_name,
+		"fx": fx_name,
+		"prefix": str(spec.get("prefix", "")),
+		"frames": frames,
+		"playing": fx.is_playing(),
+		"path": str(fx.get_path()),
+	}
 
 
 func _play_prop_open_fx(hs: InteractableHotspot, open_fx: String) -> void:

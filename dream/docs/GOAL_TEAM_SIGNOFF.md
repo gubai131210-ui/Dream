@@ -27,6 +27,7 @@
 | Integer zoom (agent) | plaza zoom=(1,1) + C53 work ring visible | `g8_square_zoom1_work_pose_v3.png`（用户 §7 仍待手感） |
 | C22 cage splash | place/collect → fish_splash×4 oneshot | `GOAL_G8_C22_CAGE_SPLASH_EVIDENCE.md`；`mcp_splash` frames=4 |
 | C58 lamp spark | lamp_toggle → lamp_spark×4；DIK lamp 同 sheet | `GOAL_G8_C58_LAMP_SPARK_EVIDENCE.md` |
+| Interior tap FX | non-open props → TapFX_* (C58 sheets) | `GOAL_G8_INTERIOR_TAP_FX_EVIDENCE.md`；C07 blackboard/desk/lamp |
 
 ## Automated gates (must stay GREEN)
 
