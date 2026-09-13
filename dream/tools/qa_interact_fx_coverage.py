@@ -94,10 +94,27 @@ def main() -> int:
     if "_play_cycle_fx" not in stall:
         raise AssertionError("market stall cycle FX missing")
 
+    for sheet_dir, prefix, need in (
+        ("assets/sprites/fx", "lamp_spark", 4),
+        ("assets/sprites/fx", "fish_splash", 4),
+        ("assets/sprites/fx", "bench_dust", 4),
+        ("assets/sprites/fx", "board_rustle", 4),
+        ("assets/sprites/fx", "leaf_fall", 4),
+        ("assets/sprites/fx", "bird_peck", 4),
+        ("assets/sprites/props", "well_rope", 4),
+        ("assets/sprites/props", "crate_lid", 4),
+    ):
+        frames = sorted((ROOT / sheet_dir).glob(f"{prefix}_*.png"))
+        if len(frames) < need:
+            raise AssertionError(f"{prefix}: need ≥{need} frames under {sheet_dir}, got {len(frames)}")
+
+    if "func mcp_probe_life_poses" not in routine:
+        raise AssertionError("mcp_probe_life_poses missing")
+
     print(
         "GREEN interact-FX coverage "
         f"(C58={len(c58_ids)} gates={len(gate_ids)} breakables={len(kind_ids)} "
-        "+ DIK/cage/cast/interior/life/stall)"
+        "+ DIK/cage/cast/interior/life/stall + sheet frames)"
     )
     return 0
 
