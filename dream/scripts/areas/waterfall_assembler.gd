@@ -435,11 +435,12 @@ func _spawn_cascade_veil(ysort: Node2D, foot: Vector2 = Vector2(640, 360)) -> vo
 		if not ResourceLoader.exists(mist_path):
 			continue
 		var target_a := float(samples[i]["a"])
-		var spr := craft.spawn_sprite(ysort, mist_path, samples[i]["pos"] as Vector2, 6)
+		var spr := craft.spawn_sprite(ysort, mist_path, samples[i]["pos"] as Vector2, 4)
 		var sc := float(samples[i]["s"])
 		spr.scale = Vector2(sc, sc * 0.85)
-		spr.modulate = Color(0.88, 0.94, 0.98, target_a * 0.55)
+		spr.modulate = Color(0.88, 0.94, 0.98, target_a * 0.4)
 		spr.name = "CascadeVeil_%d" % i
+		spr.z_index = 4
 		var tw := spr.create_tween().set_loops()
 		tw.tween_interval(0.12 * float(i))
 		tw.tween_property(spr, "modulate:a", target_a, 1.0).set_trans(Tween.TRANS_SINE)
