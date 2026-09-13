@@ -59,20 +59,27 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_BRACKETLEFT:
+				_mark_handled()
 				_cycle(-1)
-				get_viewport().set_input_as_handled()
 			KEY_BRACKETRIGHT:
+				_mark_handled()
 				_cycle(1)
-				get_viewport().set_input_as_handled()
 			KEY_M:
+				_mark_handled()
 				SceneRouter.change_to(get_tree(), SceneRouter.HUB_PATH)
-				get_viewport().set_input_as_handled()
 			KEY_ESCAPE:
+				_mark_handled()
 				SceneRouter.change_to(get_tree(), SceneRouter.CONNECTION_PATH)
-				get_viewport().set_input_as_handled()
 			KEY_F11:
 				_toggle_fullscreen()
-				get_viewport().set_input_as_handled()
+				_mark_handled()
+
+
+func _mark_handled() -> void:
+	## Must run before change_scene — after unload get_viewport() is null.
+	var vp := get_viewport()
+	if vp:
+		vp.set_input_as_handled()
 
 
 func _cycle(delta: int) -> void:
