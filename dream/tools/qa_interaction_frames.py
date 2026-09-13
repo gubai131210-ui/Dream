@@ -154,7 +154,7 @@ def main() -> int:
         raise AssertionError("waterfall still calls deprecated _spawn_mist")
     if "WaterfallAnim" not in waterfall or "waterfall_water_%02d" not in waterfall:
         raise AssertionError("waterfall missing animated water loop wiring")
-    if "splash.reparent(vis)" not in waterfall and "node.reparent(vis)" not in waterfall:
+    if "n.reparent(vis)" not in waterfall and "splash.reparent(vis)" not in waterfall and "node.reparent(vis)" not in waterfall:
         raise AssertionError("waterfall cascade not reparented into hotspot Visual")
     cliff_asset = ROOT / "assets/sprites/props/cascade_cliff_mouth_v1.png"
     if not cliff_asset.is_file():
