@@ -26,6 +26,7 @@
 | C60 unlock FX | `mcp_unlock` door/log/boulder | board_rustle / leaf_fall / bench_dust; `g8_c60_unlock_fx_door.png` |
 | C61 all sites | tree/waterfall/cave/island `mcp_open` + shots | 5/5 lids; smoke `g8_c61_chests_smoke.gd` |
 | C05 stall cycle | `MarketStall.mcp_cycle` | crate_lid/board_rustle/leaf_fall; `g8_c05_stall_cycle_fx.png` |
+| C22 cage splash | `FishCage.mcp_splash` / place/collect | fish_splash×4; `g8_c22_cage_splash_held.png` |
 | integer zoom | plaza `CameraController.zoom=(1,1)` + `cycle_work_ring` | `g8_square_zoom1_work_pose_v3.png`；顶栏「工作:打铁环」 |
 | lighthouse / hill_farm / lake_house | runtime idle + DistrictInteractKit | shots `g8_walkthrough_lighthouse_idle` / `hill_farm_idle` / `lake_house_idle` |
 | §7 checklist UI | `user_qa_checklist.tscn` | **21** rows（户外全表+室内抽样）；复制「§7 已勾」；`g8_user_qa_checklist_v2.png` |

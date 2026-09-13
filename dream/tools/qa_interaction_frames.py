@@ -81,8 +81,9 @@ def main() -> int:
         "crate_lid": sorted((ROOT / "assets/sprites/props").glob("crate_lid_*.png")),
         "leaf_fall": sorted((ROOT / "assets/sprites/fx").glob("leaf_fall_*.png")),
         "bird_peck": sorted((ROOT / "assets/sprites/fx").glob("bird_peck_*.png")),
-        "board_rustle": sorted((ROOT / "assets/sprites/fx").glob("board_rustle_*.png")),
+		"board_rustle": sorted((ROOT / "assets/sprites/fx").glob("board_rustle_*.png")),
         "bench_dust": sorted((ROOT / "assets/sprites/fx").glob("bench_dust_*.png")),
+        "fish_splash": sorted((ROOT / "assets/sprites/fx").glob("fish_splash_*.png")),
     }
     for label, paths in groups.items():
         assert_normalized_contract(paths, label)

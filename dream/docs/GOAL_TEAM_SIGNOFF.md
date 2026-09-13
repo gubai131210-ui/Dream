@@ -25,6 +25,7 @@
 | C61 Hidden chests | coin_chest + lid + `mcp_open` **5/5 sites** | `GOAL_G8_C60_C61_FULL_EVIDENCE.md`；well + tree/waterfall/cave/island MCP |
 | C05 stall cycle FX | state tap → crate_lid / board_rustle / leaf_fall | `GOAL_G8_C05_STALL_FX_EVIDENCE.md`；`mcp_cycle` |
 | Integer zoom (agent) | plaza zoom=(1,1) + C53 work ring visible | `g8_square_zoom1_work_pose_v3.png`（用户 §7 仍待手感） |
+| C22 cage splash | place/collect → fish_splash×4 oneshot | `GOAL_G8_C22_CAGE_SPLASH_EVIDENCE.md`；`mcp_splash` frames=4 |
 
 ## Automated gates (must stay GREEN)
 

@@ -127,10 +127,43 @@ def bench_dust() -> None:
 		save(im, FX / f"bench_dust_{i:02d}.png")
 
 
+def fish_splash() -> None:
+	# 32x24 — shore splash expands then thins; bottom waterline fixed ~y=20.
+	# Replaces single fish_splash_00 with a 4-frame oneshot for C22 cage / bite FX.
+	water = (120, 175, 210, 230)
+	foam = (220, 235, 245, 255)
+	shadow = (70, 120, 150, 160)
+	for i in range(4):
+		im = blank(32, 24)
+		d = ImageDraw.Draw(im)
+		spread = 6 + i * 3
+		cy = 18
+		# ellipse ripple
+		d.ellipse(
+			[16 - spread, cy - 3 - i // 2, 16 + spread, cy + 2],
+			outline=water,
+			width=1 + (0 if i > 1 else 1),
+		)
+		# crown jets
+		jet_h = 4 + i
+		d.rectangle([15, cy - jet_h, 17, cy], fill=foam)
+		if i >= 1:
+			d.rectangle([11, cy - jet_h + 2, 12, cy - 1], fill=water)
+			d.rectangle([20, cy - jet_h + 2, 21, cy - 1], fill=water)
+		if i >= 2:
+			d.point((9, cy - 2), fill=foam)
+			d.point((23, cy - 2), fill=foam)
+		if i == 3:
+			# thinning outer ring
+			d.ellipse([16 - spread - 1, cy - 2, 16 + spread + 1, cy + 1], outline=shadow, width=1)
+		# fixed bottom waterline pixels (anchor)
+		d.rectangle([10, 20, 22, 21], fill=water)
+		save(im, FX / f"fish_splash_{i:02d}.png")
+
+
 def main() -> None:
 	# Append-only helpers: do not rewrite shipped leaf/well/crate/bird by default.
-	board_rustle()
-	bench_dust()
+	fish_splash()
 
 
 if __name__ == "__main__":

@@ -63,13 +63,16 @@ func _on_activated(_hs: InteractableHotspot) -> void:
 		"empty":
 			FishingCatalog.cage_place(site_id, cage_id)
 			_pulse()
+			_play_splash_fx()
 		"soaking":
 			if FishingCatalog.cage_try_ripen(site_id, cage_id, SOAK_MSEC):
 				_pulse()
+				_play_splash_fx()
 			# else still soaking — copy refresh only
 		"ready":
 			FishingCatalog.cage_collect(site_id, cage_id)
 			_pulse()
+			_play_splash_fx()
 		_:
 			pass
 	_refresh()
@@ -174,19 +177,23 @@ func mcp_report() -> Dictionary:
 func mcp_place() -> Dictionary:
 	FishingCatalog.cage_place(site_id, cage_id)
 	_pulse()
+	_play_splash_fx()
 	_refresh()
 	var out := mcp_report()
 	out["ok"] = str(out.get("phase", "")) == "soaking"
+	out["fx"] = _fx_report()
 	return out
 
 
 func mcp_collect() -> Dictionary:
 	var out_fish := FishingCatalog.cage_collect(site_id, cage_id)
 	_pulse()
+	_play_splash_fx()
 	_refresh()
 	var out := mcp_report()
 	out["ok"] = str(out.get("phase", "")) == "empty"
 	out["collected"] = out_fish
+	out["fx"] = _fx_report()
 	return out
 
 
@@ -212,3 +219,81 @@ func _pulse() -> void:
 	var tw := _spr.create_tween()
 	tw.tween_property(_spr, "modulate", Color(1.25, 1.2, 0.9, 1.0), 0.12)
 	tw.tween_property(_spr, "modulate", Color.WHITE, 0.2)
+
+
+func _play_splash_fx() -> void:
+	## Multi-frame shore splash (formal pixels — not modulate-only feedback).
+	var visual := get_node_or_null("Visual") as Node2D
+	if visual == null:
+		return
+	var prior := visual.get_node_or_null("FX_fish_splash")
+	if prior != null:
+		prior.free()
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("oneshot")
+	frames.set_animation_loop("oneshot", false)
+	frames.set_animation_speed("oneshot", 10.0)
+	var n := 0
+	for i in range(4):
+		var path := "res://assets/sprites/fx/fish_splash_%02d.png" % i
+		var tex: Texture2D = null
+		if ResourceLoader.exists(path):
+			tex = load(path) as Texture2D
+		if tex == null:
+			var abs_path := ProjectSettings.globalize_path(path)
+			if FileAccess.file_exists(abs_path):
+				var img := Image.load_from_file(abs_path)
+				if img != null:
+					tex = ImageTexture.create_from_image(img)
+		if tex == null:
+			continue
+		frames.add_frame("oneshot", tex)
+		n += 1
+	if n == 0:
+		return
+	var anim := AnimatedSprite2D.new()
+	anim.name = "FX_fish_splash"
+	anim.sprite_frames = frames
+	anim.position = Vector2(0, 8)
+	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	anim.z_index = 8
+	anim.centered = true
+	visual.add_child(anim)
+	anim.play("oneshot")
+	anim.animation_finished.connect(func() -> void:
+		if not is_instance_valid(anim):
+			return
+		anim.pause()
+		var sf2 := anim.sprite_frames
+		if sf2 != null and sf2.has_animation("oneshot"):
+			var last := sf2.get_frame_count("oneshot") - 1
+			if last >= 0:
+				anim.frame = last
+	)
+
+
+func _fx_report() -> Dictionary:
+	var visual := get_node_or_null("Visual") as Node2D
+	if visual == null:
+		return {"ok": false, "reason": "no_visual"}
+	var fx := visual.get_node_or_null("FX_fish_splash") as AnimatedSprite2D
+	if fx == null:
+		return {"ok": false, "reason": "no_fx"}
+	var sf := fx.sprite_frames
+	var count := 0
+	if sf != null and sf.has_animation("oneshot"):
+		count = sf.get_frame_count("oneshot")
+	return {
+		"ok": count >= 4,
+		"name": fx.name,
+		"frames": count,
+		"playing": fx.is_playing(),
+	}
+
+
+func mcp_splash() -> Dictionary:
+	## Force splash oneshot for MCP/runtime evidence without changing cage phase.
+	_play_splash_fx()
+	return _fx_report()

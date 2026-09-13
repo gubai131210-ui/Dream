@@ -286,6 +286,36 @@ func _spawn_bubble(offset: Vector2) -> void:
 
 
 func _spawn_splash() -> void:
+	## Prefer 4-frame fish_splash sheet; fall back to single _00 sprite tween.
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("oneshot")
+	frames.set_animation_loop("oneshot", false)
+	frames.set_animation_speed("oneshot", 10.0)
+	var n := 0
+	for i in range(4):
+		var path := "res://assets/sprites/fx/fish_splash_%02d.png" % i
+		var tex := WorldSpawnUtil.load_prop_texture(path)
+		if tex == null:
+			continue
+		frames.add_frame("oneshot", tex)
+		n += 1
+	if n >= 2:
+		var anim := AnimatedSprite2D.new()
+		anim.name = "FX_fish_splash"
+		anim.sprite_frames = frames
+		anim.position = Vector2(0, -2)
+		anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		anim.z_index = 5
+		anim.centered = true
+		_fx_layer.add_child(anim)
+		anim.play("oneshot")
+		anim.animation_finished.connect(func() -> void:
+			if is_instance_valid(anim):
+				anim.queue_free()
+		)
+		return
 	var splash_tex := WorldSpawnUtil.load_prop_texture("res://assets/sprites/fx/fish_splash_00.png")
 	if splash_tex != null:
 		var spr := Sprite2D.new()
