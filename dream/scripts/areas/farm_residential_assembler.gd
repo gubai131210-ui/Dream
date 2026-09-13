@@ -1,7 +1,7 @@
 class_name FarmResidentialAssembler
 extends Node
 
-## Farm residential (A02) â AreaCraft masks + layered assemble.
+## Farm residential (A02) — AreaCraft masks + layered assemble.
 ## District: farm_home (AREA_FRAMEWORK). craft.setup(..., "farm_home").
 ## Buildings must sit FULLY inside the farm play zone (sprite AABB), not straddling fence/forest.
 
@@ -9,7 +9,7 @@ const MAP_W := 40
 const MAP_H := 30
 const PROP_SCALE := 0.55
 
-## Visual farmyard â forest belt outside; fence hugs this rect.
+## Visual farmyard — forest belt outside; fence hugs this rect.
 const FARM_ZONE := Rect2(96, 96, 1088, 768)
 ## Buildings/props must sit fully *inside* the fence (not just FARM_ZONE).
 ## Fence is drawn at FARM_ZONE Â±8; this rect insets past posts + roof clearance.
@@ -70,7 +70,7 @@ func _rebuild_masks() -> void:
 
 
 func _compute_pond_tile(tx: int, ty: int) -> bool:
-	## Meandering farm pond â angular + multi-frequency noise so the shore is not a clean ellipse/rect.
+	## Meandering farm pond — angular + multi-frequency noise so the shore is not a clean ellipse/rect.
 	var nx: float = (float(tx) - POND_CX) / POND_RX
 	var ny: float = (float(ty) - POND_CY) / POND_RY
 	var ang: float = atan2(ny, nx)
@@ -85,7 +85,7 @@ func _compute_pond_tile(tx: int, ty: int) -> bool:
 	var radius: float = 1.0 + meander
 	if d2 <= radius * radius * 0.68:
 		return true
-	# Ragged fringe â not a filled elliptical ring.
+	# Ragged fringe — not a filled elliptical ring.
 	if d2 <= radius * radius and sin(float(tx) * 0.95 + float(ty) * 1.45 + ang * 2.2) > -0.22:
 		return true
 	# Occasional spit / inlet just outside the main body.
@@ -217,13 +217,13 @@ func _spawn_buildings(ysort: Node2D) -> void:
 func _spawn_props(ysort: Node2D) -> void:
 	# Yard defaults use upright barrel_1; small props match village residential scale 0.55.
 	var samples := [
-		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(420, 420), "title": "è´§ç®±", "desc": "èç¦æè´§ç®±ã", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/crate_1.png", "pos": Vector2(860, 420), "title": "æ¨ç®±", "desc": "ä¸ç¦ææ¨ç®±ã", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(540, 400), "title": "éº»è¢", "desc": "åèåèç®éº»è¢ã", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/sack_1.png", "pos": Vector2(700, 440), "title": "ç²®è¢", "desc": "é¢è½ç²®è¢ã", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(300, 420), "title": "æ¨æ¡¶", "desc": "é¸¡èææ¨æ¡¶ã", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(1040, 420), "title": "æ°´æ¡¶", "desc": "è°·ä»ææ°´æ¡¶ã", "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(580, 480), "title": "é¢ç¯", "desc": "é¢è½è·¯ç¯ã", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(420, 420), "title": "货箱", "desc": "菜畦旁货箱。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/crate_1.png", "pos": Vector2(860, 420), "title": "木箱", "desc": "东畦旁木箱。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(540, 400), "title": "麻袋", "desc": "农舍前草皮麻袋。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/sack_1.png", "pos": Vector2(700, 440), "title": "粮袋", "desc": "院落粮袋。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(300, 420), "title": "木桶", "desc": "鸡舍旁木桶。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(1040, 420), "title": "水桶", "desc": "谷仓旁水桶。", "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(580, 480), "title": "院灯", "desc": "院落路灯。", "hw": 1, "hh": 1},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):
@@ -273,8 +273,8 @@ func _spawn_fences(ysort: Node2D) -> void:
 
 
 func _spawn_trees(ysort: Node2D) -> void:
-	# Forest belt outside fence â full crown AABB via spawn_tree + map play rect.
-	# spawn_tree auto mark_blocked_footprint â do not duplicate.
+	# Forest belt outside fence — full crown AABB via spawn_tree + map play rect.
+	# spawn_tree auto mark_blocked_footprint — do not duplicate.
 	var map_zone := craft.map_play_rect(2.0)
 	var forest := [
 		Vector2(48, 48), Vector2(48, 480), Vector2(48, 900),
@@ -287,7 +287,7 @@ func _spawn_trees(ysort: Node2D) -> void:
 			path = "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
 		craft.spawn_tree(ysort, path, forest[i], map_zone, 1, 1, 8, false)
 
-	# Yard orchard inside fence on grass (not garden dirt) â AABB â FARM_BUILD_ZONE.
+	# Yard orchard inside fence on grass (not garden dirt) — AABB â FARM_BUILD_ZONE.
 	var yard := [
 		Vector2(160, 560), Vector2(1120, 560), Vector2(280, 700), Vector2(1000, 700),
 	]
@@ -299,12 +299,12 @@ func _spawn_trees(ysort: Node2D) -> void:
 
 
 func _spawn_actors(ysort: Node2D) -> void:
-	# PatrolActor walk cycles â never animate_patrol sliding (NPC_ANIM).
+	# PatrolActor walk cycles — never animate_patrol sliding (NPC_ANIM).
 	var actors := [
 		{
 			"id": "farmer",
-			"title": "åå¤«",
-			"desc": "æ²¿é¢è½åè·¯å·¡è§èåã",
+			"title": "农夫",
+			"desc": "沿院落土路巡视菜圃。",
 			"waypoints": [
 				Vector2(640, 400),
 				Vector2(640, 560),
@@ -315,8 +315,8 @@ func _spawn_actors(ysort: Node2D) -> void:
 		},
 		{
 			"id": "elder_woman",
-			"title": "å¸®æ",
-			"desc": "å¨åèä¸è°·ä»åå»ä¹é´èµ°å¨ã",
+			"title": "帮手",
+			"desc": "在农舍与谷仓前廊之间走动。",
 			"waypoints": [
 				Vector2(320, 380),
 				Vector2(640, 380),
@@ -326,8 +326,8 @@ func _spawn_actors(ysort: Node2D) -> void:
 		},
 		{
 			"id": "merchant",
-			"title": "è®¿å®¢",
-			"desc": "ä»åå£èµ°è¿é¢è½ï¼ä¸ä¸æ°´å¡ï¼ã",
+			"title": "访客",
+			"desc": "从南口走进院落（不下水塘）。",
 			"waypoints": [
 				Vector2(640, 820),
 				Vector2(640, 700),

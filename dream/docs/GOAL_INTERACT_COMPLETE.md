@@ -173,6 +173,7 @@
 | ~~farmer 仅 4 帧（qa_scene_presentation RED）~~ | `npc/farmer` | **DONE** → 提升 `farmer_v5` 8 帧；presentation GREEN；MCP `g8_farmland_farmer_8frame.png` |
 | ~~C60 锁门共用门脸~~ | ProgressGates locked_door | **DONE** → `gate_locked_door_00`（铁锁+横闩；禁 door_facade） |
 | ~~C59 杂草/C60 倒木低密度~~ | breakable_weed / gate_log | **DONE** → 重绘 uniq≥60；StyleQA 抬地板 |
+| ~~assembler 中文 title mojibake~~ | farmland / farm_residential / village_residential | **DONE** → 源码修复 61 串；`qa_assembler_encoding` GREEN |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据
@@ -224,6 +225,7 @@
 - [`GOAL_G8_LAMP_OFF_RESTORE_DAY_EVIDENCE.md`](GOAL_G8_LAMP_OFF_RESTORE_DAY_EVIDENCE.md) — 白天点灯粘性夜间；关灯回白天（N 仍可用）
 - [`GOAL_G8_HUB_QA_ENTRY_EVIDENCE.md`](GOAL_G8_HUB_QA_ENTRY_EVIDENCE.md) — Hub「§7验收」→ 清单 MCP；WIP profile 归档
 - [`GOAL_G8_USER_QA_PROGRESS_POLL_EVIDENCE.md`](GOAL_G8_USER_QA_PROGRESS_POLL_EVIDENCE.md) — `mcp_progress` 0/21 + checklist agent-ready 文案；广场 C58 再探活
+- [`GOAL_G8_ASSEMBLER_ENCODING_EVIDENCE.md`](GOAL_G8_ASSEMBLER_ENCODING_EVIDENCE.md) — 农田/农场住宅/住宅区 assembler 中文串 mojibake 修复 + encoding QA
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — **26 groups** GREEN  
