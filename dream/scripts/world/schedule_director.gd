@@ -125,7 +125,12 @@ func _resolve_mode(role: String, night: bool, precip: bool) -> String:
 
 
 func _apply_actor(n: Node, mode: String, scene_key: String) -> void:
+	var prev := str(n.get_meta("schedule_mode", ""))
+	var mode_changed := prev != mode
 	n.set_meta("schedule_mode", mode)
+	# Same mode rebroadcast (DayNight + WorldEnv both fire): skip teleport / resume blink.
+	if not mode_changed:
+		return
 	match mode:
 		"hidden_home":
 			# Indoors / barn / coop — leave outdoor scene empty of this body.
@@ -162,6 +167,8 @@ func _apply_actor(n: Node, mode: String, scene_key: String) -> void:
 				n.set_process(true)
 			if n.has_method("resume_patrol"):
 				n.resume_patrol()
+			elif n.has_method("set_physics_process"):
+				n.set_physics_process(true)
 			elif n.has_method("set_physics_process"):
 				n.set_physics_process(true)
 

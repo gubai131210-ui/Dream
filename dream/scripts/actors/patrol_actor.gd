@@ -7,6 +7,8 @@ const DIRS: Array[String] = ["down", "left", "right", "up"]
 const SNAP_MAX_R := 8
 const FOOT_CONTACT_Y := 0.0
 const AVOID_PAUSE_SEC := 0.45
+## Require a clearer axis bias before swapping facing (stops diagonal thrash).
+const FACING_BIAS := 0.18
 
 var _anim: AnimatedSprite2D
 var _route: Array[Vector2] = []
@@ -15,6 +17,8 @@ var _dir: int = 1
 var _pause_left: float = 0.0
 var _facing: String = "down"
 var _moving: bool = false
+## Last anim walk/idle state we committed — avoids per-tick play()/frame=0 thrash.
+var _anim_walking: bool = false
 var _character_id: String = ""
 var _role: int = NpcMotionPolicy.Role.VISITOR
 var _speed_px: float = 32.0
@@ -79,6 +83,7 @@ func setup(
 	visual.add_child(_anim)
 	_anim.offset = NpcWalkFrames.foot_offset(_anim.sprite_frames, FOOT_CONTACT_Y)
 	_apply_anim_fps()
+	_anim_walking = true  # force first idle commit
 	_set_anim(false)
 
 
@@ -125,7 +130,10 @@ func _refresh_motion_policy() -> void:
 func _apply_anim_fps() -> void:
 	if _anim == null:
 		return
-	NpcMotionPolicy.apply_anim_speed(_anim, NpcMotionPolicy.frame_fps(_role, _host_scene()))
+	var fps := NpcMotionPolicy.frame_fps(_role, _host_scene())
+	var next_scale := fps / 8.0
+	if absf(_anim.speed_scale - next_scale) > 0.01:
+		NpcMotionPolicy.apply_anim_speed(_anim, fps)
 
 
 ## If a waypoint sits on water/blocked, snap to nearby NPC-walkable tile center (spiral).
@@ -165,8 +173,9 @@ func _physics_process(delta: float) -> void:
 	# Re-sample weather/time occasionally cheaply via pause boundaries.
 	if _pause_left > 0.0:
 		_pause_left -= delta
-		_moving = false
-		_set_anim(false)
+		if _moving:
+			_moving = false
+			_set_anim(false)
 		if _pause_left <= 0.0:
 			_refresh_motion_policy()
 		return
@@ -192,12 +201,11 @@ func _physics_process(delta: float) -> void:
 		var nt: Vector2i = craft.world_to_tile(next_pos)
 		if not craft.is_npc_walkable(nt.x, nt.y):
 			# Stardew-like: try a short sidestep onto an adjacent walkable tile before reversing.
+			# Keep facing along route intent — sidestep facing thrash restarts walk anim every tick.
 			var side := _try_sidestep(craft, dir, move_len)
 			if side != Vector2.ZERO:
-				var move_dir := side - position
 				position = side
-				if move_dir != Vector2.ZERO:
-					_update_facing(move_dir)
+				_update_facing(dir)
 				_moving = true
 				_set_anim(true)
 				return
@@ -242,10 +250,16 @@ func _turn_back() -> void:
 
 
 func _update_facing(dir: Vector2) -> void:
-	if absf(dir.x) >= absf(dir.y):
-		_facing = "right" if dir.x >= 0.0 else "left"
-	else:
-		_facing = "down" if dir.y >= 0.0 else "up"
+	var ax := absf(dir.x)
+	var ay := absf(dir.y)
+	var next := _facing
+	if ax > ay + FACING_BIAS:
+		next = "right" if dir.x >= 0.0 else "left"
+	elif ay > ax + FACING_BIAS:
+		next = "down" if dir.y >= 0.0 else "up"
+	# Near-diagonal: keep current facing to avoid left/right thrash.
+	if next != _facing:
+		_facing = next
 
 
 func _set_anim(walking: bool) -> void:
@@ -254,10 +268,17 @@ func _set_anim(walking: bool) -> void:
 	var anim_name := ("walk_%s" if walking else "idle_%s") % _facing
 	if not _anim.sprite_frames.has_animation(anim_name):
 		return
-	if _anim.animation != anim_name:
+	var switched := _anim.animation != anim_name
+	var walk_edge := walking != _anim_walking
+	if switched:
 		_anim.play(anim_name)
+		if not walking:
+			_anim.pause()
+			# Hold standing pose once — do not reset every physics tick.
+			_anim.frame = 0
 	elif walking and not _anim.is_playing():
 		_anim.play(anim_name)
-	elif not walking:
+	elif not walking and walk_edge:
 		_anim.pause()
 		_anim.frame = 0
+	_anim_walking = walking

@@ -108,9 +108,7 @@ func _on_global(tg: int, w: int, _season: int) -> void:
 	state_changed.emit(time_grade, weather)
 	_broadcast_motion_refresh()
 	_syncing = false
-	var sd := get_node_or_null("/root/ScheduleDirector")
-	if sd and sd.has_method("apply_to_current_scene"):
-		sd.apply_to_current_scene()
+	# ScheduleDirector already listens to WorldEnvState — do not double-apply (NPC blink).
 
 
 func _pull_global() -> void:

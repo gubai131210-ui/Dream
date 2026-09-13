@@ -179,7 +179,8 @@ func _on_mouse_entered() -> void:
 		_visual = get_node_or_null("Visual") as CanvasItem
 		if _visual:
 			_default_modulate = _visual.modulate
-	if _visual:
+	# Soften highlight on walking NPCs — hard modulate pops look like flicker.
+	if _visual and not is_in_group("patrol_actors"):
 		_visual.modulate = highlight_modulate
 	_ensure_focus_corners()
 	queue_redraw()
