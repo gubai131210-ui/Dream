@@ -23,7 +23,8 @@ func _ready() -> void:
 		assembler.assemble(self, profile_id)
 	var prof: Dictionary = InteriorProfiles.get_profile(profile_id)
 	var ret_path := str(prof.get("return_path", SceneRouter.RESIDENTIAL_PATH))
-	btn_outside.pressed.connect(func(): SceneRouter.change_to(get_tree(), ret_path))
+	var ret_spawn := str(prof.get("return_spawn_id", ""))
+	btn_outside.pressed.connect(func(): SceneRouter.change_to(get_tree(), ret_path, ret_spawn))
 	btn_hub.pressed.connect(func(): SceneRouter.change_to(get_tree(), SceneRouter.HUB_PATH))
 	_wire_hotspots(world)
 	_wire_portals(world)
@@ -60,6 +61,8 @@ func _frame_room(room_rect: Rect2) -> void:
 				if TrainService.get_state() == TrainService.State.DOCKED and TrainService.has_ticket_for_active():
 					TrainService.request_early_depart()
 			)
+	if profile_id == "c29_ruins":
+		EncounterPocketKit.attach_to(self, world, info)
 
 
 func _process(_delta: float) -> void:
@@ -82,7 +85,8 @@ func _wire_portals(node: Node) -> void:
 				if path == SceneRouter.C36_TRAIN_CAR_PATH and not TrainService.can_board_car():
 					info.show_info("车厢门", TrainService.board_hint())
 					return
-				SceneRouter.change_to(get_tree(), path)
+				var sid := str(area.get_meta("spawn_id", ""))
+				SceneRouter.change_to(get_tree(), path, sid)
 		)
 	for child in node.get_children():
 		_wire_portals(child)

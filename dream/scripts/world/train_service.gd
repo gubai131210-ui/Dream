@@ -168,6 +168,9 @@ func timetable_text() -> String:
 	else:
 		lines.append("")
 		lines.append("你未持票 · 售票窗只在停靠时开放")
+	# Spine D soft sink — no hard lock on boarding.
+	lines.append("")
+	lines.append("闲话：深林遗迹的苔树脂可做灯饰/家具（soft gate，不挡上车）。")
 	return "\n".join(lines)
 
 

@@ -255,7 +255,8 @@ func _spawn_portals(ysort: Node2D) -> void:
 	var ruins := craft.tile_center(28, 12)
 	var hs_ruins := craft.make_hotspot(ysort, "遗迹残垣", "林间石砌遗迹门洞。", ruins, Vector2(88, 64))
 	craft.attach_hotspot_prop(hs_ruins, "res://assets/sprites/props/ruin_arch_00.png", 0.7)
-	craft.make_portal(
+	var ruins_portal := craft.make_portal(
 		ysort, "进入遗迹", SceneRouter.C29_RUINS_PATH,
 		ruins + Vector2(0, 14), Vector2(100, 56)
 	)
+	ruins_portal.set_meta("spawn_id", "entrance")

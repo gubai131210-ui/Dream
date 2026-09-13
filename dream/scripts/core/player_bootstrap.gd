@@ -59,9 +59,24 @@ func _bootstrap_current() -> void:
 
 
 func _resolve_spawn(host: Node2D, ysort: Node2D) -> Vector2:
+	## Prefer SpawnRegistry pending (from SceneRouter.change_to spawn_id / portal meta).
+	if SpawnRegistry.has_pending():
+		var pending: Dictionary = SpawnRegistry.take_pending()
+		var pos_v: Variant = pending.get("pos", Vector2.INF)
+		if typeof(pos_v) == TYPE_VECTOR2 and pos_v != Vector2.INF:
+			return ysort.to_local(pos_v)
+		var sid := str(pending.get("id", ""))
+		if not sid.is_empty():
+			var marker := host.find_child("Spawn_%s" % sid, true, false) as Node2D
+			if marker != null:
+				return ysort.to_local(marker.global_position)
+			var catalog := SpawnRegistry.default_local_pos(host.scene_file_path, sid)
+			if catalog != Vector2.INF:
+				return catalog
+	# Legacy: south apron of Portal_Return (avoid instant re-trigger).
 	var portal := host.find_child("Portal_Return", true, false) as Node2D
 	if portal != null:
-		return ysort.to_local(portal.global_position + Vector2(0, -40.0))
+		return ysort.to_local(portal.global_position + Vector2(0, 48.0))
 	var camera := _find_camera(host)
 	if camera != null:
 		return ysort.to_local(camera.global_position)

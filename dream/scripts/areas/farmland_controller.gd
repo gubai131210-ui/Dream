@@ -38,6 +38,8 @@ func _ready() -> void:
 	# G4 — district prop interacts.
 	var _dik = load("res://scripts/world/district_interact_kit.gd")
 	_dik.attach_to(self, "farmland", top_bar)
+	# Spine B — turnip crop vertical slice (new stage art → InventoryService).
+	FarmCropKit.attach_to(self, ysort_root, info)
 	if not bool(ProjectSettings.get_setting("debug/show_demo_overlays", false)):
 		var routine_status := get_node_or_null("NpcRingDemoStatus") as CanvasLayer
 		if routine_status:
@@ -50,13 +52,7 @@ func _ready() -> void:
 
 func _wire_portals(node: Node) -> void:
 	if node is Area2D and (node as Area2D).has_meta("scene_path"):
-		var area := node as Area2D
-		area.input_event.connect(func(_vp: Node, event: InputEvent, _si: int) -> void:
-			if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-				var path: String = str(area.get_meta("scene_path"))
-				if not path.is_empty():
-					SceneRouter.change_to(get_tree(), path)
-		)
+		WorldSpawnUtil.wire_portal_click(node as Area2D, get_tree())
 	for c in node.get_children():
 		_wire_portals(c)
 

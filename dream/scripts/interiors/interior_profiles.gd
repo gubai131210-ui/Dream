@@ -1759,6 +1759,7 @@ static func _all() -> Dictionary:
 			"title": "遗迹主殿",
 			"hint": "遗迹 · 残祭主殿 / 侧廊藏宝",
 			"return_path": FDEEP,
+			"return_spawn_id": "from_ruins",
 			"room_w": 26,
 			"room_h": 20,
 			"door_tx0": 11,

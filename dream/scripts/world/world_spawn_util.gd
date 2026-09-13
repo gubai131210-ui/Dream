@@ -276,8 +276,10 @@ static func wire_portal_click(area: Area2D, tree: SceneTree) -> void:
 	area.input_event.connect(func(_vp: Node, event: InputEvent, _si: int) -> void:
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			var path := str(area.get_meta("scene_path", ""))
-			if not path.is_empty():
-				SceneRouter.change_to(tree, path)
+			if path.is_empty():
+				return
+			var sid := str(area.get_meta("spawn_id", ""))
+			SceneRouter.change_to(tree, path, sid)
 	)
 
 

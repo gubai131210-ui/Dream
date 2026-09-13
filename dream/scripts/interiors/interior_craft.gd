@@ -917,6 +917,9 @@ func _spawn_return_portal(parent: Node2D) -> void:
 	)
 	# No always-on arch pulse — hover brighten above is the only door affordance cue.
 	portal.set_meta("scene_path", str(_profile.get("return_path", SceneRouter.RESIDENTIAL_PATH)))
+	var ret_spawn := str(_profile.get("return_spawn_id", ""))
+	if not ret_spawn.is_empty():
+		portal.set_meta("spawn_id", ret_spawn)
 	parent.add_child(portal)
 
 

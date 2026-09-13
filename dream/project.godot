@@ -20,6 +20,8 @@ config/icon="res://icon.svg"
 MCPRuntime="*res://addons/godot_mcp/runtime/mcp_runtime.gd"
 PlayerBootstrap="*res://scripts/core/player_bootstrap.gd"
 TrainService="*res://scripts/world/train_service.gd"
+SpawnRegistry="*res://scripts/world/spawn_registry.gd"
+InventoryService="*res://scripts/world/inventory_service.gd"
 
 [debug]
 

@@ -44,13 +44,8 @@ func _ready() -> void:
 
 func _wire_portals(node: Node) -> void:
 	if node is Area2D and (node as Area2D).has_meta("scene_path"):
-		var area := node as Area2D
-		area.input_event.connect(func(_vp: Node, event: InputEvent, _si: int) -> void:
-			if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-				var path: String = str(area.get_meta("scene_path"))
-				if not path.is_empty():
-					SceneRouter.change_to(get_tree(), path)
-		)
+		# Pass portal spawn_id meta into SpawnRegistry via SceneRouter.
+		WorldSpawnUtil.wire_portal_click(node as Area2D, get_tree())
 	for c in node.get_children():
 		_wire_portals(c)
 
