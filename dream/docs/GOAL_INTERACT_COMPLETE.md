@@ -166,6 +166,7 @@
 | ~~C06 会议桌/公告板 · C11 时刻表~~ | town hall / station | **DONE** → `meeting_table` / `civic_board` / `timetable` |
 | ~~C28 根桌/木钉梯/根须垛代理~~ | giant tree interior | **DONE** → `root_table` / `peg_ladder` / `root_mass` |
 | ~~C29 碑刻 / C28 树皮符 / C11 票价牌~~ | ruins / tree / station | **DONE** → `ruin_stele` / `bark_glyph` / `fare_board` |
+| ~~C10 经文牌~~ | church altar | **DONE** → `scripture_plaque_00`（非 notice）；MCP `g8_c10_scripture_plaque.png` |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据

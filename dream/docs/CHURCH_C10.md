@@ -87,6 +87,7 @@ Blockers: none desk-side; confirm portal + return in editor
 - [x] `c10_church`: altar + pews_w + pews_e + cool lights + clergy actor  
 - [x] `return_path` = square; door aisle ≥2  
 - [x] Unique `pew_00.png` (no grass)  
+- [x] Altar cluster: `altar_00` + `scripture_plaque_00`（经文牌非 notice）  
 - [x] Portal host Lead-seeded「进入教堂」  
 - [x] This package MD + Visual QA PASS (desk)  
 - [x] Commit + push  

@@ -116,6 +116,7 @@ const P_STALL_CORNER_SW := DIR_INTERIOR_PROP + "/stall_corner_sw_00.png"
 const P_STALL_CORNER_SE := DIR_INTERIOR_PROP + "/stall_corner_se_00.png"
 # Semantic signature props (replace dining/counter/hay/barrel proxies)
 const P_ALTAR := DIR_INTERIOR_PROP + "/altar_00.png"
+const P_SCRIPTURE_PLAQUE := DIR_INTERIOR_PROP + "/scripture_plaque_00.png"
 const P_WAITING_BENCH := DIR_INTERIOR_PROP + "/waiting_bench_00.png"
 const P_BLACKBOARD := DIR_INTERIOR_PROP + "/blackboard_00.png"
 const P_SCHOOL_DESK := DIR_INTERIOR_PROP + "/school_desk_00.png"
@@ -1297,7 +1298,7 @@ static func _all() -> Dictionary:
 				# Verb: 祭礼 — north sanctuary; clergy south of altar facing nave.
 				_cluster("altar", 13, 4, [
 					_m(P_ALTAR, 0, 0, "祭坛", "北向长祭坛（礼堂主锚）。", 1.0),
-					_m(P_NOTICE, 0, -2, "经文牌", "北壁经文/彩窗下告示。", 0.8),
+					_m(P_SCRIPTURE_PLAQUE, 0, -2, "经文牌", "北壁经文牌（非 notice 代理）。", 0.85),
 					_m(P_LEDGER, -2, 0, "经书", "祭坛西侧经书。", 0.65),
 					_m(P_LAMP_INDOOR, 2, -1, "圣灯", "祭坛东侧圣灯。", PROP),
 					_m(P_LAMP_INDOOR, -2, -1, "圣灯", "祭坛西侧圣灯。", 0.85),

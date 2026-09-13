@@ -71,6 +71,7 @@
 | C28 bark glyph | `docs/evidence/g8_c28_bark_glyph.png` | 树皮符=`bark_glyph_00` |
 | C29 ruin stele | `docs/evidence/g8_c29_ruin_stele.png` | 碑刻=`ruin_stele_00` |
 | C11 fare board | `docs/evidence/g8_c11_fare_board.png` | 票价牌=`fare_board_00` |
+| C10 scripture plaque | `docs/evidence/g8_c10_scripture_plaque.png` | 经文牌=`scripture_plaque_00` |
 
 ## Runtime queries
 
@@ -99,6 +100,7 @@
 - C04 `候坐` texture=`waiting_bench_00`; C07 `讲台` texture=`lectern_00`
 - C06 `公告板`=`civic_board_00` + `会议桌`=`meeting_table_00`; C11 `时刻表`=`timetable_00`
 - C28 `根桌`/`木钉梯`/`根须垛` = root_table / peg_ladder / root_mass
+- C10 `经文牌` texture=`scripture_plaque_00` (altar cluster forbids `notice_00`)
 - Headless `g8_c58_fx_smoke` PASS (well_rope / crate_lid / leaf_fall ×4)
 
 ## Agent reviews this batch
