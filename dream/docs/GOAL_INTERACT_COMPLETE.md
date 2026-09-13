@@ -285,10 +285,10 @@
 | 1 | 已列交互正式像素 + 反馈 + 多帧 | C58 全套；DIK；C05；C22+钓鱼；室内 Open/Tap；**C53/C54 deep-paint**；C59–C61；qa frames + pose StyleQA GREEN | **PROVEN（代码+MCP）**；§7 手感确认仍待 |
 | 2 | 全户外+室内门面/道具/可进出 | load smoke 72/72；portal cue 12；MCP 进门+多室内 idle；室内 tap FX；C62 全链 | **PROVEN（加载+MCP 进门）**；§7 全表进出仍待 |
 | 3 | 统称权威 | 本文件 + `ASSET_TAXONOMY` 回链 | **PROVEN** |
-| 4 | 多团队流水线门禁 | §2 角色表；[`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md)；Style/Anim/Cohere + Genre/Canon；qa_* 全套 GREEN（2026-09-13 再跑） | **PROVEN（本轮批次）** |
-| 5 | MCP/运行时交互动画证据 | MCP 证据链 + [`GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md`](GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md) + zoom1 `g8_square_zoom1_work_pose_v3.png` | **PROVEN** |
+| 4 | 多团队流水线门禁 | §2 角色表；[`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md)；Style/Anim/Cohere + Genre/Canon；qa_* 全套 GREEN（2026-09-13 tip `4d01e14` 再跑） | **PROVEN（本轮批次）** |
+| 5 | MCP/运行时交互动画证据 | MCP 证据链 + hub「§7验收」入口 + walkthrough + zoom1 | **PROVEN** |
 
-**结论：** Agent 侧五条要求已有可复核证据；在 §7 用户本机勾选确认前，**不得**将 Goal 标 complete（项目验收门）。
+**结论：** Agent 侧五条要求已有可复核证据（含 sprite-only 硬门与 hub §7 入口）；在 §7 用户本机勾选确认前，**不得**将 Goal 标 complete（项目验收门）。预计手测 15–25 分钟，回复「§7 已勾」即可关 Goal。
 
 ---
 
