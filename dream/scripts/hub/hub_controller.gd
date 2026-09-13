@@ -82,7 +82,7 @@ func _wire_user_qa_button() -> void:
 
 
 func _enter_user_qa() -> void:
-	SceneRouter.change_to(get_tree(), SceneRouter.USER_QA_PATH)
+	DreamUI.go_user_qa(get_tree())
 
 
 func _bind_btn(btn: Button, cb: Callable) -> void:

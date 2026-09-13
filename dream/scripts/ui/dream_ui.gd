@@ -23,6 +23,7 @@ static func polish_area(root: Node, scene_title: String) -> void:
 	_apply_topbar(topbar, scene_title, false)
 	_add_help_card(ui, "左键调查物件  ·  中键拖拽镜头  ·  滚轮缩放  ·  G 网格  ·  K 工作环  ·  L 生活态")
 	_add_ambient_fx(root)
+	_add_user_qa_return(ui)
 	var info := root.get_node_or_null("InfoPanel")
 	if info != null:
 		polish_info_panel(info)
@@ -44,6 +45,26 @@ static func polish_hub(root: Node, connections: bool = false) -> void:
 			nature_hint.add_theme_font_size_override("font_size", 15)
 	_add_help_card(ui, "选择一个地点开始探索  ·  点击地图标记或上方入口")
 	_add_hub_pins(root)
+	# Hub already has §7验收 entry — clear return arm so it does not stack.
+	clear_user_qa_return()
+
+
+static func arm_user_qa_return() -> void:
+	Engine.set_meta("dream_user_qa_return", true)
+
+
+static func clear_user_qa_return() -> void:
+	if Engine.has_meta("dream_user_qa_return"):
+		Engine.remove_meta("dream_user_qa_return")
+
+
+static func is_user_qa_return_armed() -> bool:
+	return bool(Engine.get_meta("dream_user_qa_return", false))
+
+
+static func go_user_qa(tree: SceneTree) -> void:
+	clear_user_qa_return()
+	SceneRouter.change_to(tree, SceneRouter.USER_QA_PATH)
 
 
 static func polish_info_panel(panel_layer: Node) -> void:
@@ -141,6 +162,33 @@ static func _add_help_card(ui: CanvasLayer, text: String) -> void:
 	label.add_theme_font_size_override("font_size", 13)
 	card.add_child(label)
 	ui.add_child(card)
+
+
+static func _add_user_qa_return(ui: CanvasLayer) -> void:
+	## After §7 checklist「跳转」, keep a single return chip so hand-feel QA can loop.
+	if not is_user_qa_return_armed():
+		return
+	if ui.get_node_or_null("UserQaReturnBtn") != null:
+		return
+	var btn := Button.new()
+	btn.name = "UserQaReturnBtn"
+	btn.text = "回§7清单"
+	btn.tooltip_text = "返回 Goal 用户验收清单继续勾选"
+	btn.anchor_left = 1.0
+	btn.anchor_right = 1.0
+	btn.anchor_top = 0.0
+	btn.anchor_bottom = 0.0
+	btn.offset_left = -150.0
+	btn.offset_right = -22.0
+	btn.offset_top = 78.0
+	btn.offset_bottom = 112.0
+	_style_button(btn, true)
+	btn.pressed.connect(func() -> void:
+		var tree := ui.get_tree()
+		if tree:
+			go_user_qa(tree)
+	)
+	ui.add_child(btn)
 
 
 static func _add_hub_pins(root: Node) -> void:

@@ -122,7 +122,7 @@
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
 | G7 | **DONE (code)** — bobber；C22；pose×4；drawer StyleQA；C05 摊位默认真棚 PNG |
-| G8 | **IN PROGRESS** — smoke 72/72；activate/portal/open FX；**MCP 截图已落**；**用户 Godot QA 仍待** |
+| G8 | **IN PROGRESS** — Agent 侧五条 §8 **PROVEN**；§7 用户手感门仍开（引擎「§7验收」+「回§7清单」） |
 
 ### G8 已知残留（不可假装清零）
 

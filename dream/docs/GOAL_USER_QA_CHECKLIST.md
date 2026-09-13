@@ -6,6 +6,8 @@
 
 勾选保存在 `user://goal_user_qa.cfg`，**不会**自动把 Goal 标 complete。全部通过后请在 Cursor 回复：**§7 已勾**。
 
+从清单「跳转」进入场景后，右上角会出现 **「回§7清单」**，测完可立即返回继续勾选（`DreamUI` + `Engine` meta；MCP 已见 `VillageSquare/UI/UserQaReturnBtn`）。
+
 ## 最短路径（建议顺序）
 
 | # | 项 | 跳转后看什么 |

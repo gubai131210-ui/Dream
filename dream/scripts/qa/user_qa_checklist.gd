@@ -92,6 +92,7 @@ func _build_ui() -> void:
 	var hub := Button.new()
 	hub.text = "回世界总览"
 	hub.pressed.connect(func() -> void:
+		DreamUI.clear_user_qa_return()
 		SceneRouter.change_to(get_tree(), SceneRouter.HUB_PATH)
 	)
 	foot.add_child(hub)
@@ -137,6 +138,7 @@ func _make_row(item: Dictionary) -> Control:
 	go.custom_minimum_size = Vector2(72, 0)
 	var path := str(item["path"])
 	go.pressed.connect(func() -> void:
+		DreamUI.arm_user_qa_return()
 		SceneRouter.change_to(get_tree(), path)
 	)
 	h.add_child(go)
@@ -183,3 +185,13 @@ func _clear_all() -> void:
 	for item in ITEMS:
 		_list.add_child(_make_row(item))
 	_refresh_status()
+
+
+func mcp_jump_first() -> Dictionary:
+	## MCP probe: arm return chip and enter square.
+	if ITEMS.is_empty():
+		return {"ok": false, "reason": "no_items"}
+	DreamUI.arm_user_qa_return()
+	var path := str(ITEMS[0]["path"])
+	SceneRouter.change_to(get_tree(), path)
+	return {"ok": true, "path": path, "armed": DreamUI.is_user_qa_return_armed()}
