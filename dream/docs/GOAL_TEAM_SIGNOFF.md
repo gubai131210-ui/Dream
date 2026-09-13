@@ -38,6 +38,10 @@
 | Window + focus chrome | 窗光柱 Sprite2D；hover FocusCorners only | `GOAL_G8_WINDOW_FOCUS_SPRITE_EVIDENCE` |
 | Lamp-off restore day | sticky night only when lamp-forced；关灯回白天 | `GOAL_G8_LAMP_OFF_RESTORE_DAY_EVIDENCE` |
 | Hub §7 entry | TopBar「§7验收」→ checklist；WIP profiles archived | `GOAL_G8_HUB_QA_ENTRY_EVIDENCE` |
+| Encoding hygiene | farmland/residential mojibake fixed；scripts encoding QA | `GOAL_G8_ASSEMBLER_ENCODING_EVIDENCE`；`qa_assembler_encoding` **GREEN** |
+| Hotspot sprite inventory | outdoor 14/14 · 554；interior 56/56 · 958 | `GOAL_G8_HOTSPOT_PROP_SMOKE`；`GOAL_G8_INTERIOR_HOTSPOT_PROP_SMOKE` |
+| Portal DoorFacade inventory | 70/70 scenes · 161 portals textured | `GOAL_G8_PORTAL_FACADE_SMOKE_EVIDENCE` |
+| §7 interact load smoke | 21/21 tightened kits（SecretPassageChain + Portal_*） | `GOAL_G8_USER_QA_LOAD_SMOKE_EVIDENCE` tip `318dafb+` |
 
 ## Automated gates (must stay GREEN)
 
@@ -53,7 +57,8 @@
 - `tools/qa_interact_fx_coverage.py`
 - `tools/qa_scene_presentation.py`
 - `tools/qa_portal_hover_only.py`
-- G8 smoke matrix scripts (interact / interior FX / portal / worldsys / anim FX / bath / C62 / interact target / outdoor prompt / **user_qa_load_smoke**)
+- `tools/qa_assembler_encoding.py`
+- G8 smoke matrix（… / **user_qa_load_smoke** / **hotspot_prop** / **interior_hotspot_prop** / **portal_facade**）
 
 ## Still open for Goal complete
 
