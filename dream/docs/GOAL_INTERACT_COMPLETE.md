@@ -198,6 +198,7 @@
 - [`GOAL_G8_WAVE_DE_PORTAL_EVIDENCE.md`](GOAL_G8_WAVE_DE_PORTAL_EVIDENCE.md) — Wave D/E portal enter smoke + live C32/C46  
 - [`GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md`](GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md) — Agent §7 探针（不代替用户勾选）  
 - [`GOAL_G8_DISTRICT_FX_EVIDENCE.md`](GOAL_G8_DISTRICT_FX_EVIDENCE.md) — 全区 DistrictInteract 多帧 FX（复用 C58 sheets）  
+- [`GOAL_G8_DISTRICT_LAMP_TOGGLE_EVIDENCE.md`](GOAL_G8_DISTRICT_LAMP_TOGGLE_EVIDENCE.md) — District 路灯 PointLight2D 开关（灯塔/车站 MCP）  
 - [`GOAL_G8_C59_C61_FX_EVIDENCE.md`](GOAL_G8_C59_C61_FX_EVIDENCE.md) — C59 清除碎屑 FX + C61 `mcp_open` 箱盖  
 - [`GOAL_G8_C60_C61_FULL_EVIDENCE.md`](GOAL_G8_C60_C61_FULL_EVIDENCE.md) — C60 解锁 FX×3 + C61 五站点全开（截图+smoke）  
 - [`GOAL_G8_C05_STALL_FX_EVIDENCE.md`](GOAL_G8_C05_STALL_FX_EVIDENCE.md) — C05 摊位状态切换多帧 FX
@@ -235,7 +236,7 @@
 | 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [x] `g8_farm_residential_idle.png` | [ ] |
 | 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract；C62 树洞密道 | [x] idle + landmarks；**C62** smoke PASS；walkthrough portal+facade + `g8_walkthrough_forest_entrance_idle` | [ ] |
 | 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 + **施放 splash** | [x] river+lake ready；cage splash；**fishing cast** `g8_fishing_cast_splash_held`；smoke PASS | [ ] |
-| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 + 瀑水循环 | [x] idle + **`g8_waterfall_anim.png`**；walkthrough `g8_walkthrough_lighthouse_idle` / `hill_farm_idle` | [ ] |
+| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 + 瀑水循环；灯塔 `light_lamp` 开关+灯 | [x] idle + **`g8_waterfall_anim.png`**；walkthrough idle；**`g8_district_lighthouse_lamp_on/off.png`** | [ ] |
 | 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png`；walkthrough `g8_walkthrough_lake_house_idle` | [ ] |
 
 ### 室内（抽样必测）

@@ -319,6 +319,8 @@ func setup(host: Node2D, host_id: String, _top_bar: Control = null) -> void:
 		)
 		hs.set_meta("interact_id", interact_id)
 		hs.set_meta("district_fx", _fx_spec_for_id(interact_id))
+		if interact_id.contains("lamp"):
+			_setup_lamp(hs)
 		hs.activated.connect(func(_h: InteractableHotspot) -> void:
 			_on_interact(interact_id, title, desc, _h)
 		)
@@ -348,8 +350,52 @@ func _fx_spec_for_id(interact_id: String) -> Dictionary:
 	return {"dir": "res://assets/sprites/fx", "prefix": "bench_dust", "pos": Vector2(0, 4), "fps": 10.0}
 
 
+func _setup_lamp(hs: InteractableHotspot) -> void:
+	## Result layer: PointLight2D + sprite modulate (plaza lamp_toggle parity).
+	if hs == null:
+		return
+	var visual := hs.get_node_or_null("Visual") as Node2D
+	if visual == null:
+		return
+	if visual.get_node_or_null("LampLight") != null:
+		return
+	var light := PointLight2D.new()
+	light.name = "LampLight"
+	light.color = Color(1.0, 0.85, 0.45, 1.0)
+	light.energy = 0.85
+	light.texture_scale = 1.35
+	light.position = Vector2(0, -28)
+	visual.add_child(light)
+	hs.set_meta("lamp_on", true)
+	var spr := visual.get_node_or_null("PropSprite") as Sprite2D
+	if spr:
+		spr.modulate = Color(1.15, 1.05, 0.8)
+
+
+func _toggle_lamp(hs: InteractableHotspot) -> String:
+	if hs == null:
+		return ""
+	var on := not bool(hs.get_meta("lamp_on", true))
+	hs.set_meta("lamp_on", on)
+	var visual := hs.get_node_or_null("Visual") as Node2D
+	if visual:
+		var light := visual.get_node_or_null("LampLight") as PointLight2D
+		if light:
+			light.enabled = on
+			light.energy = 0.85 if on else 0.0
+		var spr := visual.get_node_or_null("PropSprite") as Sprite2D
+		if spr:
+			spr.modulate = Color(1.15, 1.05, 0.8) if on else Color(0.55, 0.55, 0.65)
+	return "路灯已%s。" % ("点亮" if on else "熄灭")
+
+
 func _on_interact(interact_id: String, title: String, desc: String, hs: InteractableHotspot) -> void:
+	var body := desc
 	if hs:
+		if interact_id.contains("lamp"):
+			var blurb := _toggle_lamp(hs)
+			if not blurb.is_empty():
+				body = blurb
 		var visual := hs.get_node_or_null("Visual") as CanvasItem
 		if visual:
 			var tw := visual.create_tween()
@@ -368,7 +414,7 @@ func _on_interact(interact_id: String, title: String, desc: String, hs: Interact
 				float(spec.get("fps", 10.0)),
 			)
 	if _info:
-		_info.show_info(title, desc)
+		_info.show_info(title, body)
 	interacted.emit(interact_id)
 
 
@@ -379,6 +425,9 @@ func mcp_spawn_fx(interact_id: String) -> Dictionary:
 	for child in _root.get_children():
 		if child is InteractableHotspot and str(child.get_meta("interact_id", "")) == interact_id:
 			var hs := child as InteractableHotspot
+			var lamp_blurb := ""
+			if interact_id.contains("lamp"):
+				lamp_blurb = _toggle_lamp(hs)
 			var spec: Dictionary = hs.get_meta("district_fx", {}) as Dictionary
 			if spec.is_empty():
 				spec = _fx_spec_for_id(interact_id)
@@ -397,11 +446,11 @@ func mcp_spawn_fx(interact_id: String) -> Dictionary:
 				fx = visual.get_node_or_null(fx_name) as AnimatedSprite2D
 			if fx == null:
 				return {"ok": false, "reason": "fx_not_spawned", "id": interact_id, "fx": fx_name}
-			var frames := 0
 			var sf := fx.sprite_frames
+			var frames := 0
 			if sf != null and sf.has_animation("oneshot"):
 				frames = sf.get_frame_count("oneshot")
-			return {
+			var out := {
 				"ok": true,
 				"id": interact_id,
 				"fx": fx_name,
@@ -409,6 +458,12 @@ func mcp_spawn_fx(interact_id: String) -> Dictionary:
 				"playing": fx.is_playing(),
 				"path": str(fx.get_path()),
 			}
+			if interact_id.contains("lamp"):
+				out["lamp_on"] = bool(hs.get_meta("lamp_on", false))
+				out["lamp_blurb"] = lamp_blurb
+				var light := visual.get_node_or_null("LampLight") as PointLight2D if visual else null
+				out["has_light"] = light != null
+			return out
 	return {"ok": false, "reason": "missing_hotspot", "id": interact_id}
 
 

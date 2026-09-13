@@ -67,6 +67,10 @@ def main() -> int:
     dik = read("scripts/world/district_interact_kit.gd")
     if "_fx_spec_for_id" not in dik or "lamp_spark" not in dik:
         raise AssertionError("DIK FX map / lamp_spark missing")
+    if "_setup_lamp" not in dik or "_toggle_lamp" not in dik or "PointLight2D" not in dik:
+        raise AssertionError("DIK lamp light toggle (PointLight2D) missing")
+    if 'contains("lamp")' not in dik:
+        raise AssertionError("DIK lamp keyword wiring missing")
 
     cage = read("scripts/fishing/fish_cage.gd")
     if "_play_splash_fx" not in cage or "fish_splash" not in cage:
