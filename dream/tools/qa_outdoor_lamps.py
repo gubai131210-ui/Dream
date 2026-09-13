@@ -23,6 +23,13 @@ def main() -> int:
 		"lamp_0.png",
 		"LAMP0_SCALE",
 	)
+	kit = (ROOT / "scripts/world/outdoor_lamp_kit.gd").read_text(encoding="utf-8")
+	if 'ends_with("/lamp_2.png")' in kit and "return p.ends_with" in kit:
+		# Street-lamp path matcher must not OR lamp_2 (planter).
+		for line in kit.splitlines():
+			if "return p.ends_with" in line and "lamp_2" in line:
+				raise AssertionError("OutdoorLampKit must not treat lamp_2 planter as street lamp")
+
 	must(
 		ROOT / "scripts/env/day_night_weather.gd",
 		"scripts/world/outdoor_lamp_kit.gd",

@@ -76,8 +76,8 @@ func _scan(node: Node) -> void:
 
 func _is_street_lamp_path(path: String) -> bool:
 	var p := path.replace("\\", "/").to_lower()
-	# Real posts only — lamp_1 is a flower pot (ASSET_TAXONOMY / INTERIOR_ASSET_AUDIT).
-	return p.ends_with("/lamp_0.png") or p.ends_with("/lamp_2.png")
+	# Real post only — lamp_1 = flower pot, lamp_2 = planter/花箱 (MARKET_STALL_ASSET_AUDIT).
+	return p.ends_with("/lamp_0.png")
 
 
 func _maybe_wire_sprite(spr: Sprite2D) -> void:
@@ -104,10 +104,15 @@ func _maybe_wire_hotspot(hs: InteractableHotspot) -> void:
 	var spr := hs.get_node_or_null("Visual/PropSprite") as Sprite2D
 	if spr and spr.texture:
 		path_hint = str(spr.texture.resource_path)
-	# Misnamed lamp_1 "路灯" — retitle so players aren't misled.
-	if path_hint.to_lower().ends_with("/lamp_1.png") and ("灯" in title):
+	var pl := path_hint.to_lower()
+	# Misnamed pots/planters titled as lamps — retitle, never light.
+	if pl.ends_with("/lamp_1.png") and ("灯" in title):
 		hs.title = "花盆"
 		hs.description = "巷边花盆（不是灯柱）。"
+		return
+	if pl.ends_with("/lamp_2.png") and ("灯" in title):
+		hs.title = "花箱"
+		hs.description = "街角花箱装饰（不是灯柱）。"
 		return
 	if _is_street_lamp_path(path_hint) or (spr == null and ("路灯" in title or "站台灯" in title or title.ends_with("灯"))):
 		if spr:
