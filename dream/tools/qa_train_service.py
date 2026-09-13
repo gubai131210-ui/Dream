@@ -52,7 +52,11 @@ def main() -> int:
 	ride = (ROOT / "scripts/interiors/train_car_window_ride.gd").read_text(encoding="utf-8")
 	if "WindowSceneryBand" not in ride:
 		raise AssertionError("window ride missing world-space WindowSceneryBand")
-	if "Vector2(x0, 520)" in ride or "position = Vector2(x0, 520)" in ride:
+	if "InteriorWorld" not in ride:
+		raise AssertionError("window ride must parent under InteriorWorld")
+	if "ORIGIN" not in ride or "WINDOW_ANCHOR" not in ride:
+		raise AssertionError("window ride missing ORIGIN/WINDOW_ANCHOR alignment")
+	if "Vector2(x0, 520)" in ride:
 		raise AssertionError("window ride still uses bottom-screen scenery strip")
 	prof = (ROOT / "scripts/interiors/interior_profiles.gd").read_text(encoding="utf-8")
 	if "P_TRAIN_WINDOW_WALL" not in prof or "train_window_wall_00" not in prof:

@@ -7,9 +7,10 @@ extends Node
 const SCENERY := "res://assets/sprites/fx/train_window_scenery_00.png"
 const NODE_NAME := "TrainCarWindowRide"
 const TILE := 32.0
-## Align with c36_train_car room_w / window_n cluster.
+## Must match InteriorCraft.ORIGIN and c36_train_car window_n / room_w.
+const ORIGIN := Vector2i(4, 4)
 const ROOM_W := 22
-const BAND_Y := 28.0
+const WINDOW_ANCHOR := Vector2i(11, 1)
 
 
 static func attach_to(host: Node) -> TrainCarWindowRide:
@@ -31,15 +32,14 @@ var _strip_a: Sprite2D
 var _strip_b: Sprite2D
 var _banner: Label
 var _scrolling := false
-var _strip_w := 220.0
+var _strip_w := 246.0
 
 
 func _boot() -> void:
 	TrainService.notify_player_entered_car(get_parent())
-	_world = get_parent().get_node_or_null("World") as Node2D
+	_world = get_parent().get_node_or_null("InteriorWorld") as Node2D
 	if _world == null:
-		_world = get_parent() as Node2D
-	# Defer one frame so furniture (window walls) exists and we sit behind them.
+		_world = get_parent().get_node_or_null("World") as Node2D
 	call_deferred("_spawn_window_band")
 	_spawn_banner()
 	_refresh_banner()
@@ -48,33 +48,46 @@ func _boot() -> void:
 	_on_state(TrainService.get_active_id(), TrainService.get_state())
 
 
+func _tile_center(tx: int, ty: int) -> Vector2:
+	return Vector2(
+		(ORIGIN.x + tx) * TILE + TILE * 0.5,
+		(ORIGIN.y + ty) * TILE + TILE * 0.5
+	)
+
+
 func _spawn_window_band() -> void:
 	if _world == null or not ResourceLoader.exists(SCENERY):
+		push_warning("TrainCarWindowRide: no InteriorWorld or scenery — window view skipped")
 		return
 	if _band and is_instance_valid(_band):
 		_band.queue_free()
+	var tex := load(SCENERY) as Texture2D
+	if tex == null:
+		return
+	# Resolve strip width *before* placing either strip so A/B stay seamless.
+	_strip_w = maxf(180.0, float(tex.get_width()) * 1.45)
+
 	_band = Node2D.new()
 	_band.name = "WindowSceneryBand"
-	# Behind walls/props (foundation -20, props ~0+); still above floor foundation.
+	# InteriorWorld z=2; band absolute z under furniture hotspots (~0+).
 	_band.z_index = -8
 	_band.z_as_relative = false
-	# Center under the three window-wall segments (anchor ~tx 11).
-	_band.position = Vector2(float(ROOM_W) * TILE * 0.5, BAND_Y)
+	# Center on window_n cluster; nudge north into the pane region of the wall prop.
+	var mid := _tile_center(WINDOW_ANCHOR.x, WINDOW_ANCHOR.y)
+	_band.position = mid + Vector2(0.0, -22.0)
 	_world.add_child(_band)
-	_strip_a = _mk_strip(-_strip_w * 0.5)
-	_strip_b = _mk_strip(-_strip_w * 0.5 + _strip_w)
+
+	_strip_a = _mk_strip(tex, -_strip_w * 0.5)
+	_strip_b = _mk_strip(tex, -_strip_w * 0.5 + _strip_w)
 
 
-func _mk_strip(x0: float) -> Sprite2D:
+func _mk_strip(tex: Texture2D, x0: float) -> Sprite2D:
 	var spr := Sprite2D.new()
-	spr.texture = load(SCENERY) as Texture2D
+	spr.texture = tex
 	spr.centered = true
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	if spr.texture:
-		_strip_w = maxf(180.0, float(spr.texture.get_width()) * 1.45)
-	# Wide enough to fill several window panes across the coach.
 	spr.scale = Vector2(1.45, 1.2)
-	spr.position = Vector2(x0, 8.0)
+	spr.position = Vector2(x0, 0.0)
 	spr.modulate = Color(0.95, 0.9, 0.8, 1.0)
 	_band.add_child(spr)
 	return spr
@@ -94,7 +107,6 @@ func _spawn_banner() -> void:
 
 func _on_state(_sid: String, state: int) -> void:
 	_refresh_banner()
-	# Docked: gentle creep; depart/en-route: faster scroll.
 	_scrolling = (
 		state == TrainService.State.DOCKED
 		or state == TrainService.State.DEPARTING
