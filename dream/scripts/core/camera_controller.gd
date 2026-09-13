@@ -76,6 +76,10 @@ func _apply_zoom(amount: float) -> void:
 	_clamp_to_bounds()
 
 
-func _clamp_to_bounds() -> void:
+func clamp_to_bounds() -> void:
 	global_position.x = clampf(global_position.x, bounds.position.x, bounds.end.x)
 	global_position.y = clampf(global_position.y, bounds.position.y, bounds.end.y)
+
+
+func _clamp_to_bounds() -> void:
+	clamp_to_bounds()

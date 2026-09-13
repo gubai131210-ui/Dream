@@ -23,6 +23,8 @@ var _water_mask: Array = []
 var _bank_mask: Array = []
 var _path_mask: Array = []
 var _dirt_mask: Array = []
+## Retained for PlayerActor walk blocking after assemble.
+var craft: AreaCraft = AreaCraft.new()
 
 
 func assemble(root: Node2D) -> void:
@@ -679,7 +681,7 @@ func _spawn_bridge_prop(ysort: Node2D) -> void:
 
 
 func _make_craft() -> AreaCraft:
-	var craft := AreaCraft.new()
+	craft = AreaCraft.new()
 	craft.setup(MAP_W, MAP_H, "plaza")
 	for y in range(MAP_H):
 		for x in range(MAP_W):

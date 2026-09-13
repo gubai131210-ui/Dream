@@ -44,15 +44,18 @@ func _bootstrap_current() -> void:
 	player.position = _resolve_spawn(host, ysort)
 	ysort.add_child(player)
 
+	# AreaCraft is RefCounted (not a Node). Assemblers expose it as `.craft`.
 	var assembler := scene.get_node_or_null("Assembler")
-	if assembler is AreaCraft:
-		player.set_area_craft(assembler as AreaCraft)
+	if assembler != null:
+		var craft_variant: Variant = assembler.get("craft")
+		if craft_variant is AreaCraft:
+			player.set_area_craft(craft_variant as AreaCraft)
 
 	if camera is CameraController:
 		var cam := camera as CameraController
 		cam.set_follow_target(player)
 		cam.global_position = player.global_position
-		cam._clamp_to_bounds()
+		cam.clamp_to_bounds()
 
 
 func _resolve_spawn(host: Node2D, ysort: Node2D) -> Vector2:
