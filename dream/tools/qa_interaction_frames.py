@@ -142,22 +142,27 @@ def main() -> int:
         raise AssertionError("WorldSpawnUtil plant props missing WindSway")
     if "_hover_time" in hotspot or "sin(" in function_body(hotspot, "_draw"):
         raise AssertionError("hotspot focus frame still has a pulsing/flickering clock")
-    if "_spawn_cliff_frame" not in waterfall:
-        raise AssertionError("waterfall missing cliff-mouth framing")
+    if "_spawn_cascade_landmark" not in waterfall:
+        raise AssertionError("waterfall missing cascade landmark assembly")
+    if "cascade_cliff_mouth_v1" not in waterfall:
+        raise AssertionError("waterfall missing redrawn cliff mouth asset")
+    if "cascade_bench_00" not in waterfall or "cascade_fern_00" not in waterfall:
+        raise AssertionError("waterfall missing scenic props (bench/fern)")
     if "_spawn_cascade_veil" not in waterfall:
         raise AssertionError("waterfall missing cascade veil mist")
     if "_spawn_mist(ysort)" in waterfall:
         raise AssertionError("waterfall still calls deprecated _spawn_mist")
     if "WaterfallAnim" not in waterfall or "waterfall_water_%02d" not in waterfall:
         raise AssertionError("waterfall missing animated water loop wiring")
-    if "splash.reparent(vis)" not in waterfall:
-        raise AssertionError("waterfall splash not reparented into hotspot Visual")
-    if "modulate:a" not in waterfall:
-        raise AssertionError("waterfall missing soft reveal fade-in")
+    if "splash.reparent(vis)" not in waterfall and "node.reparent(vis)" not in waterfall:
+        raise AssertionError("waterfall cascade not reparented into hotspot Visual")
+    cliff_asset = ROOT / "assets/sprites/props/cascade_cliff_mouth_v1.png"
+    if not cliff_asset.is_file():
+        raise AssertionError("cascade_cliff_mouth_v1.png missing on disk")
 
     print(
         f"GREEN interaction-frame QA ({len(groups)} groups, shader wind, "
-        "cliff-framed waterfall + soft reveal)"
+        "redrawn cliff-mouth cascade + scenic props)"
     )
     return 0
 

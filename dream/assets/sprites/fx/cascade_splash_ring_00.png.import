@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bgxij4pl4mfjd"
-path="res://.godot/imported/waterfall_water_02.png-20d30e7ab880ed569c489a19e67503be.ctex"
+uid="uid://btnhomdrmwjf8"
+path="res://.godot/imported/cascade_splash_ring_00.png-ce926d2d2a6819d844fbbe07bbd96e0e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/props/waterfall_water_02.png"
-dest_files=["res://.godot/imported/waterfall_water_02.png-20d30e7ab880ed569c489a19e67503be.ctex"]
+source_file="res://assets/sprites/fx/cascade_splash_ring_00.png"
+dest_files=["res://.godot/imported/cascade_splash_ring_00.png-ce926d2d2a6819d844fbbe07bbd96e0e.ctex"]
 
 [params]
 
