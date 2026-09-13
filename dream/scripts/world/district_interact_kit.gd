@@ -125,10 +125,10 @@ const HOST_DEFS := {
 		{
 			"id": "stn_lamp",
 			"title": "月台灯",
-			"desc": "拨一下灯罩，铜环叮一声。",
+			"desc": "拨一下灯罩，铜环叮一声。夜间会照亮站台。",
 			"pos": Vector2(520, 480),
 			"sprite": "res://assets/sprites/props/lamp_0.png",
-			"scale": 0.55,
+			"scale": 1.15,
 			"color": Color(0.9, 0.75, 0.35, 0.92),
 		},
 	],
@@ -185,10 +185,10 @@ const HOST_DEFS := {
 		{
 			"id": "light_lamp",
 			"title": "岸边航标灯",
-			"desc": "拨一下灯罩，铜环叮一声。",
+			"desc": "拨一下灯罩，铜环叮一声。夜间照亮岸边。",
 			"pos": Vector2(640, 700),
 			"sprite": "res://assets/sprites/props/lamp_0.png",
-			"scale": 0.55,
+			"scale": 1.15,
 			"color": Color(0.95, 0.8, 0.4, 0.92),
 		},
 	],
@@ -358,16 +358,22 @@ func _setup_lamp(hs: InteractableHotspot) -> void:
 	if visual == null:
 		return
 	if visual.get_node_or_null("LampLight") != null:
+		hs.set_meta("lamp_on", true)
 		return
 	var light := PointLight2D.new()
 	light.name = "LampLight"
-	WorldSpawnUtil.configure_lamp_light(light, Color(1.0, 0.85, 0.45, 1.0), 0.85, 1.35)
-	light.position = Vector2(0, -28)
+	WorldSpawnUtil.configure_lamp_light(light, Color(1.0, 0.88, 0.55, 1.0), WorldSpawnUtil.LAMP_ENERGY_NIGHT, WorldSpawnUtil.LAMP_TEX_SCALE, WorldSpawnUtil.LAMP_TEX_SIZE)
+	light.position = WorldSpawnUtil.LAMP_LIGHT_OFFSET
 	visual.add_child(light)
 	hs.set_meta("lamp_on", true)
 	var spr := visual.get_node_or_null("PropSprite") as Sprite2D
 	if spr:
-		spr.modulate = Color(1.15, 1.05, 0.8)
+		spr.modulate = Color(1.2, 1.08, 0.82)
+	var host := get_parent() as Node2D
+	if host:
+		var _olk := load("res://scripts/world/outdoor_lamp_kit.gd")
+		if _olk:
+			_olk.attach_to(host)
 
 
 func _toggle_lamp(hs: InteractableHotspot) -> String:
@@ -380,10 +386,10 @@ func _toggle_lamp(hs: InteractableHotspot) -> String:
 		var light := visual.get_node_or_null("LampLight") as PointLight2D
 		if light:
 			light.enabled = on
-			light.energy = 1.05 if on else 0.0
+			light.energy = WorldSpawnUtil.LAMP_ENERGY_NIGHT if on else 0.0
 		var spr := visual.get_node_or_null("PropSprite") as Sprite2D
 		if spr:
-			spr.modulate = Color(1.15, 1.05, 0.8) if on else Color(0.55, 0.55, 0.65)
+			spr.modulate = Color(1.2, 1.08, 0.82) if on else Color(0.55, 0.55, 0.65)
 	var body := "路灯已%s。" % ("点亮" if on else "熄灭")
 	if on:
 		var env := DayNightWeather.find_on(get_parent())

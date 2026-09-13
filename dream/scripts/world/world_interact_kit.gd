@@ -56,11 +56,11 @@ const INTERACT_DEFS := [
 	{
 		"id": "lamp_toggle",
 		"title": "路灯",
-		"desc": "拨亮/熄灭广场路灯（本地示意）。",
+		"desc": "拨亮/熄灭广场路灯。夜间灯柱会照亮周围地面。",
 		"pos": Vector2(300, 240),
 		"color": Color(1.0, 0.88, 0.45, 0.92),
 		"sprite": PROP + "/lamp_0.png",
-		"scale": 0.55,
+		"scale": 1.15,
 	},
 	{
 		"id": "feed_critter",
@@ -164,9 +164,17 @@ func _setup_lamp(hs: InteractableHotspot) -> void:
 	_lamp_sprite = hs.get_node_or_null("Visual/PropSprite") as Sprite2D
 	_lamp_light = PointLight2D.new()
 	_lamp_light.name = "LampLight"
-	WorldSpawnUtil.configure_lamp_light(_lamp_light)
-	_lamp_light.position = Vector2(0, -28)
+	WorldSpawnUtil.configure_lamp_light(_lamp_light, Color(1.0, 0.88, 0.55, 1.0), WorldSpawnUtil.LAMP_ENERGY_NIGHT, WorldSpawnUtil.LAMP_TEX_SCALE, WorldSpawnUtil.LAMP_TEX_SIZE)
+	_lamp_light.position = WorldSpawnUtil.LAMP_LIGHT_OFFSET
 	hs.get_node("Visual").add_child(_lamp_light)
+	hs.set_meta("lamp_on", true)
+	_lamp_on = true
+	# Re-scan so kit tracks this light for night/day energy.
+	var host := get_parent() as Node2D
+	if host:
+		var _olk := load("res://scripts/world/outdoor_lamp_kit.gd")
+		if _olk:
+			_olk.attach_to(host)
 
 
 func _handle_interact(interact_id: String, title: String, desc: String) -> void:
@@ -180,9 +188,11 @@ func _handle_interact(interact_id: String, title: String, desc: String) -> void:
 			body = "路灯已%s。" % ("点亮" if _lamp_on else "熄灭")
 			if _lamp_light:
 				_lamp_light.enabled = _lamp_on
-				_lamp_light.energy = 1.05 if _lamp_on else 0.0
+				_lamp_light.energy = WorldSpawnUtil.LAMP_ENERGY_NIGHT if _lamp_on else 0.0
+			if hs:
+				hs.set_meta("lamp_on", _lamp_on)
 			if _lamp_sprite:
-				_lamp_sprite.modulate = Color(1.15, 1.05, 0.8) if _lamp_on else Color(0.55, 0.55, 0.65)
+				_lamp_sprite.modulate = Color(1.2, 1.08, 0.82) if _lamp_on else Color(0.55, 0.55, 0.65)
 			if _lamp_on:
 				var env := DayNightWeather.find_on(get_parent())
 				if env and not env.is_night():
@@ -192,7 +202,7 @@ func _handle_interact(interact_id: String, title: String, desc: String) -> void:
 				var env_off := DayNightWeather.find_on(get_parent())
 				if env_off:
 					var restored := env_off.restore_day_from_lamps()
-					if bool(restored.get("restored", false)):
+					if bool(restored.get("ok", false)) and bool(restored.get("restored", false)):
 						body += "（已回白天）"
 			_pulse_visual(hs)
 			_play_fx_clip(hs, "res://assets/sprites/fx", "lamp_spark", 4, Vector2(0, -30), 10.0)

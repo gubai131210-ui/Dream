@@ -15,7 +15,14 @@
 | C56 | 夜间调色 | `CanvasModulate` night grade on **all outdoor areas** |
 | C57 / H | 天气覆盖 | ≥1 weather: **雨** (+ **雾** veil); cycle 晴→雨→雾 |
 | H | 调色/粒子资源 | Runtime streak texture + ColorRect veil (no new art pack required) |
-| H+G | 路灯可读 | Outdoor lamps use radial PointLight; night grade makes glow obvious (`GOAL_G8_ENV_NIGHT_LAMP_EVIDENCE`) |
+| H+G | 路灯可读 | **所有户外 `lamp_0` 路灯**挂径向 PointLight；夜间能量补偿 CanvasModulate（`OutdoorLampKit`） |
+
+### 路灯约定（2026-09-13 修补）
+
+- `lamp_0` / `lamp_2` = 真灯柱 → `OutdoorLampKit` 自动挂 `LampLight`
+- `lamp_1` = 花盆，**禁止**当路灯
+- 夜间 `ENERGY_NIGHT≈3.6`（CanvasModulate 会压暗灯光，必须补偿）
+- 灯柱显示缩放约 `1.15`（原 0.55 相对建筑过小）
 
 ## API
 

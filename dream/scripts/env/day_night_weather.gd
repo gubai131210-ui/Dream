@@ -14,7 +14,7 @@ enum WeatherKind { CLEAR, RAIN, FOG }
 
 signal state_changed(time_grade: int, weather: int)
 
-@export var night_color: Color = Color(0.30, 0.36, 0.58, 1.0)
+@export var night_color: Color = Color(0.22, 0.26, 0.42, 1.0)
 @export var rain_veil_color: Color = Color(0.42, 0.52, 0.70, 0.22)
 @export var fog_veil_color: Color = Color(0.72, 0.76, 0.82, 0.35)
 
@@ -45,6 +45,10 @@ static func attach_to(host: Node2D, top_bar: Control = null) -> DayNightWeather:
 		return null
 	var existing := host.get_node_or_null(NODE_NAME) as DayNightWeather
 	if existing:
+		# Props/kits may have spawned after first attach — re-wire street lamps.
+		var _olk := load("res://scripts/world/outdoor_lamp_kit.gd")
+		if _olk:
+			_olk.attach_to(host)
 		return existing
 	var env := DayNightWeather.new()
 	env.name = NODE_NAME
@@ -52,6 +56,10 @@ static func attach_to(host: Node2D, top_bar: Control = null) -> DayNightWeather:
 	env.bind_host(host)
 	if top_bar:
 		env.mount_top_bar(top_bar)
+	# Street lamps get PointLight2D + night energy boost (CanvasModulate compensation).
+	var _olk2 := load("res://scripts/world/outdoor_lamp_kit.gd")
+	if _olk2:
+		_olk2.attach_to(host)
 	return env
 
 

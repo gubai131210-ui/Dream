@@ -294,7 +294,7 @@ func _spawn_platform_benches_and_props(ysort: Node2D) -> void:
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(480, 352), "title": "行李箱", "desc": "站台货箱。"},
 		{"path": "res://assets/sprites/props/barrel_1.png", "pos": Vector2(720, 360), "title": "站台桶", "desc": "站房旁木桶。"},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(352, 352), "title": "站台灯", "desc": "西站台灯柱。"},
-		{"path": "res://assets/sprites/props/lamp_1.png", "pos": Vector2(1040, 352), "title": "站台灯", "desc": "东站台灯柱。"},
+		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(1040, 352), "title": "站台灯", "desc": "东站台灯柱。"},
 		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(880, 360), "title": "邮包", "desc": "候车邮包堆。"},
 	]
 	for s in props:
