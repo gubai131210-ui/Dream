@@ -33,7 +33,8 @@
 | C54 life pose | `mcp_probe_life_poses` | 5/5 × frames=4；`g8_c54_life_pose_sleep.png` |
 | integer zoom | plaza `CameraController.zoom=(1,1)` + `cycle_work_ring` | `g8_square_zoom1_work_pose_v3.png`；顶栏「工作:打铁环」 |
 | lighthouse / hill_farm / lake_house | runtime idle + DistrictInteractKit | shots `g8_walkthrough_lighthouse_idle` / `hill_farm_idle` / `lake_house_idle` |
-| §7 checklist UI | `user_qa_checklist.tscn` | **21** rows（户外全表+室内抽样）；复制「§7 已勾」；`g8_user_qa_checklist_v2.png` |
+| §7 checklist UI | `user_qa_checklist.tscn` | **21** rows + expect + 跳转下一项；`g8_user_qa_checklist_v3.png` |
+| §7 load smoke | `g8_user_qa_load_smoke.tscn` | **21/21 PASS** DayNight+AreaInteract / interior tree；`g8_user_qa_load_smoke_21.png` |
 | portals D/E | prior `g8_wave_de_portal_smoke` + live enter | PASS (separate evidence) |
 
 **QA re-run (this extend):** `qa_no_placeholder_visuals` / `qa_interact_sprite_inventory` / `qa_interaction_frames` / `qa_orphan_hotspot_visuals` / `qa_portal_hover_only` / `qa_semantic_interior_props` → all **GREEN**.

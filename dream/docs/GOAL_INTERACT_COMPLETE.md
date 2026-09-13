@@ -212,6 +212,7 @@
 - [`GOAL_G8_C54_POSE_DEEP_EVIDENCE.md`](GOAL_G8_C54_POSE_DEEP_EVIDENCE.md) — C53/C54 姿态深绘 + read→book_open  
 - [`GOAL_G8_POSE_CUE_CLEANUP_EVIDENCE.md`](GOAL_G8_POSE_CUE_CLEANUP_EVIDENCE.md) — WorkPoseCue dying 清理 + eat→bowl  
 - [`GOAL_G8_USER_QA_UX_EVIDENCE.md`](GOAL_G8_USER_QA_UX_EVIDENCE.md) — §7 清单通过标准 + 跳转下一项  
+- [`GOAL_G8_USER_QA_LOAD_SMOKE_EVIDENCE.md`](GOAL_G8_USER_QA_LOAD_SMOKE_EVIDENCE.md) — §7 21 场景加载冒烟 21/21  
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — **26 groups** GREEN  
