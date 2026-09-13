@@ -187,7 +187,13 @@ func _handle_interact(interact_id: String, title: String, desc: String) -> void:
 				var env := DayNightWeather.find_on(get_parent())
 				if env and not env.is_night():
 					env.pulse_dusk_for_lamps()
-					body += "（已切夜间观灯；按 N 回白天）"
+					body += "（已切夜间观灯；关灯或按 N 回白天）"
+			else:
+				var env_off := DayNightWeather.find_on(get_parent())
+				if env_off:
+					var restored := env_off.restore_day_from_lamps()
+					if bool(restored.get("restored", false)):
+						body += "（已回白天）"
 			_pulse_visual(hs)
 			_play_fx_clip(hs, "res://assets/sprites/fx", "lamp_spark", 4, Vector2(0, -30), 10.0)
 		"shake_tree":

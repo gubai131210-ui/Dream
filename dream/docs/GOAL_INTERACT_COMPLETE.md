@@ -221,6 +221,7 @@
 - [`GOAL_G8_TREE_HARD_GATE_EVIDENCE.md`](GOAL_G8_TREE_HARD_GATE_EVIDENCE.md) — 摇树禁多边形回退 + inventory 硬门 + MCP PropSprite
 - [`GOAL_G8_SPRITE_ONLY_FALLBACK_EVIDENCE.md`](GOAL_G8_SPRITE_ONLY_FALLBACK_EVIDENCE.md) — 摊位/钓鱼/门阶/垄线禁 ColorRect·Polygon 回退
 - [`GOAL_G8_WINDOW_FOCUS_SPRITE_EVIDENCE.md`](GOAL_G8_WINDOW_FOCUS_SPRITE_EVIDENCE.md) — 窗光柱 + hover 角标禁 Polygon/draw_line
+- [`GOAL_G8_LAMP_OFF_RESTORE_DAY_EVIDENCE.md`](GOAL_G8_LAMP_OFF_RESTORE_DAY_EVIDENCE.md) — 白天点灯粘性夜间；关灯回白天（N 仍可用）
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — **26 groups** GREEN  

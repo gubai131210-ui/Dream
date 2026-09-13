@@ -30,6 +30,8 @@ var _veil: ColorRect
 var _rain: CPUParticles2D
 var _btn_night: Button
 var _btn_weather: Button
+## True when night was entered via daytime lamp-on (sticky); lamp-off can restore day.
+var _lamp_forced_night: bool = false
 
 
 static func find_on(host: Node) -> DayNightWeather:
@@ -82,6 +84,16 @@ func mount_top_bar(top_bar: Control) -> void:
 
 func toggle_night() -> void:
 	time_grade = TimeGrade.DAY if time_grade == TimeGrade.NIGHT else TimeGrade.NIGHT
+	if time_grade == TimeGrade.DAY:
+		_lamp_forced_night = false
+	_apply_visuals()
+	state_changed.emit(time_grade, weather)
+
+
+func set_time_grade(grade: TimeGrade) -> void:
+	time_grade = grade
+	if grade == TimeGrade.DAY:
+		_lamp_forced_night = false
 	_apply_visuals()
 	state_changed.emit(time_grade, weather)
 
@@ -94,12 +106,6 @@ func cycle_weather() -> void:
 			weather = WeatherKind.FOG
 		_:
 			weather = WeatherKind.CLEAR
-	_apply_visuals()
-	state_changed.emit(time_grade, weather)
-
-
-func set_time_grade(grade: TimeGrade) -> void:
-	time_grade = grade
 	_apply_visuals()
 	state_changed.emit(time_grade, weather)
 
@@ -127,11 +133,12 @@ func is_night() -> bool:
 
 
 func pulse_dusk_for_lamps() -> Dictionary:
-	## Daytime lamp-on: switch to sticky night grade (same path as mcp_set_night).
-	## Player returns to day with N / 白天 button — no auto-restore timer (was racing).
+	## Daytime lamp-on: sticky night so radial glow reads. Lamp-off restores day
+	## when this flag is set; N / 白天 also clears it via set_time_grade(DAY).
 	if time_grade == TimeGrade.NIGHT:
-		return {"ok": true, "pulsed": false, "reason": "already_night"}
+		return {"ok": true, "pulsed": false, "reason": "already_night", "lamp_forced": _lamp_forced_night}
 	set_time_grade(TimeGrade.NIGHT)
+	_lamp_forced_night = true
 	var after_r := -1.0
 	var mod := _live_modulate()
 	if mod:
@@ -141,9 +148,18 @@ func pulse_dusk_for_lamps() -> Dictionary:
 		"pulsed": true,
 		"mode": "sticky_night",
 		"night": true,
+		"lamp_forced": true,
 		"after_r": after_r,
-		"hint": "press_N_for_day",
 	}
+
+
+func restore_day_from_lamps() -> Dictionary:
+	## Lamp extinguished: undo sticky night only (leave manual N-night alone).
+	if not _lamp_forced_night:
+		return {"ok": true, "restored": false, "reason": "not_lamp_forced", "night": is_night()}
+	_lamp_forced_night = false
+	set_time_grade(TimeGrade.DAY)
+	return {"ok": true, "restored": true, "night": false, "time_grade": int(time_grade)}
 
 
 func _live_modulate() -> CanvasModulate:
