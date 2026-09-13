@@ -313,3 +313,32 @@ static func resolve_info(host: Node) -> InfoPanel:
 	if info:
 		return info
 	return host.get_node_or_null("InfoLayer") as InfoPanel
+
+
+static func radial_light_texture(size_px: int = 192) -> GradientTexture2D:
+	## Soft radial falloff for outdoor/interior PointLight2D (Genre glow, not flat energy).
+	var grad := Gradient.new()
+	grad.colors = PackedColorArray([Color(1, 1, 1, 1), Color(1, 1, 1, 0)])
+	grad.offsets = PackedFloat32Array([0.0, 1.0])
+	var tex := GradientTexture2D.new()
+	tex.gradient = grad
+	tex.width = size_px
+	tex.height = size_px
+	tex.fill = GradientTexture2D.FILL_RADIAL
+	tex.fill_from = Vector2(0.5, 0.5)
+	tex.fill_to = Vector2(0.5, 0.0)
+	return tex
+
+
+static func configure_lamp_light(
+	light: PointLight2D,
+	color: Color = Color(1.0, 0.85, 0.45, 1.0),
+	energy: float = 0.85,
+	tex_scale: float = 1.4,
+) -> void:
+	if light == null:
+		return
+	light.color = color
+	light.energy = energy
+	light.texture_scale = tex_scale
+	light.texture = radial_light_texture()

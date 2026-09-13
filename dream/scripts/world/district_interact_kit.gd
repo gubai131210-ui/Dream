@@ -361,9 +361,7 @@ func _setup_lamp(hs: InteractableHotspot) -> void:
 		return
 	var light := PointLight2D.new()
 	light.name = "LampLight"
-	light.color = Color(1.0, 0.85, 0.45, 1.0)
-	light.energy = 0.85
-	light.texture_scale = 1.35
+	WorldSpawnUtil.configure_lamp_light(light, Color(1.0, 0.85, 0.45, 1.0), 0.85, 1.35)
 	light.position = Vector2(0, -28)
 	visual.add_child(light)
 	hs.set_meta("lamp_on", true)
@@ -463,6 +461,10 @@ func mcp_spawn_fx(interact_id: String) -> Dictionary:
 				out["lamp_blurb"] = lamp_blurb
 				var light := visual.get_node_or_null("LampLight") as PointLight2D if visual else null
 				out["has_light"] = light != null
+				if light != null:
+					out["light_enabled"] = light.enabled
+					out["light_energy"] = light.energy
+					out["has_light_texture"] = light.texture != null
 			return out
 	return {"ok": false, "reason": "missing_hotspot", "id": interact_id}
 

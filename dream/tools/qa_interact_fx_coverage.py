@@ -71,6 +71,14 @@ def main() -> int:
         raise AssertionError("DIK lamp light toggle (PointLight2D) missing")
     if 'contains("lamp")' not in dik:
         raise AssertionError("DIK lamp keyword wiring missing")
+    if "configure_lamp_light" not in dik:
+        raise AssertionError("DIK lamp missing radial texture via WorldSpawnUtil.configure_lamp_light")
+
+    wsu = read("scripts/world/world_spawn_util.gd")
+    if "radial_light_texture" not in wsu or "configure_lamp_light" not in wsu:
+        raise AssertionError("WorldSpawnUtil radial lamp light helpers missing")
+    if "configure_lamp_light" not in wik:
+        raise AssertionError("C58 plaza lamp missing configure_lamp_light")
 
     cage = read("scripts/fishing/fish_cage.gd")
     if "_play_splash_fx" not in cage or "fish_splash" not in cage:

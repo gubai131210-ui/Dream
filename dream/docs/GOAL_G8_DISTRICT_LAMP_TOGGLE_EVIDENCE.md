@@ -24,4 +24,6 @@ Shots: `g8_district_lighthouse_lamp_on.png` / `g8_district_lighthouse_lamp_off.p
 
 Gate: `qa_interact_fx_coverage.py` asserts `_setup_lamp` / `_toggle_lamp` / `PointLight2D`.
 
+Follow-up: radial texture — [`GOAL_G8_LAMP_RADIAL_LIGHT_EVIDENCE.md`](GOAL_G8_LAMP_RADIAL_LIGHT_EVIDENCE.md).
+
 User §7 still open.

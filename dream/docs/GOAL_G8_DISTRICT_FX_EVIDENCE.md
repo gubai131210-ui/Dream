@@ -2,7 +2,8 @@
 
 **Date:** 2026-09-13  
 **Change:** `DistrictInteractKit` no longer pulse-only — maps interact ids onto shipped C58 FX sheets.  
-**Addendum:** District `*lamp*` now matches plaza `lamp_toggle` result layer — `PointLight2D` + sprite modulate + Info「路灯已点亮/熄灭」+ `lamp_spark` oneshot.
+**Addendum:** District `*lamp*` now matches plaza `lamp_toggle` result layer — `PointLight2D` + sprite modulate + Info「路灯已点亮/熄灭」+ `lamp_spark` oneshot.  
+**Addendum 2:** Outdoor lamps share `WorldSpawnUtil.configure_lamp_light` radial `GradientTexture2D` (see `GOAL_G8_LAMP_RADIAL_LIGHT_EVIDENCE.md`).
 
 ## Mapping (keyword → FX)
 
