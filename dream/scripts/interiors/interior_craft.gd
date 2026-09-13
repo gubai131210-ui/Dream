@@ -817,23 +817,9 @@ func _add_point_light(parent: Node2D, pos: Vector2, color: Color, energy: float,
 	light.color = color
 	light.energy = energy
 	light.texture_scale = tex_scale
-	light.texture = _radial_light_texture()
+	light.texture = WorldSpawnUtil.radial_light_texture()
 	light.z_index = 8
 	parent.add_child(light)
-
-
-func _radial_light_texture() -> GradientTexture2D:
-	var grad := Gradient.new()
-	grad.colors = PackedColorArray([Color(1, 1, 1, 1), Color(1, 1, 1, 0)])
-	grad.offsets = PackedFloat32Array([0.0, 1.0])
-	var tex := GradientTexture2D.new()
-	tex.gradient = grad
-	tex.width = 192
-	tex.height = 192
-	tex.fill = GradientTexture2D.FILL_RADIAL
-	tex.fill_from = Vector2(0.5, 0.5)
-	tex.fill_to = Vector2(0.5, 0.0)
-	return tex
 
 
 func _spawn_ambient(parent: Node2D) -> void:

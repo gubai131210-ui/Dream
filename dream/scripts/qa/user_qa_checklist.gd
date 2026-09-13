@@ -7,7 +7,7 @@ extends Control
 const SAVE_PATH := "user://goal_user_qa.cfg"
 ## Mirrors GOAL_INTERACT_COMPLETE §7 outdoor rows + indoor sample rows (full user gate).
 const ITEMS := [
-	{"id": "square", "title": "广场 C58–C60 / K·L姿态 / 门脸", "hint": "点井/树/箱/灯/喂鸟；桩草；锁门；K工作环；L生活态；户外「互动」", "path": SceneRouter.SQUARE_PATH},
+	{"id": "square", "title": "广场 C58–C60 / K·L姿态 / 门脸", "hint": "点井/树/箱/灯/喂鸟；N夜间看灯晕；桩草；锁门；K工作；L生活；「互动」", "path": SceneRouter.SQUARE_PATH},
 	{"id": "market", "title": "市集摊位木棚", "hint": "默认木棚可见；点摊切换状态看 FX；可进市场后台/夜市", "path": SceneRouter.MARKET_PATH},
 	{"id": "farmland", "title": "农田垄线/栅栏/农夫", "hint": "无白底盘；DistrictInteract", "path": SceneRouter.FARMLAND_PATH},
 	{"id": "residential", "title": "住宅区门阶", "hint": "门阶/拱门；可进后院", "path": SceneRouter.RESIDENTIAL_PATH},
@@ -17,9 +17,9 @@ const ITEMS := [
 	{"id": "river", "title": "河渔笼/浮漂/施放", "hint": "下放→约6s→可收；施放水花多帧；浮漂+水环", "path": SceneRouter.RIVER_PATH},
 	{"id": "lake", "title": "湖渔笼/渡口/施放", "hint": "东码头笼；钓点施放 splash；登岛渡口", "path": SceneRouter.LAKE_PATH},
 	{"id": "waterfall", "title": "瀑布水体动画", "hint": "WaterfallAnim 循环可见", "path": SceneRouter.WATERFALL_PATH},
-	{"id": "lighthouse", "title": "灯塔户外门脸", "hint": "DistrictInteract；岸边航标灯开关+火花；进室内可返回", "path": SceneRouter.LIGHTHOUSE_PATH},
+	{"id": "lighthouse", "title": "灯塔户外门脸", "hint": "DistrictInteract；N夜间+航标灯开关晕光；进室内可返回", "path": SceneRouter.LIGHTHOUSE_PATH},
 	{"id": "hill_farm", "title": "坡田 DistrictInteract", "hint": "门脸/交互；无色块占位", "path": SceneRouter.HILL_FARM_PATH},
-	{"id": "station", "title": "车站轨枕", "hint": "轨枕精灵非色块", "path": SceneRouter.STATION_PATH},
+	{"id": "station", "title": "车站轨枕", "hint": "轨枕精灵；N夜间+月台灯开关；非色块", "path": SceneRouter.STATION_PATH},
 	{"id": "lake_house", "title": "湖畔小屋门脸", "hint": "门脸可进；返回湖区", "path": SceneRouter.LAKE_HOUSE_PATH},
 	{"id": "c01", "title": "C01 衣柜开合 / 二楼", "hint": "drawer_open 短帧；可↑二楼", "path": SceneRouter.C01_HOME_PATH},
 	{"id": "c02", "title": "C02 钱箱开盖", "hint": "chest_lid 开合", "path": SceneRouter.C02_MERCHANT_PATH},

@@ -79,6 +79,20 @@ def main() -> int:
         raise AssertionError("WorldSpawnUtil radial lamp light helpers missing")
     if "configure_lamp_light" not in wik:
         raise AssertionError("C58 plaza lamp missing configure_lamp_light")
+    if "mcp_activate" not in wik:
+        raise AssertionError("WorldInteractKit.mcp_activate missing")
+
+    env = read("scripts/env/day_night_weather.gd")
+    if "mcp_set_night" not in env:
+        raise AssertionError("DayNightWeather.mcp_set_night missing")
+    for host_script in (
+        "scripts/areas/village_square_controller.gd",
+        "scripts/areas/lighthouse_controller.gd",
+        "scripts/areas/station_controller.gd",
+    ):
+        src = read(host_script)
+        if "DayNightWeather.attach_to" not in src:
+            raise AssertionError(f"{host_script} missing DayNightWeather attach")
 
     cage = read("scripts/fishing/fish_cage.gd")
     if "_play_splash_fx" not in cage or "fish_splash" not in cage:

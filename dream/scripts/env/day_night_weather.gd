@@ -104,6 +104,18 @@ func set_weather(kind: WeatherKind) -> void:
 	state_changed.emit(time_grade, weather)
 
 
+func mcp_set_night(on: bool) -> Dictionary:
+	## Sync MCP probe: force day/night grade for lamp-glow / Env-H evidence.
+	set_time_grade(TimeGrade.NIGHT if on else TimeGrade.DAY)
+	return {
+		"ok": true,
+		"night": time_grade == TimeGrade.NIGHT,
+		"time_grade": int(time_grade),
+		"weather": int(weather),
+		"has_modulate": _modulate != null,
+	}
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:

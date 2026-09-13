@@ -285,7 +285,7 @@ func mcp_spawn_c58_fx(interact_id: String) -> Dictionary:
 	var frames := 0
 	if sf != null and sf.has_animation("oneshot"):
 		frames = sf.get_frame_count("oneshot")
-	return {
+	var out := {
 		"ok": true,
 		"id": interact_id,
 		"fx": fx_name,
@@ -293,6 +293,29 @@ func mcp_spawn_c58_fx(interact_id: String) -> Dictionary:
 		"playing": fx.is_playing(),
 		"path": str(fx.get_path()),
 	}
+	if interact_id == "lamp_toggle" and _lamp_light != null:
+		out["has_light"] = true
+		out["has_light_texture"] = _lamp_light.texture != null
+		out["light_enabled"] = _lamp_light.enabled
+		out["light_energy"] = _lamp_light.energy
+		out["lamp_on"] = _lamp_on
+	return out
+
+
+func mcp_activate(interact_id: String) -> Dictionary:
+	## Sync MCP: run full interact handler (lamp toggle + FX + Info).
+	for d in INTERACT_DEFS:
+		if str(d.get("id", "")) != interact_id:
+			continue
+		_handle_interact(interact_id, str(d.get("title", "")), str(d.get("desc", "")))
+		var out := {"ok": true, "id": interact_id}
+		if interact_id == "lamp_toggle" and _lamp_light != null:
+			out["lamp_on"] = _lamp_on
+			out["light_enabled"] = _lamp_light.enabled
+			out["light_energy"] = _lamp_light.energy
+			out["has_light_texture"] = _lamp_light.texture != null
+		return out
+	return {"ok": false, "reason": "unknown_id", "id": interact_id}
 
 
 func _pulse_visual(hs: Node) -> void:

@@ -19,7 +19,7 @@
 | **E** | Gameplay Scene Library | 钓鱼/农业加工/商店柜台等玩法专用场景与 UI 锚点 | C18–C22、C38–C39 等 |
 | **F** | Event Library | 节日覆盖、剧情专图、特殊列车等 | C33/C55 等 |
 | **G** | Interaction Library | 可交互/可破坏/进度障碍/宝箱/密道道具 | C58–C62 |
-| **H** | Environment State Library | 昼夜、天气、季节调色与灯效 | C56–C57 |
+| **H** | Environment State Library | 昼夜、天气、季节调色与灯效 | C56–C57；户外 `DayNightWeather` + 路灯 `WorldSpawnUtil` 径向 PointLight |
 
 ```text
 A 参考构图
