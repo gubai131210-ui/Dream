@@ -12,14 +12,16 @@
 
 Shot: `docs/evidence/g8_c60_unlock_fx_door.png`（InfoPanel「锁门·通」）
 
-## C61 HiddenChests `mcp_open` — all 5 sites
+## C61 HiddenChests `mcp_open` — all 5 sites (shots + smoke)
 
 | site_id | host | frames | playing | shot |
 | --- | --- | --- | --- | --- |
 | well | village_square | 4 | true | `g8_c61_well_chest_open.png` |
 | tree_behind | forest_deep | 4 | true | `g8_c61_tree_chest_open.png` |
-| waterfall | waterfall | 4 | true | MCP return only |
-| cave | hill_farm | 4 | true | MCP return only |
-| island | lake | 4 | true | MCP return only |
+| waterfall | waterfall | 4 | true | `g8_c61_waterfall_chest_open.png` |
+| cave | hill_farm | 4 | true | `g8_c61_cave_chest_open.png` |
+| island | lake | 4 | true | `g8_c61_island_chest_open.png` |
+
+**Smoke:** `res://tools/g8_c61_chests_smoke.gd` — opens all five via `mcp_open`, asserts frames≥4.
 
 User §7 still required.
