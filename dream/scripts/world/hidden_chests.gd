@@ -164,6 +164,45 @@ func _play_lid_open(hs: InteractableHotspot) -> void:
 	anim.centered = true
 	visual.add_child(anim)
 	anim.play("open")
+	anim.animation_finished.connect(func() -> void:
+		if not is_instance_valid(anim):
+			return
+		anim.pause()
+		var sf := anim.sprite_frames
+		if sf != null and sf.has_animation("open"):
+			var last := sf.get_frame_count("open") - 1
+			if last >= 0:
+				anim.frame = last
+	)
 	var body := visual.get_node_or_null("PropSprite") as CanvasItem
 	if body:
 		body.modulate = Color(0.85, 0.85, 0.8, 0.95)
+
+
+func mcp_open() -> Dictionary:
+	## Sync probe: open this site's chest once and report lid FX.
+	if _opened:
+		return {"ok": false, "reason": "already_opened", "site_id": _site_id}
+	if _root == null or _root.get_child_count() == 0:
+		return {"ok": false, "reason": "no_hotspot", "site_id": _site_id}
+	var hs := _root.get_child(0) as InteractableHotspot
+	if hs == null:
+		return {"ok": false, "reason": "bad_hotspot", "site_id": _site_id}
+	var d: Dictionary = SITE_DEFS.get(_site_id, {})
+	_open_chest(str(d.get("title", "宝箱")), str(d.get("loot", "")), hs)
+	var fx := hs.get_node_or_null("Visual/ChestLidFX") as AnimatedSprite2D
+	var frames := 0
+	var playing := false
+	if fx != null:
+		playing = fx.is_playing()
+		var sf := fx.sprite_frames
+		if sf != null and sf.has_animation("open"):
+			frames = sf.get_frame_count("open")
+	return {
+		"ok": true,
+		"site_id": _site_id,
+		"frames": frames,
+		"playing": playing,
+		"opened": _opened,
+		"fx": "ChestLidFX" if fx else "",
+	}

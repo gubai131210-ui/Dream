@@ -198,6 +198,7 @@
 - [`GOAL_G8_WAVE_DE_PORTAL_EVIDENCE.md`](GOAL_G8_WAVE_DE_PORTAL_EVIDENCE.md) — Wave D/E portal enter smoke + live C32/C46  
 - [`GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md`](GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md) — Agent §7 探针（不代替用户勾选）  
 - [`GOAL_G8_DISTRICT_FX_EVIDENCE.md`](GOAL_G8_DISTRICT_FX_EVIDENCE.md) — 全区 DistrictInteract 多帧 FX（复用 C58 sheets）  
+- [`GOAL_G8_C59_C61_FX_EVIDENCE.md`](GOAL_G8_C59_C61_FX_EVIDENCE.md) — C59 清除碎屑 FX + C61 `mcp_open` 箱盖  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 17 groups GREEN  
 - `tools/qa_portal_hover_only.py` — GREEN  

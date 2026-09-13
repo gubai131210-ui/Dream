@@ -73,11 +73,20 @@ func mcp_clear(kind_id: String) -> Dictionary:
 		if child is InteractableHotspot and str(child.get_meta("breakable_id", "")) == kind_id:
 			var hs := child as InteractableHotspot
 			_clear_breakable(kind_id, hs.title, hs)
+			var fx_node: AnimatedSprite2D = null
+			var visual := hs.get_node_or_null("Visual") as Node
+			if visual:
+				for c in visual.get_children():
+					if c is AnimatedSprite2D and str(c.name).begins_with("FX_"):
+						fx_node = c as AnimatedSprite2D
+						break
 			return {
 				"ok": true,
 				"id": kind_id,
 				"cleared": cleared_count(),
 				"remaining_nodes": _root.get_child_count() - 1, # queue_free deferred
+				"fx": str(fx_node.name) if fx_node else "",
+				"fx_playing": fx_node.is_playing() if fx_node else false,
 			}
 	return {"ok": false, "reason": "missing_hotspot", "id": kind_id}
 
@@ -109,5 +118,79 @@ func _clear_breakable(kind_id: String, title: String, hs: InteractableHotspot) -
 	if _info:
 		_info.show_info(title, "已清除「%s」。" % title)
 	cleared.emit(kind_id)
-	if is_instance_valid(hs):
-		hs.queue_free()
+	if not is_instance_valid(hs):
+		return
+	# Hide body immediately; play short debris FX, then free.
+	var body := hs.get_node_or_null("Visual/PropSprite") as CanvasItem
+	if body:
+		body.visible = false
+	var prompt := hs.get_node_or_null("ProximityPrompt") as CanvasItem
+	if prompt:
+		prompt.visible = false
+	_play_clear_fx(hs, kind_id)
+	var tw := hs.create_tween()
+	tw.tween_interval(0.55)
+	tw.tween_callback(func() -> void:
+		if is_instance_valid(hs):
+			hs.queue_free()
+	)
+
+
+func _play_clear_fx(hs: InteractableHotspot, kind_id: String) -> void:
+	var dir := "res://assets/sprites/fx"
+	var prefix := "bench_dust"
+	var local := Vector2(0, 0)
+	var fps := 12.0
+	match kind_id:
+		"weed", "rock":
+			prefix = "leaf_fall"
+			local = Vector2(0, -8)
+		"crate":
+			dir = "res://assets/sprites/props"
+			prefix = "crate_lid"
+			local = Vector2(0, -12)
+			fps = 8.0
+		"stake":
+			prefix = "bench_dust"
+			local = Vector2(0, 4)
+		_:
+			pass
+	var visual := hs.get_node_or_null("Visual") as Node2D
+	if visual == null:
+		return
+	var prior := visual.get_node_or_null("FX_%s" % prefix)
+	if prior != null:
+		prior.free()
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("oneshot")
+	frames.set_animation_loop("oneshot", false)
+	frames.set_animation_speed("oneshot", fps)
+	var n := 0
+	for i in range(4):
+		var path := "%s/%s_%02d.png" % [dir, prefix, i]
+		var tex: Texture2D = null
+		if ResourceLoader.exists(path):
+			tex = load(path) as Texture2D
+		if tex == null:
+			var abs_path := ProjectSettings.globalize_path(path)
+			if FileAccess.file_exists(abs_path):
+				var img := Image.load_from_file(abs_path)
+				if img != null:
+					tex = ImageTexture.create_from_image(img)
+		if tex == null:
+			continue
+		frames.add_frame("oneshot", tex)
+		n += 1
+	if n == 0:
+		return
+	var anim := AnimatedSprite2D.new()
+	anim.name = "FX_%s" % prefix
+	anim.sprite_frames = frames
+	anim.position = local
+	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	anim.z_index = 8
+	anim.centered = true
+	visual.add_child(anim)
+	anim.play("oneshot")

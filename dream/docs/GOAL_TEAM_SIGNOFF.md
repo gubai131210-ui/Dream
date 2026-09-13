@@ -21,7 +21,8 @@
 | Semantic interior | zero `_m(P_NOTICE)` + full board taxonomy + civic/C28/signature | `qa_semantic_interior_props` **GREEN** + MCP |
 | Interior OpenFX | C01 dresser + **C02 chest_lid** MCP sync + pause-on-end + smoke | `mcp_play_open_fx`；held frame=3；`g8_c02_chest_lid_held.png` |
 | C58 FX | well/crate/tree/bird oneshots + pause-on-end + MCP live ×4 | smoke held_ok；`g8_c58_*_live.png` |
-| C59 Breakables | stake/weed sprites + `mcp_clear` | `GOAL_G8_C59_BREAKABLES_EVIDENCE.md`；weed 重绘 |
+| C59 Breakables | stake/weed sprites + `mcp_clear` + **clear FX** | `GOAL_G8_C59_BREAKABLES_EVIDENCE.md`；`GOAL_G8_C59_C61_FX_EVIDENCE.md` |
+| C61 Hidden chests | coin_chest + lid + `mcp_open` | `GOAL_G8_C59_C61_FX_EVIDENCE.md`；well open shot |
 | C60 Gates | locked_door unlock soften + fallen log repaint | `mcp_unlock`；`GOAL_G8_C60_GATES_EVIDENCE.md` |
 
 ## Automated gates (must stay GREEN)
