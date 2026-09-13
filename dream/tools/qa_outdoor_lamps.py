@@ -33,12 +33,14 @@ def main() -> int:
 	must(
 		ROOT / "scripts/env/day_night_weather.gd",
 		"scripts/world/outdoor_lamp_kit.gd",
-		"Color(0.22, 0.26, 0.42",
+		"Color(0.28, 0.32, 0.48",
 	)
 	must(
 		ROOT / "scripts/world/world_spawn_util.gd",
-		"tex_scale: float = 2.4",
+		"tex_scale: float = 1.05",
 		"size_px: int = 256",
+		"LAMP_ENERGY_NIGHT := 1.55",
+		"LAMP_TEX_SCALE := 1.05",
 	)
 	must(
 		ROOT / "scripts/world/world_interact_kit.gd",

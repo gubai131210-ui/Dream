@@ -308,15 +308,15 @@ static func resolve_info(host: Node) -> InfoPanel:
 
 
 static func radial_light_texture(size_px: int = 256) -> GradientTexture2D:
-	## Soft radial falloff for outdoor/interior PointLight2D (Genre glow, not flat energy).
+	## Soft radial falloff — cozy pool, not a blown-out stage spotlight.
 	var grad := Gradient.new()
-	# Hold brightness longer near center so night CanvasModulate still leaves a pool.
+	# Peak quickly then fall off; avoid a large flat white core.
 	grad.colors = PackedColorArray([
 		Color(1, 1, 1, 1),
-		Color(1, 1, 1, 0.55),
+		Color(1, 1, 1, 0.32),
 		Color(1, 1, 1, 0),
 	])
-	grad.offsets = PackedFloat32Array([0.0, 0.35, 1.0])
+	grad.offsets = PackedFloat32Array([0.0, 0.18, 1.0])
 	var tex := GradientTexture2D.new()
 	tex.gradient = grad
 	tex.width = size_px
@@ -329,9 +329,9 @@ static func radial_light_texture(size_px: int = 256) -> GradientTexture2D:
 
 static func configure_lamp_light(
 	light: PointLight2D,
-	color: Color = Color(1.0, 0.88, 0.55, 1.0),
-	energy: float = 3.2,
-	tex_scale: float = 2.4,
+	color: Color = Color(1.0, 0.82, 0.52, 1.0),
+	energy: float = 1.55,
+	tex_scale: float = 1.05,
 	size_px: int = 256,
 ) -> void:
 	if light == null:
@@ -344,10 +344,11 @@ static func configure_lamp_light(
 	light.shadow_enabled = false
 
 
-## Outdoor street-lamp defaults (CanvasModulate night multiplies light — use high energy).
-const LAMP_ENERGY_NIGHT := 3.6
-const LAMP_ENERGY_DAY := 0.22
-const LAMP_TEX_SCALE := 2.55
+## Outdoor street-lamp defaults (CanvasModulate multiplies light — compensate, but keep cozy).
+## Target: readable warm pool around the post, not a washed-out half-screen spotlight.
+const LAMP_ENERGY_NIGHT := 1.55
+const LAMP_ENERGY_DAY := 0.18
+const LAMP_TEX_SCALE := 1.05
 const LAMP_TEX_SIZE := 256
 const LAMP_SPRITE_SCALE := 1.15
 const LAMP_LIGHT_OFFSET := Vector2(8, -40)

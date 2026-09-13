@@ -40,7 +40,7 @@ func _boot() -> void:
 	for L in lights:
 		if L == null:
 			continue
-		if bool(L.enabled) and float(L.energy) > 1.0:
+		if bool(L.enabled) and float(L.energy) > 0.8:
 			lit += 1
 			max_e = maxf(max_e, float(L.energy))
 	print("G8_LAMP: lights=", lights.size(), " lit_night=", lit, " max_energy=", max_e)
@@ -48,8 +48,12 @@ func _boot() -> void:
 		push_error("G8_LAMP FAIL: expected ≥1 street lamp light")
 		quit(1)
 		return
-	if lit < 1 or max_e < 2.0:
+	if lit < 1 or max_e < 1.2:
 		push_error("G8_LAMP FAIL: night energy too weak (CanvasModulate compensation missing?)")
+		quit(1)
+		return
+	if max_e > 2.4:
+		push_error("G8_LAMP FAIL: night energy too harsh (blown-out pool)")
 		quit(1)
 		return
 	print("G8_LAMP: GREEN")

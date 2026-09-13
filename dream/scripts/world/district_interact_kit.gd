@@ -362,7 +362,7 @@ func _setup_lamp(hs: InteractableHotspot) -> void:
 		return
 	var light := PointLight2D.new()
 	light.name = "LampLight"
-	WorldSpawnUtil.configure_lamp_light(light, Color(1.0, 0.88, 0.55, 1.0), WorldSpawnUtil.LAMP_ENERGY_NIGHT, WorldSpawnUtil.LAMP_TEX_SCALE, WorldSpawnUtil.LAMP_TEX_SIZE)
+	WorldSpawnUtil.configure_lamp_light(light, Color(1.0, 0.82, 0.52, 1.0), WorldSpawnUtil.LAMP_ENERGY_NIGHT, WorldSpawnUtil.LAMP_TEX_SCALE, WorldSpawnUtil.LAMP_TEX_SIZE)
 	light.position = WorldSpawnUtil.LAMP_LIGHT_OFFSET
 	visual.add_child(light)
 	hs.set_meta("lamp_on", true)

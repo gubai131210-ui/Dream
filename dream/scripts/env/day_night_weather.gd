@@ -14,7 +14,7 @@ enum WeatherKind { CLEAR, RAIN, FOG }
 
 signal state_changed(time_grade: int, weather: int)
 
-@export var night_color: Color = Color(0.22, 0.26, 0.42, 1.0)
+@export var night_color: Color = Color(0.28, 0.32, 0.48, 1.0)
 @export var rain_veil_color: Color = Color(0.42, 0.52, 0.70, 0.22)
 @export var fog_veil_color: Color = Color(0.72, 0.76, 0.82, 0.35)
 

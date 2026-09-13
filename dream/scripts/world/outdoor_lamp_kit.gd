@@ -131,7 +131,7 @@ func _ensure_light_under(visual: Node2D, spr: Sprite2D) -> void:
 		light.name = "LampLight"
 		WorldSpawnUtil.configure_lamp_light(
 			light,
-			Color(1.0, 0.88, 0.55, 1.0),
+			Color(1.0, 0.82, 0.52, 1.0),
 			ENERGY_NIGHT,
 			TEX_SCALE,
 			TEX_SIZE,
@@ -145,7 +145,7 @@ func _ensure_light_under(visual: Node2D, spr: Sprite2D) -> void:
 	else:
 		WorldSpawnUtil.configure_lamp_light(
 			light,
-			Color(1.0, 0.88, 0.55, 1.0),
+			Color(1.0, 0.82, 0.52, 1.0),
 			ENERGY_NIGHT,
 			TEX_SCALE,
 			TEX_SIZE,
@@ -174,4 +174,4 @@ func _apply_grade(night: bool) -> void:
 		light.energy = e
 		var spr := light.get_parent().get_node_or_null("PropSprite") as Sprite2D if light.get_parent() else null
 		if spr:
-			spr.modulate = Color(1.2, 1.08, 0.82) if night else Color(0.92, 0.92, 0.95)
+			spr.modulate = Color(1.08, 1.0, 0.88) if night else Color(0.92, 0.92, 0.95)
