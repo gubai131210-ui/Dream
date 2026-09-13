@@ -1,7 +1,7 @@
 {
   "id": "farmer",
   "title": "农夫",
-  "source": "promoted from farmer_v5 (8-frame walk; edge-white keyed)",
+  "source": "gen_npc_farmer_v5 plate-keyed + height-normalized",
   "height_px": 56,
   "canvas_width_px": 48,
   "columns": 8,
@@ -10,5 +10,48 @@
     "left",
     "right",
     "up"
-  ]
+  ],
+  "frames": {
+    "down": [
+      "walk_down_0.png",
+      "walk_down_1.png",
+      "walk_down_2.png",
+      "walk_down_3.png",
+      "walk_down_4.png",
+      "walk_down_5.png",
+      "walk_down_6.png",
+      "walk_down_7.png"
+    ],
+    "left": [
+      "walk_left_0.png",
+      "walk_left_1.png",
+      "walk_left_2.png",
+      "walk_left_3.png",
+      "walk_left_4.png",
+      "walk_left_5.png",
+      "walk_left_6.png",
+      "walk_left_7.png"
+    ],
+    "right": [
+      "walk_right_0.png",
+      "walk_right_1.png",
+      "walk_right_2.png",
+      "walk_right_3.png",
+      "walk_right_4.png",
+      "walk_right_5.png",
+      "walk_right_6.png",
+      "walk_right_7.png"
+    ],
+    "up": [
+      "walk_up_0.png",
+      "walk_up_1.png",
+      "walk_up_2.png",
+      "walk_up_3.png",
+      "walk_up_4.png",
+      "walk_up_5.png",
+      "walk_up_6.png",
+      "walk_up_7.png"
+    ]
+  },
+  "filter": "NEAREST"
 }

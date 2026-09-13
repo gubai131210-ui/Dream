@@ -402,7 +402,8 @@ func _attach_pose_anim(parent: Node2D, dir: String) -> void:
 	anim.centered = true
 	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	anim.position = Vector2(-22, -6)
-	anim.scale = Vector2(1.15, 1.15)
+	# Pose sheets are 32×48; scale toward walk NPC read height (~56).
+	anim.scale = Vector2(1.45, 1.45)
 	anim.z_index = 2
 	parent.add_child(anim)
 	anim.play("pose")

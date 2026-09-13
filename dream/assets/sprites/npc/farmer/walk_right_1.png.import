@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ccwffy7wf6ahm"
-path="res://.godot/imported/walk_right_1.png-94731ef9cb30d36100d2b498a769ca37.ctex"
+uid="uid://rd671305148f2"
+path="res://.godot/imported/walk_right_1.png-0757f24c8206e3d5f82397313d471381.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/npc/farmer/walk_right_1.png"
-dest_files=["res://.godot/imported/walk_right_1.png-94731ef9cb30d36100d2b498a769ca37.ctex"]
+dest_files=["res://.godot/imported/walk_right_1.png-0757f24c8206e3d5f82397313d471381.ctex"]
 
 [params]
 

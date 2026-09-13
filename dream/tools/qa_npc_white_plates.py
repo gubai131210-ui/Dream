@@ -11,6 +11,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 NPC = ROOT / "assets" / "sprites" / "npc"
 THR = 235
+GRAY_MIN = 175
 PACKS = (
 	"farmer",
 	"blacksmith",
@@ -21,7 +22,24 @@ PACKS = (
 	"miller",
 	"player",
 )
+# Packs known to ship AI checkerboard plates — require gray-plate clearance too.
+STRICT_PLATE_PACKS = ("farmer", "player")
 MAX_EDGE_WHITE = 8
+MAX_STRICT_PLATE = 8
+
+
+def is_near_white(px: tuple[int, int, int, int]) -> bool:
+	r, g, b, a = px
+	return a > 0 and r >= THR and g >= THR and b >= THR
+
+
+def is_plate_pixel(px: tuple[int, int, int, int]) -> bool:
+	r, g, b, a = px
+	if a < 12:
+		return False
+	if r >= 238 and g >= 238 and b >= 238:
+		return True
+	return abs(r - g) <= 10 and abs(g - b) <= 10 and min(r, g, b) >= GRAY_MIN
 
 
 def max_edge_white(path: Path) -> int:
@@ -63,6 +81,11 @@ def max_edge_white(path: Path) -> int:
 	return edge_w
 
 
+def count_plate(path: Path) -> int:
+	im = Image.open(path).convert("RGBA")
+	return sum(1 for p in im.getdata() if is_plate_pixel(p))
+
+
 def main() -> None:
 	failures: list[str] = []
 	for pack in PACKS:
@@ -73,16 +96,34 @@ def main() -> None:
 			continue
 		worst = 0
 		worst_name = ""
+		worst_plate = 0
+		worst_plate_name = ""
 		for f in frames:
 			n = max_edge_white(f)
 			if n > worst:
 				worst = n
 				worst_name = f.name
+			if pack in STRICT_PLATE_PACKS:
+				p = count_plate(f)
+				if p > worst_plate:
+					worst_plate = p
+					worst_plate_name = f.name
 		if worst > MAX_EDGE_WHITE:
 			failures.append(f"{pack}/{worst_name}: edge-white={worst} > {MAX_EDGE_WHITE}")
+		if pack in STRICT_PLATE_PACKS and worst_plate > MAX_STRICT_PLATE:
+			failures.append(
+				f"{pack}/{worst_plate_name}: gray/white plate={worst_plate} > {MAX_STRICT_PLATE}"
+			)
+		if pack in STRICT_PLATE_PACKS:
+			bb = Image.open(frames[0]).convert("RGBA").getchannel("A").getbbox()
+			if bb is None or (bb[3] - bb[1]) < 46:
+				failures.append(f"{pack}: silhouette too short bbox={bb}")
 	if failures:
 		raise SystemExit("FAIL npc white-plate QA:\n- " + "\n- ".join(failures))
-	print(f"GREEN npc white-plate QA ({len(PACKS)} packs, max_edge_white<={MAX_EDGE_WHITE})")
+	print(
+		f"GREEN npc white-plate QA ({len(PACKS)} packs, "
+		f"max_edge_white<={MAX_EDGE_WHITE}, farmer/player plate+height gate)"
+	)
 
 
 if __name__ == "__main__":
