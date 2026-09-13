@@ -24,6 +24,7 @@ static func polish_area(root: Node, scene_title: String) -> void:
 	_add_help_card(ui, "左键调查物件  ·  中键拖拽镜头  ·  滚轮缩放  ·  G 网格  ·  K 工作环  ·  L 生活态")
 	_add_ambient_fx(root)
 	_add_user_qa_return(ui)
+	_add_user_qa_brief(ui)
 	var info := root.get_node_or_null("InfoPanel")
 	if info != null:
 		polish_info_panel(info)
@@ -53,13 +54,29 @@ static func arm_user_qa_return() -> void:
 	Engine.set_meta("dream_user_qa_return", true)
 
 
+static func arm_user_qa_brief(title: String, hint: String, expect: String) -> void:
+	## Carry the current §7 item criteria into the jumped scene HUD.
+	Engine.set_meta("dream_user_qa_brief", {
+		"title": title,
+		"hint": hint,
+		"expect": expect,
+	})
+
+
 static func clear_user_qa_return() -> void:
 	if Engine.has_meta("dream_user_qa_return"):
 		Engine.remove_meta("dream_user_qa_return")
+	if Engine.has_meta("dream_user_qa_brief"):
+		Engine.remove_meta("dream_user_qa_brief")
 
 
 static func is_user_qa_return_armed() -> bool:
 	return bool(Engine.get_meta("dream_user_qa_return", false))
+
+
+static func user_qa_brief() -> Dictionary:
+	var v = Engine.get_meta("dream_user_qa_brief", {})
+	return v if typeof(v) == TYPE_DICTIONARY else {}
 
 
 static func go_user_qa(tree: SceneTree) -> void:
@@ -189,6 +206,51 @@ static func _add_user_qa_return(ui: CanvasLayer) -> void:
 			go_user_qa(tree)
 	)
 	ui.add_child(btn)
+
+
+static func _add_user_qa_brief(ui: CanvasLayer) -> void:
+	## Show the armed checklist item's hand-feel criteria while testing in-scene.
+	if not is_user_qa_return_armed():
+		return
+	var brief := user_qa_brief()
+	if brief.is_empty():
+		return
+	if ui.get_node_or_null("UserQaBrief") != null:
+		return
+	var card := PanelContainer.new()
+	card.name = "UserQaBrief"
+	card.anchor_left = 1.0
+	card.anchor_right = 1.0
+	card.anchor_top = 0.0
+	card.anchor_bottom = 0.0
+	card.offset_left = -340.0
+	card.offset_right = -22.0
+	card.offset_top = 120.0
+	card.offset_bottom = 248.0
+	card.add_theme_stylebox_override("panel", _panel_style(Color("#243229f0"), GOLD, 2, 10, 8))
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 4)
+	card.add_child(v)
+	var head := Label.new()
+	head.text = "§7 手测 · %s" % str(brief.get("title", ""))
+	head.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	head.add_theme_color_override("font_color", GOLD_BRIGHT)
+	head.add_theme_font_size_override("font_size", 14)
+	v.add_child(head)
+	var hint := Label.new()
+	hint.text = str(brief.get("hint", ""))
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hint.add_theme_color_override("font_color", PAPER)
+	hint.add_theme_font_size_override("font_size", 12)
+	v.add_child(hint)
+	var expect := Label.new()
+	expect.text = str(brief.get("expect", ""))
+	expect.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	expect.add_theme_color_override("font_color", Color(0.78, 0.9, 0.7))
+	expect.add_theme_font_size_override("font_size", 12)
+	v.add_child(expect)
+	ui.add_child(card)
 
 
 static func _add_hub_pins(root: Node) -> void:

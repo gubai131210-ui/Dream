@@ -188,6 +188,7 @@ func _make_row(item: Dictionary) -> Control:
 	var path := str(item["path"])
 	go.pressed.connect(func() -> void:
 		DreamUI.arm_user_qa_return()
+		DreamUI.arm_user_qa_brief(str(item["title"]), str(item["hint"]), str(item.get("expect", "")))
 		SceneRouter.change_to(get_tree(), path)
 	)
 	h.add_child(go)
@@ -207,6 +208,7 @@ func _jump_next_unchecked() -> void:
 		_status.text = "全部已勾 — 请复制「§7 已勾」"
 		return
 	DreamUI.arm_user_qa_return()
+	DreamUI.arm_user_qa_brief(str(item["title"]), str(item["hint"]), str(item.get("expect", "")))
 	SceneRouter.change_to(get_tree(), str(item["path"]))
 
 
@@ -263,13 +265,20 @@ func _clear_all() -> void:
 
 
 func mcp_jump_first() -> Dictionary:
-	## MCP probe: arm return chip and enter square.
+	## MCP probe: arm return chip + brief and enter first checklist scene.
 	if ITEMS.is_empty():
 		return {"ok": false, "reason": "no_items"}
+	var item: Dictionary = ITEMS[0]
 	DreamUI.arm_user_qa_return()
-	var path := str(ITEMS[0]["path"])
+	DreamUI.arm_user_qa_brief(str(item["title"]), str(item["hint"]), str(item.get("expect", "")))
+	var path := str(item["path"])
 	SceneRouter.change_to(get_tree(), path)
-	return {"ok": true, "path": path, "armed": DreamUI.is_user_qa_return_armed()}
+	return {
+		"ok": true,
+		"path": path,
+		"armed": DreamUI.is_user_qa_return_armed(),
+		"brief_title": str(item["title"]),
+	}
 
 
 func mcp_next_unchecked() -> Dictionary:
