@@ -188,7 +188,7 @@
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 17 groups GREEN  
 - `tools/qa_portal_hover_only.py` — GREEN  
-- `tools/qa_semantic_interior_props.py` — GREEN（civic+C28 + signature）  
+- `tools/qa_semantic_interior_props.py` — GREEN（civic notices + stele/fare/bark + signature）  
 - `tools/qa_no_placeholder_visuals.py` — GREEN  
 - `tools/qa_interact_sprite_inventory.py` — GREEN（kits + focus/open FX）  
 - `tools/qa_work_pose_style.py` — GREEN（C53 pose sheets）  
