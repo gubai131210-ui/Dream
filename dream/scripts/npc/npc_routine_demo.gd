@@ -286,7 +286,7 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 			"sleep":
 				prop_path = "res://assets/sprites/props/hay_00.png"
 			"read":
-				prop_path = "res://assets/sprites/props/flower_bed_00.png"
+				prop_path = "res://assets/sprites/props/book_open_00.png"
 			"laundry":
 				prop_path = "res://assets/sprites/props/trough_00.png"
 			"idle_sit":

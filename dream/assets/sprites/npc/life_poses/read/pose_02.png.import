@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://e2r8xbhjhpr0"
-path="res://.godot/imported/pose_02.png-cc1d459c76bb6ba6ea187d05ec390f2b.ctex"
+uid="uid://l325a5aede704"
+path="res://.godot/imported/pose_02.png-0e7cd7e254d131abd04f7ba7e35b2fe0.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/npc/life_poses/read/pose_02.png"
-dest_files=["res://.godot/imported/pose_02.png-cc1d459c76bb6ba6ea187d05ec390f2b.ctex"]
+dest_files=["res://.godot/imported/pose_02.png-0e7cd7e254d131abd04f7ba7e35b2fe0.ctex"]
 
 [params]
 

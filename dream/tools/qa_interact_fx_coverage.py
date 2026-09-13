@@ -114,6 +114,10 @@ def main() -> int:
         frames = sorted(d.glob("pose_*.png"))
         if len(frames) < 4:
             raise AssertionError(f"life pose {life}: need ≥4 frames")
+    if 'book_open_00.png' not in routine:
+        raise AssertionError("C54 read cue should use book_open_00 (not flower_bed)")
+    if not (ROOT / "assets" / "sprites" / "props" / "book_open_00.png").is_file():
+        raise AssertionError("props/book_open_00.png missing")
 
     stall = read("scripts/market/market_stall.gd")
     if "_play_cycle_fx" not in stall:
