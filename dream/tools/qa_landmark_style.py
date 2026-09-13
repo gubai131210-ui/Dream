@@ -32,7 +32,8 @@ MIN_UNIQ = {
 
 def uniq(path: Path) -> int:
 	im = Image.open(path).convert("RGBA")
-	return len({c[:3] for c in im.getdata() if c[3] > 200})
+	data = getattr(im, "get_flattened_data", im.getdata)()
+	return len({c[:3] for c in data if c[3] > 200})
 
 
 def main() -> int:

@@ -62,6 +62,7 @@ def main() -> int:
 		"assets/sprites/props/ruin_arch_00.png",
 		"assets/sprites/props/grave_marker_00.png",
 		"assets/sprites/props/bridge_plank_00.png",
+		"assets/sprites/trees/grounded/tree_00.png",
 		"assets/sprites/trees/grounded/tree_04.png",
 		"assets/sprites/props/boat_skiff_00.png",
 		"assets/sprites/props/track_rail_00.png",
@@ -70,6 +71,15 @@ def main() -> int:
 	):
 		if not (ROOT / p).exists():
 			missing.append(f"landmark: res://{p}")
+
+	# C58 shake_tree must ship formal tree prop (no polygon canopy production path).
+	wik = (ROOT / "scripts/world/world_interact_kit.gd").read_text(encoding="utf-8")
+	if "TreeCanopyCue" in wik or "_setup_tree_marker" in wik:
+		missing.append("world_interact: polygon tree canopy fallback still present")
+	if "trees/grounded/tree_00.png" not in wik:
+		missing.append("world_interact: shake_tree must reference tree_00.png")
+	if re.search(r'"id":\s*"shake_tree"[\s\S]*?"scale":\s*0\.0', wik):
+		missing.append("world_interact: shake_tree scale must be > 0 (prop required)")
 
 	if missing:
 		print("FAIL interact sprite inventory")

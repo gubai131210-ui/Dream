@@ -116,7 +116,7 @@
 | --- | --- |
 | G0 | **DONE** — 本统称落地；缺口 inventory 完成 |
 | G1 | **DONE (code)** — C58/C59/C60 prop 精灵 + 灯/脉冲；广场 MCP smoke 无 ERROR |
-| G2 | **DONE (code)** — `leaf_fall` / `well_rope` / `crate_lid` / `bird_peck` 固定画布帧已接线；StyleQA 抛光仍开放 |
+| G2 | **DONE (code)** — `leaf_fall` / `well_rope` / `crate_lid` / `bird_peck` 固定画布帧已接线；StyleQA/AnimQA **GREEN** |
 | G3 | **DONE (code)** — C55 四季改用真实 prop；层与 TopBar 默认可见（不依赖 demo overlay） |
 | G4 | **DONE (code)** — 全区 ≥2 DistrictInteractKit（含瀑/灯塔/坡田/林口/农场住宅/湖屋） |
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
@@ -133,7 +133,7 @@
 | ~~bridge label_proxy~~ | village_square | **DONE** → `bridge_plank_00` |
 | ~~程序门阶多边形~~ | area_craft / WorldSpawnUtil / interior | **DONE** → `doorstep_mat` + `door_arch_cue` |
 | ~~作物床 ColorRect 垄线~~ | area_craft crop beds | **DONE** → `furrow_line_00` |
-| ~~摇树 Polygon 占位~~ | WorldInteractKit | **DONE** → `trees/grounded/tree_00` |
+| ~~摇树 Polygon 占位~~ | WorldInteractKit | **DONE** → `tree_00` PropSprite；多边形回退已删除 + inventory 硬门 |
 | ~~孤岛传送无门脸~~ | museum/bath 等 portal | **DONE** → `door_facade_00` on all portals |
 | ~~完整独立建筑 façade sheet~~ | 博物馆/浴场 | **DONE** → `facade_museum_00` / `facade_bath_00` |
 | ~~drawer_open PIL~~ | interior dresser | **DONE** → StyleQA 48×40 开合帧 |
@@ -216,7 +216,8 @@
 - [`GOAL_G8_PILLOW_LAMP_HINT_EVIDENCE.md`](GOAL_G8_PILLOW_LAMP_HINT_EVIDENCE.md) — C54 pillow 深绘 + 白天路灯按 N 提示  
 - [`GOAL_G8_LAMP_STICKY_NIGHT_EVIDENCE.md`](GOAL_G8_LAMP_STICKY_NIGHT_EVIDENCE.md) — 点灯切粘性夜间观灯（无竞态 Timer）  
 - [`GOAL_G8_LIFE_POSE_HOLD_EVIDENCE.md`](GOAL_G8_LIFE_POSE_HOLD_EVIDENCE.md) — `mcp_force_life_pose` 持握睡眠枕头近景  
-- [`GOAL_G8_USER_QA_BRIEF_EVIDENCE.md`](GOAL_G8_USER_QA_BRIEF_EVIDENCE.md) — §7 跳转场景内手测要点浮层  
+- [`GOAL_G8_USER_QA_BRIEF_EVIDENCE.md`](GOAL_G8_USER_QA_BRIEF_EVIDENCE.md) — §7 跳转场景内手测要点浮层
+- [`GOAL_G8_TREE_HARD_GATE_EVIDENCE.md`](GOAL_G8_TREE_HARD_GATE_EVIDENCE.md) — 摇树禁多边形回退 + inventory 硬门 + MCP PropSprite  
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — **26 groups** GREEN  

@@ -33,6 +33,7 @@
 | Sticky night lamp | daytime lamp-on → `set_time_grade(NIGHT)`；N 回白天 | `GOAL_G8_LAMP_STICKY_NIGHT_EVIDENCE` |
 | §7 UX | expect 文案 + next-unchecked + **in-scene brief** | `GOAL_G8_USER_QA_UX`；`GOAL_G8_USER_QA_BRIEF_EVIDENCE` |
 | §7 load smoke | 21 checklist scenes DayNight+AreaInteract | `GOAL_G8_USER_QA_LOAD_SMOKE_EVIDENCE` 21/21 |
+| Tree hard-gate | shake_tree PropSprite only；polygon canopy deleted | `GOAL_G8_TREE_HARD_GATE_EVIDENCE` |
 
 ## Automated gates (must stay GREEN)
 

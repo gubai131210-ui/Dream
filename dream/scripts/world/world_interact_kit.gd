@@ -148,9 +148,9 @@ func setup(host: Node2D, _top_bar: Control = null) -> void:
 		if interact_id == "lamp_toggle":
 			_setup_lamp(hs)
 		if interact_id == "shake_tree":
-			# Only fall back to polygon canopy if tree sprite failed to attach.
+			# Formal tree prop is required; polygon canopy is not a production path.
 			if hs.get_node_or_null("Visual/PropSprite") == null:
-				_setup_tree_marker(hs)
+				push_error("WorldInteractKit: shake_tree missing PropSprite (tree_00 required)")
 		hs.activated.connect(func(_h: InteractableHotspot) -> void:
 			_handle_interact(interact_id, title, desc)
 		)
@@ -167,25 +167,6 @@ func _setup_lamp(hs: InteractableHotspot) -> void:
 	WorldSpawnUtil.configure_lamp_light(_lamp_light)
 	_lamp_light.position = Vector2(0, -28)
 	hs.get_node("Visual").add_child(_lamp_light)
-
-
-func _setup_tree_marker(hs: InteractableHotspot) -> void:
-	## Soft canopy cue so the interact is discoverable without a fake barrel sprite.
-	var canopy := Polygon2D.new()
-	canopy.name = "TreeCanopyCue"
-	canopy.color = Color(0.28, 0.55, 0.32, 0.55)
-	canopy.polygon = PackedVector2Array([
-		Vector2(0, -36), Vector2(22, -18), Vector2(14, 4), Vector2(-14, 4), Vector2(-22, -18),
-	])
-	canopy.z_index = 0
-	hs.get_node("Visual").add_child(canopy)
-	var trunk := Polygon2D.new()
-	trunk.name = "TreeTrunkCue"
-	trunk.color = Color(0.45, 0.3, 0.18, 0.9)
-	trunk.polygon = PackedVector2Array([
-		Vector2(-4, 4), Vector2(4, 4), Vector2(3, 18), Vector2(-3, 18),
-	])
-	hs.get_node("Visual").add_child(trunk)
 
 
 func _handle_interact(interact_id: String, title: String, desc: String) -> void:

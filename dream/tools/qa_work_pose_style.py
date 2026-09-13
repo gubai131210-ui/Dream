@@ -68,7 +68,7 @@ def check_kinds(root: Path, kinds: tuple[str, ...], label: str, failures: list[s
 			ew = edge_white(f)
 			if ew > MAX_EDGE_WHITE:
 				failures.append(f"{label}/{kind}/{f.name}: edge-white={ew}")
-			uniq = len({c[:3] for c in im.getdata() if c[3] > 200})
+			uniq = len({c[:3] for c in getattr(im, "get_flattened_data", im.getdata)() if c[3] > 200})
 			if uniq < 80:
 				failures.append(f"{label}/{kind}/{f.name}: uniq={uniq} < 80 (need painted density)")
 			bb = im.getchannel("A").getbbox()
