@@ -1,6 +1,6 @@
 # Env-H — 昼夜 / 天气壳（C56–C57 / H）
 
-**Status:** DONE (Wave A2 minimal) 2026-09-11；**lamp-host expand** 2026-09-13  
+**Status:** DONE — outdoor-wide Env-H mounts（2026-09-13）  
 **Package:** outdoor night grade + weather overlay  
 **Owns:** `scripts/env/**`, this doc  
 **Hook:** thin `DayNightWeather.attach_to` on **all 14 outdoor area controllers** (not Autoload)  
