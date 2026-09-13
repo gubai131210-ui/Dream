@@ -35,6 +35,7 @@
 | §7 load smoke | 21 checklist scenes DayNight+AreaInteract | `GOAL_G8_USER_QA_LOAD_SMOKE_EVIDENCE` 21/21 |
 | Tree hard-gate | shake_tree PropSprite only；polygon canopy deleted | `GOAL_G8_TREE_HARD_GATE_EVIDENCE` |
 | Sprite-only fallbacks | C05/钓鱼/门阶/垄线禁 ColorRect·Polygon | `GOAL_G8_SPRITE_ONLY_FALLBACK_EVIDENCE` |
+| Window + focus chrome | 窗光柱 Sprite2D；hover FocusCorners only | `GOAL_G8_WINDOW_FOCUS_SPRITE_EVIDENCE` |
 
 ## Automated gates (must stay GREEN)
 

@@ -194,13 +194,14 @@ func _on_mouse_exited() -> void:
 
 
 func _ensure_focus_corners() -> void:
-	## Prefer pixel corner marks; _draw() lines remain as fallback.
+	## Pixel corner marks required — no procedural draw_line frame in production.
 	if get_node_or_null("FocusCorners") != null:
 		_set_focus_corners_visible(true)
 		return
 	var path := "res://assets/sprites/fx/focus_corners_00.png"
 	var tex := WorldSpawnUtil.load_prop_texture(path)
 	if tex == null:
+		push_error("InteractableHotspot: missing focus_corners_00.png (draw_line frame forbidden)")
 		return
 	var root := Node2D.new()
 	root.name = "FocusCorners"
@@ -235,29 +236,8 @@ func _set_focus_corners_visible(shown: bool) -> void:
 
 
 func _draw() -> void:
-	if not _hovered:
-		return
-	# Skip procedural lines when pixel focus corners are present.
-	if get_node_or_null("FocusCorners") != null:
-		return
-	var half := Vector2(maxf(_marker_size.x, 18.0), maxf(_marker_size.y, 16.0))
-	var pad := 5.0
-	var left := -half.x - pad
-	var right := half.x + pad
-	var top := -half.y - pad
-	var bottom := half.y + pad
-	# A stable focus frame is easier to read than an always-pulsing frame and
-	# cannot be mistaken for a broken animation or duplicated sprite.
-	var c := Color(1.0, 0.87, 0.4, 0.88)
-	var arm := 12.0
-	draw_line(Vector2(left, top), Vector2(left + arm, top), c, 2.0)
-	draw_line(Vector2(left, top), Vector2(left, top + arm), c, 2.0)
-	draw_line(Vector2(right - arm, top), Vector2(right, top), c, 2.0)
-	draw_line(Vector2(right, top), Vector2(right, top + arm), c, 2.0)
-	draw_line(Vector2(left, bottom - arm), Vector2(left, bottom), c, 2.0)
-	draw_line(Vector2(left, bottom), Vector2(left + arm, bottom), c, 2.0)
-	draw_line(Vector2(right - arm, bottom), Vector2(right, bottom), c, 2.0)
-	draw_line(Vector2(right, bottom - arm), Vector2(right, bottom), c, 2.0)
+	## Hover chrome is FocusCorners sprites only (no procedural line frame).
+	pass
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:

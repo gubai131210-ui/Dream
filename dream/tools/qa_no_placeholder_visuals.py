@@ -35,6 +35,8 @@ def main() -> None:
     require(interior, 'label.visible = show_marker', "interior return label visibility")
     require(interior, 'lbl.visible = show_marker', "interior extra label visibility")
     require(interior, "window_light_shaft_00.png", "interior window light shaft sprite")
+    if 'shaft := Polygon2D.new()' in interior:
+        raise AssertionError("interior window light still has Polygon2D shaft fallback")
 
     square = read("scripts/areas/village_square_assembler.gd")
     if 'rock_g := "res://assets/sprites/props/rock_02.png"' in square:
@@ -76,6 +78,8 @@ def main() -> None:
     require(hotspot, "focus_corners_00.png", "hover focus corner sprite")
     require(hotspot, "queue_redraw()", "hover redraw for focus frame")
     require(hotspot, "_ensure_focus_corners", "pixel focus corner helper")
+    if "draw_line(" in hotspot:
+        raise AssertionError("hotspot still has procedural draw_line focus frame")
 
     stall = read("scripts/market/market_stall.gd")
     require(stall, "stall_open_wood_00.png", "C05 default stall body PNG")

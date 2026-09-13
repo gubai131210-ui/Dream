@@ -142,8 +142,8 @@
 | ~~C05 摊位 ColorRect 棚~~ | MarketStall | **DONE** → 默认 `stall_open_wood_00`；ColorRect 回退已删 |
 | ~~C05 摊位 ColorRect 立柱~~ | MarketStall `_add_poles` | **DONE** → `stall_pole_00`；ColorRect 回退已删 |
 | ~~钓鱼浮漂下 Polygon 水环~~ | `fishing_spot.gd` / `fish_cage.gd` | **DONE** → `fish_ring_00`；Polygon/ColorRect 回退已删 |
-| ~~室内窗光 Polygon 光柱~~ | `interior_craft.gd` | **DONE** → `fx/window_light_shaft_00.png`（Polygon 仅 fallback） |
-| ~~hover 仅 draw_line 角标~~ | `interactable_hotspot.gd` | **DONE** → `fx/focus_corners_00.png` + 修复 enter 时 `queue_redraw` |
+| ~~室内窗光 Polygon 光柱~~ | `interior_craft.gd` | **DONE** → `window_light_shaft_00`；Polygon 回退已删 |
+| ~~hover 仅 draw_line 角标~~ | `interactable_hotspot.gd` | **DONE** → `focus_corners_00`；draw_line 回退已删 |
 | ~~农夫 walk 不透明白底盘~~ | `assets/sprites/npc/farmer` | **DONE** → 提升 `farmer_v2` 后经 `farmer_v5` 8 帧；`qa_npc_white_plates` GREEN |
 | ~~室内 actor 缺 mayor/miller 包~~ | `interior_profiles` | **DONE** → `npc/mayor` + `npc/miller`（recolor 正式包） |
 | ~~C53/C54 按钮被 demo 开关隐藏~~ | square/market/farmland controllers | **DONE** → TopBar 工作/生活环常显；仅 status strip 仍 demo 门控 |
@@ -219,6 +219,7 @@
 - [`GOAL_G8_USER_QA_BRIEF_EVIDENCE.md`](GOAL_G8_USER_QA_BRIEF_EVIDENCE.md) — §7 跳转场景内手测要点浮层
 - [`GOAL_G8_TREE_HARD_GATE_EVIDENCE.md`](GOAL_G8_TREE_HARD_GATE_EVIDENCE.md) — 摇树禁多边形回退 + inventory 硬门 + MCP PropSprite
 - [`GOAL_G8_SPRITE_ONLY_FALLBACK_EVIDENCE.md`](GOAL_G8_SPRITE_ONLY_FALLBACK_EVIDENCE.md) — 摊位/钓鱼/门阶/垄线禁 ColorRect·Polygon 回退
+- [`GOAL_G8_WINDOW_FOCUS_SPRITE_EVIDENCE.md`](GOAL_G8_WINDOW_FOCUS_SPRITE_EVIDENCE.md) — 窗光柱 + hover 角标禁 Polygon/draw_line
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — **26 groups** GREEN  
