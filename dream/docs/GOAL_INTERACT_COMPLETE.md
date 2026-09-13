@@ -238,7 +238,7 @@
 
 | 区 | 场景 | 交互/门面要点 | Agent MCP | 用户勾选 |
 | --- | --- | --- | --- | --- |
-| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、**K/L姿态**、夜间路灯 | [x] idle+井/灯；**`g8_square_lamp_night_on/off`**；C53/C54；「互动」 | [ ] |
+| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、**K/L姿态**、点灯粘性夜间 | [x] idle+井/灯；**sticky night** `g8_square_lamp_night_preview`；C53/C54+`mcp_force_life_pose(sleep)`；「互动」 | [ ] |
 | 市集 | `market_street` | 木棚摊位、DistrictInteract | [x] `g8_market_idle.png` 木棚可见 | [ ] |
 | 农田 | `farmland` | 垄线、栅栏、DistrictInteract | [x] `g8_farmland_idle.png`；farmer 白底盘已替换 | [ ] |
 | 住宅 | `village_residential` | 门阶/拱门、DistrictInteract | [x] `g8_residential_idle.png` | [ ] |
