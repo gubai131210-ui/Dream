@@ -20,6 +20,7 @@
 | C01 | `mcp_play_open_fx(衣柜)` | ok, OpenFX_drawer_open frames=4 |
 | C02 | `mcp_play_open_fx(钱箱)` | ok, OpenFX_chest_lid frames=4 |
 | C62 | forest_deep `WorldPortal_树洞密道` | secret_chain=true; facade Sprite2D; to c16; `g8_walkthrough_c62_portal.png` + prior chain smoke PASS |
+| district FX | market `mcp_spawn_fx(mkt_crate_stack)` + forest `fent_sign` | crate_lid / board_rustle frames=4; `g8_district_market_crate_fx.png` |
 | lighthouse / hill_farm / lake_house | runtime idle + DistrictInteractKit | shots `g8_walkthrough_lighthouse_idle` / `hill_farm_idle` / `lake_house_idle` |
 | §7 checklist UI | `user_qa_checklist.tscn` | **21** rows（户外全表+室内抽样）；复制「§7 已勾」；`g8_user_qa_checklist_v2.png` |
 | portals D/E | prior `g8_wave_de_portal_smoke` + live enter | PASS (separate evidence) |

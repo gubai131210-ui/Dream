@@ -318,6 +318,7 @@ func setup(host: Node2D, host_id: String, _top_bar: Control = null) -> void:
 			float(d.get("scale", 0.55)),
 		)
 		hs.set_meta("interact_id", interact_id)
+		hs.set_meta("district_fx", _fx_spec_for_id(interact_id))
 		hs.activated.connect(func(_h: InteractableHotspot) -> void:
 			_on_interact(interact_id, title, desc, _h)
 		)
@@ -329,6 +330,24 @@ func live_count() -> int:
 	return _root.get_child_count()
 
 
+func _fx_spec_for_id(interact_id: String) -> Dictionary:
+	## Map district hotspots onto shipped C58 FX sheets (formal pixels, not pulse-only).
+	var id := interact_id
+	if id.contains("bench"):
+		return {"dir": "res://assets/sprites/fx", "prefix": "bench_dust", "pos": Vector2(0, 6), "fps": 10.0}
+	if id.contains("sign"):
+		return {"dir": "res://assets/sprites/fx", "prefix": "board_rustle", "pos": Vector2(0, -18), "fps": 10.0}
+	if id.contains("crate") or id.contains("handcart") or id.contains("barrel"):
+		return {"dir": "res://assets/sprites/props", "prefix": "crate_lid", "pos": Vector2(0, -16), "fps": 8.0}
+	if id.contains("trough"):
+		return {"dir": "res://assets/sprites/props", "prefix": "well_rope", "pos": Vector2(0, -14), "fps": 8.0}
+	if id.contains("hay") or id.contains("wood") or id.contains("sack") or id.contains("rock"):
+		return {"dir": "res://assets/sprites/fx", "prefix": "leaf_fall", "pos": Vector2(0, -12), "fps": 12.0}
+	if id.contains("lamp"):
+		return {"dir": "res://assets/sprites/fx", "prefix": "board_rustle", "pos": Vector2(0, -22), "fps": 10.0}
+	return {"dir": "res://assets/sprites/fx", "prefix": "bench_dust", "pos": Vector2(0, 4), "fps": 10.0}
+
+
 func _on_interact(interact_id: String, title: String, desc: String, hs: InteractableHotspot) -> void:
 	if hs:
 		var visual := hs.get_node_or_null("Visual") as CanvasItem
@@ -336,6 +355,113 @@ func _on_interact(interact_id: String, title: String, desc: String, hs: Interact
 			var tw := visual.create_tween()
 			tw.tween_property(visual, "modulate", Color(1.25, 1.2, 0.9), 0.08)
 			tw.tween_property(visual, "modulate", Color.WHITE, 0.18)
+		var spec: Dictionary = hs.get_meta("district_fx", {}) as Dictionary
+		if spec.is_empty():
+			spec = _fx_spec_for_id(interact_id)
+		if not spec.is_empty():
+			_play_fx_clip(
+				hs,
+				str(spec.get("dir", "")),
+				str(spec.get("prefix", "")),
+				4,
+				spec.get("pos", Vector2.ZERO) as Vector2,
+				float(spec.get("fps", 10.0)),
+			)
 	if _info:
 		_info.show_info(title, desc)
 	interacted.emit(interact_id)
+
+
+func mcp_spawn_fx(interact_id: String) -> Dictionary:
+	## Sync MCP probe: find hotspot by interact_id and play its district FX.
+	if _root == null:
+		return {"ok": false, "reason": "no_root", "id": interact_id}
+	for child in _root.get_children():
+		if child is InteractableHotspot and str(child.get_meta("interact_id", "")) == interact_id:
+			var hs := child as InteractableHotspot
+			var spec: Dictionary = hs.get_meta("district_fx", {}) as Dictionary
+			if spec.is_empty():
+				spec = _fx_spec_for_id(interact_id)
+			_play_fx_clip(
+				hs,
+				str(spec.get("dir", "")),
+				str(spec.get("prefix", "")),
+				4,
+				spec.get("pos", Vector2.ZERO) as Vector2,
+				float(spec.get("fps", 10.0)),
+			)
+			var fx_name := "FX_%s" % str(spec.get("prefix", ""))
+			var visual := hs.get_node_or_null("Visual") as Node
+			var fx: AnimatedSprite2D = null
+			if visual:
+				fx = visual.get_node_or_null(fx_name) as AnimatedSprite2D
+			if fx == null:
+				return {"ok": false, "reason": "fx_not_spawned", "id": interact_id, "fx": fx_name}
+			var frames := 0
+			var sf := fx.sprite_frames
+			if sf != null and sf.has_animation("oneshot"):
+				frames = sf.get_frame_count("oneshot")
+			return {
+				"ok": true,
+				"id": interact_id,
+				"fx": fx_name,
+				"frames": frames,
+				"playing": fx.is_playing(),
+				"path": str(fx.get_path()),
+			}
+	return {"ok": false, "reason": "missing_hotspot", "id": interact_id}
+
+
+func _play_fx_clip(hs: Node, dir_path: String, prefix: String, frame_count: int, local_pos: Vector2, fps: float = 10.0) -> void:
+	if hs == null or dir_path.is_empty() or prefix.is_empty():
+		return
+	var visual := hs.get_node_or_null("Visual") as Node2D
+	if visual == null:
+		return
+	var prior := visual.get_node_or_null("FX_%s" % prefix)
+	if prior != null:
+		prior.free()
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("oneshot")
+	frames.set_animation_loop("oneshot", false)
+	frames.set_animation_speed("oneshot", fps)
+	var n := 0
+	for i in range(frame_count):
+		var path := "%s/%s_%02d.png" % [dir_path, prefix, i]
+		if not ResourceLoader.exists(path) and not FileAccess.file_exists(ProjectSettings.globalize_path(path)):
+			continue
+		var tex: Texture2D = null
+		if ResourceLoader.exists(path):
+			tex = load(path) as Texture2D
+		if tex == null:
+			var img := Image.load_from_file(ProjectSettings.globalize_path(path))
+			if img != null:
+				tex = ImageTexture.create_from_image(img)
+		if tex == null:
+			continue
+		frames.add_frame("oneshot", tex)
+		n += 1
+	if n == 0:
+		push_warning("DistrictInteractKit: no FX frames for %s in %s" % [prefix, dir_path])
+		return
+	var anim := AnimatedSprite2D.new()
+	anim.name = "FX_%s" % prefix
+	anim.sprite_frames = frames
+	anim.position = local_pos
+	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	anim.z_index = 8
+	anim.centered = true
+	visual.add_child(anim)
+	anim.play("oneshot")
+	anim.animation_finished.connect(func() -> void:
+		if not is_instance_valid(anim):
+			return
+		anim.pause()
+		var sf2 := anim.sprite_frames
+		if sf2 != null and sf2.has_animation("oneshot"):
+			var last := sf2.get_frame_count("oneshot") - 1
+			if last >= 0:
+				anim.frame = last
+	)

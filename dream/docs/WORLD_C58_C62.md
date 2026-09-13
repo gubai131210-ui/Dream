@@ -21,16 +21,18 @@
 
 | id | Title | Action | Visual |
 | --- | --- | --- | --- |
-| sit_bench | 长椅 | Info + pulse | `bench_0.png` |
-| well_water | 井水 | Info + pulse | `well_0.png` |
-| shake_tree | 摇树 | Info + leaf burst | canopy/trunk cue |
-| notice_board | 公告栏 | Info + pulse | `B11-06_mailbox_board_02` |
-| crate_search | 木箱 | Info + pulse | `crate_1.png` |
+| sit_bench | 长椅 | Info + pulse + `bench_dust`×4 | `bench_0.png` |
+| well_water | 井水 | Info + pulse + `well_rope`×4 | `well_0.png` |
+| shake_tree | 摇树 | Info + `leaf_fall`×4 | `trees/grounded/tree_00` |
+| notice_board | 公告栏 | Info + pulse + `board_rustle`×4 | `B11-06_mailbox_board_02` |
+| crate_search | 木箱 | Info + pulse + `crate_lid`×4 | `crate_1.png` |
 | lamp_toggle | 路灯 | Toggle light + modulate | `lamp_0.png` + PointLight2D |
-| feed_critter | 喂鸟 | Info + grain burst | `sack_0.png` |
-| read_sign | 路牌 | Info + pulse | `B11-06_mailbox_board_00` |
+| feed_critter | 喂鸟 | Info + `bird_peck`×4 | `sack_0.png` |
+| read_sign | 路牌 | Info + pulse + `board_rustle`×4 | `B11-06_mailbox_board_00` |
 
-Art pass tracked in [`GOAL_INTERACT_COMPLETE.md`](./GOAL_INTERACT_COMPLETE.md) Wave **G1**.
+District hosts (`DistrictInteractKit`) reuse the same FX sheets by interact id keywords (bench/sign/crate/hay/…).
+
+Art pass tracked in [`GOAL_INTERACT_COMPLETE.md`](./GOAL_INTERACT_COMPLETE.md).
 
 ## C59 breakables (plaza)
 
