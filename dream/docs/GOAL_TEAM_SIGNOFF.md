@@ -37,6 +37,7 @@
 | Sprite-only fallbacks | C05/钓鱼/门阶/垄线禁 ColorRect·Polygon | `GOAL_G8_SPRITE_ONLY_FALLBACK_EVIDENCE` |
 | Window + focus chrome | 窗光柱 Sprite2D；hover FocusCorners only | `GOAL_G8_WINDOW_FOCUS_SPRITE_EVIDENCE` |
 | Lamp-off restore day | sticky night only when lamp-forced；关灯回白天 | `GOAL_G8_LAMP_OFF_RESTORE_DAY_EVIDENCE` |
+| Hub §7 entry | TopBar「§7验收」→ checklist；WIP profiles archived | `GOAL_G8_HUB_QA_ENTRY_EVIDENCE` |
 
 ## Automated gates (must stay GREEN)
 

@@ -1,3 +1,6 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Local WIP profile forks (not live; confuse P_NOTICE audits)
+scripts/interiors/_wip_archive/
