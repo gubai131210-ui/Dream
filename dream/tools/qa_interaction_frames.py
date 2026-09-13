@@ -130,13 +130,21 @@ def main() -> int:
         raise AssertionError("WindSway missing")
     if "SHADER_PATH" not in wind or "wind_sway_2d.gdshader" not in wind:
         raise AssertionError("WindSway must use wind_sway_2d shader (not skew tweens)")
-    if "create_tween" in wind or "skew" in wind:
-        raise AssertionError("WindSway still uses tween/skew motion")
+    if "amplitude_px" not in wind:
+        raise AssertionError("WindSway missing visible pixel amplitude")
+    if "_attach_rotation_pulse" not in wind:
+        raise AssertionError("WindSway missing rotation pulse for small plants")
+    if "create_tween" in wind and "skew" in wind:
+        raise AssertionError("WindSway still uses skew motion")
     shader = (ROOT / "shaders/wind_sway_2d.gdshader").read_text(encoding="utf-8")
-    if "VERTEX.x" not in shader or "uv.y" not in shader.lower():
+    if "VERTEX.x" not in shader or "UV.y" not in shader:
         raise AssertionError("wind shader missing UV.y falloff vertex sway")
+    if "amplitude_px" not in shader:
+        raise AssertionError("wind shader missing amplitude_px")
     if "WindSway.attach" not in area:
         raise AssertionError("AreaCraft trees/crops missing WindSway")
+    if "kind_for_path" not in area or "spawn_sprite" not in area:
+        raise AssertionError("AreaCraft spawn_sprite should auto-attach WindSway")
     spawn_util = (ROOT / "scripts/world/world_spawn_util.gd").read_text(encoding="utf-8")
     if "WindSway.attach" not in spawn_util:
         raise AssertionError("WorldSpawnUtil plant props missing WindSway")

@@ -1,32 +1,23 @@
 shader_type canvas_item;
 render_mode blend_mix;
 
-// Based on Maujoe / HungryProton 2D wind sway (godotshaders.com/shader/2d-wind-sway/)
-// UV.y falloff keeps feet planted; optional pixel snap for nearest-filtered art.
+// Maujoe-style 2D wind: top of sprite leans, feet stay planted (UV.y falloff).
+// amplitude_px is in local Sprite2D pixels — keep it clearly visible (4–12).
 
-uniform float speed = 1.0;
-uniform float min_strength : hint_range(0.0, 1.0) = 0.02;
-uniform float max_strength : hint_range(0.0, 1.0) = 0.055;
-uniform float strength_scale = 7.0;
-uniform float interval = 3.5;
-uniform float detail = 1.0;
-uniform float height_offset : hint_range(0.0, 1.0) = 0.0;
+uniform float speed = 1.2;
+uniform float amplitude_px = 8.0;
+uniform float detail = 1.25;
+uniform float height_offset : hint_range(0.0, 0.6) = 0.12;
 uniform float phase_offset = 0.0;
-uniform bool pixel_snap = true;
-
-float get_wind(vec2 uv, float time) {
-	float diff = max(0.0, max_strength - min_strength);
-	float strength = (min_strength + diff * 0.5 + sin(time / interval) * diff * 0.5) * strength_scale;
-	float falloff = max(0.0, (1.0 - uv.y) - height_offset);
-	return (sin(time) + cos(time * detail)) * strength * falloff;
-}
+uniform float gust_interval = 3.2;
+uniform float gust_boost = 0.35;
 
 void vertex() {
 	float time = TIME * speed + phase_offset;
-	float wind = get_wind(UV, time);
-	if (pixel_snap) {
-		// VERTEX is in local pixels for Sprite2D — snap to whole pixels.
-		wind = floor(wind + 0.5);
-	}
-	VERTEX.x += wind;
+	// Primary sway + slower gust envelope so motion never looks flat.
+	float wave = sin(time) + 0.55 * sin(time * detail + 1.7);
+	float gust = 1.0 + gust_boost * sin(time / max(gust_interval, 0.2));
+	float falloff = max(0.0, (1.0 - UV.y) - height_offset);
+	falloff = pow(falloff, 0.9);
+	VERTEX.x += wave * amplitude_px * gust * falloff;
 }

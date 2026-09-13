@@ -385,6 +385,9 @@ func spawn_sprite(parent: Node2D, path: String, pos: Vector2, z: int = 0) -> Spr
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	spr.z_index = z
 	parent.add_child(spr)
+	var sway_kind := WindSway.kind_for_path(path)
+	if not sway_kind.is_empty():
+		WindSway.attach(spr, sway_kind)
 	return spr
 
 
@@ -491,7 +494,6 @@ func spawn_tree(
 	var spr := spawn_sprite(parent, path, cleared, z)
 	spr.offset = offset
 	mark_blocked_footprint(cleared, half_w, half_h)
-	WindSway.attach(spr, "tree")
 	return spr
 
 

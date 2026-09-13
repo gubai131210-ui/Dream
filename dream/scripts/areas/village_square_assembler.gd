@@ -469,6 +469,9 @@ func _spawn_sprite(parent: Node2D, path: String, pos: Vector2, z: int = 0) -> Sp
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	spr.z_index = z
 	parent.add_child(spr)
+	var sway_kind := WindSway.kind_for_path(path)
+	if not sway_kind.is_empty():
+		WindSway.attach(spr, sway_kind)
 	return spr
 
 
