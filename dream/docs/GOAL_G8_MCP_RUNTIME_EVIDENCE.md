@@ -88,6 +88,11 @@
 | C39 processing idle | `docs/evidence/g8_c39_processing_idle.png` | Wave D 加工棚 |
 | C51 apiary idle | `docs/evidence/g8_c51_apiary_idle.png` | Wave D 蜂场 |
 | C52 orchard store idle | `docs/evidence/g8_c52_orchard_store_idle.png` | Wave D 果仓 |
+| C46 second floor idle | `docs/evidence/g8_c46_second_floor_idle.png` | Wave E 二楼 |
+| C47 attic idle | `docs/evidence/g8_c47_attic_idle.png` | Wave E 阁楼 |
+| C48 roof idle | `docs/evidence/g8_c48_roof_idle.png` | Wave E 屋顶 |
+| C49 backyard idle | `docs/evidence/g8_c49_backyard_idle.png` | Wave E 后院 |
+| C50 farm cellar idle | `docs/evidence/g8_c50_farm_cellar_idle.png` | Wave E 农场地窖 |
 | C36 train schedule | `docs/evidence/g8_c36_ferry_schedule.png` | 班次牌=`ferry_schedule_00` |
 | Farmland farmer 8-frame | `docs/evidence/g8_farmland_farmer_8frame.png` | 田农 `walk_*` frame≥6（8 帧循环） |
 | C58 well rope live | `docs/evidence/g8_c58_well_rope_live.png` | 取水 InfoPanel + `mcp_spawn_c58_fx` frames=4 |

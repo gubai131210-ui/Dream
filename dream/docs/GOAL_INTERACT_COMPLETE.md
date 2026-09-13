@@ -194,6 +194,7 @@
 - [`GOAL_G8_C60_GATES_EVIDENCE.md`](GOAL_G8_C60_GATES_EVIDENCE.md) — C60 锁门解锁 + 倒木重绘  
 - [`GOAL_G8_C22_FISH_CAGE_EVIDENCE.md`](GOAL_G8_C22_FISH_CAGE_EVIDENCE.md) — C22 河/湖渔笼 place/ready MCP + dual-site smoke  
 - [`GOAL_G8_WAVE_D_EVIDENCE.md`](GOAL_G8_WAVE_D_EVIDENCE.md) — Wave D 七室内 idle MCP  
+- [`GOAL_G8_WAVE_E_EVIDENCE.md`](GOAL_G8_WAVE_E_EVIDENCE.md) — Wave E 五室内 idle MCP  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 17 groups GREEN  
 - `tools/qa_portal_hover_only.py` — GREEN  
@@ -232,6 +233,7 @@
 | C06 议事厅 | 门户进出 | [x] `g8_c06_town_hall_idle.png`；镇长 walk 帧已补 | [ ] |
 | C40/C43 博物/浴 | 立面可发现 → 进门 | [x] 博物馆进门 + `g8_c40_museum_idle`；浴场 façade enter PASS；室内 idle | [ ] |
 | Wave D 农商七包 | C32/C33/C37–39/C51–C52 可进可出 | [x] 七室 idle MCP — `GOAL_G8_WAVE_D_EVIDENCE.md` | [ ] |
+| Wave E 垂直/院 | C46–C50 二楼/阁楼/屋顶/后院/地窖 | [x] 五室 idle MCP — `GOAL_G8_WAVE_E_EVIDENCE.md` | [ ] |
 | Wave A2–F 其余已锁室 | 按 PHASE5 进出各一次 | [x] 抽检 C04/C07/C09–C12/C16–C17/C28–C30/C44 idle；72/72 load；**C62 全链 PASS** | [ ] |
 
 ### 本机 QA 步骤（请你跑，避免中文路径 CLI 损文件）

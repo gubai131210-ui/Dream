@@ -1,6 +1,6 @@
 # Phase 5 Wave E — Vertical / yard expand (C46–C50)
 
-**Status:** DONE (code / desk QA) 2026-09-11 — user Godot playtest pending  
+**Status:** DONE (code / desk QA) 2026-09-11 — MCP idle evidence 2026-09-13; **user Godot playtest pending**  
 **User lock:** Expand residential vertical + yard + farm cellar. **Do not polish C01–C04 / Wave A2 / B / C / D** unless broken portals.  
 **Locks:** [`PHASE5.md`](./PHASE5.md), [`INTERIOR_LIBRARY.md`](./INTERIOR_LIBRARY.md), [`INTERIOR_FOUNDATION.md`](./INTERIOR_FOUNDATION.md), [`INTERIOR_COMPOSITION.md`](./INTERIOR_COMPOSITION.md), [`SCALE.md`](./SCALE.md), [`INTERIOR_TERRITORY.md`](./INTERIOR_TERRITORY.md)  
 **Skills:** `interior-territory-craft`, `painting-asset-craft` (unique props), `interior-visual-qa` (desk PASS), `realistic-scene-craft` (outdoor hosts — Lead only)
