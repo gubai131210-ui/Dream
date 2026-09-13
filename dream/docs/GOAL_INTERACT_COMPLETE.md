@@ -106,7 +106,7 @@
 | --- | ---:|
 | P0 | **用户 Godot QA Waves A2–F + §7 勾选** |
 | P1 | ~~姿态 ArtGen 深绘~~ **DONE** — deep-paint + pillow densify；§7 手感仍待 |
-| P2 | tomyud1 MCP 截图证据（**全户外 + 多室内**；C62/C58 FX 冒烟 PASS；白天灯提示按 N；仍不代替 §7） |
+| P2 | ~~tomyud1 MCP 截图证据~~ **DONE（agent）** — 全户外+多室内+FX/portal/C62；**不代替 §7** |
 
 ---
 
@@ -155,7 +155,7 @@
 | ~~civic façade / 破 / 栅 / 桥 / 垄~~ | bath/museum/stake/weed/fence/bridge/furrow | **DONE** → 同批次重绘 + StyleQA 地板 |
 | 季节 grade ColorRect | seasonal_decor | 保留为环境罩（非交互占位） |
 | Env-H / 钓鱼 UI ColorRect | day_night veil / session dim | 环境与 UI 罩，非世界交互占位 |
-| 姿态/摊位 ArtGen 抛光 | work_poses / market | **StyleQA GREEN**（32×48×4，uniq≥80）；awning PNG |
+| ~~姿态/摊位 ArtGen 抛光~~ | work_poses / market | **DONE** → StyleQA GREEN（32×48×4，uniq≥80）；awning PNG |
 | ~~室内语义代理（祭坛/课桌/候车椅/黑板/芦苇/管道）~~ | C07/C10/C11/C25/C31 | **DONE** → dedicated props + `qa_semantic_interior_props` GREEN |
 | ~~提示A/点击B 目标分裂~~ | InteriorRoomController | **DONE** → hover 优先 + click sync；`g8_interact_target_smoke` PASS |
 | ~~C05 EMPTY/LOCKED 代理图~~ | MarketStall | **DONE** → `stall_empty_bay_00` / `stall_locked_board_00` |
@@ -179,6 +179,7 @@
 
 - [`GOAL_G8_MCP_RUNTIME_EVIDENCE.md`](GOAL_G8_MCP_RUNTIME_EVIDENCE.md) — 广场/C01 MCP 截图 + 运行时节点  
 - [`GOAL_G8_SMOKE_EVIDENCE.md`](GOAL_G8_SMOKE_EVIDENCE.md) — headless load matrix（全户外 + 全 C 室内 + hubs）  
+- [`GOAL_G8_WORLDSYS_ACTIVATE_EVIDENCE.md`](GOAL_G8_WORLDSYS_ACTIVATE_EVIDENCE.md) — WorldSys C58–C62 激活冒烟矩阵  
 - [`GOAL_G8_INTERACT_ACTIVATE_EVIDENCE.md`](GOAL_G8_INTERACT_ACTIVATE_EVIDENCE.md) — 广场 C58×8 激活冒烟  
 - [`GOAL_G8_INTERIOR_OPEN_FX_EVIDENCE.md`](GOAL_G8_INTERIOR_OPEN_FX_EVIDENCE.md) — C01 衣柜 drawer_open（headless + `mcp_play_open_fx` live）  
 - [`GOAL_G8_PORTAL_CUE_EVIDENCE.md`](GOAL_G8_PORTAL_CUE_EVIDENCE.md) — 广场门户 façade/门阶  
