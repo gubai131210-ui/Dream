@@ -223,12 +223,27 @@ def paint_book_prop() -> None:
 	print(f"props/{name}")
 
 
+def paint_bowl_prop() -> None:
+	im = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+	d = ImageDraw.Draw(im)
+	# ceramic bowl
+	d.ellipse([6, 12, 26, 28], fill=(220, 210, 190, 255), outline=(90, 75, 55, 255))
+	d.ellipse([9, 14, 23, 22], fill=(180, 90, 50, 245))  # stew
+	d.rectangle([20, 8, 22, 16], fill=(190, 190, 200, 255))  # spoon handle
+	d.ellipse([18, 6, 24, 11], fill=(190, 190, 200, 255))
+	name = "bowl_00.png"
+	im.save(PROP_OUT / name)
+	write_prop_import(PROP_OUT / name, name)
+	print(f"props/{name}")
+
+
 def uniq(im: Image.Image) -> int:
 	return len({c[:3] for c in im.getdata() if c[3] > 200})
 
 
 def main() -> None:
 	paint_book_prop()
+	paint_bowl_prop()
 	farmer = [Image.open(FARMER / f"walk_down_{i}.png").convert("RGBA") for i in range(4)]
 	elder = [Image.open(ELDER / f"walk_down_{i}.png").convert("RGBA") for i in range(4)]
 	for kind, cfg in WORK.items():

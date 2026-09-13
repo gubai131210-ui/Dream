@@ -140,10 +140,16 @@ func debug_force_work_pose() -> String:
 	var entry: Dictionary = rings[_work_idx]
 	_spawn_work_pose_cue("work", entry)
 	var cue := _ysort.get_node_or_null("WorkPoseCue") if _ysort else null
-	return "id=%s ysort=%s cue=%s names=%s" % [
+	var dying := 0
+	if _ysort:
+		for c in _ysort.get_children():
+			if str(c.name).begins_with("WorkPoseCue_dying"):
+				dying += 1
+	return "id=%s ysort=%s cue=%s dying=%d names=%s" % [
 		str(entry.get("id", "")),
 		_ysort != null,
 		cue != null,
+		dying,
 		",".join(debug_work_pose_names()),
 	]
 
@@ -257,11 +263,7 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 		return
 	if kind != "work" and kind != "life":
 		return
-	var old := _ysort.get_node_or_null("WorkPoseCue")
-	if old:
-		# queue_free is deferred — rename so the replacement can reuse the name this frame.
-		old.name = "WorkPoseCue_dying"
-		old.queue_free()
+	_clear_work_pose_cues()
 	var ring_id := str(entry.get("id", ""))
 	var prop_path := ""
 	var pose_dir := ""
@@ -282,7 +284,7 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 		pose_dir = "res://assets/sprites/npc/life_poses/%s" % ring_id
 		match ring_id:
 			"eat":
-				prop_path = "res://assets/sprites/props/stove_00.png"
+				prop_path = "res://assets/sprites/props/bowl_00.png"
 			"sleep":
 				prop_path = "res://assets/sprites/props/hay_00.png"
 			"read":
@@ -312,6 +314,19 @@ func _spawn_work_pose_cue(kind: String, entry: Dictionary) -> void:
 	tw.tween_interval(6.0)
 	tw.tween_property(cue, "modulate:a", 0.0, 0.45)
 	tw.tween_callback(cue.queue_free)
+
+
+func _clear_work_pose_cues() -> void:
+	## Immediate free (not queue_free rename) so rapid K/L cycles never leave WorkPoseCue_dying stubs.
+	if _ysort == null:
+		return
+	var doomed: Array[Node] = []
+	for child in _ysort.get_children():
+		var n := str(child.name)
+		if n == "WorkPoseCue" or n.begins_with("WorkPoseCue_dying"):
+			doomed.append(child)
+	for node in doomed:
+		node.free()
 
 
 func _attach_pose_anim(parent: Node2D, dir: String) -> void:

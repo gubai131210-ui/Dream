@@ -210,6 +210,7 @@
 - [`GOAL_G8_FISHING_CAST_FX_EVIDENCE.md`](GOAL_G8_FISHING_CAST_FX_EVIDENCE.md) — 钓点施放/收取多帧 `fish_splash`
 - [`GOAL_G8_C54_LIFE_POSE_EVIDENCE.md`](GOAL_G8_C54_LIFE_POSE_EVIDENCE.md) — C54 生活态多帧 pose cue（eat/sleep/read/laundry/idle_sit）  
 - [`GOAL_G8_C54_POSE_DEEP_EVIDENCE.md`](GOAL_G8_C54_POSE_DEEP_EVIDENCE.md) — C53/C54 姿态深绘 + read→book_open  
+- [`GOAL_G8_POSE_CUE_CLEANUP_EVIDENCE.md`](GOAL_G8_POSE_CUE_CLEANUP_EVIDENCE.md) — WorkPoseCue dying 清理 + eat→bowl  
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — **26 groups** GREEN  

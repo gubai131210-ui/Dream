@@ -29,7 +29,7 @@
 | C58 lamp spark | lamp_toggle → lamp_spark×4；DIK lamp 同 sheet | `GOAL_G8_C58_LAMP_SPARK_EVIDENCE.md` |
 | Interior tap FX | non-open props → TapFX_* (C58 sheets) | `GOAL_G8_INTERIOR_TAP_FX_EVIDENCE.md`；C07 blackboard/desk/lamp |
 | Fishing cast splash | cast/catch → fish_splash×4 | `GOAL_G8_FISHING_CAST_FX_EVIDENCE.md`；`mcp_cast_fx` |
-| C54 life poses | eat/sleep/read/laundry/idle_sit ×4 + **deep-paint** + book cue | `GOAL_G8_C54_LIFE_POSE_EVIDENCE`；`GOAL_G8_C54_POSE_DEEP_EVIDENCE`；StyleQA GREEN |
+| C54 life poses | deep-paint + book/bowl cues + **WorkPoseCue no dying stubs** | `GOAL_G8_C54_POSE_DEEP_EVIDENCE`；`GOAL_G8_POSE_CUE_CLEANUP_EVIDENCE` |
 
 ## Automated gates (must stay GREEN)
 

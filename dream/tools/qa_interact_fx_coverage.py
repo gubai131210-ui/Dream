@@ -116,8 +116,14 @@ def main() -> int:
             raise AssertionError(f"life pose {life}: need ≥4 frames")
     if 'book_open_00.png' not in routine:
         raise AssertionError("C54 read cue should use book_open_00 (not flower_bed)")
+    if 'bowl_00.png' not in routine:
+        raise AssertionError("C54 eat cue should use bowl_00 (not stove)")
+    if "_clear_work_pose_cues" not in routine:
+        raise AssertionError("WorkPoseCue must clear dying stubs via _clear_work_pose_cues")
     if not (ROOT / "assets" / "sprites" / "props" / "book_open_00.png").is_file():
         raise AssertionError("props/book_open_00.png missing")
+    if not (ROOT / "assets" / "sprites" / "props" / "bowl_00.png").is_file():
+        raise AssertionError("props/bowl_00.png missing")
 
     stall = read("scripts/market/market_stall.gd")
     if "_play_cycle_fx" not in stall:
