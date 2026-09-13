@@ -49,9 +49,20 @@ def main() -> int:
 		raise AssertionError("station assembler missing continuous seamless track band")
 	if "TRACK_TX0 := 0" not in asm:
 		raise AssertionError("tracks must start at left map edge (TRACK_TX0 := 0)")
+	ride = (ROOT / "scripts/interiors/train_car_window_ride.gd").read_text(encoding="utf-8")
+	if "WindowSceneryBand" not in ride:
+		raise AssertionError("window ride missing world-space WindowSceneryBand")
+	if "Vector2(x0, 520)" in ride or "position = Vector2(x0, 520)" in ride:
+		raise AssertionError("window ride still uses bottom-screen scenery strip")
 	prof = (ROOT / "scripts/interiors/interior_profiles.gd").read_text(encoding="utf-8")
 	if "P_TRAIN_WINDOW_WALL" not in prof or "train_window_wall_00" not in prof:
 		raise AssertionError("C36 profile missing train window wall")
+	idx = prof.find('"c36_train_car"')
+	chunk = prof[idx : idx + 1400]
+	if '"window": false' not in chunk:
+		raise AssertionError("c36 must disable generic house window/shaft")
+	if "P_BASKET" in chunk or "P_CRATE0" in chunk or "P_FERRY_SCHEDULE" in chunk:
+		raise AssertionError("c36 still has non-coach clutter props")
 	for rel in assets:
 		if not (ROOT / rel).is_file():
 			raise AssertionError(f"missing asset {rel}")

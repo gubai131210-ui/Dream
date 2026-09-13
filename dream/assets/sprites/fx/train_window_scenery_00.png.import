@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xp74lv0ae70n"
-path="res://.godot/imported/train_window_scenery_00.png-9e7f3d730b8367a6d140ad23146f417c.ctex"
+uid="uid://r23bcffc555684"
+path="res://.godot/imported/train_window_scenery_00.png-fb3c07a50684cc3171c565f1ba517ebb.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/fx/train_window_scenery_00.png"
-dest_files=["res://.godot/imported/train_window_scenery_00.png-9e7f3d730b8367a6d140ad23146f417c.ctex"]
+dest_files=["res://.godot/imported/train_window_scenery_00.png-fb3c07a50684cc3171c565f1ba517ebb.ctex"]
 
 [params]
 
