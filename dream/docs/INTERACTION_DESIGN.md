@@ -29,7 +29,7 @@ Dream 下一阶段的交互不能继续采用“找到一张图 → 放到场景
 - [x] hover 角标改为稳定焦点框，避免被误认为随机闪烁。
 - [x] 瀑布场景停止额外独立石头和雾气实例；瀑布主体保留原有资源。
 - [x] 增加 [`tools/qa_interaction_frames.py`](../tools/qa_interaction_frames.py) 静态回归检查。
-- [ ] Godot 编辑器运行时截图验证：当前 MCP 启动场景超时，需编辑器重新连接后完成。
+- [x] Godot 编辑器运行时截图验证：MCP `run_scene` + 关键表面证据（C58 FX / C01 OpenFX / 瀑布 / 门户）已落（手感仍见 Goal §7）。
 
 ### 0.1 明确禁止
 

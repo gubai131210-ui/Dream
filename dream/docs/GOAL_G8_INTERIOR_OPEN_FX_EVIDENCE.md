@@ -23,5 +23,6 @@ G8_INTERIOR_FX: PASS
 - Shots:
   - `docs/evidence/g8_c01_dresser_open_fx_live.png` — targeting +「互动」
   - `docs/evidence/g8_c01_dresser_open_fx_held.png` — post-oneshot held OpenFX
+  - `docs/evidence/g8_c02_chest_lid_held.png` — C02 钱箱 `chest_lid` held frame=3
 
 User Godot QA still required for visual fidelity (§7).

@@ -83,6 +83,9 @@
 | C36 train schedule | `docs/evidence/g8_c36_ferry_schedule.png` | 班次牌=`ferry_schedule_00` |
 | Farmland farmer 8-frame | `docs/evidence/g8_farmland_farmer_8frame.png` | 田农 `walk_*` frame≥6（8 帧循环） |
 | C58 well rope live | `docs/evidence/g8_c58_well_rope_live.png` | 取水 InfoPanel + `mcp_spawn_c58_fx` frames=4 |
+| C58 crate lid live | `docs/evidence/g8_c58_crate_lid_live.png` | 木箱 `FX_crate_lid` frames=4 playing |
+| C58 leaf fall live | `docs/evidence/g8_c58_leaf_fall_live.png` | 摇树 `FX_leaf_fall` frames=4 playing |
+| C02 chest lid held | `docs/evidence/g8_c02_chest_lid_held.png` | 钱箱 `OpenFX_chest_lid` 末帧 frame=3 |
 
 ## Runtime queries
 

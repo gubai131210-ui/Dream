@@ -16,7 +16,10 @@ G8_C58_FX: PASS
 ## MCP live (editor)
 
 - `WorldInteractKit.mcp_spawn_c58_fx(id)` sync probe → `ok` + `frames=4` + `playing=true` for well / crate / tree  
-- InfoPanel: `docs/evidence/g8_c58_well_rope_live.png`（取水 / 井绳吱呀）  
+- InfoPanel / FX shots:
+  - `docs/evidence/g8_c58_well_rope_live.png`（取水 / 井绳）
+  - `docs/evidence/g8_c58_crate_lid_live.png`（木箱 / crate_lid）
+  - `docs/evidence/g8_c58_leaf_fall_live.png`（摇树 / leaf_fall）
 - Oneshot holds last frame ~2s for readability
 
 User Godot QA still required for visual fidelity.

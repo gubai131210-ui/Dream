@@ -18,8 +18,8 @@
 | Interact target sync | hover/click shared selector (interior + **outdoor**) | `g8_interact_target_smoke` + `g8_outdoor_prompt_smoke` **PASS** |
 | Portal affordance | no always-on arch pulse | `qa_portal_hover_only` **GREEN** |
 | Semantic interior | zero `_m(P_NOTICE)` + full board taxonomy + civic/C28/signature | `qa_semantic_interior_props` **GREEN** + MCP |
-| C58 FX | well_rope / crate_lid / leaf_fall oneshots + MCP sync probe | `g8_c58_fx_smoke` **PASS**; `mcp_spawn_c58_fx` frames=4 |
-| Interior OpenFX | C01 衣柜 drawer_open MCP sync + pause-on-end + smoke mcp path | `mcp_play_open_fx` frames=4；held frame=3；smoke dual-path |
+| Interior OpenFX | C01 dresser + **C02 chest_lid** MCP sync + pause-on-end + smoke | `mcp_play_open_fx`；held frame=3；`g8_c02_chest_lid_held.png` |
+| C58 FX | well_rope / crate_lid / leaf_fall oneshots + MCP sync + live shots | `g8_c58_*_live.png` ×3；`mcp_spawn_c58_fx` frames=4 |
 
 ## Automated gates (must stay GREEN)
 
