@@ -171,6 +171,7 @@
 | ~~C08/C40/C43/C44 告示特化~~ | clinic/museum/bath/inn | **DONE** → `clinic_fee` / `exhibit_guide` / `bath_rules` / `inn_rate` |
 | ~~室内全部 notice_00 代理~~ | all interior markers | **DONE** → 0×`_m(P_NOTICE)`；13 专用牌 + QA 硬禁 |
 | ~~farmer 仅 4 帧（qa_scene_presentation RED）~~ | `npc/farmer` | **DONE** → 提升 `farmer_v5` 8 帧；presentation GREEN；MCP `g8_farmland_farmer_8frame.png` |
+| ~~C60 锁门共用门脸~~ | ProgressGates locked_door | **DONE** → `gate_locked_door_00`（铁锁+横闩；禁 door_facade） |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据

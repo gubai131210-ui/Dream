@@ -11,7 +11,7 @@
 | Draw / Crop / Cutout / Import | Farmer white-plate → v2; mayor/miller packs; outdoor prop copies; landmark/civic/breakable/fence/bridge/furrow/awning repaints | `paint_landmark_props.py` + props/market PNG+import |
 | StyleQA | Work pose sheets 32×48 ×4; landmark/utility painted uniq floors | `qa_work_pose_style` + `qa_landmark_style` **GREEN** |
 | Continuity / science (Canon) | C58–C60 / C22 / OpenFX state explainable | Genre+Canon agent **PASS_WITH_NOTES**（2026-09-13） |
-| Genre reference | Portals façade/doorstep; outdoor hosts ban `interior/props` | Genre **PASS_WITH_NOTES**；QA blocks DIK / routine / seasonal / hidden_chests；C60 锁门暂共用 `door_facade_00`（P1） |
+| Genre reference | Portals façade/doorstep; outdoor hosts ban `interior/props` | Genre **PASS_WITH_NOTES**；QA blocks DIK / routine / seasonal / hidden_chests；**C60 锁门=`gate_locked_door_00`** |
 | Imported-style consistency | NPC edge-white gate; farmer promote | `qa_npc_white_plates.py` **GREEN** (7 packs) |
 | AnimQA / scene presentation | Farmer 8-frame walk promote | `promote_farmer_v5.py` → `qa_scene_presentation` **GREEN** |
 | Animation-frame QA | leaf/rope/lid/bird/waterfall/drawer; WorkPose+leaf smoke; **瀑布 WaterfallAnim** | `qa_interaction_frames.py` **GREEN**; `g8_anim_fx_smoke` **PASS**; MCP `g8_waterfall_anim.png` |

@@ -88,7 +88,11 @@ def main() -> None:
 
     gates = read("scripts/world/progress_gates.gd")
     require(gates, "gate_log_00.png", "C60 fallen log sprite")
-    require(gates, "door_facade_00.png", "C60 locked door facade")
+    require(gates, "gate_locked_door_00.png", "C60 dedicated locked door sprite")
+    if "door_facade_00.png" in gates:
+        raise AssertionError("C60 locked_door still reuses generic door_facade_00")
+    if not (ROOT / "assets/sprites/props/gate_locked_door_00.png").is_file():
+        raise AssertionError("C60 gate_locked_door_00.png missing")
 
     breakables = read("scripts/world/breakables_kit.gd")
     require(breakables, "breakable_stake_00.png", "C59 stake sprite")
