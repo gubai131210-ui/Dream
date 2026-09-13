@@ -19,6 +19,7 @@ PACKS = (
 	"station_master",
 	"mayor",
 	"miller",
+	"player",
 )
 MAX_EDGE_WHITE = 8
 

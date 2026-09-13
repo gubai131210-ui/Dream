@@ -11,13 +11,19 @@ config_version=5
 [application]
 
 config/name="Dream"
+run/main_scene="res://scenes/hub/world_hub.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
-run/main_scene="res://scenes/hub/world_hub.tscn"
 
 [autoload]
 
 MCPRuntime="*res://addons/godot_mcp/runtime/mcp_runtime.gd"
+PlayerBootstrap="*res://scripts/core/player_bootstrap.gd"
+
+[debug]
+
+show_interaction_markers=false
+show_demo_overlays=false
 
 [display]
 

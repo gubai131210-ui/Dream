@@ -1,0 +1,14 @@
+{
+  "id": "player",
+  "title": "\u4e3b\u89d2",
+  "source": "farmer_v5 recolor (hero palette)",
+  "height_px": 56,
+  "canvas_width_px": 48,
+  "columns": 8,
+  "dirs": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ]
+}

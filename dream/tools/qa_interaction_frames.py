@@ -95,6 +95,8 @@ def main() -> int:
         assert_normalized_contract(paths, label)
 
     patrol = (ROOT / "scripts/actors/patrol_actor.gd").read_text(encoding="utf-8")
+    walk_frames = (ROOT / "scripts/actors/npc_walk_frames.gd").read_text(encoding="utf-8")
+    player = (ROOT / "scripts/actors/player_actor.gd").read_text(encoding="utf-8")
     critter = (ROOT / "scripts/actors/ambient_critter.gd").read_text(encoding="utf-8")
     interior = (ROOT / "scripts/interiors/interior_craft.gd").read_text(encoding="utf-8")
     area = (ROOT / "scripts/areas/area_craft.gd").read_text(encoding="utf-8")
@@ -102,13 +104,16 @@ def main() -> int:
     waterfall = (ROOT / "scripts/areas/waterfall_assembler.gd").read_text(encoding="utf-8")
     hotspot = (ROOT / "scripts/interact/interactable_hotspot.gd").read_text(encoding="utf-8")
 
-    for label, source in {
-        "PatrolActor": patrol,
-        "AmbientCritter": critter,
-        "InteriorCraft": interior,
-    }.items():
-        if "get_used_rect()" not in source:
-            raise AssertionError(f"{label} is missing fixed alpha-anchor normalization")
+    if "NpcWalkFrames.build" not in patrol:
+        raise AssertionError("PatrolActor no longer delegates to NpcWalkFrames")
+    if "get_used_rect()" not in walk_frames:
+        raise AssertionError("NpcWalkFrames is missing fixed alpha-anchor normalization")
+    if "NpcWalkFrames.build" not in player:
+        raise AssertionError("PlayerActor is missing NpcWalkFrames wiring")
+    if "get_used_rect()" not in critter:
+        raise AssertionError("AmbientCritter is missing fixed alpha-anchor normalization")
+    if "get_used_rect()" not in interior:
+        raise AssertionError("InteriorCraft is missing fixed alpha-anchor normalization")
 
     water_body = function_body(area, "spawn_water_overlay")
     if "create_tween" in water_body:
