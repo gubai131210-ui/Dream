@@ -17,7 +17,7 @@ Phase 5 打开世界 **第二/三层**：可进入室内、地下入口、钓鱼
 | Stall-C05 … Env-H | **Wave A2 DONE (code)** | 见 [`PHASE5_WAVE_A2.md`](PHASE5_WAVE_A2.md)；用户 Godot QA 进行中 |
 | Civic C06–C11 | **Wave B DONE (code)** | 六公服可进可出；见 [`PHASE5_WAVE_B.md`](PHASE5_WAVE_B.md)。用户 Godot QA；**延期** C01–C04 抛光 |
 | Explore C13/C16/C24–31 | **Wave C DONE (code)** | 探索/地下八包可进可出；见 [`PHASE5_WAVE_C.md`](PHASE5_WAVE_C.md)。用户 Godot QA |
-| Agro/Market C32/C33/C37–39/C51–52 | **Wave D IN PROGRESS** | 农商扩展七包；见 [`PHASE5_WAVE_D.md`](PHASE5_WAVE_D.md)（≠ `INTERIOR_WAVE_D` 抛光锁） |
+| Agro/Market C32/C33/C37–39/C51–52 | **Wave D DONE (code)** | 七包 enriched + MCP idle；见 [`PHASE5_WAVE_D.md`](PHASE5_WAVE_D.md) / [`GOAL_G8_WAVE_D_EVIDENCE.md`](GOAL_G8_WAVE_D_EVIDENCE.md)。用户 Godot QA |
 | Vertical/Yard C46–C50 | **Wave E DONE (code)** | 二楼/阁楼/屋顶/后院/农场地窖；见 [`PHASE5_WAVE_E.md`](PHASE5_WAVE_E.md)。用户 Godot QA |
 | Civic/Transit/NPC/World | **Wave F DONE (code)** | C40–C45 · C34–C36+C23 · C53–C54 · C55+C58–C62；见 [`PHASE5_WAVE_F.md`](PHASE5_WAVE_F.md)。用户 Godot QA |
 

@@ -1,6 +1,6 @@
 # Phase 5 Wave D — Agro / market expand (C32, C33, C37–C39, C51–C52)
 
-**Status:** IN PROGRESS (seeded) 2026-09-11  
+**Status:** DONE (code) 2026-09-13 — seven interiors enriched + MCP idle evidence; **user Godot QA still open**  
 **User lock:** Expand market + farm production rooms. **Do not polish C01–C04 / Wave A2 / Wave B / Wave C** unless broken portals.  
 **Note:** This file is **not** [`INTERIOR_WAVE_D.md`](./INTERIOR_WAVE_D.md) (that lock is C01–C04 polish — deferred).  
 **Locks:** [`PHASE5.md`](./PHASE5.md), [`INTERIOR_LIBRARY.md`](./INTERIOR_LIBRARY.md), [`INTERIOR_FOUNDATION.md`](./INTERIOR_FOUNDATION.md), [`INTERIOR_COMPOSITION.md`](./INTERIOR_COMPOSITION.md), [`SCALE.md`](./SCALE.md), [`INTERIOR_TERRITORY.md`](./INTERIOR_TERRITORY.md)  
@@ -10,13 +10,13 @@
 
 | Team | Package | Own (edit only) | Portal host (Lead-seeded) | Done when |
 | --- | --- | --- | --- | --- |
-| **Backstage** | C32 | `c32_market_back` + `docs/MARKET_BACK_C32.md` | Market 西侧货栈 | stub → enrich |
-| **NightMarket** | C33 | `c33_night_market` + `docs/NIGHT_MARKET_C33.md` | Market 南巷 「进入夜市」 | stub → enrich |
-| **Warehouse** | C37 | `c37_warehouse` + `docs/WAREHOUSE_C37.md` | Farm residential 「进入仓库」 | stub → enrich |
-| **Workshop** | C38 | `c38_workshop` + `docs/WORKSHOP_C38.md` | Market 铁匠旁 「进入工坊」 | stub → enrich |
-| **Processing** | C39 | `c39_processing` + `docs/PROCESSING_C39.md` | Farmland 农具棚 | stub → enrich |
-| **Apiary** | C51 | `c51_apiary` + `docs/APIARY_C51.md` | Farmland 北缘 「进入蜂场」 | stub → enrich |
-| **OrchardStore** | C52 | `c52_orchard_store` + `docs/ORCHARD_STORE_C52.md` | Farm residential 果园旁 「进入果仓」 | stub → enrich |
+| **Backstage** | C32 | `c32_market_back` + `docs/MARKET_BACK_C32.md` | Market 西侧货栈 | **DONE** |
+| **NightMarket** | C33 | `c33_night_market` + `docs/NIGHT_MARKET_C33.md` | Market 南巷 「进入夜市」 | **DONE** |
+| **Warehouse** | C37 | `c37_warehouse` + `docs/WAREHOUSE_C37.md` | Farm residential 「进入仓库」 | **DONE** |
+| **Workshop** | C38 | `c38_workshop` + `docs/WORKSHOP_C38.md` | Market 铁匠旁 「进入工坊」 | **DONE** |
+| **Processing** | C39 | `c39_processing` + `docs/PROCESSING_C39.md` | Farmland 农具棚 | **DONE** |
+| **Apiary** | C51 | `c51_apiary` + `docs/APIARY_C51.md` | Farmland 北缘 「进入蜂场」 | **DONE** |
+| **OrchardStore** | C52 | `c52_orchard_store` + `docs/ORCHARD_STORE_C52.md` | Farm residential 果园旁 「进入果仓」 | **DONE** |
 
 **Shared (Lead only):** `scene_router.gd`, `gen_interior_scenes.py` (`--only-new`), outdoor assembler portal appends, stub profiles, this MD, `PHASE5.md`.
 
@@ -79,9 +79,9 @@ C52_ORCHARD_STORE_PATH → c52_orchard_store
 
 ## Integration checklist (Lead)
 
-- [ ] All seven profiles enriched (not stub 占位)  
-- [ ] Package MDs + desk QA PASS  
-- [ ] Outdoor portals pickable; return works  
-- [ ] Mark teams DONE in this table  
-- [ ] Commit + push `origin/master`  
+- [x] All seven profiles enriched (not stub 占位)  
+- [x] Package MDs + desk QA PASS  
+- [x] Outdoor portals pickable; return works (code + load smoke; §7 hand-feel open)  
+- [x] Mark teams DONE in this table  
+- [x] Commit + push `origin/master`  
 - [ ] User Godot QA note  
