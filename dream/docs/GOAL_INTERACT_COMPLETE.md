@@ -218,7 +218,7 @@
 | 住宅 | `village_residential` | 门阶/拱门、DistrictInteract | [x] `g8_residential_idle.png` | [ ] |
 | 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [x] `g8_farm_residential_idle.png` | [ ] |
 | 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract；C62 树洞密道 | [x] idle + landmarks；**C62** `g8_c62_secret_portal.png` + smoke PASS | [ ] |
-| 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] soaking+ready 截图 + `mcp_place/cycle/collect` + `g8_c22_fish_cage_smoke` PASS | [ ] |
+| 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] river+lake ready 截图；`g8_c22_fish_cage_smoke` river+lake **ok=6 PASS** | [ ] |
 | 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 + 瀑水循环 | [x] idle + **`g8_waterfall_anim.png`**（`WaterfallAnim` playing） | [ ] |
 | 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png` + `g8_lake_house_idle.png` | [ ] |
 

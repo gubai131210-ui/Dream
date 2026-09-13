@@ -19,7 +19,7 @@
 | River idle | `docs/evidence/g8_river_idle.png` | bobber + fish cage sprite on shore |
 | River cage soaking | `docs/evidence/g8_river_fish_cage_soaking.png` | `mcp_place` → phase=soaking + empty cage sprite |
 | River cage ready | `docs/evidence/g8_river_fish_cage_ready.png` | `mcp_cycle_to_ready` → title「可收」+ `fish_cage_full` + 提示「收取渔获」 |
-| Lake idle | `docs/evidence/g8_lake_idle.png` | 湖泊岸边渔笼/浮漂区 + 门户 |
+| Lake cage ready | `docs/evidence/g8_lake_fish_cage_ready.png` | 东码头渔笼 `mcp_cycle_to_ready` →「可收」+ full cage |
 | Farmland idle | `docs/evidence/g8_farmland_idle.png` | 垄线/栅栏/DistrictInteract；farmer 无白底盘 |
 | Farm residential idle | `docs/evidence/g8_farm_residential_idle.png` | 院内 DistrictInteract |
 | Residential idle | `docs/evidence/g8_residential_idle.png` | 住宅区门阶/DistrictInteract |
