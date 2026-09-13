@@ -192,6 +192,7 @@
 - [`GOAL_G8_C58_FX_EVIDENCE.md`](GOAL_G8_C58_FX_EVIDENCE.md) — C58 well_rope/crate_lid/leaf_fall/bird_peck 多帧  
 - [`GOAL_G8_C59_BREAKABLES_EVIDENCE.md`](GOAL_G8_C59_BREAKABLES_EVIDENCE.md) — C59 桩/草精灵 + `mcp_clear`  
 - [`GOAL_G8_C60_GATES_EVIDENCE.md`](GOAL_G8_C60_GATES_EVIDENCE.md) — C60 锁门解锁 + 倒木重绘  
+- [`GOAL_G8_C22_FISH_CAGE_EVIDENCE.md`](GOAL_G8_C22_FISH_CAGE_EVIDENCE.md) — C22 河湾渔笼 place/soak/ready MCP + smoke  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 17 groups GREEN  
 - `tools/qa_portal_hover_only.py` — GREEN  
@@ -217,7 +218,7 @@
 | 住宅 | `village_residential` | 门阶/拱门、DistrictInteract | [x] `g8_residential_idle.png` | [ ] |
 | 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [x] `g8_farm_residential_idle.png` | [ ] |
 | 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract；C62 树洞密道 | [x] idle + landmarks；**C62** `g8_c62_secret_portal.png` + smoke PASS | [ ] |
-| 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] `g8_river_*` + `g8_lake_idle.png`；笼 place→ready | [ ] |
+| 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] soaking+ready 截图 + `mcp_place/cycle/collect` + `g8_c22_fish_cage_smoke` PASS | [ ] |
 | 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 + 瀑水循环 | [x] idle + **`g8_waterfall_anim.png`**（`WaterfallAnim` playing） | [ ] |
 | 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png` + `g8_lake_house_idle.png` | [ ] |
 

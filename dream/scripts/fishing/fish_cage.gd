@@ -155,6 +155,57 @@ func _refresh() -> void:
 			_spr.texture = tex
 
 
+func mcp_report() -> Dictionary:
+	var st := FishingCatalog.cage_state(site_id, cage_id)
+	var sprite_path := ""
+	if _spr != null and _spr.texture != null:
+		sprite_path = str(_spr.texture.resource_path)
+	return {
+		"ok": true,
+		"phase": str(st.get("phase", "")),
+		"title": title,
+		"prompt_text": prompt_text,
+		"sprite_path": sprite_path,
+		"site_id": site_id,
+		"cage_id": cage_id,
+	}
+
+
+func mcp_place() -> Dictionary:
+	FishingCatalog.cage_place(site_id, cage_id)
+	_pulse()
+	_refresh()
+	var out := mcp_report()
+	out["ok"] = str(out.get("phase", "")) == "soaking"
+	return out
+
+
+func mcp_collect() -> Dictionary:
+	var out_fish := FishingCatalog.cage_collect(site_id, cage_id)
+	_pulse()
+	_refresh()
+	var out := mcp_report()
+	out["ok"] = str(out.get("phase", "")) == "empty"
+	out["collected"] = out_fish
+	return out
+
+
+func mcp_cycle_to_ready() -> Dictionary:
+	## Sync probe: empty→place→force ripe→ready (skip 6s soak for MCP/headless).
+	var st := FishingCatalog.cage_state(site_id, cage_id)
+	var phase := str(st.get("phase", "empty"))
+	if phase != "ready":
+		if phase == "empty":
+			FishingCatalog.cage_place(site_id, cage_id)
+		st = FishingCatalog.cage_state(site_id, cage_id)
+		st["ready_at"] = Time.get_ticks_msec() - 1
+		FishingCatalog.cage_try_ripen(site_id, cage_id, 0)
+	_refresh()
+	var out := mcp_report()
+	out["ok"] = str(out.get("phase", "")) == "ready"
+	return out
+
+
 func _pulse() -> void:
 	if _spr == null:
 		return

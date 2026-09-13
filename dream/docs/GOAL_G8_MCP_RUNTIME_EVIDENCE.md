@@ -17,7 +17,8 @@
 | C01 dresser OpenFX held | `docs/evidence/g8_c01_dresser_open_fx_held.png` | oneshot 后暂停末帧（frame=3）仍可见 |
 | Market idle | `docs/evidence/g8_market_idle.png` | 商业街木棚摊位 + DistrictInteract 提示方块 |
 | River idle | `docs/evidence/g8_river_idle.png` | bobber + fish cage sprite on shore |
-| River cage ready | `docs/evidence/g8_river_fish_cage_ready.png` | place → soak ~6s → title「可收」+ `fish_cage_full` path |
+| River cage soaking | `docs/evidence/g8_river_fish_cage_soaking.png` | `mcp_place` → phase=soaking + empty cage sprite |
+| River cage ready | `docs/evidence/g8_river_fish_cage_ready.png` | `mcp_cycle_to_ready` → title「可收」+ `fish_cage_full` + 提示「收取渔获」 |
 | Lake idle | `docs/evidence/g8_lake_idle.png` | 湖泊岸边渔笼/浮漂区 + 门户 |
 | Farmland idle | `docs/evidence/g8_farmland_idle.png` | 垄线/栅栏/DistrictInteract；farmer 无白底盘 |
 | Farm residential idle | `docs/evidence/g8_farm_residential_idle.png` | 院内 DistrictInteract |
