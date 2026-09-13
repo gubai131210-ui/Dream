@@ -110,23 +110,38 @@ func _probe(id: String, host: Node, outdoor: bool) -> void:
 					_fail("%s missing ProgressGates" % id)
 					return
 			"market":
-				if not _has_named_descendant(host, "MarketStall_"):
+				if not _has_named_prefix(host, "MarketStall_"):
 					_fail("%s missing MarketStall_*" % id)
 					return
+				if host.get_node_or_null("DistrictInteractKit") == null:
+					_fail("%s missing DistrictInteractKit" % id)
+					return
 			"river", "lake":
-				if not _has_named_descendant(host, "FishCage_") and not _has_named_descendant(host, "FishingSpot_"):
+				if not _has_named_prefix(host, "FishCage_") and not _has_named_prefix(host, "FishingSpot_"):
 					_fail("%s missing FishCage_/FishingSpot_" % id)
 					return
+				if host.get_node_or_null("DistrictInteractKit") == null:
+					_fail("%s missing DistrictInteractKit" % id)
+					return
 			"waterfall":
-				if not _has_named_descendant(host, "WaterfallAnim"):
+				if not _has_named_exact(host, "WaterfallAnim"):
 					_fail("%s missing WaterfallAnim" % id)
 					return
+				if host.get_node_or_null("DistrictInteractKit") == null:
+					_fail("%s missing DistrictInteractKit" % id)
+					return
+				## C62 hop also attaches here.
+				if not _has_named_prefix(host, "SecretPassageChain_"):
+					_fail("%s missing SecretPassageChain_*" % id)
+					return
 			"forest":
-				if host.get_node_or_null("SecretPassageChain") == null and not _has_named_descendant(host, "Secret"):
-					## Secret kit may be nested; require portal into cave chain art at least.
-					if not _has_named_descendant(host, "Portal_"):
-						_fail("%s missing secret/portal affordance" % id)
-						return
+				## attach_for_host names kit SecretPassageChain_<host_key>
+				if not _has_named_prefix(host, "SecretPassageChain_"):
+					_fail("%s missing SecretPassageChain_*" % id)
+					return
+				if not _has_secret_chain_portal(host):
+					_fail("%s missing secret_chain portal" % id)
+					return
 			"farmland", "residential", "farm_home", "forest_entrance", "lighthouse", "hill_farm", "station", "lake_house":
 				if host.get_node_or_null("DistrictInteractKit") == null:
 					_fail("%s missing DistrictInteractKit" % id)
@@ -135,22 +150,50 @@ func _probe(id: String, host: Node, outdoor: bool) -> void:
 		if host.get_child_count() < 1:
 			_fail("%s empty tree" % id)
 			return
-		## Interiors must expose a return portal affordance.
-		if not _has_named_descendant(host, "Portal_"):
-			_fail("%s missing Portal_* return/extra" % id)
+		## Interiors use Portal_Return / Portal_Extra_* (not outdoor WorldPortal_*).
+		if not _has_named_prefix(host, "Portal_"):
+			_fail("%s missing Portal_Return/Extra" % id)
 			return
 	_ok += 1
 	print("G8_USER_QA_LOAD: PASS ", id)
 
 
-func _has_named_descendant(root: Node, needle: String) -> bool:
+func _has_named_exact(root: Node, needle: String) -> bool:
+	return _scan_names(root, needle, true)
+
+
+func _has_named_prefix(root: Node, prefix: String) -> bool:
+	return _scan_names(root, prefix, false)
+
+
+func _scan_names(root: Node, needle: String, exact: bool) -> bool:
 	if root == null or needle.is_empty():
 		return false
 	var stack: Array[Node] = [root]
 	while not stack.is_empty():
 		var n: Node = stack.pop_back()
 		var nm := str(n.name)
-		if nm == needle or nm.begins_with(needle) or nm.contains(needle):
+		if exact:
+			if nm == needle:
+				return true
+		elif nm.begins_with(needle):
+			return true
+		for c in n.get_children():
+			stack.append(c)
+	return false
+
+
+func _has_secret_chain_portal(root: Node) -> bool:
+	if root == null:
+		return false
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var n: Node = stack.pop_back()
+		if n.has_meta("secret_chain") and bool(n.get_meta("secret_chain")):
+			return true
+		## Fallback: C62 outdoor labels use WorldPortal_树洞密道 etc.
+		var nm := str(n.name)
+		if nm.begins_with("WorldPortal_") and (nm.contains("密道") or nm.contains("暗河") or nm.contains("瀑后")):
 			return true
 		for c in n.get_children():
 			stack.append(c)
