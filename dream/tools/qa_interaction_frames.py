@@ -144,10 +144,10 @@ def main() -> int:
         raise AssertionError("hotspot focus frame still has a pulsing/flickering clock")
     if "_spawn_cascade_landmark" not in waterfall:
         raise AssertionError("waterfall missing cascade landmark assembly")
-    if "cascade_cliff_mouth_v1" not in waterfall:
-        raise AssertionError("waterfall missing redrawn cliff mouth asset")
-    if "cascade_bench_00" not in waterfall or "cascade_fern_00" not in waterfall:
-        raise AssertionError("waterfall missing scenic props (bench/fern)")
+    if "bridge_fall_deck_v1" not in waterfall:
+        raise AssertionError("waterfall missing wooden bridge deck (木桥落水)")
+    if "bridge_fall_reed_00" not in waterfall:
+        raise AssertionError("waterfall missing bridge-scene reeds")
     if "_spawn_cascade_veil" not in waterfall:
         raise AssertionError("waterfall missing cascade veil mist")
     if "_spawn_mist(ysort)" in waterfall:
@@ -156,13 +156,13 @@ def main() -> int:
         raise AssertionError("waterfall missing animated water loop wiring")
     if "n.reparent(vis)" not in waterfall and "splash.reparent(vis)" not in waterfall and "node.reparent(vis)" not in waterfall:
         raise AssertionError("waterfall cascade not reparented into hotspot Visual")
-    cliff_asset = ROOT / "assets/sprites/props/cascade_cliff_mouth_v1.png"
-    if not cliff_asset.is_file():
-        raise AssertionError("cascade_cliff_mouth_v1.png missing on disk")
+    deck_asset = ROOT / "assets/sprites/props/bridge_fall_deck_v1.png"
+    if not deck_asset.is_file():
+        raise AssertionError("bridge_fall_deck_v1.png missing on disk")
 
     print(
         f"GREEN interaction-frame QA ({len(groups)} groups, shader wind, "
-        "redrawn cliff-mouth cascade + scenic props)"
+        "木桥落水 bridge spill + scenic props)"
     )
     return 0
 

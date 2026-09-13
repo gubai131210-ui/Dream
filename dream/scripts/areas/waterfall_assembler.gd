@@ -1,8 +1,8 @@
 class_name WaterfallAssembler
 extends Node
 
-## Waterfall (A07) — cliff band → fall column → connected pool → outflow.
-## Silhouette must read as vertical water + cliff, not a prop sitting on a dirt road.
+## Waterfall (A07) — 木桥落水: bank abutments → wooden bridge → spill under deck → pool.
+## Silhouette must read as bridge over falling water into a connected pool.
 
 const MAP_W := 40
 const MAP_H := 30
@@ -92,7 +92,7 @@ func _set_dirt(tx: int, ty: int) -> void:
 
 
 func _paint_approach_dirt() -> void:
-	# ONLY south / southwest approaches — never an E–W road through the fall.
+	# South / southwest approaches — never an E–W road through the fall column.
 	for ty in range(23, MAP_H):
 		_set_dirt(18, ty)
 		_set_dirt(19, ty)
@@ -104,10 +104,17 @@ func _paint_approach_dirt() -> void:
 	for tx in range(14, 27):
 		_set_dirt(tx, 22)
 		_set_dirt(tx, 23)
-	# West overlook spur (side path, north of pool left bank).
+	# West overlook spur.
 	for ty in range(10, 16):
 		_set_dirt(10, ty)
 		_set_dirt(11, ty)
+	# Bridge approach banks (north of pool) — dirt stops at abutments, not mid-span.
+	for tx in range(12, 17):
+		_set_dirt(tx, 9)
+		_set_dirt(tx, 10)
+	for tx in range(24, 29):
+		_set_dirt(tx, 9)
+		_set_dirt(tx, 10)
 
 
 func _scaled_fully_inside(pos: Vector2, tex: Texture2D, scale_f: float, zone: Rect2) -> bool:
@@ -211,79 +218,103 @@ func _spawn_scaled_prop(
 
 
 func _spawn_cascade_landmark(ysort: Node2D) -> void:
-	## Full scenic landmark: cliff mouth → animated chute → splash → props → mist.
-	## Anchor at the north pool notch so the fall reads into the water mask.
+	## 木桥落水: abutments → deck → spill under planks → splash into pool.
 	var foot := craft.tile_center(int(POOL_CX), 11)
-	_spawn_cliff_backfill(ysort, foot)
-	var cliff := _spawn_cliff_mouth(ysort, foot)
-	var fall := _spawn_waterfall_anim(ysort, foot + Vector2(0, -18))
+	_spawn_bridge_banks(ysort, foot)
+	var fall := _spawn_waterfall_anim(ysort, foot + Vector2(0, 8))
 	if fall == null:
-		fall = _spawn_waterfall_fallback(ysort, foot + Vector2(0, -18))
-	var splash := _spawn_splash_ring(ysort, foot + Vector2(0, 58))
+		fall = _spawn_waterfall_fallback(ysort, foot + Vector2(0, 8))
+	var moss := _spawn_bridge_moss(ysort, foot + Vector2(0, -18))
+	var bridge := _spawn_bridge_deck(ysort, foot + Vector2(0, -36))
+	var splash := _spawn_splash_ring(ysort, foot + Vector2(0, 70))
 	_spawn_scenic_props(ysort, foot)
 	_spawn_cascade_veil(ysort, foot)
-	if fall == null and cliff == null:
+	if fall == null and bridge == null:
 		return
-	var anchor: Node2D = fall if fall != null else cliff
+	var anchor: Node2D = fall if fall != null else bridge
 	var hs := craft.make_hotspot(
 		ysort,
-		"山涧飞瀑",
-		"岩壁凹口泄流进潭；木台观瀑，藤蔓与水雾环绕。",
-		foot + Vector2(0, 24),
-		Vector2(168, 140)
+		"木桥落水",
+		"木桥横跨涧口，桥下泄流进潭；水雾与芦苇环绕。",
+		foot + Vector2(0, 16),
+		Vector2(200, 150)
 	)
 	var vis := hs.get_node_or_null("Visual") as Node2D
 	if vis == null:
 		return
-	for node in [cliff, fall, splash]:
+	for node in [fall, moss, bridge, splash]:
 		if node == null:
 			continue
 		var n := node as Node2D
 		var world: Vector2 = n.global_position
 		n.reparent(vis)
 		n.global_position = world
-	# Keep QA / smoke anchor readable even if fall used fallback.
 	if fall == null and anchor != null and anchor.name != "WaterfallAnim":
 		anchor.name = "WaterfallAnim"
 
 
-func _spawn_cliff_mouth(ysort: Node2D, foot: Vector2) -> Node2D:
-	var path := "res://assets/sprites/props/cascade_cliff_mouth_v1.png"
-	if not ResourceLoader.exists(path):
-		path = "res://assets/sprites/props/waterfall_tall_00.png"
+func _spawn_bridge_deck(ysort: Node2D, pos: Vector2) -> Node2D:
+	var path := "res://assets/sprites/props/bridge_fall_deck_v1.png"
 	if not ResourceLoader.exists(path):
 		return null
 	var tex := load(path) as Texture2D
 	if tex == null:
 		return null
 	var spr := Sprite2D.new()
-	spr.name = "CascadeCliff"
+	spr.name = "BridgeFallDeck"
 	spr.texture = tex
 	spr.centered = true
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	# Foot near pool notch; cliff hangs upward (bottom of sprite near water).
-	spr.position = foot + Vector2(0, -72)
-	spr.z_index = 2
-	spr.scale = Vector2(1.15, 1.15)
+	spr.position = pos
+	spr.z_index = 6
+	spr.scale = Vector2(1.05, 1.05)
 	ysort.add_child(spr)
 	return spr
 
 
-func _spawn_cliff_backfill(ysort: Node2D, foot: Vector2) -> void:
-	## Extra rock shoulders so the new cliff doesn't float as a lone cutout.
+func _spawn_bridge_moss(ysort: Node2D, pos: Vector2) -> Node2D:
+	var path := "res://assets/sprites/props/bridge_fall_moss_00.png"
+	if not ResourceLoader.exists(path):
+		return null
+	var spr := craft.spawn_sprite(ysort, path, pos, 5)
+	spr.name = "BridgeFallMoss"
+	spr.scale = Vector2(1.1, 0.95)
+	spr.modulate = Color(0.9, 0.95, 0.92, 0.92)
+	return spr
+
+
+func _spawn_bridge_banks(ysort: Node2D, foot: Vector2) -> void:
+	## Shoulder rocks + optional abutment prop under each bridge end.
+	var abutment := "res://assets/sprites/props/bridge_fall_abutment_00.png"
+	if ResourceLoader.exists(abutment):
+		var left := craft.spawn_sprite(ysort, abutment, foot + Vector2(-108, -28), 2)
+		left.name = "BridgeAbutmentL"
+		left.scale = Vector2(0.95, 0.95)
+		var right := craft.spawn_sprite(ysort, abutment, foot + Vector2(108, -28), 2)
+		right.name = "BridgeAbutmentR"
+		right.scale = Vector2(-0.95, 0.95)
 	var specs := [
-		{"i": 2, "pos": foot + Vector2(-110, -130), "s": 0.48, "z": 1},
-		{"i": 1, "pos": foot + Vector2(110, -125), "s": 0.46, "z": 1},
-		{"i": 0, "pos": foot + Vector2(-150, -40), "s": 0.4, "z": 1},
-		{"i": 4, "pos": foot + Vector2(150, -35), "s": 0.4, "z": 1},
-		{"i": 3, "pos": foot + Vector2(-90, 70), "s": 0.36, "z": 2},
-		{"i": 5, "pos": foot + Vector2(95, 75), "s": 0.35, "z": 2},
+		{"i": 0, "pos": foot + Vector2(-150, -10), "s": 0.42, "z": 1},
+		{"i": 1, "pos": foot + Vector2(150, -5), "s": 0.4, "z": 1},
+		{"i": 3, "pos": foot + Vector2(-120, 55), "s": 0.36, "z": 2},
+		{"i": 5, "pos": foot + Vector2(125, 60), "s": 0.35, "z": 2},
+		{"i": 2, "pos": foot + Vector2(-70, 90), "s": 0.32, "z": 2},
+		{"i": 4, "pos": foot + Vector2(80, 95), "s": 0.32, "z": 2},
 	]
 	for s in specs:
 		var path := "res://assets/sprites/props/rock_%02d.png" % int(s["i"])
 		var spr := _spawn_scaled_prop(ysort, path, s["pos"], float(s["s"]), int(s["z"]), 1, 1, true, false)
 		if spr:
-			spr.modulate = Color(0.8, 0.82, 0.84)
+			spr.modulate = Color(0.82, 0.84, 0.86)
+
+
+func _spawn_cliff_mouth(_ysort: Node2D, _foot: Vector2) -> Node2D:
+	## Legacy cliff mouth — superseded by bridge deck.
+	return null
+
+
+func _spawn_cliff_backfill(ysort: Node2D, foot: Vector2) -> void:
+	_spawn_bridge_banks(ysort, foot)
 
 
 func _spawn_cliff_frame(ysort: Node2D) -> void:
@@ -331,43 +362,46 @@ func _spawn_waterfall_anim(ysort: Node2D, foot: Vector2) -> Node2D:
 	anim.centered = true
 	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	anim.position = foot
-	anim.z_index = 4
-	# Sit inside the cliff chute — bright overlay on the dark baked crevice.
-	anim.scale = Vector2(0.72, 0.78)
-	anim.modulate = Color(0.95, 0.98, 1.0, 0.88)
+	# Under the deck (bridge z=6); spill reads through the span gap.
+	anim.z_index = 3
+	anim.scale = Vector2(1.15, 0.95)
+	anim.modulate = Color(0.92, 0.97, 1.0, 0.95)
 	anim.play("fall")
 	ysort.add_child(anim)
 	return anim
 
 
 func _spawn_splash_ring(ysort: Node2D, pos: Vector2) -> Node2D:
-	var path := "res://assets/sprites/fx/cascade_splash_ring_00.png"
+	var path := "res://assets/sprites/fx/bridge_fall_splash_00.png"
+	if not ResourceLoader.exists(path):
+		path = "res://assets/sprites/fx/cascade_splash_ring_00.png"
 	if not ResourceLoader.exists(path):
 		path = "res://assets/sprites/props/waterfall_splash_00.png"
 	if not ResourceLoader.exists(path):
 		return null
 	var splash := craft.spawn_sprite(ysort, path, pos, 5)
 	splash.name = "CascadeSplash"
-	splash.scale = Vector2(0.95, 0.7)
-	splash.modulate = Color(0.9, 0.96, 1.0, 0.55)
+	splash.scale = Vector2(1.05, 0.75)
+	splash.modulate = Color(0.9, 0.96, 1.0, 0.6)
 	splash.z_index = 5
 	var pulse := splash.create_tween().set_loops()
-	pulse.tween_property(splash, "modulate:a", 0.85, 0.5).set_trans(Tween.TRANS_SINE)
+	pulse.tween_property(splash, "modulate:a", 0.9, 0.5).set_trans(Tween.TRANS_SINE)
 	pulse.tween_property(splash, "modulate:a", 0.4, 0.45).set_trans(Tween.TRANS_SINE)
 	return splash
 
 
 func _spawn_scenic_props(ysort: Node2D, foot: Vector2) -> void:
-	## Extra scenic layer — bench, ferns, vines, moss rocks (user-requested).
+	## Bridge-scene props: reeds, sign, moss rocks, viewing bench.
 	var placements: Array[Dictionary] = [
-		{"path": "res://assets/sprites/props/cascade_bench_00.png", "pos": foot + Vector2(-150, 120), "s": 1.0, "z": 3},
-		{"path": "res://assets/sprites/props/cascade_fern_00.png", "pos": foot + Vector2(-95, 40), "s": 1.1, "z": 3},
-		{"path": "res://assets/sprites/props/cascade_fern_00.png", "pos": foot + Vector2(105, 55), "s": 1.0, "z": 3},
-		{"path": "res://assets/sprites/props/cascade_vines_00.png", "pos": foot + Vector2(-70, -90), "s": 1.05, "z": 3},
-		{"path": "res://assets/sprites/props/cascade_vines_00.png", "pos": foot + Vector2(75, -85), "s": 1.0, "z": 3},
-		{"path": "res://assets/sprites/props/cascade_moss_rock_00.png", "pos": foot + Vector2(-130, 55), "s": 0.95, "z": 2},
-		{"path": "res://assets/sprites/props/cascade_moss_rock_00.png", "pos": foot + Vector2(140, 65), "s": 0.9, "z": 2},
-		{"path": "res://assets/sprites/props/cascade_moss_rock_00.png", "pos": foot + Vector2(-40, 95), "s": 0.75, "z": 2},
+		{"path": "res://assets/sprites/props/bridge_fall_reed_00.png", "pos": foot + Vector2(-130, 70), "s": 1.15, "z": 3, "sway": "reed"},
+		{"path": "res://assets/sprites/props/bridge_fall_reed_00.png", "pos": foot + Vector2(140, 80), "s": 1.05, "z": 3, "sway": "reed"},
+		{"path": "res://assets/sprites/props/bridge_fall_reed_00.png", "pos": foot + Vector2(-50, 100), "s": 0.9, "z": 3, "sway": "reed"},
+		{"path": "res://assets/sprites/props/bridge_fall_sign_00.png", "pos": foot + Vector2(-170, 30), "s": 0.95, "z": 3, "sway": ""},
+		{"path": "res://assets/sprites/props/cascade_bench_00.png", "pos": foot + Vector2(170, 110), "s": 1.0, "z": 3, "sway": ""},
+		{"path": "res://assets/sprites/props/cascade_moss_rock_00.png", "pos": foot + Vector2(-95, 50), "s": 0.9, "z": 2, "sway": ""},
+		{"path": "res://assets/sprites/props/cascade_moss_rock_00.png", "pos": foot + Vector2(100, 55), "s": 0.85, "z": 2, "sway": ""},
+		{"path": "res://assets/sprites/props/cascade_fern_00.png", "pos": foot + Vector2(-155, -5), "s": 1.0, "z": 3, "sway": "flower"},
+		{"path": "res://assets/sprites/props/cascade_fern_00.png", "pos": foot + Vector2(160, 5), "s": 0.95, "z": 3, "sway": "flower"},
 	]
 	for i in placements.size():
 		var spec: Dictionary = placements[i]
@@ -378,18 +412,21 @@ func _spawn_scenic_props(ysort: Node2D, foot: Vector2) -> void:
 		spr.name = "CascadeProp_%d" % i
 		var sc := float(spec["s"])
 		spr.scale = Vector2(sc, sc)
-		if "fern" in path or "vine" in path:
-			WindSway.attach(spr, "flower" if "fern" in path else "reed", float(i) * 0.4)
+		var sway: String = str(spec.get("sway", ""))
+		if not sway.is_empty():
+			WindSway.attach(spr, sway, float(i) * 0.35)
 
 
 func _spawn_cascade_veil(ysort: Node2D, foot: Vector2 = Vector2(640, 360)) -> void:
-	var mist_new := "res://assets/sprites/fx/cascade_mist_00.png"
+	var mist_new := "res://assets/sprites/fx/bridge_fall_mist_00.png"
+	if not ResourceLoader.exists(mist_new):
+		mist_new = "res://assets/sprites/fx/cascade_mist_00.png"
 	var samples: Array[Dictionary] = [
-		{"pos": foot + Vector2(-30, -40), "s": 1.3, "a": 0.42},
-		{"pos": foot + Vector2(35, -30), "s": 1.2, "a": 0.38},
-		{"pos": foot + Vector2(0, 20), "s": 1.55, "a": 0.34},
-		{"pos": foot + Vector2(-20, 70), "s": 1.15, "a": 0.45},
-		{"pos": foot + Vector2(25, 80), "s": 1.1, "a": 0.4},
+		{"pos": foot + Vector2(-25, 10), "s": 1.25, "a": 0.4},
+		{"pos": foot + Vector2(30, 20), "s": 1.15, "a": 0.36},
+		{"pos": foot + Vector2(0, 45), "s": 1.45, "a": 0.32},
+		{"pos": foot + Vector2(-20, 75), "s": 1.1, "a": 0.42},
+		{"pos": foot + Vector2(22, 85), "s": 1.05, "a": 0.38},
 	]
 	for i in samples.size():
 		var mist_path := mist_new
@@ -400,8 +437,8 @@ func _spawn_cascade_veil(ysort: Node2D, foot: Vector2 = Vector2(640, 360)) -> vo
 		var target_a := float(samples[i]["a"])
 		var spr := craft.spawn_sprite(ysort, mist_path, samples[i]["pos"] as Vector2, 6)
 		var sc := float(samples[i]["s"])
-		spr.scale = Vector2(sc, sc * 0.9)
-		spr.modulate = Color(0.88, 0.94, 0.98, target_a * 0.5)
+		spr.scale = Vector2(sc, sc * 0.85)
+		spr.modulate = Color(0.88, 0.94, 0.98, target_a * 0.55)
 		spr.name = "CascadeVeil_%d" % i
 		var tw := spr.create_tween().set_loops()
 		tw.tween_interval(0.12 * float(i))
@@ -426,7 +463,7 @@ func _spawn_trees(ysort: Node2D) -> void:
 
 func _spawn_actors(ysort: Node2D) -> void:
 	craft.spawn_patrol_actor(
-		ysort, "farmer", "观瀑旅人", "在南岸观瀑土径上来回走动。",
+		ysort, "farmer", "观瀑旅人", "在木桥南岸土径上来回走动，看桥下泄流。",
 		[Vector2(480, 720), Vector2(640, 740), Vector2(800, 720), Vector2(640, 780)],
 	)
 
