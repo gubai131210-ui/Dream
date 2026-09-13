@@ -217,13 +217,13 @@
 
 | 区 | 场景 | 交互/门面要点 | Agent MCP | 用户勾选 |
 | --- | --- | --- | --- | --- |
-| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、工作环姿态 | [x] idle+井/灯；activate；worldsys；anim FX；**C53 按钮常显**；浴场 portal enter PASS | [ ] |
+| 广场 | `village_square` | C58×8、C59、C60、门脸、摇树叶、工作环姿态 | [x] idle+井/灯；activate；worldsys；anim FX；**C53 按钮常显**；浴场 portal enter PASS；walkthrough crate/bird +「互动」prompt | [ ] |
 | 市集 | `market_street` | 木棚摊位、DistrictInteract | [x] `g8_market_idle.png` 木棚可见 | [ ] |
 | 农田 | `farmland` | 垄线、栅栏、DistrictInteract | [x] `g8_farmland_idle.png`；farmer 白底盘已替换 | [ ] |
 | 住宅 | `village_residential` | 门阶/拱门、DistrictInteract | [x] `g8_residential_idle.png` | [ ] |
 | 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [x] `g8_farm_residential_idle.png` | [ ] |
-| 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract；C62 树洞密道 | [x] idle + landmarks；**C62** `g8_c62_secret_portal.png` + smoke PASS | [ ] |
-| 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] river+lake ready 截图；`g8_c22_fish_cage_smoke` river+lake **ok=6 PASS** | [ ] |
+| 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract；C62 树洞密道 | [x] idle + landmarks；**C62** smoke PASS；walkthrough portal+facade `g8_walkthrough_c62_portal.png` | [ ] |
+| 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] river+lake ready 截图；`g8_c22_fish_cage_smoke` river+lake **ok=6 PASS**；walkthrough 湖笼 `mcp_cycle_to_ready` | [ ] |
 | 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 + 瀑水循环 | [x] idle + **`g8_waterfall_anim.png`**（`WaterfallAnim` playing） | [ ] |
 | 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png` + `g8_lake_house_idle.png` | [ ] |
 
@@ -232,7 +232,7 @@
 | 室 | 要点 | Agent MCP | 用户勾选 |
 | --- | --- | --- | --- |
 | C01 家 | dresser/chest 开合帧、返回门 | [x] idle + dresser OpenFX held | [ ] |
-| C02 商贾 | coin_chest 开合帧 | [x] `g8_c02_chest_lid_held.png`（chest_lid frame=3） | [ ] |
+| C02 商贾 | coin_chest 开合帧 | [x] `g8_c02_chest_lid_held.png`；walkthrough `mcp_play_open_fx(钱箱)` frames=4 | [ ] |
 | C06 议事厅 | 门户进出 | [x] `g8_c06_town_hall_idle.png`；镇长 walk 帧已补 | [ ] |
 | C40/C43 博物/浴 | 立面可发现 → 进门 | [x] 博物馆进门 + `g8_c40_museum_idle`；浴场 façade enter PASS；室内 idle | [ ] |
 | Wave D 农商七包 | C32/C33/C37–39/C51–C52 可进可出 | [x] idle + **market→C32 enter** MCP；`g8_wave_de_portal_smoke` PASS | [ ] |
