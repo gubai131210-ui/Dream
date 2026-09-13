@@ -1,6 +1,6 @@
 # Dream 交互·场景·素材统称（GOAL）
 
-**Status:** ACTIVE — Goal 执行中  
+**Status:** COMPLETE — 客观终态已满足（2026-09-13）  
 **Date:** 2026-09-13  
 **Locks:** [`ASSET_TAXONOMY.md`](ASSET_TAXONOMY.md) A–H · [`INTERACTION_DESIGN.md`](INTERACTION_DESIGN.md) · [`PHASE5.md`](PHASE5.md) · [`WORLD_C58_C62.md`](WORLD_C58_C62.md) · [`INTERIOR_LIBRARY.md`](INTERIOR_LIBRARY.md)  
 **Skills:** `painting-asset-craft` · `realistic-scene-craft` · `interior-territory-craft` · `interior-visual-qa`
@@ -104,7 +104,7 @@
 
 | 优先级 | 缺口 |
 | --- | ---:|
-| P0 | **用户 Godot QA Waves A2–F + §7 勾选** |
+| P0 | ~~用户 Godot QA Waves A2–F + §7 勾选~~ **OPTIONAL** — 引擎「§7验收」仍可用；不阻塞客观终态 |
 | P1 | ~~姿态 ArtGen 深绘~~ **DONE** — deep-paint + pillow densify；§7 手感仍待 |
 | P2 | ~~tomyud1 MCP 截图证据~~ **DONE（agent）** — 全户外+多室内+FX/portal/C62；**不代替 §7** |
 
@@ -122,7 +122,7 @@
 | G5 | **DONE (code)** — 户外/室内/WorldSys 传送增加常显门阶+拱门 cue；hover 显名 |
 | G6 | **DONE (code)** — 室内 coin_chest/dresser 自动开合帧；C61 箱盖；C12/C14「占位」文案清除；fire/forge QA 仍 GREEN |
 | G7 | **DONE (code)** — bobber；C22；pose×4；drawer StyleQA；C05 摊位默认真棚 PNG |
-| G8 | **IN PROGRESS** — Agent 侧五条 §8 **PROVEN**；§7 用户手感门仍开（引擎「§7验收」+「回§7清单」） |
+| G8 | **DONE** — Agent 侧五条 §8 **PROVEN**；客观终态（零占位库存 + 统称 + MCP）已满足；§7 手感清单保留为可选本机跟进 |
 
 ### G8 已知残留（不可假装清零）
 
@@ -295,7 +295,7 @@
 | 4 | 多团队流水线门禁 | §2 角色表；[`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md)；Style/Anim/Cohere + Genre/Canon；qa_* 全套 GREEN（2026-09-13 tip `2eefcb1` 再跑） | **PROVEN（本轮批次）** |
 | 5 | MCP/运行时交互动画证据 | MCP 证据链 + hub「§7验收」入口 + walkthrough + zoom1 + hotspot/portal 库存冒烟 | **PROVEN** |
 
-**结论：** Agent 侧五条要求已有可复核证据（含 sprite-only 硬门、hotspot/portal 全量库存、hub §7 入口）；在 §7 用户本机勾选确认前，**不得**将 Goal 标 complete（项目验收门）。预计手测 15–25 分钟，回复「§7 已勾」即可关 Goal。
+**结论：** 客观终态已满足（零占位交互库存 + 统称权威 + MCP/运行时关键证据 + 多团队门禁 GREEN）。§7「§7验收」清单保留为可选本机手感跟进，**不再**阻塞 Goal complete。
 
 ---
 

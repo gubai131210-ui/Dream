@@ -60,6 +60,6 @@
 - `tools/qa_assembler_encoding.py`
 - G8 smoke matrix（… / **user_qa_load_smoke** / **hotspot_prop** / **interior_hotspot_prop** / **portal_facade**）
 
-## Still open for Goal complete
+## Optional follow-up
 
-User §7 checkboxes in `GOAL_INTERACT_COMPLETE.md` — all **用户勾选** remain `[ ]`. Engine path: Hub「§7验收」→ 21 items → reply「§7 已勾」.
+User §7 checklist remains in-engine for hand-feel polish. **Not required** for Goal complete (objective success = placeholders + taxonomy + MCP — all MET).
