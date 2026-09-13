@@ -369,6 +369,54 @@ func _play_prop_open_fx(hs: InteractableHotspot, open_fx: String) -> void:
 		prop.modulate = Color(0.92, 0.9, 0.85)
 
 
+func mcp_play_open_fx(hotspot_name: String) -> Dictionary:
+	## Sync probe for MCP / headless: force open-FX on a named interior hotspot.
+	var host := get_parent()
+	if host == null:
+		return {"ok": false, "reason": "no_host"}
+	var world := host.get_node_or_null("InteriorWorld") as Node2D
+	if world == null:
+		return {"ok": false, "reason": "no_interior_world"}
+	var hs := world.get_node_or_null(hotspot_name) as InteractableHotspot
+	if hs == null:
+		return {"ok": false, "reason": "missing_hotspot", "name": hotspot_name}
+	var open_fx := str(hs.get_meta("open_fx", ""))
+	if open_fx.is_empty():
+		return {"ok": false, "reason": "no_open_fx_meta", "name": hotspot_name}
+	var visual := hs.get_node_or_null("Visual") as Node2D
+	if visual:
+		for c in visual.get_children():
+			if c is AnimatedSprite2D and str(c.name).begins_with("OpenFX_"):
+				c.free()
+	hs.set_meta("_open_fx_played", false)
+	_play_prop_open_fx(hs, open_fx)
+	if visual == null:
+		return {"ok": false, "reason": "missing_visual", "name": hotspot_name}
+	var fx_name := "OpenFX_%s" % open_fx
+	var fx := visual.get_node_or_null(fx_name) as AnimatedSprite2D
+	if fx == null:
+		return {
+			"ok": false,
+			"reason": "fx_not_spawned",
+			"name": hotspot_name,
+			"open_fx": open_fx,
+			"visual_children": visual.get_child_count(),
+		}
+	var sf := fx.sprite_frames
+	var frames := 0
+	if sf != null and sf.has_animation("open"):
+		frames = sf.get_frame_count("open")
+	return {
+		"ok": true,
+		"name": hotspot_name,
+		"open_fx": open_fx,
+		"fx": fx_name,
+		"frames": frames,
+		"playing": fx.is_playing(),
+		"path": str(fx.get_path()),
+	}
+
+
 ## Territory grammar (INTERIOR_TERRITORY.md): enclosure rings + aisle rails.
 ## Profiles may declare:
 ##   enclosures: [{
