@@ -154,7 +154,6 @@ func _spawn_track_proxy(ysort: Node2D) -> void:
 	## Continuous E–W track band (A11 grammar): seamless ballast+rails+sleepers.
 	## Old per-sleeper rail stubs left a visual gap mid-platform — tile a full strip instead.
 	const BAND := "res://assets/sprites/props/track_band_seamless_00.png"
-	const SLEEPER := "res://assets/sprites/props/track_sleeper_00.png"
 	if not ResourceLoader.exists(BAND):
 		push_warning("Station: missing track_band_seamless_00 — track will look broken")
 		return
@@ -196,21 +195,8 @@ func _spawn_track_proxy(ysort: Node2D) -> void:
 		end.position = Vector2(right - piece_w * 0.5, mid_y)
 		end.scale = Vector2(scale_f, scale_f)
 		layer.add_child(end)
-	# Dense sleeper accents on top of the seamless band (optional polish).
-	if ResourceLoader.exists(SLEEPER):
-		var sx := left + 10.0
-		var si := 0
-		while sx < right - 10.0:
-			var sh := Sprite2D.new()
-			sh.texture = load(SLEEPER) as Texture2D
-			sh.centered = true
-			sh.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			sh.position = Vector2(sx, mid_y + 2.0)
-			sh.scale = Vector2(0.95, 0.95)
-			sh.z_index = 1
-			layer.add_child(sh)
-			sx += 22.0
-			si += 1
+	# No extra sleeper overlay — band already has sleepers; stacking made the
+	# left look like a thick wooden deck while the right stayed thin rails.
 	var mid := Vector2((left + right) * 0.5, mid_y)
 	var hs_band := craft.make_hotspot(
 		ysort,

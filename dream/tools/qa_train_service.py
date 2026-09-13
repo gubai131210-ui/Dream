@@ -26,6 +26,9 @@ def main() -> int:
 	room = (ROOT / "scripts/interiors/interior_room_controller.gd").read_text(encoding="utf-8")
 	if "TrainCarWindowRide" not in room:
 		raise AssertionError("C36 window ride not wired")
+	rt = (ROOT / "scripts/areas/station_train_runtime.gd").read_text(encoding="utf-8")
+	if "_seat_wheels_on_rails" not in rt or "RAIL_Y" not in rt:
+		raise AssertionError("train runtime missing wheel-on-rail seating")
 	assets = [
 		"assets/sprites/props/train_loco_00.png",
 		"assets/sprites/props/train_coach_00.png",

@@ -12,11 +12,15 @@ const TOWER := "res://assets/sprites/props/train_water_tower_00.png"
 const BOARD := "res://assets/sprites/props/train_timetable_board_00.png"
 const BUFFER := "res://assets/sprites/props/train_buffer_00.png"
 
-## Align with StationAssembler track band mid (TRACK_TY0..TY1, tile 32 → y=448).
-const TRACK_Y := 448.0
+## Must match StationAssembler track-band mid_y (TRACK_TY0..TY1, tile 32).
+## Consist *node* stays on RAIL_Y for YSort; loco sprite is lifted so wheels sit on rails.
+const RAIL_Y := 448.0
 const DOCK_X := 720.0
 const OFF_LEFT := -220.0
 const OFF_RIGHT := 1500.0
+const CONSIST_SCALE := 1.15
+## Flange sit-in below rail mid (px). Keeps wheels visually “in” the rails.
+const WHEEL_FLANGE_PX := 6.0
 
 var _consist: Node2D
 var _loco: Sprite2D
@@ -67,7 +71,9 @@ func _spawn_scenery(ysort: Node2D) -> void:
 		buf.texture = load(BUFFER) as Texture2D
 		buf.centered = true
 		buf.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		buf.position = Vector2(180, TRACK_Y)
+		# Buffer sprite includes a short stub of rails — seat its base on RAIL_Y.
+		var bh := float(buf.texture.get_height()) * 0.5
+		buf.position = Vector2(180, RAIL_Y - (bh - WHEEL_FLANGE_PX))
 		buf.z_index = 2
 		ysort.add_child(buf)
 	# Timetable board hotspot — live text from TrainService.
@@ -101,19 +107,22 @@ func _spawn_consist(ysort: Node2D) -> void:
 	ysort.add_child(_consist)
 	# Prefer full A11-matched loco+coach silhouette; fall back to split sprites.
 	if ResourceLoader.exists(CONSIST):
-		_loco = _mk_sprite(CONSIST, Vector2.ZERO, 1.15)
+		_loco = _mk_sprite(CONSIST, Vector2.ZERO, CONSIST_SCALE)
 		_coach = null
-		_steam = _mk_sprite(STEAM, Vector2(-100, -52), 0.95)
+		_seat_wheels_on_rails(_loco, CONSIST_SCALE)
+		_steam = _mk_sprite(STEAM, Vector2(-100, _loco.position.y - 52.0), 0.95)
 	else:
 		_loco = _mk_sprite(LOCO, Vector2(-70, 0), 1.1)
 		_coach = _mk_sprite(COACH, Vector2(70, 0), 1.1)
-		_steam = _mk_sprite(STEAM, Vector2(-95, -48), 0.9)
+		_seat_wheels_on_rails(_loco, 1.1)
+		_seat_wheels_on_rails(_coach, 1.1)
+		_steam = _mk_sprite(STEAM, Vector2(-95, _loco.position.y - 48.0), 0.9)
 	if _steam:
 		_steam.modulate.a = 0.75
 		var tw := _steam.create_tween().set_loops()
 		tw.tween_property(_steam, "modulate:a", 0.35, 0.55)
 		tw.tween_property(_steam, "modulate:a", 0.85, 0.7)
-	_consist.position = Vector2(OFF_RIGHT, TRACK_Y)
+	_consist.position = Vector2(OFF_RIGHT, RAIL_Y)
 
 
 func _mk_sprite(path: String, local: Vector2, scale_f: float) -> Sprite2D:
@@ -129,10 +138,20 @@ func _mk_sprite(path: String, local: Vector2, scale_f: float) -> Sprite2D:
 	return spr
 
 
+func _seat_wheels_on_rails(spr: Sprite2D, scale_f: float) -> void:
+	## Centered sprites put the visual midpoint on RAIL_Y — wheels live near the
+	## texture bottom, so the consist floated south onto the grass. Lift the
+	## sprite so the wheel line lands on the rail mid (node stays at RAIL_Y).
+	if spr == null or spr.texture == null:
+		return
+	var half_h := float(spr.texture.get_height()) * scale_f * 0.5
+	spr.position.y = -(half_h - WHEEL_FLANGE_PX)
+
+
 func _hide_consist() -> void:
 	if _consist:
 		_consist.visible = false
-		_consist.position = Vector2(OFF_RIGHT, TRACK_Y)
+		_consist.position = Vector2(OFF_RIGHT, RAIL_Y)
 
 
 func _on_state(_sid: String, state: int) -> void:
@@ -145,15 +164,15 @@ func _on_state(_sid: String, state: int) -> void:
 			_hide_consist()
 		TrainService.State.APPROACHING:
 			_consist.visible = true
-			_consist.position = Vector2(OFF_RIGHT, TRACK_Y)
+			_consist.position = Vector2(OFF_RIGHT, RAIL_Y)
 			_move_tween = create_tween()
 			_move_tween.tween_property(_consist, "position:x", DOCK_X, TrainService.APPROACH_SEC).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		TrainService.State.DOCKED:
 			_consist.visible = true
-			_consist.position = Vector2(DOCK_X, TRACK_Y)
+			_consist.position = Vector2(DOCK_X, RAIL_Y)
 		TrainService.State.DEPARTING, TrainService.State.EN_ROUTE:
 			_consist.visible = true
-			_consist.position = Vector2(DOCK_X, TRACK_Y)
+			_consist.position = Vector2(DOCK_X, RAIL_Y)
 			_move_tween = create_tween()
 			_move_tween.tween_property(_consist, "position:x", OFF_LEFT, TrainService.DEPART_ANIM_SEC).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 
@@ -167,7 +186,7 @@ func _leave_steam_wisps() -> void:
 		wisp.texture = load(STEAM) as Texture2D
 		wisp.centered = true
 		wisp.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		wisp.position = Vector2(DOCK_X - 40.0 + float(i) * 36.0, TRACK_Y - 30.0)
+		wisp.position = Vector2(DOCK_X - 40.0 + float(i) * 36.0, RAIL_Y - 30.0)
 		wisp.modulate = Color(0.9, 0.95, 1.0, 0.55)
 		wisp.z_index = 3
 		wisp.scale = Vector2(0.7 + 0.1 * float(i), 0.7)
