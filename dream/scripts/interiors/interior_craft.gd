@@ -367,6 +367,18 @@ func _play_prop_open_fx(hs: InteractableHotspot, open_fx: String) -> void:
 	var prop := visual.get_node_or_null("PropSprite") as CanvasItem
 	if prop:
 		prop.modulate = Color(0.92, 0.9, 0.85)
+	# Pause on last frame so MCP / screenshots can observe OpenFX_* after the oneshot.
+	# Replay path (mcp_play_open_fx / one-shot meta) clears prior OpenFX_* explicitly.
+	anim.animation_finished.connect(func() -> void:
+		if not is_instance_valid(anim):
+			return
+		anim.pause()
+		var sf := anim.sprite_frames
+		if sf != null and sf.has_animation("open"):
+			var last := sf.get_frame_count("open") - 1
+			if last >= 0:
+				anim.frame = last
+	)
 
 
 func mcp_play_open_fx(hotspot_name: String) -> Dictionary:

@@ -14,6 +14,7 @@
 | C01 idle | `docs/evidence/g8_c01_home_idle.png` | Interior art + fire FX + return portals |
 | C01 dresser open | `docs/evidence/g8_c01_dresser_open.png` | InfoPanel「衣柜」+ runtime `OpenFX_drawer_open` |
 | C01 dresser OpenFX live | `docs/evidence/g8_c01_dresser_open_fx_live.png` | `mcp_play_open_fx` → frames=4 playing；镜头对准衣柜「互动」 |
+| C01 dresser OpenFX held | `docs/evidence/g8_c01_dresser_open_fx_held.png` | oneshot 后暂停末帧（frame=3）仍可见 |
 | Market idle | `docs/evidence/g8_market_idle.png` | 商业街木棚摊位 + DistrictInteract 提示方块 |
 | River idle | `docs/evidence/g8_river_idle.png` | bobber + fish cage sprite on shore |
 | River cage ready | `docs/evidence/g8_river_fish_cage_ready.png` | place → soak ~6s → title「可收」+ `fish_cage_full` path |

@@ -98,6 +98,10 @@ def main() -> None:
     require(stall, "stall_open_wood_00.png", "C05 default stall body PNG")
     require(stall, "DEFAULT_BODY", "C05 body default constant")
     require(stall, "stall_awning_00.png", "C05 awning PNG preferred over ColorRect")
+    require(stall, "stall_pole_00.png", "C05 stall pole PNG preferred over ColorRect")
+    require(stall, "POLE_TEX", "C05 pole constant")
+    if not (ROOT / "assets/sprites/market/stall_pole_00.png").is_file():
+        raise AssertionError("C05 stall pole asset missing")
 
     dik = read("scripts/world/district_interact_kit.gd")
     for host in (

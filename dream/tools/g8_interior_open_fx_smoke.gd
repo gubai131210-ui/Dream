@@ -52,6 +52,20 @@ func _probe(host: Node2D) -> void:
 		activated += 1
 		print("G8_INTERIOR_FX: activated ", hs.name, " fx=", fx_name)
 	_ok = activated
+	# Also exercise InteriorCraft.mcp_play_open_fx sync probe (MCP parity).
+	var craft := host.get_node_or_null("Assembler")
+	if craft != null and craft.has_method("mcp_play_open_fx"):
+		var first_name := str((targets[0] as Node).name)
+		var probe: Dictionary = craft.call("mcp_play_open_fx", first_name)
+		print("G8_INTERIOR_FX: mcp_play_open_fx ", probe)
+		if not bool(probe.get("ok", false)):
+			_fail("mcp_probe", "mcp_play_open_fx failed: %s" % str(probe))
+		elif int(probe.get("frames", 0)) < 2:
+			_fail("mcp_frames", "expected ≥2 frames, got %s" % str(probe.get("frames")))
+		elif not bool(probe.get("playing", false)):
+			_fail("mcp_playing", "OpenFX not playing after mcp_play_open_fx")
+	else:
+		_fail("mcp_probe", "Assembler.mcp_play_open_fx missing")
 	create_timer(0.85).timeout.connect(func() -> void:
 		var played := 0
 		for hs in targets:

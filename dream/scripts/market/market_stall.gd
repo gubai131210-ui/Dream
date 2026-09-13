@@ -34,6 +34,7 @@ const DEFAULT_PRODUCE_CRATE := "res://assets/sprites/props/produce_crate_00.png"
 const LOCKED_BOARD := "res://assets/sprites/market/stall_locked_board_00.png"
 const EMPTY_MARK := "res://assets/sprites/market/stall_empty_bay_00.png"
 const AWNING_TEX := "res://assets/sprites/market/stall_awning_00.png"
+const POLE_TEX := "res://assets/sprites/market/stall_pole_00.png"
 
 var _layer: Node2D
 
@@ -211,6 +212,8 @@ func _add_bay_mark() -> void:
 
 
 func _add_poles() -> void:
+	if _add_sprite(POLE_TEX, Vector2(-32, -14), 1.0) and _add_sprite(POLE_TEX, Vector2(32, -14), 1.0):
+		return
 	_rect(_layer, Vector2(3, 30), Vector2(-34, -28), Color(0.35, 0.22, 0.12, 0.92), 1)
 	_rect(_layer, Vector2(3, 30), Vector2(31, -28), Color(0.35, 0.22, 0.12, 0.92), 1)
 
