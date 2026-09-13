@@ -34,9 +34,11 @@ func _ready() -> void:
 	# Wave F WorldSys — C61 tree chest + C62 forest→cave secret portal.
 	HiddenChests.attach_site(self, "tree_behind")
 	SecretPassageChain.attach_for_host(self, "forest_deep")
+	var top_bar := get_node_or_null("UI/TopBar") as Control
+	DayNightWeather.attach_to(self, top_bar)
 	# G4 — district prop interacts.
 	var _dik = load("res://scripts/world/district_interact_kit.gd")
-	_dik.attach_to(self, "forest_deep")
+	_dik.attach_to(self, "forest_deep", top_bar)
 	# Outdoor proximity 「互动」parity with interiors.
 	AreaInteractHost.attach_to(self, ysort_root, camera)
 

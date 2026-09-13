@@ -35,6 +35,7 @@ func _ready() -> void:
 	HiddenChests.attach_site(self, "waterfall")
 	SecretPassageChain.attach_for_host(self, "waterfall")
 	var top_bar := get_node_or_null("UI/TopBar") as Control
+	DayNightWeather.attach_to(self, top_bar)
 	var _dik = load("res://scripts/world/district_interact_kit.gd")
 	_dik.attach_to(self, "waterfall", top_bar)
 	# Outdoor proximity 「互动」parity with interiors.

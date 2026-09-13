@@ -36,6 +36,7 @@ func _ready() -> void:
 		grid_overlay.visible = false
 	# Wave F NpcRing C53/C54: stall/smith/cook rings + life states (TopBar + K/L).
 	var top_bar := get_node_or_null("UI/TopBar") as Control
+	DayNightWeather.attach_to(self, top_bar)
 	NpcRoutineDemo.attach_to(self, top_bar, NpcRoutineRings.HOST_MARKET)
 	# G4 — district prop interacts.
 	var _dik = load("res://scripts/world/district_interact_kit.gd")

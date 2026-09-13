@@ -34,6 +34,7 @@ func _ready() -> void:
 	# Wave F WorldSys — C61 cave-mouth chest (hill farm cave portal host).
 	HiddenChests.attach_site(self, "cave")
 	var top_bar := get_node_or_null("UI/TopBar") as Control
+	DayNightWeather.attach_to(self, top_bar)
 	var _dik = load("res://scripts/world/district_interact_kit.gd")
 	_dik.attach_to(self, "hill_farm", top_bar)
 	# Outdoor proximity 「互动」parity with interiors.

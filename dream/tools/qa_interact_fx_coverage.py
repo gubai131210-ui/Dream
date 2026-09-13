@@ -85,14 +85,13 @@ def main() -> int:
     env = read("scripts/env/day_night_weather.gd")
     if "mcp_set_night" not in env:
         raise AssertionError("DayNightWeather.mcp_set_night missing")
-    for host_script in (
-        "scripts/areas/village_square_controller.gd",
-        "scripts/areas/lighthouse_controller.gd",
-        "scripts/areas/station_controller.gd",
-    ):
-        src = read(host_script)
+    outdoor_hosts = sorted((ROOT / "scripts" / "areas").glob("*_controller.gd"))
+    if len(outdoor_hosts) < 14:
+        raise AssertionError(f"expected ≥14 outdoor area controllers, got {len(outdoor_hosts)}")
+    for host_path in outdoor_hosts:
+        src = host_path.read_text(encoding="utf-8")
         if "DayNightWeather.attach_to" not in src:
-            raise AssertionError(f"{host_script} missing DayNightWeather attach")
+            raise AssertionError(f"{host_path.name} missing DayNightWeather attach")
 
     cage = read("scripts/fishing/fish_cage.gd")
     if "_play_splash_fx" not in cage or "fish_splash" not in cage:

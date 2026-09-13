@@ -238,8 +238,8 @@
 | 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [x] `g8_farm_residential_idle.png` | [ ] |
 | 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract；C62 树洞密道 | [x] idle + landmarks；**C62** smoke PASS；walkthrough portal+facade + `g8_walkthrough_forest_entrance_idle` | [ ] |
 | 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 + **施放 splash** | [x] river+lake ready；cage splash；**fishing cast** `g8_fishing_cast_splash_held`；smoke PASS | [ ] |
-| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 + 瀑水循环；灯塔 `light_lamp` 开关+灯 | [x] idle + **`g8_waterfall_anim.png`**；walkthrough idle；**`g8_district_lighthouse_lamp_on/off.png`** | [ ] |
-| 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png`；walkthrough `g8_walkthrough_lake_house_idle` | [ ] |
+| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 + 瀑水循环；灯塔夜间航标灯 | [x] idle + waterfall anim；**`g8_lighthouse_lamp_night_on/off.png`**；全区 Env-H | [ ] |
+| 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸；车站夜间月台灯 | [x] `g8_station_idle`；**`g8_station_lamp_night_on/off.png`**；walkthrough lake_house | [ ] |
 
 ### 室内（抽样必测）
 
