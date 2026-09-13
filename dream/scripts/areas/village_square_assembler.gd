@@ -485,6 +485,8 @@ func _add_contact_shadow(parent: Node2D, at: Vector2, radius: Vector2 = Vector2(
 
 
 func _make_hotspot(parent: Node2D, title: String, desc: String, pos: Vector2, size: Vector2) -> InteractableHotspot:
+	title = AreaCraft.repair_user_text(title)
+	desc = AreaCraft.repair_user_text(desc)
 	var hs := InteractableHotspot.new()
 	hs.name = title.replace(" ", "")
 	hs.title = title

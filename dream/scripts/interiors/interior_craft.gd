@@ -860,7 +860,13 @@ func _spawn_actor(parent: Node2D) -> void:
 		return
 	var actor := PatrolActor.new()
 	parent.add_child(actor)
-	actor.setup(str(a.get("id", "farmer")), str(a.get("title", "居民")), str(a.get("desc", "")), route, null)
+	actor.setup(
+		str(a.get("id", "farmer")),
+		AreaCraft.repair_user_text(str(a.get("title", "居民"))),
+		AreaCraft.repair_user_text(str(a.get("desc", ""))),
+		route,
+		null,
+	)
 
 
 func _spawn_return_portal(parent: Node2D) -> void:
@@ -985,6 +991,8 @@ func _apply_topbar_hint(root: Node2D) -> void:
 
 func _make_hotspot(parent: Node2D, title: String, desc: String, pos: Vector2, size: Vector2) -> InteractableHotspot:
 	## Collision doubles as mouse pick + CharacterBody2D/"player" proximity (Wave D prompt).
+	title = AreaCraft.repair_user_text(title)
+	desc = AreaCraft.repair_user_text(desc)
 	var hs := InteractableHotspot.new()
 	hs.name = title.replace(" ", "")
 	hs.title = title
