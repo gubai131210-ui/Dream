@@ -196,6 +196,7 @@
 - [`GOAL_G8_WAVE_D_EVIDENCE.md`](GOAL_G8_WAVE_D_EVIDENCE.md) — Wave D 七室内 idle MCP  
 - [`GOAL_G8_WAVE_E_EVIDENCE.md`](GOAL_G8_WAVE_E_EVIDENCE.md) — Wave E 五室内 idle MCP  
 - [`GOAL_G8_WAVE_DE_PORTAL_EVIDENCE.md`](GOAL_G8_WAVE_DE_PORTAL_EVIDENCE.md) — Wave D/E portal enter smoke + live C32/C46  
+- [`GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md`](GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md) — Agent §7 探针（不代替用户勾选）  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 17 groups GREEN  
 - `tools/qa_portal_hover_only.py` — GREEN  
@@ -257,7 +258,7 @@
 | 2 | 全户外+室内门面/道具/可进出 | load smoke 72/72；portal cue 12；MCP 进门+多室内 idle；C62 全链 | **PROVEN（加载+MCP 进门）**；§7 全表进出仍待 |
 | 3 | 统称权威 | 本文件 + `ASSET_TAXONOMY` 回链 | **PROVEN** |
 | 4 | 多团队流水线门禁 | §2 角色表；[`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md)；Style/Anim/Cohere + Genre/Canon；qa_* GREEN；语义+目标同步 | **PROVEN（本轮批次）** |
-| 5 | MCP/运行时交互动画证据 | [`GOAL_G8_MCP_RUNTIME_EVIDENCE.md`](GOAL_G8_MCP_RUNTIME_EVIDENCE.md) + activate/open FX/anim/target smokes | **PROVEN** |
+| 5 | MCP/运行时交互动画证据 | [`GOAL_G8_MCP_RUNTIME_EVIDENCE.md`](GOAL_G8_MCP_RUNTIME_EVIDENCE.md) + activate/open FX/anim/target smokes + [`GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md`](GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md) | **PROVEN** |
 
 **结论：** Agent 侧五条要求已有可复核证据；在 §7 用户本机勾选确认前，**不得**将 Goal 标 complete（项目验收门）。
 
