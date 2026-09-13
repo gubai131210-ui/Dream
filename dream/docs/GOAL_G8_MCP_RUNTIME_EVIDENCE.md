@@ -88,6 +88,9 @@
 | C58 bird peck live | `docs/evidence/g8_c58_bird_peck_live.png` | 喂鸟 `FX_bird_peck` held frame=3 · scale=1.75 |
 | C02 chest lid held | `docs/evidence/g8_c02_chest_lid_held.png` | 钱箱 `OpenFX_chest_lid` 末帧 frame=3 |
 | C60 locked door | `docs/evidence/g8_c60_locked_door.png` | ProgressGates 锁门=`gate_locked_door_00`（非 door_facade） |
+| C59 stake | `docs/evidence/g8_c59_breakables_stake.png` | 木桩 `breakable_stake_00` PropSprite |
+| C59 weed | `docs/evidence/g8_c59_breakables_weed.png` | 杂草 `breakable_weed_00` PropSprite |
+| C59 stake cleared | `docs/evidence/g8_c59_stake_cleared.png` | `mcp_clear("stake")` → InfoPanel + 节点移除 |
 
 ## Runtime queries
 

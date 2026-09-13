@@ -63,6 +63,25 @@ func cleared_count() -> int:
 	return _cleared.size()
 
 
+func mcp_clear(kind_id: String) -> Dictionary:
+	## Sync probe for MCP / headless: clear one breakable and report remaining.
+	if _root == null:
+		return {"ok": false, "reason": "no_root", "id": kind_id}
+	if _cleared.has(kind_id):
+		return {"ok": false, "reason": "already_cleared", "id": kind_id}
+	for child in _root.get_children():
+		if child is InteractableHotspot and str(child.get_meta("breakable_id", "")) == kind_id:
+			var hs := child as InteractableHotspot
+			_clear_breakable(kind_id, hs.title, hs)
+			return {
+				"ok": true,
+				"id": kind_id,
+				"cleared": cleared_count(),
+				"remaining_nodes": _root.get_child_count() - 1, # queue_free deferred
+			}
+	return {"ok": false, "reason": "missing_hotspot", "id": kind_id}
+
+
 func _spawn_one(d: Dictionary) -> void:
 	var kind_id := str(d["id"])
 	var title := str(d["title"])

@@ -188,7 +188,8 @@
 - [`GOAL_G8_INTERACT_TARGET_EVIDENCE.md`](GOAL_G8_INTERACT_TARGET_EVIDENCE.md) — 室内提示/点击共享目标  
 - [`GOAL_G8_WATERFALL_ANIM_EVIDENCE.md`](GOAL_G8_WATERFALL_ANIM_EVIDENCE.md) — 瀑布水体 AnimatedSprite 循环 + MCP  
 - [`GOAL_G8_OUTDOOR_PROMPT_EVIDENCE.md`](GOAL_G8_OUTDOOR_PROMPT_EVIDENCE.md) — 户外邻近「互动」+ hover 胜出  
-- [`GOAL_G8_C58_FX_EVIDENCE.md`](GOAL_G8_C58_FX_EVIDENCE.md) — C58 well_rope/crate_lid/leaf_fall 多帧  
+- [`GOAL_G8_C58_FX_EVIDENCE.md`](GOAL_G8_C58_FX_EVIDENCE.md) — C58 well_rope/crate_lid/leaf_fall/bird_peck 多帧  
+- [`GOAL_G8_C59_BREAKABLES_EVIDENCE.md`](GOAL_G8_C59_BREAKABLES_EVIDENCE.md) — C59 桩/草精灵 + `mcp_clear`  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 17 groups GREEN  
 - `tools/qa_portal_hover_only.py` — GREEN  
