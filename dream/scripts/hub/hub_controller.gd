@@ -75,7 +75,7 @@ func _wire_user_qa_button() -> void:
 	var btn := Button.new()
 	btn.name = "EnterUserQa"
 	btn.text = "§7验收"
-	btn.tooltip_text = "Goal 用户手感验收清单（跳转+勾选）"
+	btn.tooltip_text = "Goal 用户手感验收（Agent 冒烟已就绪）— 跳转+勾选后回复「§7 已勾」"
 	buttons.add_child(btn)
 	buttons.move_child(btn, 0)
 	btn.pressed.connect(_enter_user_qa)

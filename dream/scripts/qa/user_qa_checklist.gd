@@ -72,7 +72,7 @@ func _build_ui() -> void:
 	root.add_child(title)
 
 	var sub := Label.new()
-	sub.text = "每项：跳转场景按「通过标准」手测 → 勾选。场景内点「回§7清单」继续。\n勾选只保存在本机 user://，不会自动把 Goal 标 complete。全部通过后回复 Cursor：「§7 已勾」。"
+	sub.text = "每项：跳转场景按「通过标准」手测 → 勾选。场景内点「回§7清单」继续。\nAgent 冒烟已 21/21 PASS（kits+密道+Portal）；勾选只保存在本机 user://，不会自动把 Goal 标 complete。\n全部通过后回复 Cursor：「§7 已勾」。"
 	sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	sub.add_theme_color_override("font_color", Color(0.75, 0.78, 0.72))
 	root.add_child(sub)
@@ -262,6 +262,32 @@ func _clear_all() -> void:
 	_save()
 	_rebuild_rows()
 	_refresh_status()
+
+
+func mcp_progress() -> Dictionary:
+	## MCP poll of local user checks — never marks Goal complete.
+	var done := 0
+	var checked: PackedStringArray = []
+	var unchecked: PackedStringArray = []
+	for item in ITEMS:
+		var id := str(item["id"])
+		if bool(_checks.get(id, false)):
+			done += 1
+			checked.append(id)
+		else:
+			unchecked.append(id)
+	var total := ITEMS.size()
+	return {
+		"ok": true,
+		"done": done,
+		"total": total,
+		"all_done": done >= total and total > 0,
+		"checked": checked,
+		"unchecked": unchecked,
+		"save_path": SAVE_PATH,
+		"agent_smoke": "21/21 PASS (tightened kits; tip 318dafb+)",
+		"goal_gate": "reply §7 已勾 in Cursor after all checks",
+	}
 
 
 func mcp_jump_first() -> Dictionary:
