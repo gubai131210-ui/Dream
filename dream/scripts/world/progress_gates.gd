@@ -98,10 +98,15 @@ func unlock(gate_id: String) -> void:
 		return
 	_unlocked[gate_id] = true
 	unlocked.emit(gate_id)
+	var unlocked_blurb := "已解锁。"
+	for d in GATE_DEFS:
+		if str(d.get("id", "")) == gate_id:
+			unlocked_blurb = str(d.get("unlocked", unlocked_blurb))
+			break
 	for child in _root.get_children():
 		if child is InteractableHotspot and str(child.get_meta("gate_id", "")) == gate_id:
 			var hs := child as InteractableHotspot
-			hs.description = "已解锁。"
+			hs.description = unlocked_blurb
 			var visual := hs.get_node_or_null("Visual/Marker") as Polygon2D
 			if visual:
 				visual.color = Color(0.45, 0.85, 0.5, 0.85)
@@ -111,6 +116,8 @@ func unlock(gate_id: String) -> void:
 			var spr := hs.get_node_or_null("Visual/PropSprite") as Sprite2D
 			if spr:
 				spr.modulate = Color(0.7, 0.9, 0.7, 0.45)
+			if _info:
+				_info.show_info(hs.title + "·通", unlocked_blurb)
 			break
 
 

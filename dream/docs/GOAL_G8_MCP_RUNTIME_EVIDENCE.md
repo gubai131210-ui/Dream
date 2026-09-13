@@ -92,7 +92,7 @@
 | C59 stake | `docs/evidence/g8_c59_breakables_stake.png` | 木桩 `breakable_stake_00` PropSprite |
 | C59 weed | `docs/evidence/g8_c59_breakables_weed.png` | 杂草 `breakable_weed_00` PropSprite |
 | C59 stake cleared | `docs/evidence/g8_c59_stake_cleared.png` | `mcp_clear("stake")` → InfoPanel + 节点移除 |
-| C60 locked unlocked | `docs/evidence/g8_c60_locked_door_unlocked.png` | `mcp_unlock` → sprite_alpha≈0.45 |
+| C60 locked unlocked | `docs/evidence/g8_c60_locked_door_unlocked.png` | `mcp_unlock` → InfoPanel「锁门·通」+ sprite_alpha≈0.45 |
 | C60 fallen log | `docs/evidence/g8_c60_fallen_log.png` | 倒木 `gate_log_00` 重绘 |
 
 ## Runtime queries
