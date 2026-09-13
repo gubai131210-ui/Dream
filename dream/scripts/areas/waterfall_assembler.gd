@@ -30,7 +30,9 @@ func assemble(root: Node2D) -> void:
 	craft.paint_dirt_spurs(ground)
 	craft.paint_water(water, ground)
 	craft.paint_paths(path)
+	_spawn_cliff_frame(ysort)
 	_spawn_waterfall(ysort)
+	_spawn_cascade_veil(ysort)
 	_spawn_trees(ysort)
 	_spawn_actors(ysort)
 	craft.spawn_water_overlay(ysort)
@@ -210,47 +212,59 @@ func _spawn_scaled_prop(
 	return spr
 
 
-func _spawn_cliff_rocks(ysort: Node2D) -> void:
-	# North cliff mass behind the fall — rock sheets ~0.35–0.45 (no ColorRect cliff).
-	var specs := [
-		{"i": 0, "pos": Vector2(520, 220), "s": 0.44, "z": 1},
-		{"i": 1, "pos": Vector2(760, 230), "s": 0.42, "z": 1},
-		{"i": 2, "pos": Vector2(640, 180), "s": 0.45, "z": 1},
-		{"i": 4, "pos": Vector2(440, 280), "s": 0.38, "z": 1},
-		{"i": 5, "pos": Vector2(840, 290), "s": 0.38, "z": 1},
-	]
-	for s in specs:
-		var path := "res://assets/sprites/props/rock_%02d.png" % int(s["i"])
-		_spawn_scaled_prop(ysort, path, s["pos"], float(s["s"]), int(s["z"]), 1, 1, true, false)
+func _spawn_cliff_frame(ysort: Node2D) -> void:
+	## Rock amphitheater + ledge lip so the cascade reads as a cliff-mouth spring,
+	## not a free-floating sheet on grass (SLYNYRD grammar: mouth → flow → splash).
+	_spawn_cliff_rocks(ysort)
+	_spawn_rim_rocks(ysort)
+	var lip := "res://assets/sprites/props/waterfall_base_norock_v4.png"
+	if not ResourceLoader.exists(lip):
+		lip = "res://assets/sprites/props/waterfall_mid_00.png"
+	var foot := craft.tile_center(int(POOL_CX), 10)
+	var ledge := _spawn_scaled_prop(ysort, lip, foot, 0.62, 3, 2, 1, true, true)
+	if ledge:
+		ledge.name = "CascadeLedge"
+		ledge.modulate = Color(0.82, 0.84, 0.86, 1.0)
+		ledge.z_index = 3
 
 
 func _spawn_waterfall(ysort: Node2D) -> void:
-	## Prefer sliced water loop frames (INTERACTION_DESIGN P0); fall back to static tall/mid.
-	var foot := craft.tile_center(int(POOL_CX), 11)
+	## Cascade sits in the cliff notch and dumps into the pool notch (ty≈11).
+	var foot := craft.tile_center(int(POOL_CX), 11) + Vector2(0, -8)
 	var fall: Node2D = _spawn_waterfall_anim(ysort, foot)
 	if fall == null:
-		var tall := "res://assets/sprites/props/waterfall_tall_00.png"
 		var mid := "res://assets/sprites/props/waterfall_mid_00.png"
-		# Foot on north pool rim (ty≈11 notch into pool) so cascade reads into the pond.
-		# allow_water_foot — never place a dirt road under the fall column.
-		if ResourceLoader.exists(tall):
-			fall = _spawn_scaled_prop(ysort, tall, foot, 0.72, 4, 1, 1, true, true)
-		if fall == null and ResourceLoader.exists(mid):
-			fall = _spawn_scaled_prop(ysort, mid, foot, 0.68, 4, 1, 1, true, true)
+		if ResourceLoader.exists(mid):
+			fall = _spawn_scaled_prop(ysort, mid, foot, 0.48, 4, 1, 1, true, true)
+			if fall:
+				fall.name = "WaterfallAnim"
 	if fall == null:
 		return
+	if fall is CanvasItem:
+		(fall as CanvasItem).modulate = Color(0.92, 0.96, 1.0, 0.4)
+		# Soft reveal so the sheet doesn't pop onto grass in one frame.
+		var reveal := (fall as CanvasItem).create_tween()
+		reveal.tween_property(fall, "modulate:a", 0.92, 0.7).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	var splash: Node2D = null
 	var splash_path := "res://assets/sprites/props/waterfall_splash_00.png"
 	if ResourceLoader.exists(splash_path):
-		splash = craft.spawn_sprite(ysort, splash_path, foot + Vector2(0, 36), 5)
-		splash.scale = Vector2(0.55, 0.55)
-		splash.modulate = Color(0.92, 0.96, 1.0, 0.85)
+		splash = craft.spawn_sprite(ysort, splash_path, foot + Vector2(0, 42), 5)
+		splash.scale = Vector2(0.62, 0.5)
+		splash.modulate = Color(0.9, 0.95, 1.0, 0.35)
 		splash.z_index = 5
+		var splash_in := splash.create_tween()
+		splash_in.tween_property(splash, "modulate:a", 0.78, 0.8).set_trans(Tween.TRANS_SINE)
+		splash_in.tween_callback(func() -> void:
+			if not is_instance_valid(splash):
+				return
+			var pulse := splash.create_tween().set_loops()
+			pulse.tween_property(splash, "modulate:a", 0.55, 0.35).set_trans(Tween.TRANS_SINE)
+			pulse.tween_property(splash, "modulate:a", 0.85, 0.45).set_trans(Tween.TRANS_SINE)
+		)
 	var hs_fall := craft.make_hotspot(
-		ysort, "瀑布", "岩壁倾泻入潭，水雾弥漫。",
-		fall.position + Vector2(0, 28), Vector2(110, 80)
+		ysort, "山涧飞瀑", "岩壁凹口泄流进潭，水雾沿崖面散开。",
+		fall.position + Vector2(0, 36), Vector2(120, 96)
 	)
-	# Interact owns its pixel — reparent cascade + splash into hotspot Visual.
 	var vis := hs_fall.get_node_or_null("Visual") as Node2D
 	if vis:
 		var fall_world := fall.global_position
@@ -267,7 +281,7 @@ func _spawn_waterfall_anim(ysort: Node2D, foot: Vector2) -> Node2D:
 	if frames.has_animation("default"):
 		frames.remove_animation("default")
 	frames.add_animation("fall")
-	frames.set_animation_speed("fall", 8.0)
+	frames.set_animation_speed("fall", 10.0)
 	frames.set_animation_loop("fall", true)
 	var loaded := 0
 	for i in range(6):
@@ -288,11 +302,60 @@ func _spawn_waterfall_anim(ysort: Node2D, foot: Vector2) -> Node2D:
 	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	anim.position = foot
 	anim.z_index = 4
-	# 232×666 frames: ~0.55 ≈ on-screen ~128×366 (closer to prior tall width, still tall column).
-	anim.scale = Vector2(0.55, 0.55)
+	# Narrower column so it sits inside the rock mouth.
+	anim.scale = Vector2(0.42, 0.5)
 	anim.play("fall")
 	ysort.add_child(anim)
 	return anim
+
+
+func _spawn_cascade_veil(ysort: Node2D) -> void:
+	## Soft mist veil around mouth + splash — framing, not a second water clock.
+	var samples: Array[Dictionary] = [
+		{"pos": Vector2(600, 300), "s": 1.6, "a": 0.28},
+		{"pos": Vector2(680, 310), "s": 1.5, "a": 0.26},
+		{"pos": Vector2(640, 360), "s": 1.9, "a": 0.22},
+		{"pos": Vector2(620, 430), "s": 1.4, "a": 0.3},
+		{"pos": Vector2(660, 440), "s": 1.35, "a": 0.28},
+	]
+	for i in samples.size():
+		var mist_path := "res://assets/sprites/fx/waterfall_mist_%02d.png" % (i % 2)
+		if not ResourceLoader.exists(mist_path):
+			continue
+		var target_a := float(samples[i]["a"])
+		var spr := craft.spawn_sprite(ysort, mist_path, samples[i]["pos"] as Vector2, 6)
+		var sc := float(samples[i]["s"])
+		spr.scale = Vector2(sc, sc * 0.85)
+		spr.modulate = Color(0.88, 0.94, 0.98, 0.0)
+		spr.name = "CascadeVeil_%d" % i
+		var tw := spr.create_tween()
+		tw.tween_interval(0.15 * float(i))
+		tw.tween_property(spr, "modulate:a", target_a, 0.9).set_trans(Tween.TRANS_SINE)
+		tw.tween_callback(func() -> void:
+			if not is_instance_valid(spr):
+				return
+			var pulse := spr.create_tween().set_loops()
+			pulse.tween_property(spr, "modulate:a", target_a * 0.55, 1.1).set_trans(Tween.TRANS_SINE)
+			pulse.tween_property(spr, "modulate:a", target_a, 1.3).set_trans(Tween.TRANS_SINE)
+		)
+
+
+func _spawn_cliff_rocks(ysort: Node2D) -> void:
+	# North cliff mass behind the fall — denser amphitheater.
+	var specs := [
+		{"i": 0, "pos": Vector2(520, 200), "s": 0.5, "z": 1},
+		{"i": 1, "pos": Vector2(760, 210), "s": 0.48, "z": 1},
+		{"i": 2, "pos": Vector2(640, 160), "s": 0.55, "z": 0},
+		{"i": 4, "pos": Vector2(430, 260), "s": 0.42, "z": 1},
+		{"i": 5, "pos": Vector2(850, 270), "s": 0.42, "z": 1},
+		{"i": 3, "pos": Vector2(560, 250), "s": 0.4, "z": 2},
+		{"i": 0, "pos": Vector2(720, 255), "s": 0.4, "z": 2},
+	]
+	for s in specs:
+		var path := "res://assets/sprites/props/rock_%02d.png" % int(s["i"])
+		var spr := _spawn_scaled_prop(ysort, path, s["pos"], float(s["s"]), int(s["z"]), 1, 1, true, false)
+		if spr:
+			spr.modulate = Color(0.78, 0.8, 0.82)
 
 
 func _spawn_rim_rocks(ysort: Node2D) -> void:
@@ -300,26 +363,14 @@ func _spawn_rim_rocks(ysort: Node2D) -> void:
 	var specs := [
 		{"i": 0, "pos": Vector2(400, 480), "s": 0.4},
 		{"i": 1, "pos": Vector2(880, 500), "s": 0.38},
-		{"i": 3, "pos": Vector2(480, 720), "s": 0.36},
-		{"i": 4, "pos": Vector2(780, 700), "s": 0.35},
+		{"i": 3, "pos": Vector2(480, 700), "s": 0.36},
+		{"i": 4, "pos": Vector2(780, 690), "s": 0.35},
+		{"i": 2, "pos": Vector2(520, 420), "s": 0.34},
+		{"i": 5, "pos": Vector2(760, 410), "s": 0.34},
 	]
 	for s in specs:
 		var path := "res://assets/sprites/props/rock_%02d.png" % int(s["i"])
 		_spawn_scaled_prop(ysort, path, s["pos"], float(s["s"]), 2, 1, 1, true, false)
-
-
-func _spawn_mist(ysort: Node2D) -> void:
-	var samples: Array[Vector2] = [
-		Vector2(600, 360), Vector2(680, 380), Vector2(640, 340), Vector2(620, 420),
-	]
-	for i in samples.size():
-		var mist_path := "res://assets/sprites/fx/waterfall_mist_%02d.png" % (i % 2)
-		var path := mist_path if ResourceLoader.exists(mist_path) else ("res://assets/sprites/fx/smoke_%02d.png" % (i % 6))
-		if not ResourceLoader.exists(path):
-			continue
-		var spr := craft.spawn_sprite(ysort, path, samples[i], 5)
-		spr.modulate = Color(0.88, 0.94, 0.98, 0.36)
-		spr.scale = Vector2(1.8, 1.5)
 
 
 func _spawn_trees(ysort: Node2D) -> void:

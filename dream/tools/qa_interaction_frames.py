@@ -126,8 +126,15 @@ def main() -> int:
     if "OVERLAY_CAP" not in square_water_body or "step" not in square_water_body:
         raise AssertionError("village-square water overlay missing stride coverage")
     wind = (ROOT / "scripts/env/wind_sway.gd").read_text(encoding="utf-8")
-    if "class_name WindSway" not in wind or "skew" not in wind:
+    if "class_name WindSway" not in wind:
         raise AssertionError("WindSway missing")
+    if "SHADER_PATH" not in wind or "wind_sway_2d.gdshader" not in wind:
+        raise AssertionError("WindSway must use wind_sway_2d shader (not skew tweens)")
+    if "create_tween" in wind or "skew" in wind:
+        raise AssertionError("WindSway still uses tween/skew motion")
+    shader = (ROOT / "shaders/wind_sway_2d.gdshader").read_text(encoding="utf-8")
+    if "VERTEX.x" not in shader or "uv.y" not in shader.lower():
+        raise AssertionError("wind shader missing UV.y falloff vertex sway")
     if "WindSway.attach" not in area:
         raise AssertionError("AreaCraft trees/crops missing WindSway")
     spawn_util = (ROOT / "scripts/world/world_spawn_util.gd").read_text(encoding="utf-8")
@@ -135,18 +142,22 @@ def main() -> int:
         raise AssertionError("WorldSpawnUtil plant props missing WindSway")
     if "_hover_time" in hotspot or "sin(" in function_body(hotspot, "_draw"):
         raise AssertionError("hotspot focus frame still has a pulsing/flickering clock")
-    if "_spawn_cliff_rocks(ysort)" in waterfall or "_spawn_rim_rocks(ysort)" in waterfall:
-        raise AssertionError("waterfall still spawns standalone rocks")
+    if "_spawn_cliff_frame" not in waterfall:
+        raise AssertionError("waterfall missing cliff-mouth framing")
+    if "_spawn_cascade_veil" not in waterfall:
+        raise AssertionError("waterfall missing cascade veil mist")
     if "_spawn_mist(ysort)" in waterfall:
-        raise AssertionError("waterfall still spawns mist")
+        raise AssertionError("waterfall still calls deprecated _spawn_mist")
     if "WaterfallAnim" not in waterfall or "waterfall_water_%02d" not in waterfall:
         raise AssertionError("waterfall missing animated water loop wiring")
     if "splash.reparent(vis)" not in waterfall:
         raise AssertionError("waterfall splash not reparented into hotspot Visual")
+    if "modulate:a" not in waterfall:
+        raise AssertionError("waterfall missing soft reveal fade-in")
 
     print(
-        f"GREEN interaction-frame QA ({len(groups)} groups, single water clock, "
-        "fixed waterfall layers + anim loop)"
+        f"GREEN interaction-frame QA ({len(groups)} groups, shader wind, "
+        "cliff-framed waterfall + soft reveal)"
     )
     return 0
 
