@@ -102,6 +102,19 @@ func refresh_motion_policy() -> void:
 	_refresh_motion_policy()
 
 
+func pause_patrol() -> void:
+	set_meta("schedule_patrol_paused", true)
+	_moving = false
+	_set_anim(false)
+
+
+func resume_patrol() -> void:
+	set_meta("schedule_patrol_paused", false)
+	set_physics_process(true)
+	visible = true
+	_refresh_motion_policy()
+
+
 func _refresh_motion_policy() -> void:
 	var host := _host_scene()
 	_speed_px = NpcMotionPolicy.speed_px(_role, host)
@@ -145,6 +158,8 @@ func _find_npc_walkable_near(craft: AreaCraft, origin: Vector2i, max_r: int) -> 
 
 
 func _physics_process(delta: float) -> void:
+	if bool(get_meta("schedule_patrol_paused", false)):
+		return
 	if _route.size() < 2 or _anim == null:
 		return
 	# Re-sample weather/time occasionally cheaply via pause boundaries.

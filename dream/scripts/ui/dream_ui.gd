@@ -20,14 +20,56 @@ static func polish_area(root: Node, scene_title: String) -> void:
 	var topbar := ui.get_node_or_null("TopBar") as Control
 	if topbar == null:
 		return
-	_apply_topbar(topbar, scene_title, false)
-	_add_help_card(ui, "左键调查物件  ·  中键拖拽镜头  ·  滚轮缩放  ·  G 网格  ·  K 工作环  ·  L 生活态")
+	# Immersive play: leave the viewport to the world; map travel is keyboard-driven.
+	_hide_play_chrome(ui, topbar)
 	_add_ambient_fx(root)
 	_add_user_qa_return(ui)
 	_add_user_qa_brief(ui)
 	var info := root.get_node_or_null("InfoPanel")
 	if info != null:
 		polish_info_panel(info)
+	# Quiet toast once so players learn keys (skipped during §7 QA arm).
+	if not is_user_qa_return_armed():
+		_spawn_keys_hint(ui, scene_title)
+
+
+static func _hide_play_chrome(ui: CanvasLayer, topbar: Control) -> void:
+	topbar.visible = false
+	topbar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var backdrop := ui.get_node_or_null("DreamTopBarBackdrop")
+	if backdrop:
+		backdrop.visible = false
+	var help := ui.get_node_or_null("DreamHelpCard")
+	if help:
+		help.visible = false
+	# Suppress demo status overlays unless debug flag on.
+	if not bool(ProjectSettings.get_setting("debug/show_demo_overlays", false)):
+		var demo := ui.get_node_or_null("NpcRingDemoStatus")
+		if demo:
+			demo.visible = false
+
+
+static func _spawn_keys_hint(ui: CanvasLayer, scene_title: String) -> void:
+	if ui.get_node_or_null("PlayKeysHint") != null:
+		return
+	var lbl := Label.new()
+	lbl.name = "PlayKeysHint"
+	lbl.text = "%s  ·  [ ]切图  M总览  N昼夜  R天气  F11全屏" % scene_title
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lbl.add_theme_font_size_override("font_size", 13)
+	lbl.add_theme_color_override("font_color", Color(0.95, 0.93, 0.86, 0.75))
+	lbl.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.5))
+	lbl.add_theme_constant_override("shadow_offset_x", 1)
+	lbl.add_theme_constant_override("shadow_offset_y", 1)
+	lbl.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	lbl.offset_top = -36
+	lbl.offset_bottom = -14
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	ui.add_child(lbl)
+	var tw := lbl.create_tween()
+	tw.tween_interval(2.8)
+	tw.tween_property(lbl, "modulate:a", 0.0, 0.7)
+	tw.tween_callback(lbl.queue_free)
 
 
 static func polish_hub(root: Node, connections: bool = false) -> void:

@@ -76,17 +76,23 @@ static func resolve_env(host: Node) -> Dictionary:
 	var weather := DayNightWeather.WeatherKind.CLEAR
 	var time_grade := DayNightWeather.TimeGrade.DAY
 	var district := "plaza"
-	if host == null:
-		return {"weather": weather, "time_grade": time_grade, "district": district}
-	var env := DayNightWeather.find_on(host)
-	if env:
-		weather = env.weather
-		time_grade = env.time_grade
-	var assembler := host.get_node_or_null("Assembler")
-	if assembler != null:
-		var craft_variant: Variant = assembler.get("craft")
-		if craft_variant is AreaCraft:
-			district = str((craft_variant as AreaCraft).district)
+	var wes: Node = null
+	if Engine.get_main_loop() is SceneTree:
+		wes = (Engine.get_main_loop() as SceneTree).root.get_node_or_null("WorldEnvState")
+	if wes:
+		weather = int(wes.weather)
+		time_grade = int(wes.time_grade)
+	elif host != null:
+		var env := DayNightWeather.find_on(host)
+		if env:
+			weather = env.weather
+			time_grade = env.time_grade
+	if host != null:
+		var assembler := host.get_node_or_null("Assembler")
+		if assembler != null:
+			var craft_variant: Variant = assembler.get("craft")
+			if craft_variant is AreaCraft:
+				district = str((craft_variant as AreaCraft).district)
 	return {"weather": weather, "time_grade": time_grade, "district": district}
 
 
@@ -94,6 +100,8 @@ static func weather_mult(weather: int) -> float:
 	match weather:
 		DayNightWeather.WeatherKind.RAIN:
 			return 0.72
+		DayNightWeather.WeatherKind.SNOW:
+			return 0.68
 		DayNightWeather.WeatherKind.FOG:
 			return 0.80
 		_:

@@ -32,6 +32,21 @@ func _ready() -> void:
 	_frame_room(rr)
 
 
+func _apply_immersive_chrome() -> void:
+	var ui := get_node_or_null("UI") as CanvasLayer
+	var top := get_node_or_null("UI/TopBar") as Control
+	if top:
+		top.visible = false
+		top.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if ui:
+		var help := ui.get_node_or_null("DreamHelpCard")
+		if help:
+			help.visible = false
+	var mt := load("res://scripts/world/map_travel_kit.gd")
+	if mt:
+		mt.attach_to(self)
+
+
 func _frame_room(room_rect: Rect2) -> void:
 	# Interior art is authored from the 32px grid, but room sizes vary from
 	# compact 16x14 shops to 36x22 homes. Frame the actual room instead of
@@ -52,6 +67,7 @@ func _frame_room(room_rect: Rect2) -> void:
 	# Wave F WorldSys C62 — append-only secret chain hop (e.g. c16_cave_entry → waterfall).
 	# Portal click is wired inside SecretPassageChain (avoid double _wire_portals).
 	SecretPassageChain.try_attach_interior(self)
+	_apply_immersive_chrome()
 	if profile_id == "c36_train_car":
 		# Notify service + soft auto-depart (no window-scenery HUD).
 		TrainService.notify_player_entered_car(self)

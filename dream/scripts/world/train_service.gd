@@ -333,6 +333,11 @@ func _gate_label(s: Dictionary) -> String:
 
 
 func _refresh_env_cache() -> void:
+	var wes := get_node_or_null("/root/WorldEnvState")
+	if wes:
+		_cached_night = bool(wes.is_night())
+		_cached_bad_weather = bool(wes.is_bad_weather())
+		return
 	var scene := get_tree().current_scene if get_tree() else null
 	var env := DayNightWeather.find_on(scene) if scene else null
 	if env == null:
@@ -342,16 +347,23 @@ func _refresh_env_cache() -> void:
 
 
 func _is_night_now() -> bool:
+	var wes := get_node_or_null("/root/WorldEnvState")
+	if wes:
+		_cached_night = bool(wes.is_night())
+		return _cached_night
 	var scene := get_tree().current_scene if get_tree() else null
 	var env := DayNightWeather.find_on(scene) if scene else null
 	if env:
 		_cached_night = env.is_night()
 		return _cached_night
-	# Prefer last outdoor snapshot over wall-clock (C11/C36 have no DayNightWeather).
 	return _cached_night
 
 
 func _is_bad_weather_now() -> bool:
+	var wes := get_node_or_null("/root/WorldEnvState")
+	if wes:
+		_cached_bad_weather = bool(wes.is_bad_weather())
+		return _cached_bad_weather
 	var scene := get_tree().current_scene if get_tree() else null
 	var env := DayNightWeather.find_on(scene) if scene else null
 	if env:

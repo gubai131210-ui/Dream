@@ -1,21 +1,21 @@
 class_name DayNightWeather
 extends Node
 
-## Env-H / C56–C57 outdoor night grade + weather overlay (scene-local Node).
-## Not an Autoload — mount per outdoor scene so interiors stay untouched.
-## Forest_deep: apply-if-present on existing CanvasModulate; never free CanopyTint.
+## Env-H outdoor night grade + weather overlay (scene-local visual).
+## Source of truth: Autoload WorldEnvState — survives map changes.
 
 const NODE_NAME := "DayNightWeather"
 const OWNED_MODULATE_NAME := "EnvDayNightModulate"
 const RAIN_LAYER_NAME := "EnvWeatherOverlay"
 
 enum TimeGrade { DAY, NIGHT }
-enum WeatherKind { CLEAR, RAIN, FOG }
+enum WeatherKind { CLEAR, RAIN, SNOW, FOG }
 
 signal state_changed(time_grade: int, weather: int)
 
 @export var night_color: Color = Color(0.28, 0.32, 0.48, 1.0)
 @export var rain_veil_color: Color = Color(0.42, 0.52, 0.70, 0.22)
+@export var snow_veil_color: Color = Color(0.78, 0.84, 0.92, 0.28)
 @export var fog_veil_color: Color = Color(0.72, 0.76, 0.82, 0.35)
 
 var time_grade: TimeGrade = TimeGrade.DAY
@@ -28,10 +28,11 @@ var _day_baseline: Color = Color.WHITE
 var _rain_layer: CanvasLayer
 var _veil: ColorRect
 var _rain: CPUParticles2D
+var _snow: CPUParticles2D
 var _btn_night: Button
 var _btn_weather: Button
-## True when night was entered via daytime lamp-on (sticky); lamp-off can restore day.
 var _lamp_forced_night: bool = false
+var _syncing: bool = false
 
 
 static func find_on(host: Node) -> DayNightWeather:
@@ -45,21 +46,33 @@ static func attach_to(host: Node2D, top_bar: Control = null) -> DayNightWeather:
 		return null
 	var existing := host.get_node_or_null(NODE_NAME) as DayNightWeather
 	if existing:
-		# Props/kits may have spawned after first attach — re-wire street lamps.
-		var _olk := load("res://scripts/world/outdoor_lamp_kit.gd")
-		if _olk:
-			_olk.attach_to(host)
+		existing._pull_global()
+		existing._apply_visuals()
+		for path in [
+			"res://scripts/world/outdoor_lamp_kit.gd",
+			"res://scripts/world/weather_building_fx.gd",
+			"res://scripts/world/map_travel_kit.gd",
+		]:
+			var scr = load(path)
+			if scr and scr.has_method("attach_to"):
+				scr.attach_to(host)
 		return existing
 	var env := DayNightWeather.new()
 	env.name = NODE_NAME
 	host.add_child(env)
 	env.bind_host(host)
-	if top_bar:
+	# Immersive play: no TopBar chrome; keyboard N/R only.
+	if top_bar and bool(Engine.get_meta("dream_show_env_buttons", false)):
 		env.mount_top_bar(top_bar)
-	# Street lamps get PointLight2D + night energy boost (CanvasModulate compensation).
-	var _olk2 := load("res://scripts/world/outdoor_lamp_kit.gd")
-	if _olk2:
-		_olk2.attach_to(host)
+	# Street lamps / weather buildings / keyboard travel — load() to avoid class_cache stalls.
+	for path in [
+		"res://scripts/world/outdoor_lamp_kit.gd",
+		"res://scripts/world/weather_building_fx.gd",
+		"res://scripts/world/map_travel_kit.gd",
+	]:
+		var scr = load(path)
+		if scr and scr.has_method("attach_to"):
+			scr.attach_to(host)
 	return env
 
 
@@ -67,7 +80,60 @@ func bind_host(host: Node2D) -> void:
 	_host = host
 	_resolve_modulate()
 	_ensure_weather_overlay()
+	_pull_global()
 	_apply_visuals()
+	var st := _global()
+	if st and not st.state_changed.is_connected(_on_global):
+		st.state_changed.connect(_on_global)
+	call_deferred("_kick_schedule")
+
+
+func _kick_schedule() -> void:
+	var sd := get_node_or_null("/root/ScheduleDirector")
+	if sd and sd.has_method("apply_to_current_scene"):
+		sd.apply_to_current_scene()
+
+
+func _global() -> Node:
+	return get_node_or_null("/root/WorldEnvState")
+
+
+func _on_global(tg: int, w: int, _season: int) -> void:
+	if _syncing:
+		return
+	_syncing = true
+	time_grade = tg as TimeGrade
+	weather = w as WeatherKind
+	_apply_visuals()
+	state_changed.emit(time_grade, weather)
+	_broadcast_motion_refresh()
+	_syncing = false
+	var sd := get_node_or_null("/root/ScheduleDirector")
+	if sd and sd.has_method("apply_to_current_scene"):
+		sd.apply_to_current_scene()
+
+
+func _pull_global() -> void:
+	var st := _global()
+	if st == null:
+		return
+	time_grade = int(st.time_grade) as TimeGrade
+	weather = int(st.weather) as WeatherKind
+	_lamp_forced_night = bool(st.lamp_forced_night)
+
+
+func _push_global() -> void:
+	if _syncing:
+		return
+	var st := _global()
+	if st == null:
+		return
+	_syncing = true
+	st.time_grade = time_grade
+	st.weather = weather
+	st.lamp_forced_night = _lamp_forced_night
+	st.state_changed.emit(int(st.time_grade), int(st.weather), int(st.season))
+	_syncing = false
 
 
 func mount_top_bar(top_bar: Control) -> void:
@@ -94,6 +160,7 @@ func toggle_night() -> void:
 	time_grade = TimeGrade.DAY if time_grade == TimeGrade.NIGHT else TimeGrade.NIGHT
 	if time_grade == TimeGrade.DAY:
 		_lamp_forced_night = false
+	_push_global()
 	_apply_visuals()
 	state_changed.emit(time_grade, weather)
 	_broadcast_motion_refresh()
@@ -103,6 +170,7 @@ func set_time_grade(grade: TimeGrade) -> void:
 	time_grade = grade
 	if grade == TimeGrade.DAY:
 		_lamp_forced_night = false
+	_push_global()
 	_apply_visuals()
 	state_changed.emit(time_grade, weather)
 	_broadcast_motion_refresh()
@@ -113,9 +181,12 @@ func cycle_weather() -> void:
 		WeatherKind.CLEAR:
 			weather = WeatherKind.RAIN
 		WeatherKind.RAIN:
+			weather = WeatherKind.SNOW
+		WeatherKind.SNOW:
 			weather = WeatherKind.FOG
 		_:
 			weather = WeatherKind.CLEAR
+	_push_global()
 	_apply_visuals()
 	state_changed.emit(time_grade, weather)
 	_broadcast_motion_refresh()
@@ -123,6 +194,7 @@ func cycle_weather() -> void:
 
 func set_weather(kind: WeatherKind) -> void:
 	weather = kind
+	_push_global()
 	_apply_visuals()
 	state_changed.emit(time_grade, weather)
 	_broadcast_motion_refresh()
@@ -140,7 +212,6 @@ func _broadcast_motion_refresh() -> void:
 
 
 func mcp_set_night(on: bool) -> Dictionary:
-	## Sync MCP probe: force day/night grade for lamp-glow / Env-H evidence.
 	set_time_grade(TimeGrade.NIGHT if on else TimeGrade.DAY)
 	return {
 		"ok": true,
@@ -156,12 +227,11 @@ func is_night() -> bool:
 
 
 func pulse_dusk_for_lamps() -> Dictionary:
-	## Daytime lamp-on: sticky night so radial glow reads. Lamp-off restores day
-	## when this flag is set; N / 白天 also clears it via set_time_grade(DAY).
 	if time_grade == TimeGrade.NIGHT:
 		return {"ok": true, "pulsed": false, "reason": "already_night", "lamp_forced": _lamp_forced_night}
 	set_time_grade(TimeGrade.NIGHT)
 	_lamp_forced_night = true
+	_push_global()
 	var after_r := -1.0
 	var mod := _live_modulate()
 	if mod:
@@ -177,7 +247,6 @@ func pulse_dusk_for_lamps() -> Dictionary:
 
 
 func restore_day_from_lamps() -> Dictionary:
-	## Lamp extinguished: undo sticky night only (leave manual N-night alone).
 	if not _lamp_forced_night:
 		return {"ok": true, "restored": false, "reason": "not_lamp_forced", "night": is_night()}
 	_lamp_forced_night = false
@@ -216,7 +285,6 @@ func _on_weather_pressed() -> void:
 
 
 func _resolve_modulate() -> void:
-	# Prefer an existing scene modulate (e.g. forest_deep CanopyTint) — apply-if-present.
 	var found: CanvasModulate = null
 	for child in _host.get_children():
 		if child is CanvasModulate:
@@ -273,6 +341,28 @@ func _ensure_weather_overlay() -> void:
 		_rain.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
 		_rain.emission_rect_extents = Vector2(720, 20)
 		_rain_layer.add_child(_rain)
+	_snow = _rain_layer.get_node_or_null("Snow") as CPUParticles2D
+	if _snow == null:
+		_snow = CPUParticles2D.new()
+		_snow.name = "Snow"
+		_snow.emitting = false
+		_snow.amount = 90
+		_snow.lifetime = 2.4
+		_snow.preprocess = 0.8
+		_snow.randomness = 0.7
+		_snow.texture = _make_flake_texture()
+		_snow.direction = Vector2(0.05, 1.0)
+		_snow.spread = 18.0
+		_snow.gravity = Vector2(12.0, 48.0)
+		_snow.initial_velocity_min = 28.0
+		_snow.initial_velocity_max = 55.0
+		_snow.scale_amount_min = 0.5
+		_snow.scale_amount_max = 1.2
+		_snow.color = Color(0.95, 0.97, 1.0, 0.75)
+		_snow.position = Vector2(640, -40)
+		_snow.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+		_snow.emission_rect_extents = Vector2(720, 20)
+		_rain_layer.add_child(_snow)
 
 
 func _make_streak_texture() -> ImageTexture:
@@ -281,12 +371,17 @@ func _make_streak_texture() -> ImageTexture:
 	return ImageTexture.create_from_image(img)
 
 
+func _make_flake_texture() -> ImageTexture:
+	var img := Image.create(3, 3, false, Image.FORMAT_RGBA8)
+	img.fill(Color(1, 1, 1, 0.9))
+	return ImageTexture.create_from_image(img)
+
+
 func _apply_visuals() -> void:
 	var mod := _live_modulate()
 	if mod:
 		_modulate = mod
 		if time_grade == TimeGrade.NIGHT:
-			# Night grade over baseline (keeps forest canopy relative cool if present).
 			mod.color = _day_baseline * night_color
 		else:
 			mod.color = _day_baseline
@@ -294,12 +389,16 @@ func _apply_visuals() -> void:
 		match weather:
 			WeatherKind.RAIN:
 				_veil.color = rain_veil_color
+			WeatherKind.SNOW:
+				_veil.color = snow_veil_color
 			WeatherKind.FOG:
 				_veil.color = fog_veil_color
 			_:
 				_veil.color = Color(1, 1, 1, 0)
 	if _rain:
 		_rain.emitting = weather == WeatherKind.RAIN
+	if _snow:
+		_snow.emitting = weather == WeatherKind.SNOW
 	_refresh_button_labels()
 
 
@@ -311,8 +410,10 @@ func _refresh_button_labels() -> void:
 		match weather:
 			WeatherKind.RAIN:
 				_btn_weather.text = "雨"
+			WeatherKind.SNOW:
+				_btn_weather.text = "雪"
 			WeatherKind.FOG:
 				_btn_weather.text = "雾"
 			_:
 				_btn_weather.text = "晴"
-		_btn_weather.tooltip_text = "循环天气 (R)：晴→雨→雾"
+		_btn_weather.tooltip_text = "循环天气 (R)：晴→雨→雪→雾"

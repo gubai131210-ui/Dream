@@ -22,6 +22,8 @@ PlayerBootstrap="*res://scripts/core/player_bootstrap.gd"
 TrainService="*res://scripts/world/train_service.gd"
 SpawnRegistry="*res://scripts/world/spawn_registry.gd"
 InventoryService="*res://scripts/world/inventory_service.gd"
+WorldEnvState="*res://scripts/world/world_env_state.gd"
+ScheduleDirector="*res://scripts/world/schedule_director.gd"
 
 [debug]
 

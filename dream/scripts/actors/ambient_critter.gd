@@ -11,6 +11,7 @@ const WANDER_RADIUS := 56.0
 const PAUSE_MIN := 1.4
 const PAUSE_MAX := 3.8
 const PICK_TRIES := 10
+const FOOT_CONTACT_Y := 0.0
 
 ## Display height in pixels (must stay clearly below NPC ~56px except cow/deer slightly under).
 const TARGET_HEIGHT_PX := {
@@ -45,6 +46,8 @@ func setup(
 	_target = at
 	_pause_left = randf_range(0.4, 1.6)
 	name = "Critter_%s" % species
+	add_to_group("ambient_critters")
+	set_meta("schedule_role", "critter")
 
 	var frames := _build_frames(species)
 	var scale_f := draw_scale
@@ -57,7 +60,7 @@ func setup(
 	shadow.polygon = PackedVector2Array([
 		Vector2(-sw, 0), Vector2(0, -sw * 0.4), Vector2(sw, 0), Vector2(0, sw * 0.4),
 	])
-	shadow.position = Vector2(0, 4)
+	shadow.position = Vector2(0, FOOT_CONTACT_Y + 3.0)
 	shadow.z_index = -1
 	add_child(shadow)
 
@@ -66,7 +69,14 @@ func setup(
 	_anim.centered = true
 	_anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_anim.scale = Vector2(scale_f, scale_f)
-	_anim.offset = Vector2(0, -10.0 * scale_f / 0.15)
+	# The normalized canvas is bottom-anchored. Keep the visible contact line
+	# four pixels above the actor root so the shadow and Y-sort stay stable.
+	var anchor_height := 56.0
+	if frames.has_animation("idle") and frames.get_frame_count("idle") > 0:
+		var anchor_texture := frames.get_frame_texture("idle", 0)
+		if anchor_texture:
+			anchor_height = float(anchor_texture.get_height())
+	_anim.offset = Vector2(0, -(anchor_height * scale_f * 0.5) + FOOT_CONTACT_Y)
 	_anim.sprite_frames = frames
 	add_child(_anim)
 	_play_idle()
@@ -97,6 +107,7 @@ func _build_frames(species: String) -> SpriteFrames:
 	var base := "res://assets/sprites/animals/%s" % species
 	var sources: Array[Dictionary] = []
 	var canvas_size := Vector2i(1, 1)
+	var anchor_y := 1
 	# Source animals were exported with slightly different canvas sizes per
 	# frame. Normalize them to one bottom-aligned canvas so AnimatedSprite2D
 	# cannot jump or appear to blink when an idle/walk frame changes.
@@ -112,9 +123,17 @@ func _build_frames(species: String) -> SpriteFrames:
 			var image := tex.get_image()
 			if image == null:
 				continue
-			sources.append({"animation": anim_name, "image": image})
+			var used := image.get_used_rect()
+			if used.size == Vector2i.ZERO:
+				continue
+			sources.append({"animation": anim_name, "image": image, "used": used})
 			canvas_size.x = maxi(canvas_size.x, image.get_width())
-			canvas_size.y = maxi(canvas_size.y, image.get_height())
+			anchor_y = maxi(anchor_y, used.position.y + used.size.y)
+
+	for source in sources:
+		var source_image: Image = source["image"]
+		var source_used: Rect2i = source["used"]
+		canvas_size.y = maxi(canvas_size.y, source_image.get_height() + anchor_y - (source_used.position.y + source_used.size.y))
 
 	frames.add_animation("idle")
 	frames.set_animation_speed("idle", IDLE_FPS)
@@ -127,9 +146,13 @@ func _build_frames(species: String) -> SpriteFrames:
 	var walk_n := 0
 	for source in sources:
 		var image: Image = source["image"]
+		var used: Rect2i = source["used"]
 		var normalized := Image.create(canvas_size.x, canvas_size.y, false, Image.FORMAT_RGBA8)
 		normalized.fill(Color(0, 0, 0, 0))
-		var dst := Vector2i(floori(float(canvas_size.x - image.get_width()) / 2.0), canvas_size.y - image.get_height())
+		var dst := Vector2i(
+			floori(float(canvas_size.x - image.get_width()) / 2.0),
+			anchor_y - (used.position.y + used.size.y)
+		)
 		normalized.blend_rect(image, Rect2i(Vector2i.ZERO, image.get_size()), dst)
 		var texture := ImageTexture.create_from_image(normalized)
 		var animation: String = source["animation"]
@@ -149,6 +172,11 @@ func _build_frames(species: String) -> SpriteFrames:
 
 
 func _physics_process(delta: float) -> void:
+	if bool(get_meta("schedule_patrol_paused", false)):
+		return
+	if not visible:
+		return
+
 	if _anim == null:
 		return
 	if _pause_left > 0.0:
