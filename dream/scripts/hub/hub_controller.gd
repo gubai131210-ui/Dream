@@ -38,6 +38,7 @@ func _ready() -> void:
 	btn_station.pressed.connect(_enter_station)
 	btn_other.pressed.connect(_switch_overview)
 	_wire_nature_row()
+	_wire_user_qa_button()
 	_wire_hotspot(hotspot_square, "村庄广场（可进入）", _enter_square)
 	_wire_hotspot(hotspot_residential, "村庄住宅区（可进入）", _enter_residential)
 	_wire_hotspot(hotspot_farm, "农场住宅区（可进入）", _enter_farm)
@@ -47,6 +48,7 @@ func _ready() -> void:
 	_wire_hotspot(hotspot_station, "车站（可进入）", _enter_station)
 	_wire_nature_hotspots()
 	status_label.text = _default_status()
+	DreamUI.polish_hub(self, hub_mode == "connections")
 	_fit_camera_to_map()
 
 
@@ -61,6 +63,26 @@ func _wire_nature_row() -> void:
 	_bind_btn(row.get_node_or_null("EnterLake"), _enter_lake)
 	_bind_btn(row.get_node_or_null("EnterLighthouse"), _enter_lighthouse)
 	_bind_btn(row.get_node_or_null("EnterLakeHouse"), _enter_lake_house)
+
+
+func _wire_user_qa_button() -> void:
+	## Dedicated Goal §7 page — keep hub TopBar from growing denser than one extra button.
+	var buttons := get_node_or_null("UI/TopBar/Buttons") as HBoxContainer
+	if buttons == null:
+		return
+	if buttons.get_node_or_null("EnterUserQa") != null:
+		return
+	var btn := Button.new()
+	btn.name = "EnterUserQa"
+	btn.text = "§7验收"
+	btn.tooltip_text = "Goal 用户手感验收清单（跳转+勾选）"
+	buttons.add_child(btn)
+	buttons.move_child(btn, 0)
+	btn.pressed.connect(_enter_user_qa)
+
+
+func _enter_user_qa() -> void:
+	SceneRouter.change_to(get_tree(), SceneRouter.USER_QA_PATH)
 
 
 func _bind_btn(btn: Button, cb: Callable) -> void:

@@ -5,6 +5,7 @@ extends Node
 
 const HUB_PATH := "res://scenes/hub/world_hub.tscn"
 const CONNECTION_PATH := "res://scenes/hub/connection_overview.tscn"
+const USER_QA_PATH := "res://scenes/qa/user_qa_checklist.tscn"
 const SQUARE_PATH := "res://scenes/areas/village_square/village_square.tscn"
 const RESIDENTIAL_PATH := "res://scenes/areas/village_residential/village_residential.tscn"
 const FARM_HOME_PATH := "res://scenes/areas/farm_residential/farm_residential.tscn"
