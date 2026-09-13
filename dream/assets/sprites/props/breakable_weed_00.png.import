@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pb2e2f0abc8b3"
-path="res://.godot/imported/breakable_weed_00.png-d0ad716fea42bf1077031b1b8ed92239.ctex"
+uid="uid://b31f4c56c88c4"
+path="res://.godot/imported/breakable_weed_00.png-0e67fdfbfcd704fa8b4b70050b3ffb7c.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/props/breakable_weed_00.png"
-dest_files=["res://.godot/imported/breakable_weed_00.png-d0ad716fea42bf1077031b1b8ed92239.ctex"]
+dest_files=["res://.godot/imported/breakable_weed_00.png-0e67fdfbfcd704fa8b4b70050b3ffb7c.ctex"]
 
 [params]
 

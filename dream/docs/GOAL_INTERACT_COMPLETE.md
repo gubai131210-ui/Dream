@@ -172,6 +172,7 @@
 | ~~室内全部 notice_00 代理~~ | all interior markers | **DONE** → 0×`_m(P_NOTICE)`；13 专用牌 + QA 硬禁 |
 | ~~farmer 仅 4 帧（qa_scene_presentation RED）~~ | `npc/farmer` | **DONE** → 提升 `farmer_v5` 8 帧；presentation GREEN；MCP `g8_farmland_farmer_8frame.png` |
 | ~~C60 锁门共用门脸~~ | ProgressGates locked_door | **DONE** → `gate_locked_door_00`（铁锁+横闩；禁 door_facade） |
+| ~~C59 杂草/C60 倒木低密度~~ | breakable_weed / gate_log | **DONE** → 重绘 uniq≥60；StyleQA 抬地板 |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据
@@ -190,6 +191,7 @@
 - [`GOAL_G8_OUTDOOR_PROMPT_EVIDENCE.md`](GOAL_G8_OUTDOOR_PROMPT_EVIDENCE.md) — 户外邻近「互动」+ hover 胜出  
 - [`GOAL_G8_C58_FX_EVIDENCE.md`](GOAL_G8_C58_FX_EVIDENCE.md) — C58 well_rope/crate_lid/leaf_fall/bird_peck 多帧  
 - [`GOAL_G8_C59_BREAKABLES_EVIDENCE.md`](GOAL_G8_C59_BREAKABLES_EVIDENCE.md) — C59 桩/草精灵 + `mcp_clear`  
+- [`GOAL_G8_C60_GATES_EVIDENCE.md`](GOAL_G8_C60_GATES_EVIDENCE.md) — C60 锁门解锁 + 倒木重绘  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 17 groups GREEN  
 - `tools/qa_portal_hover_only.py` — GREEN  

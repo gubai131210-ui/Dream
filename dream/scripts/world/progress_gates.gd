@@ -114,6 +114,32 @@ func unlock(gate_id: String) -> void:
 			break
 
 
+func mcp_unlock(gate_id: String) -> Dictionary:
+	## Sync probe for MCP / headless: unlock one gate and report sprite soften.
+	if _root == null:
+		return {"ok": false, "reason": "no_root", "id": gate_id}
+	if is_unlocked(gate_id):
+		return {"ok": false, "reason": "already_unlocked", "id": gate_id}
+	var found := false
+	var modulate_a := -1.0
+	for child in _root.get_children():
+		if child is InteractableHotspot and str(child.get_meta("gate_id", "")) == gate_id:
+			found = true
+			unlock(gate_id)
+			var spr := child.get_node_or_null("Visual/PropSprite") as Sprite2D
+			if spr:
+				modulate_a = spr.modulate.a
+			break
+	if not found:
+		return {"ok": false, "reason": "missing_hotspot", "id": gate_id}
+	return {
+		"ok": true,
+		"id": gate_id,
+		"unlocked_count": unlocked_count(),
+		"sprite_alpha": modulate_a,
+	}
+
+
 func _spawn_one(d: Dictionary) -> void:
 	var gate_id := str(d["id"])
 	var title := str(d["title"])

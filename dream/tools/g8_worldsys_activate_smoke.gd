@@ -68,9 +68,21 @@ func _probe(host: Node2D) -> void:
 			_fail("mcp_clear", "weed clear failed: %s" % str(probe))
 		elif int(probe.get("cleared", 0)) < 1:
 			_fail("mcp_clear", "cleared count < 1")
+	var gate_kit := host.get_node_or_null("ProgressGates")
+	if gate_kit == null or not gate_kit.has_method("mcp_unlock"):
+		_fail("mcp_unlock", "ProgressGates.mcp_unlock missing")
+	else:
+		var gprobe: Dictionary = gate_kit.call("mcp_unlock", "locked_door")
+		print("G8_WORLDSYS: mcp_unlock locked_door ", gprobe)
+		if not bool(gprobe.get("ok", false)):
+			_fail("mcp_unlock", "locked_door failed: %s" % str(gprobe))
+		elif float(gprobe.get("sprite_alpha", 1.0)) > 0.6:
+			_fail("mcp_unlock", "sprite not softened")
 	for k in by_id.keys():
 		var key := str(k)
 		if key.begins_with("gate:"):
+			if key == "gate:locked_door":
+				continue  # already unlocked via mcp_unlock
 			_activate(by_id[k], key)
 		elif key.begins_with("brk:"):
 			if key == "brk:weed":
