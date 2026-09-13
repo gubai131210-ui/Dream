@@ -52,8 +52,8 @@ func _frame_room(room_rect: Rect2) -> void:
 	# Portal click is wired inside SecretPassageChain (avoid double _wire_portals).
 	SecretPassageChain.try_attach_interior(self)
 	if profile_id == "c36_train_car":
-		TrainCarWindowRide.attach_to(self)
-		# Auto-depart shortly after boarding with a ticket so the ride is visible.
+		# Notify service + soft auto-depart (no window-scenery HUD).
+		TrainService.notify_player_entered_car(self)
 		if TrainService.can_board_car() or TrainService.has_ticket_for_active():
 			var t := get_tree().create_timer(2.8)
 			t.timeout.connect(func() -> void:

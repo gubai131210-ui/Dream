@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://r4b5ca24aa15e4"
-path="res://.godot/imported/train_brass_lamp_00.png-a6ec623a08110cbe1ae76bca1f9ab880.ctex"
+uid="uid://r76078379b6df4"
+path="res://.godot/imported/train_suitcase_00.png-f671e01efbd6770a56deb831f383fc1c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/interior/props/train_brass_lamp_00.png"
-dest_files=["res://.godot/imported/train_brass_lamp_00.png-a6ec623a08110cbe1ae76bca1f9ab880.ctex"]
+source_file="res://assets/sprites/interior/props/train_suitcase_00.png"
+dest_files=["res://.godot/imported/train_suitcase_00.png-f671e01efbd6770a56deb831f383fc1c.ctex"]
 
 [params]
 

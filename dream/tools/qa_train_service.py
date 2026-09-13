@@ -24,9 +24,10 @@ def main() -> int:
 	if "TrainService.can_board_car" not in ctrl:
 		raise AssertionError("station controller missing coach board gate")
 	room = (ROOT / "scripts/interiors/interior_room_controller.gd").read_text(encoding="utf-8")
-	if "TrainCarWindowRide" not in room:
-		raise AssertionError("C36 window ride not wired")
-	rt = (ROOT / "scripts/areas/station_train_runtime.gd").read_text(encoding="utf-8")
+	if "TrainCarWindowRide" in room:
+		raise AssertionError("C36 must not attach window scenery ride")
+	if "notify_player_entered_car" not in room:
+		raise AssertionError("C36 must still notify TrainService on enter")
 	if "_seat_wheels_on_rails" not in rt or "RAIL_Y" not in rt:
 		raise AssertionError("train runtime missing wheel-on-rail seating")
 	if "_spawn_driving_wheels" not in rt or "CPUParticles2D" not in rt or "TrailSmoke" not in rt:
@@ -38,39 +39,39 @@ def main() -> int:
 		"assets/sprites/props/train_wheel_00.png",
 		"assets/sprites/props/track_band_seamless_00.png",
 		"assets/sprites/fx/train_steam_00.png",
-		"assets/sprites/fx/train_steam_trail_00.png",
-		"assets/sprites/fx/train_window_scenery_00.png",
 		"assets/sprites/props/train_ticket_00.png",
 		"assets/sprites/interior/props/train_window_wall_00.png",
 		"assets/sprites/interior/props/train_seat_row_00.png",
+		"assets/sprites/interior/props/train_passenger_a_00.png",
+		"assets/sprites/interior/props/train_passenger_b_00.png",
+		"assets/sprites/interior/props/train_passenger_c_00.png",
+		"assets/sprites/interior/props/train_suitcase_00.png",
+		"assets/sprites/interior/props/train_mail_pouch_00.png",
 	]
 	asm = (ROOT / "scripts/areas/station_assembler.gd").read_text(encoding="utf-8")
 	if "track_band_seamless_00" not in asm or "TrackBandContinuous" not in asm:
 		raise AssertionError("station assembler missing continuous seamless track band")
 	if "TRACK_TX0 := 0" not in asm:
 		raise AssertionError("tracks must start at left map edge (TRACK_TX0 := 0)")
-	ride = (ROOT / "scripts/interiors/train_car_window_ride.gd").read_text(encoding="utf-8")
-	if "WindowSceneryBand" not in ride:
-		raise AssertionError("window ride missing world-space WindowSceneryBand")
-	if "InteriorWorld" not in ride:
-		raise AssertionError("window ride must parent under InteriorWorld")
-	if "ORIGIN" not in ride or "WINDOW_ANCHOR" not in ride:
-		raise AssertionError("window ride missing ORIGIN/WINDOW_ANCHOR alignment")
-	if "Vector2(x0, 520)" in ride:
-		raise AssertionError("window ride still uses bottom-screen scenery strip")
 	prof = (ROOT / "scripts/interiors/interior_profiles.gd").read_text(encoding="utf-8")
 	if "P_TRAIN_WINDOW_WALL" not in prof or "train_window_wall_00" not in prof:
 		raise AssertionError("C36 profile missing train window wall")
+	if "P_TRAIN_PASS_A" not in prof or "train_passenger_a_00" not in prof:
+		raise AssertionError("C36 profile missing seated passengers")
 	idx = prof.find('"c36_train_car"')
-	chunk = prof[idx : idx + 1400]
+	chunk = prof[idx : idx + 2200]
 	if '"window": false' not in chunk:
 		raise AssertionError("c36 must disable generic house window/shaft")
 	if "P_BASKET" in chunk or "P_CRATE0" in chunk or "P_FERRY_SCHEDULE" in chunk:
 		raise AssertionError("c36 still has non-coach clutter props")
+	if "窗外景色" in chunk or "站外景色" in chunk:
+		raise AssertionError("c36 copy still promises outdoor window scenery")
 	for rel in assets:
 		if not (ROOT / rel).is_file():
 			raise AssertionError(f"missing asset {rel}")
-	print("GREEN train-service QA (autoload, runtime, gate, window ride, assets)")
+	if (ROOT / "scripts/interiors/train_car_window_ride.gd").is_file():
+		raise AssertionError("train_car_window_ride.gd should be removed")
+	print("GREEN train-service QA (autoload, runtime, gate, coach passengers, no window scenery)")
 	return 0
 
 

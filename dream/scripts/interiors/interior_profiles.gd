@@ -115,6 +115,11 @@ const P_TRAIN_LUGGAGE := DIR_INTERIOR_PROP + "/train_luggage_rack_00.png"
 const P_TRAIN_AISLE := DIR_INTERIOR_PROP + "/train_aisle_runner_00.png"
 const P_TRAIN_VESTIBULE := DIR_INTERIOR_PROP + "/train_vestibule_00.png"
 const P_TRAIN_BRASS_LAMP := DIR_INTERIOR_PROP + "/train_brass_lamp_00.png"
+const P_TRAIN_PASS_A := DIR_INTERIOR_PROP + "/train_passenger_a_00.png"
+const P_TRAIN_PASS_B := DIR_INTERIOR_PROP + "/train_passenger_b_00.png"
+const P_TRAIN_PASS_C := DIR_INTERIOR_PROP + "/train_passenger_c_00.png"
+const P_TRAIN_SUITCASE := DIR_INTERIOR_PROP + "/train_suitcase_00.png"
+const P_TRAIN_MAIL := DIR_INTERIOR_PROP + "/train_mail_pouch_00.png"
 const P_ROCK0 := DIR_OUTDOOR_PROP + "/rock_00.png"
 const P_ROCK1 := DIR_OUTDOOR_PROP + "/rock_01.png"
 const P_ROCK2 := DIR_OUTDOOR_PROP + "/rock_02.png"
@@ -3056,56 +3061,65 @@ static func _all() -> Dictionary:
 		},
 		"c36_train_car": {
 			"title": "火车厢",
-			"hint": "客车厢 · 北窗景色 / 座席 / 中廊",
+			"hint": "客车厢 · 西座旅客 / 中廊 / 东座旅客",
 			"return_path": STN,
-			"room_w": 22,
-			"room_h": 9,
-			"door_tx0": 9,
-			"door_tx1": 12,
+			"room_w": 24,
+			"room_h": 10,
+			"door_tx0": 10,
+			"door_tx1": 13,
 			"floor": "plank",
-			"modulate": Color(0.72, 0.66, 0.58, 1.0),
+			"modulate": Color(0.74, 0.68, 0.60, 1.0),
 			"rug": null,
-			# Custom coach window wall + world-space scenery — skip generic house window/shaft.
+			# Coach grammar (INTERIOR_COMPOSITION + TRAIN_C36): twin banks + mid aisle.
+			# Warm solid window panes (no outdoor scenery strip). Occupied seats = passenger props.
 			"window": false,
-			# Narrow coach: north clear-pane windows, twin banks, mid aisle, south vestibule.
 			"clusters": [
-				_cluster("window_n", 11, 1, [
-					_m(P_TRAIN_WINDOW_WALL, -5, 0, "车厢窗", "北壁连窗：透过窗格可见站外景色。", 1.0),
-					_m(P_TRAIN_WINDOW_WALL, 0, 0, "车厢窗", "北壁中段窗墙。", 1.0),
-					_m(P_TRAIN_WINDOW_WALL, 5, 0, "车厢窗", "北壁东段窗墙。", 1.0),
-					_m(P_TRAIN_LUGGAGE, -2, 0, "行李架", "窗上行李架。", 0.8),
-					_m(P_TRAIN_LUGGAGE, 2, 0, "行李架", "窗上行李架。", 0.8),
-					_m(P_TRAIN_BRASS_LAMP, 0, -1, "黄铜壁灯", "车厢壁灯。", 0.7),
+				_cluster("window_n", 12, 1, [
+					_m(P_TRAIN_WINDOW_WALL, -6, 0, "车厢窗", "北壁暖窗：黄铜框与暖光玻璃。", 1.0),
+					_m(P_TRAIN_WINDOW_WALL, 0, 0, "车厢窗", "北壁中段暖窗。", 1.0),
+					_m(P_TRAIN_WINDOW_WALL, 6, 0, "车厢窗", "北壁东段暖窗。", 1.0),
+					_m(P_TRAIN_LUGGAGE, -3, 0, "行李架", "窗上行李架：旅行箱与提包。", 0.85),
+					_m(P_TRAIN_LUGGAGE, 3, 0, "行李架", "窗上行李架续段。", 0.85),
+					_m(P_TRAIN_BRASS_LAMP, -1, -1, "黄铜壁灯", "车厢壁灯。", 0.7),
+					_m(P_TRAIN_BRASS_LAMP, 2, -1, "黄铜壁灯", "车厢壁灯。", 0.7),
 				]),
-				_cluster("seats_w", 4, 3, [
-					_m(P_TRAIN_SEAT_ROW, 0, 0, "西排客座", "靠窗双人客座（酒红软垫）。", 0.95),
-					_m(P_TRAIN_SEAT_ROW, 0, 2, "西排客座", "靠廊双人客座。", 0.95),
+				# West bank: occupied + empty seats along car length (anchor+satellites).
+				_cluster("seats_w", 5, 3, [
+					_m(P_TRAIN_PASS_A, 0, 0, "旅客", "靠窗位：读报的旅客。", 0.95),
+					_m(P_TRAIN_SEAT_ROW, 0, 2, "空座", "西排空着的双人客座。", 0.9),
+					_m(P_TRAIN_PASS_B, 0, 4, "旅客", "靠廊位：戴帽打盹的旅客。", 0.95),
+					_m(P_TRAIN_SUITCASE, 2, 1, "旅行箱", "座侧皮箱。", 0.7),
 					_m(P_TRAIN_BRASS_LAMP, 1, -1, "壁灯", "西座壁灯。", 0.65),
 				]),
-				_cluster("seats_e", 17, 3, [
-					_m(P_TRAIN_SEAT_ROW, 0, 0, "东排客座", "靠窗双人客座。", 0.95),
-					_m(P_TRAIN_SEAT_ROW, 0, 2, "东排客座", "靠廊双人客座。", 0.95),
+				# East bank: more passengers + empty seats.
+				_cluster("seats_e", 18, 3, [
+					_m(P_TRAIN_PASS_C, 0, 0, "旅客", "靠窗位：带着小包的旅客。", 0.95),
+					_m(P_TRAIN_SEAT_ROW, 0, 2, "空座", "东排空着的双人客座。", 0.9),
+					_m(P_TRAIN_PASS_A, 0, 4, "旅客", "靠廊位：另一位读报旅客。", 0.9),
+					_m(P_TRAIN_MAIL, 2, 3, "邮袋", "座侧挂着的邮袋/票袋。", 0.7),
 					_m(P_TRAIN_BRASS_LAMP, 1, -1, "壁灯", "东座壁灯。", 0.65),
 				]),
-				_cluster("aisle", 11, 4, [
-					_m(P_TRAIN_AISLE, 0, -1, "中廊地毯", "窄长客车过道毯。", 1.05),
-					_m(P_TRAIN_AISLE, 0, 1, "中廊地毯", "过道毯续段。", 1.05),
-					_m(P_TRAIN_VESTIBULE, 0, 3, "贯通道", "车厢端门贯通道（不堵南门）。", 0.8),
+				_cluster("aisle", 12, 4, [
+					_m(P_TRAIN_AISLE, 0, -2, "中廊地毯", "窄长客车过道毯（北段）。", 1.1),
+					_m(P_TRAIN_AISLE, 0, 0, "中廊地毯", "过道毯中段。", 1.1),
+					_m(P_TRAIN_AISLE, 0, 2, "中廊地毯", "过道毯南段。", 1.1),
+					_m(P_TRAIN_VESTIBULE, 0, 4, "贯通道", "车厢端门贯通道（不堵南门）。", 0.85),
+					_m(P_TRAIN_SUITCASE, -2, 3, "旅行箱", "廊边待运皮箱。", 0.65),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 4, "ty": 2, "oy": -6, "color": Color(1.0, 0.86, 0.68), "energy": 0.85, "scale": 1.5},
-				{"tx": 11, "ty": 1, "oy": -4, "color": Color(1.0, 0.88, 0.7), "energy": 0.95, "scale": 1.8},
-				{"tx": 17, "ty": 2, "oy": -6, "color": Color(1.0, 0.86, 0.68), "energy": 0.85, "scale": 1.5},
+				{"tx": 5, "ty": 2, "oy": -6, "color": Color(1.0, 0.86, 0.68), "energy": 0.9, "scale": 1.55},
+				{"tx": 12, "ty": 1, "oy": -4, "color": Color(1.0, 0.88, 0.7), "energy": 1.0, "scale": 1.85},
+				{"tx": 18, "ty": 2, "oy": -6, "color": Color(1.0, 0.86, 0.68), "energy": 0.9, "scale": 1.55},
 			],
 			"actor": {
 				"id": "merchant",
 				"title": "乘务",
-				"desc": "在西座、中廊与东座之间检票巡视。",
+				"desc": "沿中廊检票，在西座与东座旅客之间巡视。",
 				"via_clusters": ["seats_w", "aisle", "seats_e"],
-				"via_stands": {"seats_w": [1, 1], "aisle": [0, 1], "seats_e": [-1, 1]},
+				"via_stands": {"seats_w": [2, 1], "aisle": [0, 1], "seats_e": [-2, 1]},
 			},
 		},
 		"c23_underwater": {
