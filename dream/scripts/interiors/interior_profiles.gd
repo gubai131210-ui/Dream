@@ -3104,7 +3104,7 @@ static func _all() -> Dictionary:
 					_m(P_TRAIN_AISLE, 0, 0, "中廊地毯", "过道毯中段。", 1.1),
 					_m(P_TRAIN_AISLE, 0, 2, "中廊地毯", "过道毯南段。", 1.1),
 					_m(P_TRAIN_VESTIBULE, 0, 4, "贯通道", "车厢端门贯通道（不堵南门）。", 0.85),
-					_m(P_TRAIN_SUITCASE, -2, 3, "旅行箱", "廊边待运皮箱。", 0.65),
+					_m(P_TRAIN_SUITCASE, 2, 2, "旅行箱", "廊东待运皮箱（远离南门）。", 0.65),
 				]),
 			],
 			"fx": [],
