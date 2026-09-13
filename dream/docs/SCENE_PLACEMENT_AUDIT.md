@@ -39,6 +39,12 @@ Scale lock: shore **target_h ≈ 18–28px**; cobble **≈16px**. Forbidden: raw
 - Farm residential pond rocks — **done**
 - District kit oversized moss rocks → river family 0.32 — **done**
 
+## Alpha / 抠图
+
+- `tools/gen_biome_rocks.py` regenerates biome rocks with **true RGBA** (no white/black/checker bg).
+- `tools/punch_prop_alpha.py` can punch leftover white/black fringe on prop folders.
+- QA `qa_scene_placement.py` fails if `props/rocks/**` still has opaque whiteish pixels.
+
 ## Remaining follow-ups (wave 3 optional)
 
 - River east-bank barrel closer to water

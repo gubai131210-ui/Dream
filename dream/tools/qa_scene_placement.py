@@ -42,6 +42,22 @@ def main() -> int:
 	must(ROOT / "scripts/areas/market_street_dressing.gd", "380, 380")
 	must(ROOT / "scripts/areas/forest_deep_assembler.gd", "wood_pile_00.png", "_spawn_stream_rocks")
 	must(ROOT / "scripts/areas/farm_residential_assembler.gd", "_spawn_pond_rocks")
+	# Biome rocks must be true-alpha (no opaque white leftovers).
+	from PIL import Image  # type: ignore
+
+	rocks = ROOT / "assets/sprites/props/rocks"
+	for p in rocks.rglob("*.png"):
+		im = Image.open(p).convert("RGBA")
+		px = im.load()
+		w, h = im.size
+		whiteish = 0
+		for y in range(h):
+			for x in range(w):
+				r, g, b, a = px[x, y]
+				if a > 200 and r > 240 and g > 240 and b > 240:
+					whiteish += 1
+		if whiteish > 8:
+			raise AssertionError(f"{p.relative_to(ROOT)} has {whiteish} whiteish opaque pixels (not punched)")
 	must(ROOT / "docs/SCENE_PLACEMENT_AUDIT.md", "禁止偷懒")
 	print("GREEN scene-placement + biome-rocks QA")
 	return 0
