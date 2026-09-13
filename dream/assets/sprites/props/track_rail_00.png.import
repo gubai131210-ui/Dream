@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c66b5r0h2waq2"
-path="res://.godot/imported/track_rail_00.png-13ace5c4a28150bda041324d46997aaa.ctex"
+uid="uid://r3aba48b6a2bd4"
+path="res://.godot/imported/track_rail_00.png-92d9d3d4a599bca3b9e6da5845dc9b9a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/props/track_rail_00.png"
-dest_files=["res://.godot/imported/track_rail_00.png-13ace5c4a28150bda041324d46997aaa.ctex"]
+dest_files=["res://.godot/imported/track_rail_00.png-92d9d3d4a599bca3b9e6da5845dc9b9a.ctex"]
 
 [params]
 

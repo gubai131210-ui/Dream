@@ -151,57 +151,75 @@ func _paint_dirt_approaches() -> void:
 
 
 func _spawn_track_proxy(ysort: Node2D) -> void:
-	# Sleeper / rail sprites along track band (G8 — no ColorRect proxies).
+	## Continuous E–W track band (A11 grammar): seamless ballast+rails+sleepers.
+	## Old per-sleeper rail stubs left a visual gap mid-platform — tile a full strip instead.
+	const BAND := "res://assets/sprites/props/track_band_seamless_00.png"
 	const SLEEPER := "res://assets/sprites/props/track_sleeper_00.png"
-	const RAIL := "res://assets/sprites/props/track_rail_00.png"
+	if not ResourceLoader.exists(BAND):
+		push_warning("Station: missing track_band_seamless_00 — track will look broken")
+		return
+	var tex := load(BAND) as Texture2D
+	if tex == null:
+		return
 	var band_top := float(TRACK_TY0) * float(craft.tile)
 	var band_bottom := float(TRACK_TY1 + 1) * float(craft.tile)
 	var mid_y := (band_top + band_bottom) * 0.5
-	var left := float(TRACK_TX0) * float(craft.tile) + 8.0
-	var right := float(TRACK_TX1 + 1) * float(craft.tile) - 8.0
-	var step := 28.0
+	var left := float(TRACK_TX0) * float(craft.tile)
+	var right := float(TRACK_TX1 + 1) * float(craft.tile)
+	var scale_f := 1.15
+	var piece_w := float(tex.get_width()) * scale_f
+	# Overlap 6px so seams never open a hole in the middle.
+	var step := maxf(24.0, piece_w - 6.0)
+	var layer := Node2D.new()
+	layer.name = "TrackBandContinuous"
+	layer.z_index = 1
+	ysort.add_child(layer)
 	var x := left
 	var i := 0
-	while x <= right + 0.5:
-		var pos := Vector2(x, mid_y)
-		var hs := craft.make_hotspot(
-			ysort,
-			"铁轨枕木",
-			"站台南侧轨道：枕木与道砟带构成交通脊。",
-			pos,
-			Vector2(24, 16)
-		)
-		var visual := hs.get_node("Visual") as Node2D
-		WorldSpawnUtil.attach_prop_sprite(visual, SLEEPER, 0.7)
-		if i % 2 == 0:
-			var rail_holder := Node2D.new()
-			rail_holder.name = "Rails"
-			rail_holder.position = Vector2(0, -6)
-			visual.add_child(rail_holder)
-			WorldSpawnUtil.attach_prop_sprite(rail_holder, RAIL, 0.85)
-			var rail_s := Node2D.new()
-			rail_s.position = Vector2(0, 10)
-			visual.add_child(rail_s)
-			WorldSpawnUtil.attach_prop_sprite(rail_s, RAIL, 0.85)
+	while x < right - 4.0:
+		var spr := Sprite2D.new()
+		spr.name = "TrackSeg_%d" % i
+		spr.texture = tex
+		spr.centered = true
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		spr.position = Vector2(x + piece_w * 0.5, mid_y)
+		spr.scale = Vector2(scale_f, scale_f)
+		layer.add_child(spr)
 		x += step
 		i += 1
-	var mid := Vector2(
-		float(TRACK_TX0 + TRACK_TX1 + 1) * 0.5 * float(craft.tile),
-		mid_y
-	)
+	# Cap the east end so the last meters are covered even if step undershoots.
+	if x + 8.0 < right + piece_w:
+		var end := Sprite2D.new()
+		end.texture = tex
+		end.centered = true
+		end.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		end.position = Vector2(right - piece_w * 0.5, mid_y)
+		end.scale = Vector2(scale_f, scale_f)
+		layer.add_child(end)
+	# Dense sleeper accents on top of the seamless band (optional polish).
+	if ResourceLoader.exists(SLEEPER):
+		var sx := left + 10.0
+		var si := 0
+		while sx < right - 10.0:
+			var sh := Sprite2D.new()
+			sh.texture = load(SLEEPER) as Texture2D
+			sh.centered = true
+			sh.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			sh.position = Vector2(sx, mid_y + 2.0)
+			sh.scale = Vector2(0.95, 0.95)
+			sh.z_index = 1
+			layer.add_child(sh)
+			sx += 22.0
+			si += 1
+	var mid := Vector2((left + right) * 0.5, mid_y)
 	var hs_band := craft.make_hotspot(
 		ysort,
 		"站台轨道",
-		"东西向轨道带：与石台平行，构成车站交通脊。",
+		"东西贯通轨道：道砟、枕木与双轨连续铺满站台脊，中间不断开。",
 		mid,
-		Vector2(160, 40)
+		Vector2(right - left, 48)
 	)
-	craft.attach_hotspot_prop(hs_band, RAIL, 0.9)
-	var sleeper_holder := Node2D.new()
-	sleeper_holder.name = "SleeperCue"
-	sleeper_holder.position = Vector2(0, 8)
-	hs_band.get_node("Visual").add_child(sleeper_holder)
-	WorldSpawnUtil.attach_prop_sprite(sleeper_holder, SLEEPER, 0.75)
+	hs_band.z_index = 2
 
 
 func _spawn_station_building(ysort: Node2D) -> void:

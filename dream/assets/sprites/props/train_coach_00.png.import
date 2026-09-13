@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cqgro87f1uv52"
-path="res://.godot/imported/train_coach_00.png-0feb0166ad2590e3f36c5ce9bf1bd691.ctex"
+uid="uid://r0fa069973a8e4"
+path="res://.godot/imported/train_coach_00.png-92ff2fee9584d74a2d7d2327c5c67f1d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/props/train_coach_00.png"
-dest_files=["res://.godot/imported/train_coach_00.png-0feb0166ad2590e3f36c5ce9bf1bd691.ctex"]
+dest_files=["res://.godot/imported/train_coach_00.png-92ff2fee9584d74a2d7d2327c5c67f1d.ctex"]
 
 [params]
 

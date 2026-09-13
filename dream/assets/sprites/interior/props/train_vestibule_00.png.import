@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://r252fd228d7e14"
-path="res://.godot/imported/train_seat_row_00.png-97d5d3d1e0411ac1ae0615cf522d6609.ctex"
+uid="uid://r513d9b0efb054"
+path="res://.godot/imported/train_vestibule_00.png-9667f81b54fa194308d392b0fda513a5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/interior/props/train_seat_row_00.png"
-dest_files=["res://.godot/imported/train_seat_row_00.png-97d5d3d1e0411ac1ae0615cf522d6609.ctex"]
+source_file="res://assets/sprites/interior/props/train_vestibule_00.png"
+dest_files=["res://.godot/imported/train_vestibule_00.png-9667f81b54fa194308d392b0fda513a5.ctex"]
 
 [params]
 

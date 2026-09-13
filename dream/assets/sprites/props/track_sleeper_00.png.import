@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6ba0ns8ew1q1"
-path="res://.godot/imported/track_sleeper_00.png-5134eeb2b0f6b68c8a633aece11e8ddb.ctex"
+uid="uid://r594a41fde8014"
+path="res://.godot/imported/track_sleeper_00.png-7cf73090d2f01e977d56855cac40833f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/props/track_sleeper_00.png"
-dest_files=["res://.godot/imported/track_sleeper_00.png-5134eeb2b0f6b68c8a633aece11e8ddb.ctex"]
+dest_files=["res://.godot/imported/track_sleeper_00.png-7cf73090d2f01e977d56855cac40833f.ctex"]
 
 [params]
 

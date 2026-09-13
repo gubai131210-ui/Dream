@@ -23,8 +23,9 @@ Make the station **feel like a real railway**: steam train arrives/departs, tick
 | Autoload | `scripts/world/train_service.gd` |
 | Outdoor runtime | `scripts/areas/station_train_runtime.gd` |
 | Window ride | `scripts/interiors/train_car_window_ride.gd` |
-| Assets | `assets/sprites/props/train_loco_00.png`, `train_coach_00.png`, … |
-| Import tool | `tools/import_train_assets.py` |
+| Assets | `train_consist_00`（A11 侧影优先）、`track_band_seamless_00`（贯通轨道）、C36 客车内装 props |
+| Outdoor track | `station_assembler._spawn_track_proxy` — 无缝带重叠铺满，中间不断开 |
+| Import tool | `tools/import_train_a11_v2.py` / `tools/import_train_assets.py` |
 | QA | `tools/qa_train_service.py` |
 
 ## Services
@@ -42,15 +43,17 @@ Make the station **feel like a real railway**: steam train arrives/departs, tick
 3. 禁止无窗外景色就跳场景  
 4. 禁止车次不受日夜/天气影响（湖岸晴开、夜行仅夜）  
 5. 禁止汽车/巴士素材冒充蒸汽火车  
-6. 禁止堵死站台轨道既有 sleeper/rail  
+6. 禁止堵死站台轨道既有 sleeper/rail；禁止轨道只铺一半/中间断开  
 7. 禁止未写研究笔记就拍脑袋发车规则  
 8. 禁止声称用户已测过（中文路径下请用户本地 Godot 测）  
+9. 禁止无视 A11 参考：黑锅炉+红轮+暖窗客车；禁止 C36 用普通室内家具冒充车厢  
 
 ## Acceptance checklist
 
-- [x] Loco + coach sprites imported  
+- [x] A11-style consist + continuous seamless track band  
+- [x] C36 coach props（窗墙/双人座/行李架/过道毯/贯通道）  
 - [x] TrainService autoload with dwell/depart/en-route  
 - [x] Outdoor approach/dock/depart animation + post-leave steam  
 - [x] Ticket scarcity + board gate  
 - [x] C36 window scroll + destination hop  
-- [ ] User Godot: 车站等车 → 买票 → 上车 → 窗外 → 新地图  
+- [ ] User Godot: 车站看贯通轨道与新火车 → 买票 → 上车看车厢内装 → 窗外 → 新地图  

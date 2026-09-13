@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qdwj74dyxyc2"
-path="res://.godot/imported/train_loco_00.png-69b14abae6156c0b11c191bf110569f3.ctex"
+uid="uid://r2f47eca41fe14"
+path="res://.godot/imported/train_loco_00.png-63469040b4c3330242d356963d0c2e83.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/props/train_loco_00.png"
-dest_files=["res://.godot/imported/train_loco_00.png-69b14abae6156c0b11c191bf110569f3.ctex"]
+dest_files=["res://.godot/imported/train_loco_00.png-63469040b4c3330242d356963d0c2e83.ctex"]
 
 [params]
 

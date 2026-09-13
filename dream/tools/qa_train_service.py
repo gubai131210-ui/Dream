@@ -29,10 +29,20 @@ def main() -> int:
 	assets = [
 		"assets/sprites/props/train_loco_00.png",
 		"assets/sprites/props/train_coach_00.png",
+		"assets/sprites/props/train_consist_00.png",
+		"assets/sprites/props/track_band_seamless_00.png",
 		"assets/sprites/fx/train_steam_00.png",
 		"assets/sprites/fx/train_window_scenery_00.png",
 		"assets/sprites/props/train_ticket_00.png",
+		"assets/sprites/interior/props/train_window_wall_00.png",
+		"assets/sprites/interior/props/train_seat_row_00.png",
 	]
+	asm = (ROOT / "scripts/areas/station_assembler.gd").read_text(encoding="utf-8")
+	if "track_band_seamless_00" not in asm or "TrackBandContinuous" not in asm:
+		raise AssertionError("station assembler missing continuous seamless track band")
+	prof = (ROOT / "scripts/interiors/interior_profiles.gd").read_text(encoding="utf-8")
+	if "P_TRAIN_WINDOW_WALL" not in prof or "train_window_wall_00" not in prof:
+		raise AssertionError("C36 profile missing train window wall")
 	for rel in assets:
 		if not (ROOT / rel).is_file():
 			raise AssertionError(f"missing asset {rel}")

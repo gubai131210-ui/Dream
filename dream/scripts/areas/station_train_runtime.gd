@@ -6,12 +6,14 @@ extends Node2D
 
 const LOCO := "res://assets/sprites/props/train_loco_00.png"
 const COACH := "res://assets/sprites/props/train_coach_00.png"
+const CONSIST := "res://assets/sprites/props/train_consist_00.png"
 const STEAM := "res://assets/sprites/fx/train_steam_00.png"
 const TOWER := "res://assets/sprites/props/train_water_tower_00.png"
 const BOARD := "res://assets/sprites/props/train_timetable_board_00.png"
 const BUFFER := "res://assets/sprites/props/train_buffer_00.png"
 
-const TRACK_Y := 432.0
+## Align with StationAssembler track band mid (TRACK_TY0..TY1, tile 32 → y=448).
+const TRACK_Y := 448.0
 const DOCK_X := 720.0
 const OFF_LEFT := -220.0
 const OFF_RIGHT := 1500.0
@@ -95,11 +97,17 @@ func _spawn_scenery(ysort: Node2D) -> void:
 func _spawn_consist(ysort: Node2D) -> void:
 	_consist = Node2D.new()
 	_consist.name = "TrainConsist"
-	_consist.z_index = 4
+	_consist.z_index = 5
 	ysort.add_child(_consist)
-	_loco = _mk_sprite(LOCO, Vector2(-70, 0), 1.0)
-	_coach = _mk_sprite(COACH, Vector2(70, 0), 1.0)
-	_steam = _mk_sprite(STEAM, Vector2(-95, -48), 0.9)
+	# Prefer full A11-matched loco+coach silhouette; fall back to split sprites.
+	if ResourceLoader.exists(CONSIST):
+		_loco = _mk_sprite(CONSIST, Vector2.ZERO, 1.15)
+		_coach = null
+		_steam = _mk_sprite(STEAM, Vector2(-100, -52), 0.95)
+	else:
+		_loco = _mk_sprite(LOCO, Vector2(-70, 0), 1.1)
+		_coach = _mk_sprite(COACH, Vector2(70, 0), 1.1)
+		_steam = _mk_sprite(STEAM, Vector2(-95, -48), 0.9)
 	if _steam:
 		_steam.modulate.a = 0.75
 		var tw := _steam.create_tween().set_loops()

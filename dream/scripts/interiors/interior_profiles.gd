@@ -110,6 +110,11 @@ const P_WRECK_HULL := DIR_INTERIOR_PROP + "/wreck_hull_00.png"
 const P_SEAWEED := DIR_INTERIOR_PROP + "/seaweed_00.png"
 const P_SUNKEN_WOOD := DIR_INTERIOR_PROP + "/sunken_wood_00.png"
 const P_TRAIN_SEAT_ROW := DIR_INTERIOR_PROP + "/train_seat_row_00.png"
+const P_TRAIN_WINDOW_WALL := DIR_INTERIOR_PROP + "/train_window_wall_00.png"
+const P_TRAIN_LUGGAGE := DIR_INTERIOR_PROP + "/train_luggage_rack_00.png"
+const P_TRAIN_AISLE := DIR_INTERIOR_PROP + "/train_aisle_runner_00.png"
+const P_TRAIN_VESTIBULE := DIR_INTERIOR_PROP + "/train_vestibule_00.png"
+const P_TRAIN_BRASS_LAMP := DIR_INTERIOR_PROP + "/train_brass_lamp_00.png"
 const P_ROCK0 := DIR_OUTDOOR_PROP + "/rock_00.png"
 const P_ROCK1 := DIR_OUTDOOR_PROP + "/rock_01.png"
 const P_ROCK2 := DIR_OUTDOOR_PROP + "/rock_02.png"
@@ -3051,48 +3056,58 @@ static func _all() -> Dictionary:
 		},
 		"c36_train_car": {
 			"title": "火车厢",
-			"hint": "火车厢 · 西座 / 东座 / 中廊",
+			"hint": "客车厢 · 窗墙 / 座席 / 中廊",
 			"return_path": STN,
-			"room_w": 26,
-			"room_h": 10,
-			"door_tx0": 11,
-			"door_tx1": 14,
+			"room_w": 28,
+			"room_h": 11,
+			"door_tx0": 12,
+			"door_tx1": 15,
 			"floor": "plank",
-			"modulate": Color(0.82, 0.78, 0.74, 1.0),
+			"modulate": Color(0.78, 0.72, 0.66, 1.0),
 			"rug": null,
 			"window": true,
-			# Dual seat-row benches + mid aisle (door 11–14); luggage satellites.
+			# Coach silhouette: north window wall + twin seat banks + mid aisle carpet + vestibule.
 			"clusters": [
-				_cluster("seats_w", 5, 4, [
-					_m(P_TRAIN_SEAT_ROW, 0, 0, "西排座", "西侧双人客座排（车厢剪影）。", 1.0),
-					_m(P_BASKET, 1, 2, "行李筐", "座前行李筐（南可站）。", 0.6),
-					_m(P_SACK0, -1, 1, "行囊", "座侧行囊。", 0.55),
-					_m(P_LAMP_INDOOR, 1, -2, "车厢灯", "西窗旁车厢顶灯。", PROP),
+				_cluster("window_n", 14, 2, [
+					_m(P_TRAIN_WINDOW_WALL, -6, 0, "车厢窗", "北壁连窗：暖光客车窗墙。", 1.05),
+					_m(P_TRAIN_WINDOW_WALL, 0, 0, "车厢窗", "北壁中段窗墙。", 1.05),
+					_m(P_TRAIN_WINDOW_WALL, 6, 0, "车厢窗", "北壁东段窗墙。", 1.05),
+					_m(P_TRAIN_LUGGAGE, -3, -1, "行李架", "窗上行李架。", 0.85),
+					_m(P_TRAIN_LUGGAGE, 3, -1, "行李架", "窗上行李架。", 0.85),
+					_m(P_TRAIN_BRASS_LAMP, 0, -2, "黄铜壁灯", "车厢壁灯。", 0.75),
 				]),
-				_cluster("seats_e", 19, 4, [
-					_m(P_TRAIN_SEAT_ROW, 0, 0, "东排座", "东侧双人客座排。", 1.0),
-					_m(P_CRATE0, 1, 2, "邮包箱", "座前邮包/货箱（南可站）。", 0.7),
-					_m(P_BASKET, -1, 1, "帽筐", "座侧帽筐。", 0.55),
-					_m(P_LAMP_INDOOR, 1, -2, "车厢灯", "东窗旁车厢顶灯。", PROP),
+				_cluster("seats_w", 6, 5, [
+					_m(P_TRAIN_SEAT_ROW, 0, 0, "西排客座", "靠窗双人客座（酒红软垫）。", 1.0),
+					_m(P_TRAIN_SEAT_ROW, 0, 3, "西排客座", "靠廊双人客座。", 1.0),
+					_m(P_BASKET, 2, 2, "行囊", "座侧行囊。", 0.55),
+					_m(P_TRAIN_BRASS_LAMP, 1, -2, "壁灯", "西座壁灯。", 0.7),
 				]),
-				_cluster("aisle_rack", 12, 2, [
-					_m(P_FERRY_SCHEDULE, 0, 0, "班次牌", "中廊北壁班次告示（不挡门轴；非 notice 代理）。", 0.65),
-					_m(P_CRATE1, 2, 0, "行包", "廊侧小行包。", 0.55),
+				_cluster("seats_e", 21, 5, [
+					_m(P_TRAIN_SEAT_ROW, 0, 0, "东排客座", "靠窗双人客座。", 1.0),
+					_m(P_TRAIN_SEAT_ROW, 0, 3, "东排客座", "靠廊双人客座。", 1.0),
+					_m(P_CRATE0, 2, 2, "邮包箱", "座前邮包。", 0.65),
+					_m(P_TRAIN_BRASS_LAMP, 1, -2, "壁灯", "东座壁灯。", 0.7),
+				]),
+				_cluster("aisle", 14, 5, [
+					_m(P_TRAIN_AISLE, 0, -1, "中廊地毯", "窄长客车过道毯。", 1.1),
+					_m(P_TRAIN_AISLE, 0, 2, "中廊地毯", "过道毯续段。", 1.1),
+					_m(P_FERRY_SCHEDULE, 0, -3, "班次牌", "廊北班次告示。", 0.6),
+					_m(P_TRAIN_VESTIBULE, 0, 4, "贯通道", "车厢端门贯通道（不堵南门）。", 0.85),
 				]),
 			],
 			"fx": [],
 			"ambient": [],
 			"lights": [
-				{"tx": 5, "ty": 3, "oy": -6, "color": Color(1.0, 0.92, 0.8), "energy": 0.8, "scale": 1.6},
-				{"tx": 12, "ty": 3, "oy": -6, "color": Color(1.0, 0.94, 0.82), "energy": 0.7, "scale": 1.5},
-				{"tx": 19, "ty": 3, "oy": -6, "color": Color(1.0, 0.92, 0.8), "energy": 0.8, "scale": 1.6},
+				{"tx": 6, "ty": 3, "oy": -8, "color": Color(1.0, 0.88, 0.7), "energy": 0.95, "scale": 1.7},
+				{"tx": 14, "ty": 2, "oy": -6, "color": Color(1.0, 0.9, 0.72), "energy": 1.05, "scale": 2.0},
+				{"tx": 21, "ty": 3, "oy": -8, "color": Color(1.0, 0.88, 0.7), "energy": 0.95, "scale": 1.7},
 			],
 			"actor": {
 				"id": "merchant",
 				"title": "乘务",
 				"desc": "在西座、中廊与东座之间检票巡视。",
-				"via_clusters": ["seats_w", "aisle_rack", "seats_e"],
-				"via_stands": {"seats_w": [1, 2], "aisle_rack": [0, 2], "seats_e": [-1, 2]},
+				"via_clusters": ["seats_w", "aisle", "seats_e"],
+				"via_stands": {"seats_w": [1, 2], "aisle": [0, 2], "seats_e": [-1, 2]},
 			},
 		},
 		"c23_underwater": {
