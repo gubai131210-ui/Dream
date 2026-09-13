@@ -28,6 +28,7 @@ G8_C58_FX: PASS
   - `docs/evidence/g8_c58_leaf_fall_live.png`
   - `docs/evidence/g8_c58_bird_peck_live.png` (held frame=3 · scale=1.75)
   - `docs/evidence/g8_c58_board_rustle_live.png` — notice/sign paper flap
-  - bench / notice / sign also wired via `mcp_spawn_c58_fx` (`bench_dust` / `board_rustle`)
+  - `docs/evidence/g8_c58_lamp_spark_held.png` — lamp_toggle spark oneshot (held frame)
+  - bench / notice / sign / lamp also wired via `mcp_spawn_c58_fx` (`bench_dust` / `board_rustle` / `lamp_spark`)
 
 User Godot QA still required for visual fidelity.

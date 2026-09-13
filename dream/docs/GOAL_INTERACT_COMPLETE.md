@@ -201,7 +201,8 @@
 - [`GOAL_G8_C59_C61_FX_EVIDENCE.md`](GOAL_G8_C59_C61_FX_EVIDENCE.md) — C59 清除碎屑 FX + C61 `mcp_open` 箱盖  
 - [`GOAL_G8_C60_C61_FULL_EVIDENCE.md`](GOAL_G8_C60_C61_FULL_EVIDENCE.md) — C60 解锁 FX×3 + C61 五站点全开（截图+smoke）  
 - [`GOAL_G8_C05_STALL_FX_EVIDENCE.md`](GOAL_G8_C05_STALL_FX_EVIDENCE.md) — C05 摊位状态切换多帧 FX
-- [`GOAL_G8_C22_CAGE_SPLASH_EVIDENCE.md`](GOAL_G8_C22_CAGE_SPLASH_EVIDENCE.md) — C22 渔笼 place/collect 多帧 `fish_splash`  
+- [`GOAL_G8_C22_CAGE_SPLASH_EVIDENCE.md`](GOAL_G8_C22_CAGE_SPLASH_EVIDENCE.md) — C22 渔笼 place/collect 多帧 `fish_splash`
+- [`GOAL_G8_C58_LAMP_SPARK_EVIDENCE.md`](GOAL_G8_C58_LAMP_SPARK_EVIDENCE.md) — C58 路灯开关多帧 `lamp_spark`（District 灯同 sheet）  
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 17 groups GREEN  
@@ -260,7 +261,7 @@
 
 | # | 要求 | 证据 | 状态 |
 | --- | --- | --- | --- |
-| 1 | 已列交互正式像素 + 反馈 + 多帧 | C58×8 + bench/board；DIK；C05 stall；C22 fish_splash；C59/C60/C61；OpenFX；qa_interaction_frames 20 groups GREEN | **PROVEN（代码+MCP）**；§7 手感确认仍待 |
+| 1 | 已列交互正式像素 + 反馈 + 多帧 | C58×8 含 lamp_spark；DIK；C05；C22 splash；C59/C60/C61；OpenFX；qa_interaction_frames 21 groups GREEN | **PROVEN（代码+MCP）**；§7 手感确认仍待 |
 | 2 | 全户外+室内门面/道具/可进出 | load smoke 72/72；portal cue 12；MCP 进门+多室内 idle；C62 全链 | **PROVEN（加载+MCP 进门）**；§7 全表进出仍待 |
 | 3 | 统称权威 | 本文件 + `ASSET_TAXONOMY` 回链 | **PROVEN** |
 | 4 | 多团队流水线门禁 | §2 角色表；[`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md)；Style/Anim/Cohere + Genre/Canon；qa_* 全套 GREEN（2026-09-13 再跑） | **PROVEN（本轮批次）** |

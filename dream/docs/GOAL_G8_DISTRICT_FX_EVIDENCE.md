@@ -8,7 +8,8 @@
 | Keyword | FX |
 | --- | --- |
 | bench | `bench_dust` |
-| sign / lamp | `board_rustle` |
+| sign | `board_rustle` |
+| lamp | `lamp_spark` |
 | crate / handcart / barrel | `crate_lid` |
 | trough | `well_rope` |
 | hay / wood / sack / rock | `leaf_fall` |

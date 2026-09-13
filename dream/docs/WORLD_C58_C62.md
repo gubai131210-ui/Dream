@@ -26,7 +26,7 @@
 | shake_tree | 摇树 | Info + `leaf_fall`×4 | `trees/grounded/tree_00` |
 | notice_board | 公告栏 | Info + pulse + `board_rustle`×4 | `B11-06_mailbox_board_02` |
 | crate_search | 木箱 | Info + pulse + `crate_lid`×4 | `crate_1.png` |
-| lamp_toggle | 路灯 | Toggle light + modulate | `lamp_0.png` + PointLight2D |
+| lamp_toggle | 路灯 | Toggle light + modulate + `lamp_spark`×4 | `lamp_0.png` + PointLight2D |
 | feed_critter | 喂鸟 | Info + `bird_peck`×4 | `sack_0.png` |
 | read_sign | 路牌 | Info + pulse + `board_rustle`×4 | `B11-06_mailbox_board_00` |
 

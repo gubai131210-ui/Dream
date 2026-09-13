@@ -344,7 +344,7 @@ func _fx_spec_for_id(interact_id: String) -> Dictionary:
 	if id.contains("hay") or id.contains("wood") or id.contains("sack") or id.contains("rock"):
 		return {"dir": "res://assets/sprites/fx", "prefix": "leaf_fall", "pos": Vector2(0, -12), "fps": 12.0}
 	if id.contains("lamp"):
-		return {"dir": "res://assets/sprites/fx", "prefix": "board_rustle", "pos": Vector2(0, -22), "fps": 10.0}
+		return {"dir": "res://assets/sprites/fx", "prefix": "lamp_spark", "pos": Vector2(0, -28), "fps": 10.0}
 	return {"dir": "res://assets/sprites/fx", "prefix": "bench_dust", "pos": Vector2(0, 4), "fps": 10.0}
 
 

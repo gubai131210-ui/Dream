@@ -204,6 +204,8 @@ func _handle_interact(interact_id: String, title: String, desc: String) -> void:
 				_lamp_light.energy = 0.85 if _lamp_on else 0.0
 			if _lamp_sprite:
 				_lamp_sprite.modulate = Color(1.15, 1.05, 0.8) if _lamp_on else Color(0.55, 0.55, 0.65)
+			_pulse_visual(hs)
+			_play_fx_clip(hs, "res://assets/sprites/fx", "lamp_spark", 4, Vector2(0, -30), 10.0)
 		"shake_tree":
 			body = "树叶沙沙作响，一片叶子飘落。"
 			_pulse_visual(hs)
@@ -255,6 +257,8 @@ func mcp_spawn_c58_fx(interact_id: String) -> Dictionary:
 			_play_fx_clip(hs, "res://assets/sprites/fx", "bench_dust", 4, Vector2(0, 6), 10.0)
 		"notice_board", "read_sign":
 			_play_fx_clip(hs, "res://assets/sprites/fx", "board_rustle", 4, Vector2(0, -20), 10.0)
+		"lamp_toggle":
+			_play_fx_clip(hs, "res://assets/sprites/fx", "lamp_spark", 4, Vector2(0, -30), 10.0)
 		_:
 			return {"ok": false, "reason": "unsupported_id", "id": interact_id}
 	var visual := hs.get_node_or_null("Visual") as Node
@@ -274,6 +278,8 @@ func mcp_spawn_c58_fx(interact_id: String) -> Dictionary:
 			fx_name = "FX_bench_dust"
 		"notice_board", "read_sign":
 			fx_name = "FX_board_rustle"
+		"lamp_toggle":
+			fx_name = "FX_lamp_spark"
 	var fx := visual.get_node_or_null(fx_name) as AnimatedSprite2D
 	if fx == null:
 		return {"ok": false, "reason": "fx_not_spawned", "id": interact_id, "visual_children": visual.get_child_count()}

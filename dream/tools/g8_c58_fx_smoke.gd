@@ -1,6 +1,6 @@
 extends SceneTree
 
-## C58 multi-frame FX: well/crate/tree/bird + bench_dust + board_rustle.
+## C58 multi-frame FX: well/crate/tree/bird + bench_dust + board_rustle + lamp_spark.
 ## Asserts oneshot starts playing, then pauses on last frame (MCP parity).
 ## godot --path dream --headless -s res://tools/g8_c58_fx_smoke.gd
 
@@ -43,6 +43,7 @@ func _probe_play() -> void:
 		{"id": "sit_bench", "fx": "FX_bench_dust", "hs": "WorldHS_长椅"},
 		{"id": "notice_board", "fx": "FX_board_rustle", "hs": "WorldHS_公告栏"},
 		{"id": "read_sign", "fx": "FX_board_rustle", "hs": "WorldHS_路牌"},
+		{"id": "lamp_toggle", "fx": "FX_lamp_spark", "hs": "WorldHS_路灯"},
 	]
 	for c in _cases:
 		kit.call("_handle_interact", str(c["id"]), "t", "d")

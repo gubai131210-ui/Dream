@@ -161,9 +161,35 @@ def fish_splash() -> None:
 		save(im, FX / f"fish_splash_{i:02d}.png")
 
 
+def lamp_spark() -> None:
+	# 24x32 — lamp flame/spark pop at top; foot of spark near y=28 (post attach).
+	core = (255, 230, 140, 255)
+	glow = (255, 180, 70, 220)
+	ember = (220, 90, 40, 200)
+	for i in range(4):
+		im = blank(24, 32)
+		d = ImageDraw.Draw(im)
+		# post tip hint (static anchor, not moving)
+		d.rectangle([11, 26, 13, 30], fill=(90, 75, 55, 255))
+		h = 6 + i * 2
+		cx, cy = 12, 24 - h
+		d.ellipse([cx - 2 - i // 2, cy, cx + 2 + i // 2, cy + 5 + i // 2], fill=glow)
+		d.ellipse([cx - 1, cy + 1, cx + 1, cy + 4], fill=core)
+		if i >= 1:
+			d.point((cx - 3 - i, cy + 1), fill=ember)
+			d.point((cx + 3 + i, cy + 2), fill=ember)
+		if i >= 2:
+			d.point((cx, cy - 1), fill=core)
+		if i == 3:
+			# fade sparks outward
+			d.point((cx - 5, cy + 3), fill=(255, 200, 100, 120))
+			d.point((cx + 5, cy + 3), fill=(255, 200, 100, 120))
+		save(im, FX / f"lamp_spark_{i:02d}.png")
+
+
 def main() -> None:
 	# Append-only helpers: do not rewrite shipped leaf/well/crate/bird by default.
-	fish_splash()
+	lamp_spark()
 
 
 if __name__ == "__main__":
