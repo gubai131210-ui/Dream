@@ -110,17 +110,7 @@ func _add_water_ring(visual: Node2D) -> void:
 		spr.z_index = 0
 		visual.add_child(spr)
 		return
-	var ring := Polygon2D.new()
-	ring.name = "WaterRing"
-	ring.color = Color(0.4, 0.65, 0.8, 0.3)
-	ring.position = Vector2(0, 10)
-	var pts: PackedVector2Array = []
-	for i in range(10):
-		var a := TAU * float(i) / 10.0
-		pts.append(Vector2(cos(a) * 16.0, sin(a) * 16.0 * 0.35))
-	ring.polygon = pts
-	ring.z_index = 0
-	visual.add_child(ring)
+	push_error("FishCage: missing fish_ring_00.png (Polygon2D ring forbidden)")
 
 
 func _refresh() -> void:

@@ -131,17 +131,17 @@
 | ~~ColorRect 轨枕/铁轨~~ | `station_assembler.gd` | **DONE** → `track_sleeper/rail` |
 | ~~ColorRect 栅栏柱~~ | farmland / farm_residential | **DONE** → `fence_post_00` |
 | ~~bridge label_proxy~~ | village_square | **DONE** → `bridge_plank_00` |
-| ~~程序门阶多边形~~ | area_craft / WorldSpawnUtil / interior | **DONE** → `doorstep_mat` + `door_arch_cue` |
-| ~~作物床 ColorRect 垄线~~ | area_craft crop beds | **DONE** → `furrow_line_00` |
+| ~~程序门阶多边形~~ | area_craft / WorldSpawnUtil / interior | **DONE** → `doorstep_mat` + `door_arch_cue`；Polygon 回退已删 |
+| ~~作物床 ColorRect 垄线~~ | area_craft crop beds | **DONE** → `furrow_line_00`；ColorRect 回退已删 |
 | ~~摇树 Polygon 占位~~ | WorldInteractKit | **DONE** → `tree_00` PropSprite；多边形回退已删除 + inventory 硬门 |
 | ~~孤岛传送无门脸~~ | museum/bath 等 portal | **DONE** → `door_facade_00` on all portals |
 | ~~完整独立建筑 façade sheet~~ | 博物馆/浴场 | **DONE** → `facade_museum_00` / `facade_bath_00` |
 | ~~drawer_open PIL~~ | interior dresser | **DONE** → StyleQA 48×40 开合帧 |
 | ~~NPC 职业姿态 sheet~~ | C53 work rings | **DONE (minimal)** → `npc/work_poses/{sow,smith,stall,cook}` |
 | ~~C59 木桩/杂草错用桶袋~~ | BreakablesKit | **DONE** → `breakable_stake/weed` |
-| ~~C05 摊位 ColorRect 棚~~ | MarketStall | **DONE** → 默认 `stall_open_wood_00`（ColorRect 仅 fallback） |
-| ~~C05 摊位 ColorRect 立柱~~ | MarketStall `_add_poles` | **DONE** → `stall_pole_00`（ColorRect 仅 fallback） |
-| ~~钓鱼浮漂下 Polygon 水环~~ | `fishing_spot.gd` / `fish_cage.gd` | **DONE** → `fx/fish_ring_00.png`（Polygon 仅 fallback） |
+| ~~C05 摊位 ColorRect 棚~~ | MarketStall | **DONE** → 默认 `stall_open_wood_00`；ColorRect 回退已删 |
+| ~~C05 摊位 ColorRect 立柱~~ | MarketStall `_add_poles` | **DONE** → `stall_pole_00`；ColorRect 回退已删 |
+| ~~钓鱼浮漂下 Polygon 水环~~ | `fishing_spot.gd` / `fish_cage.gd` | **DONE** → `fish_ring_00`；Polygon/ColorRect 回退已删 |
 | ~~室内窗光 Polygon 光柱~~ | `interior_craft.gd` | **DONE** → `fx/window_light_shaft_00.png`（Polygon 仅 fallback） |
 | ~~hover 仅 draw_line 角标~~ | `interactable_hotspot.gd` | **DONE** → `fx/focus_corners_00.png` + 修复 enter 时 `queue_redraw` |
 | ~~农夫 walk 不透明白底盘~~ | `assets/sprites/npc/farmer` | **DONE** → 提升 `farmer_v2` 后经 `farmer_v5` 8 帧；`qa_npc_white_plates` GREEN |
@@ -217,7 +217,8 @@
 - [`GOAL_G8_LAMP_STICKY_NIGHT_EVIDENCE.md`](GOAL_G8_LAMP_STICKY_NIGHT_EVIDENCE.md) — 点灯切粘性夜间观灯（无竞态 Timer）  
 - [`GOAL_G8_LIFE_POSE_HOLD_EVIDENCE.md`](GOAL_G8_LIFE_POSE_HOLD_EVIDENCE.md) — `mcp_force_life_pose` 持握睡眠枕头近景  
 - [`GOAL_G8_USER_QA_BRIEF_EVIDENCE.md`](GOAL_G8_USER_QA_BRIEF_EVIDENCE.md) — §7 跳转场景内手测要点浮层
-- [`GOAL_G8_TREE_HARD_GATE_EVIDENCE.md`](GOAL_G8_TREE_HARD_GATE_EVIDENCE.md) — 摇树禁多边形回退 + inventory 硬门 + MCP PropSprite  
+- [`GOAL_G8_TREE_HARD_GATE_EVIDENCE.md`](GOAL_G8_TREE_HARD_GATE_EVIDENCE.md) — 摇树禁多边形回退 + inventory 硬门 + MCP PropSprite
+- [`GOAL_G8_SPRITE_ONLY_FALLBACK_EVIDENCE.md`](GOAL_G8_SPRITE_ONLY_FALLBACK_EVIDENCE.md) — 摊位/钓鱼/门阶/垄线禁 ColorRect·Polygon 回退
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — **26 groups** GREEN  

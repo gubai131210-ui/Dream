@@ -193,32 +193,31 @@ func apply_state(next: State) -> void:
 	match state:
 		State.EMPTY:
 			if not _add_sprite(EMPTY_MARK, Vector2(0, 4), 1.2, Color(1, 1, 1, 0.7)):
-				_add_bay_mark()
+				push_error("MarketStall: missing stall_empty_bay_00 (ColorRect bay forbidden)")
 		State.LOCKED:
 			if not _add_sprite(LOCKED_BOARD, Vector2(0, -10), 0.55):
-				_add_poles()
-				_add_board()
+				push_error("MarketStall: missing stall_locked_board_00 (ColorRect board forbidden)")
 		State.SETUP:
 			if not _try_body_sprite(0.48, false, Color(1, 1, 1, 0.75)):
-				_add_poles()
-				_add_awning(0.55, 4)
+				if not (_add_poles() and _add_awning(0.55)):
+					push_error("MarketStall: SETUP missing body/awning/pole sprites")
 			_add_goods(true, false)
 		State.OPEN:
 			# Body PNG preferred — goods always beside (MARKET_POLISH ≤0.5).
 			if not _try_body_sprite(0.55):
-				_add_poles()
-				_add_awning(1.0, 6)
+				if not (_add_poles() and _add_awning(1.0)):
+					push_error("MarketStall: OPEN missing body/awning/pole sprites")
 			_add_goods(true, true)
 		State.SOLD_OUT:
 			if not _try_body_sprite(0.45, false, Color(0.78, 0.78, 0.82, 1.0)):
-				_add_poles()
-				_add_awning(0.75, 6, true)
+				if not (_add_poles() and _add_awning(0.75, true)):
+					push_error("MarketStall: SOLD_OUT missing body/awning/pole sprites")
 			_add_goods(true, false)
 			_add_chip("售罄", Color(0.92, 0.35, 0.28, 0.95))
 		State.CLOSED:
 			if not _try_body_sprite(0.4, true):
-				_add_poles()
-				_add_collapsed_awning()
+				if not (_add_poles() and _add_collapsed_awning()):
+					push_error("MarketStall: CLOSED missing body/awning/pole sprites")
 	title = "%s · %s" % [base_title, STATE_LABEL.get(state, "?")]
 	description = "%s\n状态：%s（再点切换）" % [base_desc, STATE_LABEL.get(state, "?")]
 	set_meta("stall_state", state_name())
@@ -296,58 +295,27 @@ func _ensure_layer() -> void:
 		visual.add_child(_layer)
 
 
-func _rect(parent: Node2D, size: Vector2, pos: Vector2, color: Color, z: int = 0) -> ColorRect:
-	var r := ColorRect.new()
-	r.size = size
-	r.position = pos
-	r.color = color
-	r.z_index = z
-	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	parent.add_child(r)
-	return r
+func _add_poles() -> bool:
+	var ok_l := _add_sprite(POLE_TEX, Vector2(-32, -14), 1.0)
+	var ok_r := _add_sprite(POLE_TEX, Vector2(32, -14), 1.0)
+	if ok_l and ok_r:
+		return true
+	push_error("MarketStall: missing stall_pole_00 (ColorRect poles forbidden)")
+	return false
 
 
-func _add_bay_mark() -> void:
-	_rect(_layer, Vector2(70, 8), Vector2(-35, 6), Color(0.45, 0.38, 0.28, 0.35), 0)
-
-
-func _add_poles() -> void:
-	if _add_sprite(POLE_TEX, Vector2(-32, -14), 1.0) and _add_sprite(POLE_TEX, Vector2(32, -14), 1.0):
-		return
-	_rect(_layer, Vector2(3, 30), Vector2(-34, -28), Color(0.35, 0.22, 0.12, 0.92), 1)
-	_rect(_layer, Vector2(3, 30), Vector2(31, -28), Color(0.35, 0.22, 0.12, 0.92), 1)
-
-
-func _add_awning(alpha_mul: float, stripes: int, dull: bool = false) -> void:
+func _add_awning(alpha_mul: float, dull: bool = false) -> bool:
 	if _add_sprite(AWNING_TEX, Vector2(0, -24), 0.9, Color(1, 1, 1, alpha_mul * (0.75 if dull else 1.0))):
-		return
-	# Last-resort procedural stripes only if awning PNG missing.
-	var awning := Node2D.new()
-	awning.name = "Awning"
-	awning.position = Vector2(-36, -34)
-	_layer.add_child(awning)
-	var stripe_w := 12.0
-	var h := 20.0
-	var a := stripe_a
-	var b := stripe_b
-	if dull:
-		a = a.darkened(0.25)
-		b = b.darkened(0.15)
-	a.a *= alpha_mul
-	b.a *= alpha_mul
-	for i in range(stripes):
-		_rect(awning, Vector2(stripe_w, h), Vector2(float(i) * stripe_w, 0), a if i % 2 == 0 else b, 2)
+		return true
+	push_error("MarketStall: missing stall_awning_00 (ColorRect stripes forbidden)")
+	return false
 
 
-func _add_collapsed_awning() -> void:
+func _add_collapsed_awning() -> bool:
 	if _add_sprite(AWNING_TEX, Vector2(0, -4), 0.85, Color(0.75, 0.75, 0.8, 0.85)):
-		return
-	_rect(_layer, Vector2(68, 8), Vector2(-34, -6), stripe_a.darkened(0.2), 2)
-
-
-func _add_board() -> void:
-	_rect(_layer, Vector2(56, 36), Vector2(-28, -24), Color(0.42, 0.28, 0.16, 0.95), 2)
-	_rect(_layer, Vector2(10, 12), Vector2(-5, -12), Color(0.75, 0.65, 0.25, 0.95), 3)
+		return true
+	push_error("MarketStall: missing stall_awning_00 for collapsed state")
+	return false
 
 
 func _add_chip(text: String, color: Color) -> void:

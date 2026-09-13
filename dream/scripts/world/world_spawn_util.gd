@@ -168,17 +168,8 @@ static func attach_portal_cues(area: Area2D, size: Vector2, facade_path: String 
 		area.add_child(spr)
 		cue = spr
 	else:
-		var poly := Polygon2D.new()
-		poly.name = "DoorstepCue"
-		poly.color = Color(0.95, 0.82, 0.4, 0.42)
-		var hw := size.x * 0.22
-		poly.polygon = PackedVector2Array([
-			Vector2(-hw, 4), Vector2(hw, 4), Vector2(hw * 0.7, 14), Vector2(-hw * 0.7, 14),
-		])
-		poly.position = Vector2(0, size.y * 0.12)
-		poly.z_index = -1
-		area.add_child(poly)
-		cue = poly
+		push_error("WorldSpawnUtil: missing doorstep_mat (Polygon2D doorstep forbidden)")
+		cue = null
 	var arch: CanvasItem
 	if arch_tex != null:
 		var spr_a := Sprite2D.new()
@@ -194,15 +185,8 @@ static func attach_portal_cues(area: Area2D, size: Vector2, facade_path: String 
 		area.add_child(spr_a)
 		arch = spr_a
 	else:
-		var poly_a := Polygon2D.new()
-		poly_a.name = "DoorArchCue"
-		poly_a.color = Color(0.98, 0.9, 0.55, 0.35)
-		poly_a.polygon = PackedVector2Array([
-			Vector2(-10, 2), Vector2(10, 2), Vector2(8, -16), Vector2(0, -22), Vector2(-8, -16),
-		])
-		poly_a.position = Vector2(0, -size.y * 0.18)
-		area.add_child(poly_a)
-		arch = poly_a
+		push_error("WorldSpawnUtil: missing door_arch_cue (Polygon2D arch forbidden)")
+		arch = null
 	out["cue"] = cue
 	out["arch"] = arch
 	return out

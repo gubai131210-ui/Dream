@@ -77,15 +77,34 @@ def main() -> None:
     require(hotspot, "queue_redraw()", "hover redraw for focus frame")
     require(hotspot, "_ensure_focus_corners", "pixel focus corner helper")
 
+    stall = read("scripts/market/market_stall.gd")
+    require(stall, "stall_open_wood_00.png", "C05 default stall body PNG")
+    require(stall, "DEFAULT_BODY", "C05 body default constant")
+    require(stall, "stall_awning_00.png", "C05 awning PNG preferred over ColorRect")
+    require(stall, "stall_pole_00.png", "C05 stall pole PNG preferred over ColorRect")
+    require(stall, "POLE_TEX", "C05 pole constant")
+    if "ColorRect.new()" in stall:
+        raise AssertionError("C05 market_stall still has ColorRect production fallback")
+    if "_add_board" in stall or "_add_bay_mark" in stall:
+        raise AssertionError("C05 market_stall still has ColorRect board/bay helpers")
+    if not (ROOT / "assets/sprites/market/stall_pole_00.png").is_file():
+        raise AssertionError("C05 stall pole asset missing")
+
     fishing = read("scripts/fishing/fishing_spot.gd")
     require(fishing, "fish_bubble_00.png", "fishing bubble sprite")
     require(fishing, "fish_splash_00.png", "fishing splash sprite")
     require(fishing, "fish_ring_00.png", "fishing water ring sprite")
     require(fishing, "_add_water_ring", "fishing ring helper prefers sprite")
+    if "ColorRect.new()" in fishing:
+        raise AssertionError("fishing_spot still has ColorRect production FX/buoy")
+    if "Polygon2D.new()" in fishing:
+        raise AssertionError("fishing_spot still has Polygon2D water ring fallback")
 
     cage = read("scripts/fishing/fish_cage.gd")
     require(cage, "fish_ring_00.png", "C22 cage water ring sprite")
     require(cage, "_add_water_ring", "C22 cage ring helper")
+    if "Polygon2D.new()" in cage:
+        raise AssertionError("fish_cage still has Polygon2D water ring fallback")
 
     gates = read("scripts/world/progress_gates.gd")
     require(gates, "gate_log_00.png", "C60 fallen log sprite")
@@ -99,14 +118,17 @@ def main() -> None:
     require(breakables, "breakable_stake_00.png", "C59 stake sprite")
     require(breakables, "breakable_weed_00.png", "C59 weed sprite")
 
-    stall = read("scripts/market/market_stall.gd")
-    require(stall, "stall_open_wood_00.png", "C05 default stall body PNG")
-    require(stall, "DEFAULT_BODY", "C05 body default constant")
-    require(stall, "stall_awning_00.png", "C05 awning PNG preferred over ColorRect")
-    require(stall, "stall_pole_00.png", "C05 stall pole PNG preferred over ColorRect")
-    require(stall, "POLE_TEX", "C05 pole constant")
-    if not (ROOT / "assets/sprites/market/stall_pole_00.png").is_file():
-        raise AssertionError("C05 stall pole asset missing")
+    spawn = read("scripts/world/world_spawn_util.gd")
+    if 'poly.name = "DoorstepCue"' in spawn or 'poly_a.name = "DoorArchCue"' in spawn:
+        raise AssertionError("portal doorstep/arch still has Polygon2D production fallback")
+    require(spawn, "doorstep_mat", "portal doorstep sprite path")
+
+    area_craft = read("scripts/areas/area_craft.gd")
+    if "ColorRect.new()" in area_craft and "furrow" in area_craft.lower():
+        # Furrow ColorRect path must be gone; other ColorRects (if any) checked loosely.
+        pass
+    if 'line := ColorRect.new()' in area_craft:
+        raise AssertionError("area_craft still has ColorRect furrow rows")
 
     dik = read("scripts/world/district_interact_kit.gd")
     for host in (

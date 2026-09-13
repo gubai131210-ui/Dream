@@ -137,15 +137,12 @@ func _build_marker_visual() -> void:
 		spr.z_index = 3
 		_bobber.add_child(spr)
 		return
-	# Fallback procedural buoy if sprite missing.
-	_add_rect(_bobber, Vector2(4, 22), Vector2(-2, -18), Color(0.42, 0.28, 0.14, 0.95), 1)
-	_add_rect(_bobber, Vector2(10, 10), Vector2(-5, -28), Color(0.92, 0.35, 0.28, 0.95), 2)
-	_add_rect(_bobber, Vector2(10, 4), Vector2(-5, -18), Color(0.95, 0.95, 0.9, 0.9), 2)
+	push_error("FishingSpot: missing bobber_00.png (procedural ColorRect buoy forbidden)")
 	_add_water_ring(_bobber, Vector2(0, 4))
 
 
 func _add_water_ring(parent: Node2D, pos: Vector2) -> void:
-	## Prefer pixel ring; Polygon2D only if FX sprite missing.
+	## Pixel ring required — no Polygon2D production path.
 	var ring_tex := WorldSpawnUtil.load_prop_texture("res://assets/sprites/fx/fish_ring_00.png")
 	if ring_tex != null:
 		var spr := Sprite2D.new()
@@ -157,27 +154,7 @@ func _add_water_ring(parent: Node2D, pos: Vector2) -> void:
 		spr.z_index = 0
 		parent.add_child(spr)
 		return
-	var ring := Polygon2D.new()
-	ring.name = "WaterRing"
-	ring.color = Color(0.45, 0.7, 0.85, 0.35)
-	ring.position = pos
-	var pts: PackedVector2Array = []
-	for i in range(12):
-		var a := TAU * float(i) / 12.0
-		pts.append(Vector2(cos(a) * 14.0, sin(a) * 14.0 * 0.35))
-	ring.polygon = pts
-	ring.z_index = 0
-	parent.add_child(ring)
-
-
-func _add_rect(parent: Node2D, size: Vector2, pos: Vector2, color: Color, z: int) -> void:
-	var r := ColorRect.new()
-	r.size = size
-	r.position = pos
-	r.color = color
-	r.z_index = z
-	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	parent.add_child(r)
+	push_error("FishingSpot: missing fish_ring_00.png (Polygon2D ring forbidden)")
 
 
 func _clear_fx_temp() -> void:
@@ -254,58 +231,39 @@ func mcp_cast_fx() -> Dictionary:
 
 func _pulse_ring(color: Color, duration: float) -> void:
 	var splash_tex := WorldSpawnUtil.load_prop_texture("res://assets/sprites/fx/fish_splash_00.png")
-	if splash_tex != null:
-		var spr := Sprite2D.new()
-		spr.texture = splash_tex
-		spr.centered = true
-		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		spr.modulate = color
-		spr.position = Vector2(0, 2)
-		spr.scale = Vector2(0.7, 0.55)
-		_fx_layer.add_child(spr)
-		var tw := create_tween()
-		tw.tween_property(spr, "scale", Vector2(1.35, 0.9), duration)
-		tw.parallel().tween_property(spr, "modulate:a", 0.0, duration)
-		tw.tween_callback(spr.queue_free)
+	if splash_tex == null:
+		push_error("FishingSpot: missing fish_splash_00 for pulse ring")
 		return
-	var ring := ColorRect.new()
-	ring.size = Vector2(12, 6)
-	ring.position = Vector2(-6, 0)
-	ring.color = color
-	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_fx_layer.add_child(ring)
-	var tw2 := create_tween()
-	tw2.tween_property(ring, "size", Vector2(40, 14), duration)
-	tw2.parallel().tween_property(ring, "position", Vector2(-20, -4), duration)
-	tw2.parallel().tween_property(ring, "modulate:a", 0.0, duration)
-	tw2.tween_callback(ring.queue_free)
+	var spr := Sprite2D.new()
+	spr.texture = splash_tex
+	spr.centered = true
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	spr.modulate = color
+	spr.position = Vector2(0, 2)
+	spr.scale = Vector2(0.7, 0.55)
+	_fx_layer.add_child(spr)
+	var tw := create_tween()
+	tw.tween_property(spr, "scale", Vector2(1.35, 0.9), duration)
+	tw.parallel().tween_property(spr, "modulate:a", 0.0, duration)
+	tw.tween_callback(spr.queue_free)
 
 
 func _spawn_bubble(offset: Vector2) -> void:
 	var bubble_tex := WorldSpawnUtil.load_prop_texture("res://assets/sprites/fx/fish_bubble_00.png")
-	if bubble_tex != null:
-		var spr := Sprite2D.new()
-		spr.texture = bubble_tex
-		spr.centered = true
-		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		spr.position = offset + Vector2(2, 2)
-		spr.scale = Vector2(0.7, 0.7)
-		_fx_layer.add_child(spr)
-		var tw := create_tween()
-		tw.tween_property(spr, "position", offset + Vector2(0, -18), 0.9)
-		tw.parallel().tween_property(spr, "modulate:a", 0.0, 0.9)
-		tw.tween_callback(spr.queue_free)
+	if bubble_tex == null:
+		push_error("FishingSpot: missing fish_bubble_00.png")
 		return
-	var b := ColorRect.new()
-	b.size = Vector2(5, 5)
-	b.position = offset
-	b.color = Color(0.75, 0.9, 1.0, 0.7)
-	b.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_fx_layer.add_child(b)
-	var tw2 := create_tween()
-	tw2.tween_property(b, "position", offset + Vector2(0, -18), 0.9)
-	tw2.parallel().tween_property(b, "modulate:a", 0.0, 0.9)
-	tw2.tween_callback(b.queue_free)
+	var spr := Sprite2D.new()
+	spr.texture = bubble_tex
+	spr.centered = true
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	spr.position = offset + Vector2(2, 2)
+	spr.scale = Vector2(0.7, 0.7)
+	_fx_layer.add_child(spr)
+	var tw := create_tween()
+	tw.tween_property(spr, "position", offset + Vector2(0, -18), 0.9)
+	tw.parallel().tween_property(spr, "modulate:a", 0.0, 0.9)
+	tw.tween_callback(spr.queue_free)
 
 
 func _spawn_splash() -> void:
@@ -360,17 +318,7 @@ func _spawn_splash() -> void:
 		tw.parallel().tween_property(spr, "modulate:a", 0.0, 0.35)
 		tw.tween_callback(spr.queue_free)
 		return
-	for i in 3:
-		var drop := ColorRect.new()
-		drop.size = Vector2(3, 6)
-		drop.position = Vector2(-4 + i * 5, -4)
-		drop.color = Color(0.85, 0.95, 1.0, 0.85)
-		drop.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_fx_layer.add_child(drop)
-		var tw2 := create_tween()
-		tw2.tween_property(drop, "position", drop.position + Vector2(randf_range(-8, 8), -16), 0.35)
-		tw2.parallel().tween_property(drop, "modulate:a", 0.0, 0.35)
-		tw2.tween_callback(drop.queue_free)
+	push_error("FishingSpot: missing fish_splash sheet (ColorRect drops forbidden)")
 
 
 func _try_water_frame() -> void:

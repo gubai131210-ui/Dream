@@ -371,12 +371,8 @@ func spawn_crop_rows(
 			spr.modulate = tint.darkened(0.04 * float(i % 2))
 			visual.add_child(spr)
 		else:
-			var line := ColorRect.new()
-			line.color = Color(0.42, 0.32, 0.18, 0.35).darkened(0.04 * float(i % 2))
-			line.size = Vector2(inner.size.x, 2.0)
-			line.position = pos - Vector2(inner.size.x * 0.5, 1.0)
-			line.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			visual.add_child(line)
+			push_error("AreaCraft: missing furrow_line_00.png (ColorRect crop rows forbidden)")
+			break
 
 
 func spawn_sprite(parent: Node2D, path: String, pos: Vector2, z: int = 0) -> Sprite2D:
