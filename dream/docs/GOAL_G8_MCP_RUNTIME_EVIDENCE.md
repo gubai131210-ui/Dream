@@ -76,6 +76,9 @@
 | C40 exhibit guide | `docs/evidence/g8_c40_exhibit_guide.png` | 展厅导览=`exhibit_guide_00` |
 | C43 bath rules | `docs/evidence/g8_c43_bath_rules.png` | 浴场须知=`bath_rules_00` |
 | C44 inn rate | `docs/evidence/g8_c44_inn_rate_board.png` | 房价牌=`inn_rate_board_00` |
+| C04 shop price | `docs/evidence/g8_c04_shop_price_board.png` | 告示板=`shop_price_board_00` |
+| C33 night market | `docs/evidence/g8_c33_night_market_board.png` | 夜市牌=`night_market_board_00` |
+| C36 train schedule | `docs/evidence/g8_c36_ferry_schedule.png` | 班次牌=`ferry_schedule_00` |
 
 ## Runtime queries
 
@@ -106,6 +109,7 @@
 - C28 `根桌`/`木钉梯`/`根须垛` = root_table / peg_ladder / root_mass
 - C10 `经文牌` texture=`scripture_plaque_00` (altar cluster forbids `notice_00`)
 - C08 `诊费告示`=`clinic_fee_board_00`; C40 `展厅导览`=`exhibit_guide_00`; C43 `浴场须知`=`bath_rules_00`; C44 `房价牌`=`inn_rate_board_00`
+- Interior markers: **0×`_m(P_NOTICE)`** (full notice taxonomy + QA hard ban)
 - Headless `g8_c58_fx_smoke` PASS (well_rope / crate_lid / leaf_fall ×4)
 
 ## Agent reviews this batch

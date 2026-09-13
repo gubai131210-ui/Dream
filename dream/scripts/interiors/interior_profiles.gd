@@ -39,6 +39,19 @@ const P_CLINIC_FEE_BOARD := DIR_INTERIOR_PROP + "/clinic_fee_board_00.png"
 const P_EXHIBIT_GUIDE := DIR_INTERIOR_PROP + "/exhibit_guide_00.png"
 const P_BATH_RULES := DIR_INTERIOR_PROP + "/bath_rules_00.png"
 const P_INN_RATE_BOARD := DIR_INTERIOR_PROP + "/inn_rate_board_00.png"
+const P_CARGO_MANIFEST := DIR_INTERIOR_PROP + "/cargo_manifest_00.png"
+const P_SHOP_PRICE_BOARD := DIR_INTERIOR_PROP + "/shop_price_board_00.png"
+const P_HOUSE_RULES := DIR_INTERIOR_PROP + "/house_rules_00.png"
+const P_MINE_SAFETY := DIR_INTERIOR_PROP + "/mine_safety_00.png"
+const P_CATALOG_CARD := DIR_INTERIOR_PROP + "/catalog_card_00.png"
+const P_TRAIL_MARKER := DIR_INTERIOR_PROP + "/trail_marker_00.png"
+const P_PIPE_SCHEMATIC := DIR_INTERIOR_PROP + "/pipe_schematic_00.png"
+const P_CIPHER_PLAQUE := DIR_INTERIOR_PROP + "/cipher_plaque_00.png"
+const P_SHIFT_BOARD := DIR_INTERIOR_PROP + "/shift_board_00.png"
+const P_NIGHT_MARKET_BOARD := DIR_INTERIOR_PROP + "/night_market_board_00.png"
+const P_CHARM_LIST := DIR_INTERIOR_PROP + "/charm_list_00.png"
+const P_DONATION_BOARD := DIR_INTERIOR_PROP + "/donation_board_00.png"
+const P_FERRY_SCHEDULE := DIR_INTERIOR_PROP + "/ferry_schedule_00.png"
 const P_RUIN_STELE := DIR_INTERIOR_PROP + "/ruin_stele_00.png"
 const P_BARK_GLYPH := DIR_INTERIOR_PROP + "/bark_glyph_00.png"
 const P_MUG_SHELF := DIR_INTERIOR_PROP + "/mug_shelf_00.png"
@@ -356,7 +369,7 @@ static func _all() -> Dictionary:
 					_m(P_LEDGER, 0, 0, "账桌", "北侧账簿桌。", 0.65),
 					_m(P_LAMP_INDOOR, 2, -1, "台灯", "账桌灯。", PROP),
 					_m(P_COIN, -2, 1, "钱箱", "账桌旁钱箱。", 0.55),
-					_m(P_NOTICE, -3, -1, "货单", "壁挂货单。", 0.5),
+					_m(P_CARGO_MANIFEST, -3, -1, "货单", "壁挂货单（非 notice 代理）。", 0.5),
 				]),
 				_cluster("cargo", 25, 7, [
 					_m(P_CRATE0, 0, -2, "货箱", "东墙货箱底垛。", PROP),
@@ -623,7 +636,7 @@ static func _all() -> Dictionary:
 					_m(P_BASKET, -3, 0, "菜筐", "柜西侧蔬果筐（不挡顾客中轴）。", 0.85),
 					_m(P_BASKET, 3, 0, "菜筐", "柜东侧根茎筐。", 0.85),
 					_m(P_BASKET, -2, -1, "果筐", "柜后店主侧果筐。", 0.8),
-					_m(P_NOTICE, 2, -1, "告示板", "柜上价目。", 0.85),
+					_m(P_SHOP_PRICE_BOARD, 2, -1, "告示板", "柜上价目（非 notice 代理）。", 0.85),
 					_m(P_LAMP_SHOP, 1, -2, "店灯", "柜台吊罩店灯（非家用台灯）。", PROP),
 				]),
 			],
@@ -719,7 +732,7 @@ static func _all() -> Dictionary:
 					_m(P_STOOL_TEA, 2, 1, "矮凳", "围桌配套凳（东站位，不堵通廊）。", 0.75),
 					_m(P_STOOL_TEA, 0, 2, "矮凳", "南侧围桌凳。", 0.75),
 					_m(P_LAMP_TAVERN, -2, -2, "座席烛灯", "雅座烛灯。", 0.75),
-					_m(P_NOTICE, -3, -2, "告示", "座席旁规矩牌。", 0.5),
+					_m(P_HOUSE_RULES, -3, -2, "告示", "座席旁规矩牌（非 notice 代理）。", 0.5),
 				]),
 				# East of corridor; satellites pulled tight (|d|≤2).
 				_cluster("party_b", 22, 7, [
@@ -904,7 +917,7 @@ static func _all() -> Dictionary:
 					_m(P_CRATE1, 0, 0, "支架木箱", "洞木与支柱备用箱。", 0.8),
 					_m(P_BARREL, 2, 0, "水桶", "入口冲洗泥尘用。", PROP),
 					_m(DIR_OUTDOOR_PROP + "/rock_01.png", -2, 1, "可挖岩壁", "北壁浅层可挖点。", 0.6),
-					_m(P_NOTICE, 1, -1, "矿洞告示", "入口层安全告示。", 0.7),
+					_m(P_MINE_SAFETY, 1, -1, "矿洞告示", "入口层安全告示（非 notice 代理）。", 0.7),
 				]),
 			],
 			"fx": [],
@@ -1258,7 +1271,7 @@ static func _all() -> Dictionary:
 				_cluster("desk", 14, 7, [
 					_m(P_COUNTER, 0, 0, "借阅台", "中岛借阅台（顾客南站、馆员北侧）。", 1.05),
 					_m(P_LEDGER, -1, -1, "借阅簿", "流通登记簿。", 0.7),
-					_m(P_NOTICE, 2, -1, "分类卡", "架位索引卡（大厅检索提示）。", 0.8),
+					_m(P_CATALOG_CARD, 2, -1, "分类卡", "架位索引卡（大厅检索提示；非 notice 代理）。", 0.8),
 					_m(P_LAMP_INDOOR, 1, -2, "阅览灯", "借阅台灯。", PROP),
 					_m(P_STOOL_TEA, 3, 0, "旁凳", "柜东短坐（不占南向站位）。", 0.55),
 				]),
@@ -1488,7 +1501,7 @@ static func _all() -> Dictionary:
 				]),
 				# East descent shaft — extra_portal south of notice for clear approach.
 				_cluster("descent", 18, 7, [
-					_m(P_NOTICE, 0, 0, "下探标记", "通向水晶中层的井口标记。", 0.7),
+					_m(P_TRAIL_MARKER, 0, 0, "下探标记", "通向水晶中层的井口标记（非 notice 代理）。", 0.7),
 					_m(P_ROCK1, -2, 1, "井口岩", "下探口西缘承台石。", 0.55),
 					_m(P_ROCK0, 1, 2, "阶缘石", "井口南缘碎岩。", 0.5),
 					_m(P_CRATE1, 2, 1, "绳索箱", "下探绳索与铁钉。", 0.75),
@@ -1550,7 +1563,7 @@ static func _all() -> Dictionary:
 					_m(P_CRATE1, 0, 0, "样本箱", "待鉴定晶矿样本。", 0.75),
 					_m(P_BASKET, 2, 1, "拣晶筐", "手拣碎晶筐。", 0.7),
 					_m(P_TOOL_RACK, 1, -2, "取样架", "凿刀与布袋架。", 0.65),
-					_m(P_NOTICE, -1, -1, "晶脉告示", "中层晶脉安全告示。", 0.65),
+					_m(P_MINE_SAFETY, -1, -1, "晶脉告示", "中层晶脉安全告示（非 notice 代理）。", 0.65),
 				]),
 			],
 			"fx": [],
@@ -1641,7 +1654,7 @@ static func _all() -> Dictionary:
 					_m(P_ROCK2, -2, 1, "倒木脚石", "半没水的倒木脚石。", 0.45),
 					_m(P_ROCK1, 2, 1, "踏脚石", "东向踏脚。", 0.48),
 					_m(P_ROCK3, 0, -2, "北岸石", "隐径继续向北。", 0.42),
-					_m(P_NOTICE, -1, -1, "隐径记号", "芦苇后的岔路记号。", 0.5),
+					_m(P_TRAIL_MARKER, -1, -1, "隐径记号", "芦苇后的岔路记号（非 notice 代理）。", 0.5),
 				]),
 				# East skiff cache — boat supply mass + hidden coin + bamboo rod.
 				_cluster("skiff", 17, 8, [
@@ -1865,7 +1878,7 @@ static func _all() -> Dictionary:
 				_cluster("junction", 15, 3, [
 					_m(P_CRATE0, 0, 0, "总阀箱", "中段总阀检修箱。", 0.7),
 					_m(P_BARREL, -2, 0, "溢流桶", "闸阀旁溢流桶。", 0.65),
-					_m(P_NOTICE, 2, 0, "管网图", "下水支管走向图。", 0.7),
+					_m(P_PIPE_SCHEMATIC, 2, 0, "管网图", "下水支管走向图（非 notice 代理）。", 0.7),
 					_m(P_LAMP_FARM, 1, -1, "阀灯", "闸阀区检修灯。", PROP),
 				]),
 				# East black-market booth — customer approach from west aisle.
@@ -1877,7 +1890,7 @@ static func _all() -> Dictionary:
 					_m(P_COIN, 0, -2, "赃箱", "柜台后赃物箱。", 0.7),
 					_m(P_CRATE1, 1, 2, "走私箱", "摊脚走私木箱。", 0.75),
 					_m(P_BASKET, -1, 1, "黑货筐", "柜西客侧旁筐（不挡站位）。", 0.7),
-					_m(P_NOTICE, -2, -1, "暗语牌", "接头暗号牌。", 0.7),
+					_m(P_CIPHER_PLAQUE, -2, -1, "暗语牌", "接头暗号牌（非 notice 代理）。", 0.7),
 					_m(P_LAMP_TAVERN, 0, -1, "摊烛", "黑市烛灯（非家用台灯）。", PROP),
 				]),
 			],
@@ -1954,7 +1967,7 @@ static func _all() -> Dictionary:
 				# Southeast rest nook — stool + notice; approach from west aisle.
 				_cluster("rest", 16, 8, [
 					_m(P_STOOL_BAR, 0, 0, "休息凳", "搬运工休息凳（交谈锚）。", 0.85),
-					_m(P_NOTICE, 1, -2, "排班牌", "壁挂排班与到货告示。", 0.7),
+					_m(P_SHIFT_BOARD, 1, -2, "排班牌", "壁挂排班与到货告示（非 notice 代理）。", 0.7),
 					_m(P_BARREL, 2, 0, "饮水桶", "休息角饮水桶。", 0.65),
 					_m(P_BASKET, -1, 1, "饭盒筐", "休息角饭盒筐。", 0.55),
 					_m(P_LEDGER, -2, -1, "到货簿", "管事到货登记簿。", 0.55),
@@ -1999,14 +2012,14 @@ static func _all() -> Dictionary:
 					_m(P_STOOL_BAR, -1, 0, "摊主凳", "柜台西侧摊主位。", 0.75),
 					_m(P_BASKET, 1, 1, "灯笼筐", "柜东客侧旁筐（不挡站位）。", 0.7),
 					_m(P_BASKET, -2, 1, "纸灯筐", "摊脚备用纸灯筐。", 0.65),
-					_m(P_NOTICE, 2, -1, "夜市牌", "灯笼价目与开摊暗号。", 0.7),
+					_m(P_NIGHT_MARKET_BOARD, 2, -1, "夜市牌", "灯笼价目与开摊暗号（非 notice 代理）。", 0.7),
 					_m(P_LAMP_TAVERN, 1, -1, "摊烛", "暖烛灯（非家用台灯）。", PROP),
 					_m(P_LAMP_TAVERN, -2, -1, "串烛", "灯笼串旁烛灯。", PROP),
 				]),
 				# North-east of door aisle — keeps tx 10–13 clear to north wall.
 				_cluster("charm_booth", 15, 2, [
 					_m(P_LEDGER, 0, 0, "符签摊", "北壁符签小摊台（偏东，让出中轴通廊）。", 0.85),
-					_m(P_NOTICE, 1, -1, "符单", "护身符价目单。", 0.7),
+					_m(P_CHARM_LIST, 1, -1, "符单", "护身符价目单（非 notice 代理）。", 0.7),
 					_m(P_BASKET, 2, 0, "符筐", "叠好的符纸筐。", 0.65),
 					_m(P_STOOL_BAR, 0, 1, "守摊凳", "符签摊守摊凳（廊东站位）。", 0.7),
 					_m(P_LAMP_SHOP, 0, -1, "巷灯", "北廊冷罩店灯。", PROP),
@@ -2621,7 +2634,7 @@ static func _all() -> Dictionary:
 					_m(P_COUNTER, 0, 0, "捐赠台", "前台捐赠登记台。", 0.95),
 					_m(P_LEDGER, 1, -1, "捐赠簿", "捐赠登记簿（钩子可读）。", 0.65),
 					_m(P_COIN, 2, 0, "捐款匣", "台侧捐款木匣。", 0.7),
-					_m(P_NOTICE, -1, -2, "捐赠告示", "欢迎捐赠化石/矿石告示。", 0.7),
+					_m(P_DONATION_BOARD, -1, -2, "捐赠告示", "欢迎捐赠化石/矿石告示（非 notice 代理）。", 0.7),
 					_m(P_STOOL, -1, 1, "访客凳", "台前南站位访客凳。", 0.7),
 					_m(P_BASKET, 2, 1, "捐赠筐", "小件捐赠筐。", 0.55),
 					_m(P_LAMP_SHOP, 2, -2, "前台灯", "捐赠台侧店灯。", PROP),
@@ -2667,7 +2680,7 @@ static func _all() -> Dictionary:
 					_m(P_COUNTER, 0, 0, "捐赠台", "钓鱼捐赠登记台。", 0.9),
 					_m(P_ROD_BAMBOO, -2, 0, "展示竿", "捐赠挂钩展示竿。", 0.7),
 					_m(P_LEDGER, 1, -1, "鱼谱", "捐赠鱼种登记谱（钩子可读）。", 0.65),
-					_m(P_NOTICE, 2, -2, "捐赠告示", "欢迎捐赠活鱼告示。", 0.65),
+					_m(P_DONATION_BOARD, 2, -2, "捐赠告示", "欢迎捐赠活鱼告示（非 notice 代理）。", 0.65),
 					_m(P_BARREL, 2, 1, "暂养桶", "捐赠暂养水桶。", 0.7),
 					_m(P_STOOL, -1, 1, "登记凳", "台前南站位凳。", 0.7),
 					_m(P_LAMP_SHOP, 1, -2, "台灯", "捐赠台侧店灯。", PROP),
@@ -2845,7 +2858,7 @@ static func _all() -> Dictionary:
 					_m(P_TABLE_R, 0, 1, "密会桌", "帷幕后秘密会议圆桌。", 0.85),
 					_m(P_STOOL_TEA, -2, 2, "凳", "围桌西凳。", 0.7),
 					_m(P_STOOL_TEA, 2, 2, "凳", "围桌东凳（东站位可坐）。", 0.7),
-					_m(P_NOTICE, 2, -1, "暗号牌", "密会暗号小牌。", 0.55),
+					_m(P_CIPHER_PLAQUE, 2, -1, "暗号牌", "密会暗号小牌（非 notice 代理）。", 0.55),
 					_m(P_COIN, -1, 0, "贿匣", "桌侧暗匣。", 0.55),
 					_m(P_LAMP_TAVERN, -2, -1, "密会烛", "帷幕侧烛灯。", PROP),
 				]),
@@ -2938,7 +2951,7 @@ static func _all() -> Dictionary:
 					_m(P_COUNTER, 0, 0, "验货台", "东侧验货台（主锚）。", 0.95),
 					_m(P_LEDGER, -1, -1, "到货簿", "商港到货登记。", 0.7),
 					_m(P_STOOL, -2, 1, "管事凳", "台西管事位。", 0.7),
-					_m(P_NOTICE, 2, -1, "班次牌", "靠泊与班次告示。", 0.65),
+					_m(P_FERRY_SCHEDULE, 2, -1, "班次牌", "靠泊与班次告示（非 notice 代理）。", 0.65),
 					_m(P_CRATE1, 2, 1, "样品箱", "台东样品箱。", 0.65),
 					_m(P_LAMP_SHOP, 1, -2, "台灯", "验货台罩灯。", PROP),
 				]),
@@ -3064,7 +3077,7 @@ static func _all() -> Dictionary:
 					_m(P_LAMP_INDOOR, 1, -2, "车厢灯", "东窗旁车厢顶灯。", PROP),
 				]),
 				_cluster("aisle_rack", 12, 2, [
-					_m(P_NOTICE, 0, 0, "班次牌", "中廊北壁班次告示（不挡门轴）。", 0.65),
+					_m(P_FERRY_SCHEDULE, 0, 0, "班次牌", "中廊北壁班次告示（不挡门轴；非 notice 代理）。", 0.65),
 					_m(P_CRATE1, 2, 0, "行包", "廊侧小行包。", 0.55),
 				]),
 			],

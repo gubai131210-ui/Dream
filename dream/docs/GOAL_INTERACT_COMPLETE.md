@@ -105,7 +105,7 @@
 | 优先级 | 缺口 |
 | --- | ---:|
 | P0 | **用户 Godot QA Waves A2–F + §7 勾选** |
-| P1 | 姿态/摊位 ArtGen 继续抛光（非阻塞）；其余通用 `notice`（货单/夜市牌等）可继续特化 |
+| P1 | 姿态/摊位 ArtGen 继续抛光（非阻塞） |
 | P2 | tomyud1 MCP 截图证据（**全户外 + 多室内**；C62/C58 FX 冒烟 PASS；仍不代替 §7） |
 
 ---
@@ -168,6 +168,7 @@
 | ~~C29 碑刻 / C28 树皮符 / C11 票价牌~~ | ruins / tree / station | **DONE** → `ruin_stele` / `bark_glyph` / `fare_board` |
 | ~~C10 经文牌~~ | church altar | **DONE** → `scripture_plaque_00`（非 notice）；MCP `g8_c10_scripture_plaque.png` |
 | ~~C08/C40/C43/C44 告示特化~~ | clinic/museum/bath/inn | **DONE** → `clinic_fee` / `exhibit_guide` / `bath_rules` / `inn_rate` |
+| ~~室内全部 notice_00 代理~~ | all interior markers | **DONE** → 0×`_m(P_NOTICE)`；13 专用牌 + QA 硬禁 |
 | 用户 Godot QA Waves A2–F | 本机点击/进出/动画 | **仍待用户确认**（见 §7） |
 
 ## G8 证据
@@ -188,7 +189,7 @@
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — 17 groups GREEN  
 - `tools/qa_portal_hover_only.py` — GREEN  
-- `tools/qa_semantic_interior_props.py` — GREEN（civic notices + stele/fare/bark + signature）  
+- `tools/qa_semantic_interior_props.py` — GREEN（zero `_m(P_NOTICE)` + full notice taxonomy）  
 - `tools/qa_no_placeholder_visuals.py` — GREEN  
 - `tools/qa_interact_sprite_inventory.py` — GREEN（kits + focus/open FX）  
 - `tools/qa_work_pose_style.py` — GREEN（C53 pose sheets）  
