@@ -5,28 +5,35 @@ extends Control
 ## Saves to user://goal_user_qa.cfg — does NOT auto-complete the Goal.
 
 const SAVE_PATH := "user://goal_user_qa.cfg"
+## Mirrors GOAL_INTERACT_COMPLETE §7 outdoor rows + indoor sample rows (full user gate).
 const ITEMS := [
-	{"id": "square", "title": "广场 C58–C60 / K姿态 / 门脸", "hint": "点井/树/箱/灯/喂鸟；桩草；锁门；K 工作环", "path": SceneRouter.SQUARE_PATH},
+	{"id": "square", "title": "广场 C58–C60 / K姿态 / 门脸", "hint": "点井/树/箱/灯/喂鸟；桩草；锁门；K 工作环；户外「互动」", "path": SceneRouter.SQUARE_PATH},
 	{"id": "market", "title": "市集摊位木棚", "hint": "默认木棚可见；可进市场后台/夜市", "path": SceneRouter.MARKET_PATH},
 	{"id": "farmland", "title": "农田垄线/栅栏/农夫", "hint": "无白底盘；DistrictInteract", "path": SceneRouter.FARMLAND_PATH},
 	{"id": "residential", "title": "住宅区门阶", "hint": "门阶/拱门；可进后院", "path": SceneRouter.RESIDENTIAL_PATH},
 	{"id": "farm_home", "title": "农场住宅/地窖", "hint": "栅栏；进入地窖", "path": SceneRouter.FARM_HOME_PATH},
-	{"id": "forest", "title": "林口/深林/C62密道", "hint": "树洞密道可进", "path": SceneRouter.FOREST_DEEP_PATH},
+	{"id": "forest_entrance", "title": "林口 DistrictInteract", "hint": "门脸/交互点可点；可进深林", "path": SceneRouter.FOREST_ENTRANCE_PATH},
+	{"id": "forest", "title": "深林 C62 密道", "hint": "树洞密道可进洞窟链", "path": SceneRouter.FOREST_DEEP_PATH},
 	{"id": "river", "title": "河渔笼/浮漂", "hint": "下放→约6s→可收；浮漂+水环", "path": SceneRouter.RIVER_PATH},
 	{"id": "lake", "title": "湖渔笼/渡口", "hint": "东码头笼；登岛渡口", "path": SceneRouter.LAKE_PATH},
 	{"id": "waterfall", "title": "瀑布水体动画", "hint": "WaterfallAnim 循环可见", "path": SceneRouter.WATERFALL_PATH},
+	{"id": "lighthouse", "title": "灯塔户外门脸", "hint": "DistrictInteract + 进室内可返回", "path": SceneRouter.LIGHTHOUSE_PATH},
+	{"id": "hill_farm", "title": "坡田 DistrictInteract", "hint": "门脸/交互；无色块占位", "path": SceneRouter.HILL_FARM_PATH},
 	{"id": "station", "title": "车站轨枕", "hint": "轨枕精灵非色块", "path": SceneRouter.STATION_PATH},
-	{"id": "c01", "title": "C01 衣柜/钱箱开合", "hint": "开合短帧；可↑二楼", "path": SceneRouter.C01_HOME_PATH},
+	{"id": "lake_house", "title": "湖畔小屋门脸", "hint": "门脸可进；返回湖区", "path": SceneRouter.LAKE_HOUSE_PATH},
+	{"id": "c01", "title": "C01 衣柜开合 / 二楼", "hint": "drawer_open 短帧；可↑二楼", "path": SceneRouter.C01_HOME_PATH},
 	{"id": "c02", "title": "C02 钱箱开盖", "hint": "chest_lid 开合", "path": SceneRouter.C02_MERCHANT_PATH},
 	{"id": "c06", "title": "C06 议事厅进出", "hint": "进门出门外观正常", "path": SceneRouter.C06_TOWN_HALL_PATH},
+	{"id": "c40", "title": "C40 博物馆立面进门", "hint": "广场立面→室内→返回", "path": SceneRouter.C40_MUSEUM_PATH},
 	{"id": "c43", "title": "C43 浴场立面进门", "hint": "广场立面→室内→返回", "path": SceneRouter.C43_BATHHOUSE_PATH},
-	{"id": "wave_d", "title": "Wave D 抽样（后台/夜市）", "hint": "市集进后台或夜市再返回", "path": SceneRouter.C32_MARKET_BACK_PATH},
+	{"id": "wave_d", "title": "Wave D 抽样（后台）", "hint": "市集进后台再返回", "path": SceneRouter.C32_MARKET_BACK_PATH},
 	{"id": "wave_e", "title": "Wave E 抽样（二楼）", "hint": "C01↑二楼再返回", "path": SceneRouter.C46_SECOND_FLOOR_PATH},
 ]
 
 var _checks: Dictionary = {}
 var _status: Label
 var _list: VBoxContainer
+var _reply_btn: Button
 
 
 func _ready() -> void:
@@ -102,6 +109,15 @@ func _build_ui() -> void:
 	clear_btn.pressed.connect(_clear_all)
 	foot.add_child(clear_btn)
 
+	_reply_btn = Button.new()
+	_reply_btn.text = "复制「§7 已勾」"
+	_reply_btn.disabled = true
+	_reply_btn.pressed.connect(func() -> void:
+		DisplayServer.clipboard_set("§7 已勾")
+		_status.text = "已复制到剪贴板：§7 已勾 — 请粘贴到 Cursor 聊天"
+	)
+	foot.add_child(_reply_btn)
+
 
 func _make_row(item: Dictionary) -> Control:
 	var id := str(item["id"])
@@ -151,10 +167,13 @@ func _refresh_status() -> void:
 		if bool(_checks.get(str(item["id"]), false)):
 			done += 1
 	var total := ITEMS.size()
-	if done >= total:
-		_status.text = "进度 %d/%d — 全部通过。请在 Cursor 聊天回复：§7 已勾" % [done, total]
+	var all_done := done >= total
+	if _reply_btn:
+		_reply_btn.disabled = not all_done
+	if all_done:
+		_status.text = "进度 %d/%d — 全部通过。点「复制「§7 已勾」」或手动回复 Cursor。" % [done, total]
 	else:
-		_status.text = "进度 %d/%d" % [done, total]
+		_status.text = "进度 %d/%d（对齐 GOAL §7 户外全表 + 室内抽样）" % [done, total]
 
 
 func _load() -> void:

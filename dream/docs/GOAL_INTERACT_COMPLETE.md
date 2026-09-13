@@ -211,7 +211,7 @@
 ## 7. 场景清单（可玩区 + 室内壳）与用户 QA
 
 > **Agent MCP 列** = 本机 MCP 截图/激活证据（不代替手感）。**用户勾选** = 你本机 Godot 确认后才勾。  
-> **引擎入口：** 世界总览顶栏 **「§7验收」** → [`GOAL_USER_QA_CHECKLIST.md`](GOAL_USER_QA_CHECKLIST.md) / `scenes/qa/user_qa_checklist.tscn`
+> **引擎入口：** 世界总览顶栏 **「§7验收」** → [`GOAL_USER_QA_CHECKLIST.md`](GOAL_USER_QA_CHECKLIST.md) / `scenes/qa/user_qa_checklist.tscn`（**21 项**：户外全表 + 室内抽样；全部通过可复制「§7 已勾」）
 
 ### 户外区（assembler 场景）
 
@@ -224,8 +224,8 @@
 | 农场住宅 | `farm_residential` | 栅栏、DistrictInteract | [x] `g8_farm_residential_idle.png` | [ ] |
 | 林口/深林 | `forest_entrance` / `forest_deep` | DistrictInteract；C62 树洞密道 | [x] idle + landmarks；**C62** smoke PASS；walkthrough portal+facade `g8_walkthrough_c62_portal.png` | [ ] |
 | 河/湖 | `river` / `lake` | bobber + fish_ring + C22 鱼笼 | [x] river+lake ready 截图；`g8_c22_fish_cage_smoke` river+lake **ok=6 PASS**；walkthrough 湖笼 `mcp_cycle_to_ready` | [ ] |
-| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 + 瀑水循环 | [x] idle + **`g8_waterfall_anim.png`**（`WaterfallAnim` playing） | [ ] |
-| 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png` + `g8_lake_house_idle.png` | [ ] |
+| 瀑/灯塔/坡田 | `waterfall` / `lighthouse` / `hill_farm` | DistrictInteract + 门脸 + 瀑水循环 | [x] idle + **`g8_waterfall_anim.png`**；walkthrough `g8_walkthrough_lighthouse_idle` / `hill_farm_idle` | [ ] |
+| 车站/湖屋 | `station` / `lake_house` | 轨枕精灵、门脸 | [x] `g8_station_idle.png`；walkthrough `g8_walkthrough_lake_house_idle` | [ ] |
 
 ### 室内（抽样必测）
 
@@ -234,7 +234,7 @@
 | C01 家 | dresser/chest 开合帧、返回门 | [x] idle + dresser OpenFX held | [ ] |
 | C02 商贾 | coin_chest 开合帧 | [x] `g8_c02_chest_lid_held.png`；walkthrough `mcp_play_open_fx(钱箱)` frames=4 | [ ] |
 | C06 议事厅 | 门户进出 | [x] `g8_c06_town_hall_idle.png`；镇长 walk 帧已补 | [ ] |
-| C40/C43 博物/浴 | 立面可发现 → 进门 | [x] 博物馆进门 + `g8_c40_museum_idle`；浴场 façade enter PASS；室内 idle | [ ] |
+| C40/C43 博物/浴 | 立面可发现 → 进门 | [x] 博物馆进门 + idle；浴场 façade enter PASS；§7 清单含 C40+C43 跳转 | [ ] |
 | Wave D 农商七包 | C32/C33/C37–39/C51–C52 可进可出 | [x] idle + **market→C32 enter** MCP；`g8_wave_de_portal_smoke` PASS | [ ] |
 | Wave E 垂直/院 | C46–C50 二楼/阁楼/屋顶/后院/地窖 | [x] idle + **C01→C46 enter** MCP；smoke 含 C50 | [ ] |
 | Wave A2–F 其余已锁室 | 按 PHASE5 进出各一次 | [x] 抽检 C04/C07/C09–C12/C16–C17/C28–C30/C44 idle；72/72 load；**C62 全链 PASS** | [ ] |
