@@ -138,6 +138,7 @@ func _paint_platform_and_tracks() -> void:
 
 func _paint_dirt_approaches() -> void:
 	# Door apron on platform south of building foot only.
+	# No-op on platform tiles: _set_dirt skips is_path, and platform was already painted as path.
 	_fill_dirt(17, DOOR_LANE_TY0, 22, DOOR_LANE_TY1)
 	# South approach fork toward platform stairs (dirt, not stone plaza).
 	_fill_dirt(18, 15, 21, 28)
@@ -341,13 +342,46 @@ func _spawn_platform_benches_and_props(ysort: Node2D) -> void:
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
 
+	_spawn_platform_end_rocks(ysort)
+
+
+func _spawn_platform_end_rocks(ysort: Node2D) -> void:
+	# Small cobble accents on platform-end dirt/path only — never on track ballast.
+	var rocks := [
+		{"i": 0, "pos": Vector2(176, 352)},   # west of PLATFORM_TX0 on soft dirt end
+		{"i": 1, "pos": Vector2(208, 384)},
+		{"i": 2, "pos": Vector2(1104, 352)},  # east of PLATFORM_TX1
+	]
+	for r in rocks:
+		var path := RockCatalog.path(RockCatalog.FAMILY_COBBLE, int(r["i"]))
+		if not ResourceLoader.exists(path):
+			continue
+		var tex := RockCatalog.load_tex(RockCatalog.FAMILY_COBBLE, int(r["i"]))
+		var pos: Vector2 = r["pos"]
+		var cleared := craft.find_clear_near(pos, 1, 1, 3, true)
+		if cleared != Vector2.ZERO:
+			pos = cleared
+		var t := craft.world_to_tile(pos)
+		if craft.is_water(t.x, t.y):
+			continue
+		# Stay off track band; allow path (platform) or dirt (soft ends).
+		if t.y >= TRACK_TY0 and t.y <= TRACK_TY1:
+			continue
+		if not craft.is_path(t.x, t.y) and not craft.is_dirt(t.x, t.y):
+			continue
+		craft.add_contact_shadow(ysort, pos, Vector2(8, 3))
+		var spr := craft.spawn_sprite(ysort, path, pos)
+		var sc := RockCatalog.scale_for_target_h(tex, RockCatalog.TARGET_H_COBBLE) if tex else 0.25
+		sc = clampf(sc, 0.18, 0.32)
+		spr.scale = Vector2(sc, sc)
+
 
 func _spawn_trees(ysort: Node2D) -> void:
 	# Edge forest frames the transit spine — full crown AABB via spawn_tree.
 	var zone := craft.map_play_rect(2.0)
 	var ideals := [
-		# North belt behind station (inset south enough for crowns)
-		Vector2(200, 200), Vector2(360, 180), Vector2(520, 190), Vector2(760, 180),
+		# North belt behind station — keep clear of roof AABB (~640,272); former 520/760 sat on roof.
+		Vector2(200, 200), Vector2(360, 160), Vector2(440, 140), Vector2(840, 140),
 		Vector2(920, 200), Vector2(1080, 190), Vector2(1140, 220),
 		# West stream / approach
 		Vector2(140, 300), Vector2(160, 480), Vector2(150, 700),

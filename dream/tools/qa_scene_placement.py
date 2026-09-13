@@ -36,6 +36,12 @@ def main() -> int:
 	must(ROOT / "scripts/areas/hill_farm_assembler.gd", "FAMILY_TERRACE")
 	must(ROOT / "scripts/areas/lighthouse_assembler.gd", "FAMILY_COASTAL", "_spawn_rocks(ysort)")
 	must(ROOT / "scripts/areas/village_residential_assembler.gd", "_spawn_se_pond_rock")
+	must(ROOT / "scripts/areas/village_square_assembler.gd", "160, 320", "_spawn_west_bank_rocks")
+	must(ROOT / "scripts/areas/forest_entrance_assembler.gd", "_spawn_brook_rocks", "520, 140")
+	must(ROOT / "scripts/areas/station_assembler.gd", "_spawn_platform_end_rocks", "440, 140")
+	must(ROOT / "scripts/areas/market_street_dressing.gd", "380, 380")
+	must(ROOT / "scripts/areas/forest_deep_assembler.gd", "wood_pile_00.png", "_spawn_stream_rocks")
+	must(ROOT / "scripts/areas/farm_residential_assembler.gd", "_spawn_pond_rocks")
 	must(ROOT / "docs/SCENE_PLACEMENT_AUDIT.md", "禁止偷懒")
 	print("GREEN scene-placement + biome-rocks QA")
 	return 0

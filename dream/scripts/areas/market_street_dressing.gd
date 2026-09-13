@@ -114,17 +114,17 @@ func _spawn_zone_benches_and_props(ysort: Node2D) -> void:
 		# West river / bridge → bench_2 only.
 		{"path": "res://assets/sprites/props/bench_2.png", "pos": Vector2(280, 480), "title": "河畔木凳", "desc": "桥头河畔木凳（河岸款）。", "on_path": true},
 		{"path": "res://assets/sprites/props/bench_2.png", "pos": Vector2(200, 420), "title": "河畔木凳", "desc": "西岸歇脚木凳（河岸款）。", "on_path": false},
-		# North shop door dirt → bench_0 only.
-		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(448, 360), "title": "铺前条凳", "desc": "货栈门前条凳（铺前款）。", "on_path": false},
-		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(672, 360), "title": "铺前条凳", "desc": "主铺门前条凳（铺前款）。", "on_path": false},
+		# North shop door dirt → bench_0 only (y≥380 so seats sit off wall / door apron).
+		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(448, 380), "title": "铺前条凳", "desc": "货栈门前条凳（铺前款）。", "on_path": false},
+		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(672, 380), "title": "铺前条凳", "desc": "主铺门前条凳（铺前款）。", "on_path": false},
 		# Real lamp posts only — lamp_1/lamp_2 are flower pot / planter (see MARKET_STALL_ASSET_AUDIT.md).
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(400, 464), "title": "西街灯", "desc": "商业街西段路灯。", "on_path": true},
 		{"path": "res://assets/sprites/props/B11-08_pots_lamps_03.png", "pos": Vector2(1040, 464), "title": "东街灯", "desc": "商业街东段弯臂路灯。", "on_path": true},
 		{"path": "res://assets/sprites/props/B11-08_pots_lamps_06.png", "pos": Vector2(640, 608), "title": "南口灯", "desc": "南土路入口铁杆路灯。", "on_path": true},
 		# Decorative planter (was mislabeled as lamp_2) — not a light.
 		{"path": "res://assets/sprites/props/lamp_2.png", "pos": Vector2(1080, 520), "title": "街角花箱", "desc": "东街花箱装饰（非路灯）。", "on_path": true, "scale": 0.5},
-		# Loose sack off stall sightline (shop side only), scaled down.
-		{"path": "res://assets/sprites/props/sack_1.png", "pos": Vector2(400, 340), "title": "货栈麻袋", "desc": "西货栈旁麻袋，不挡摊面。", "on_path": false, "scale": 0.55},
+		# Loose sack south of west shop AABB (was 400,340 overlapping shop).
+		{"path": "res://assets/sprites/props/sack_1.png", "pos": Vector2(380, 380), "title": "货栈麻袋", "desc": "西货栈旁麻袋，不挡摊面。", "on_path": false, "scale": 0.55},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):

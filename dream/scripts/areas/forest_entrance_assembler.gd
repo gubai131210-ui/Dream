@@ -130,9 +130,10 @@ func _spawn_cabin(ysort: Node2D) -> void:
 
 
 func _spawn_props(ysort: Node2D) -> void:
+	# Lamp/bench sit south of cabin door apron (ty 11–12) so clearing stays wild, not residential.
 	var samples := [
-		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(600, 480), "title": "林径灯", "desc": "土径旁路灯。"},
-		{"path": "res://assets/sprites/props/bench_2.png", "pos": Vector2(560, 520), "title": "歇脚木凳", "desc": "空地木凳（林缘款）。"},
+		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(560, 540), "title": "林径灯", "desc": "土径旁路灯。"},
+		{"path": "res://assets/sprites/props/bench_2.png", "pos": Vector2(520, 580), "title": "歇脚木凳", "desc": "空地木凳（林缘款）。"},
 		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(700, 400), "title": "行囊", "desc": "小屋旁行囊。", "scale": 0.55},
 		{"path": "res://assets/sprites/props/crate_1.png", "pos": Vector2(500, 400), "title": "木箱", "desc": "林缘补给箱。", "scale": 0.55},
 	]
@@ -156,6 +157,32 @@ func _spawn_props(ysort: Node2D) -> void:
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
+	_spawn_brook_rocks(ysort)
+
+
+func _spawn_brook_rocks(ysort: Node2D) -> void:
+	# West brook bank accents — river_bank / forest_moss at shore height.
+	var rocks := [
+		{"family": RockCatalog.FAMILY_RIVER_BANK, "i": 0, "pos": Vector2(200, 420)},
+		{"family": RockCatalog.FAMILY_FOREST_MOSS, "i": 2, "pos": Vector2(180, 520)},
+	]
+	for r in rocks:
+		var path := RockCatalog.path(str(r["family"]), int(r["i"]))
+		if not ResourceLoader.exists(path):
+			continue
+		var tex := RockCatalog.load_tex(str(r["family"]), int(r["i"]))
+		var pos: Vector2 = r["pos"]
+		var cleared := craft.find_clear_near(pos, 1, 1, 4, true)
+		if cleared != Vector2.ZERO:
+			pos = cleared
+		var t := craft.world_to_tile(pos)
+		if craft.is_water(t.x, t.y) or craft.is_dirt(t.x, t.y):
+			continue
+		craft.add_contact_shadow(ysort, pos, Vector2(10, 4))
+		var spr := craft.spawn_sprite(ysort, path, pos)
+		var sc := RockCatalog.scale_for_target_h(tex, RockCatalog.TARGET_H_SHORE) if tex else 0.3
+		sc = clampf(sc, 0.22, 0.4)
+		spr.scale = Vector2(sc, sc)
 
 
 func _spawn_trees(ysort: Node2D) -> void:
@@ -167,10 +194,11 @@ func _spawn_trees(ysort: Node2D) -> void:
 		var r := 380.0 + float(i % 5) * 40.0
 		ideals.append(Vector2(640, 480) + Vector2(cos(ang), sin(ang)) * r)
 	# Edge fills inset enough that crowns fit play zone (no north-rim half-trees).
+	# Former (640,180) sat due-north of cabin (640,320) and pierced its AABB — NW instead.
 	ideals.append_array([
 		Vector2(140, 200), Vector2(200, 160), Vector2(120, 400), Vector2(140, 700),
 		Vector2(1120, 180), Vector2(1160, 400), Vector2(1140, 700),
-		Vector2(400, 160), Vector2(800, 160), Vector2(640, 180),
+		Vector2(400, 160), Vector2(800, 160), Vector2(520, 140),
 		Vector2(300, 800), Vector2(700, 820), Vector2(1000, 800),
 		Vector2(100, 560), Vector2(1180, 560),
 	])
@@ -183,9 +211,10 @@ func _spawn_trees(ysort: Node2D) -> void:
 		# Keep trail + clearing visually open.
 		if t0.x >= CLEAR_TX0 and t0.x <= CLEAR_TX1 and t0.y >= CLEAR_TY0 and t0.y <= CLEAR_TY1:
 			continue
-		if t0.x >= 18 and t0.x <= 22 and t0.y >= 6 and t0.y <= 24:
+		# Trail spine + cabin column (cabin foot ~ty 10; skip north to ty 4 so crowns can't slide into roof).
+		if t0.x >= 17 and t0.x <= 23 and t0.y >= 4 and t0.y <= 24:
 			continue
-		var path := "res://assets/sprites/trees/tree_%02d.png" % (i % 6)
+		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % (i % 6)
 		var spr := craft.spawn_tree(ysort, path, ideal, zone, 1, 1, 6, false)
 		if spr == null:
 			continue

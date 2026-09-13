@@ -29,12 +29,21 @@
 
 Scale lock: shore **target_h ≈ 18–28px**; cobble **≈16px**. Forbidden: raw 0.4+ on 200px moss sheets as yard scatter.
 
-## Remaining follow-ups (not blocking)
+## Remaining follow-ups (wave 2 — done)
 
-- Village square: museum portal / civic AABB spacing (separate pass)
-- Forest entrance: cabin-adjacent trees still need AABB polish after blocked_mask
-- Station: north trees vs roof; cobble ballast optional decorate
-- Market sack off west shop wall
+- Village square: museum portal / civic AABB spacing — **done**
+- Forest entrance: cabin-adjacent trees + brook rocks — **done**
+- Station: north trees vs roof + cobble ballast — **done**
+- Market sack off west shop wall — **done**
+- Forest deep: plaza lamp → wood pile; stream rocks — **done**
+- Farm residential pond rocks — **done**
+- District kit oversized moss rocks → river family 0.32 — **done**
+
+## Remaining follow-ups (wave 3 optional)
+
+- River east-bank barrel closer to water
+- Market workshop portal alcove polish
+- Full AABB-vs-building tree collision (beyond blocked_mask tiles)
 
 ## 禁止偷懒
 

@@ -129,11 +129,11 @@ func _paint_winding_dirt() -> void:
 
 
 func _spawn_props(ysort: Node2D) -> void:
-	# Sparse forest litter only — no cabin / no plaza furniture cluster.
+	# Sparse forest litter — wood/moss grammar, not plaza lamp.
 	var samples := [
 		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(420, 340), "title": "苔藓行囊", "desc": "被遗弃在树根旁的行囊。", "scale": 0.55},
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(720, 580), "title": "朽木箱", "desc": "深林小径旁潮湿木箱。", "scale": 0.5},
-		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(560, 700), "title": "林灯", "desc": "土径急弯处的微弱路灯。", "scale": 0.55},
+		{"path": "res://assets/sprites/props/wood_pile_00.png", "pos": Vector2(560, 700), "title": "枯枝堆", "desc": "土径急弯处的枯枝，可供歇脚辨向。", "scale": 0.5},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):
@@ -153,6 +153,32 @@ func _spawn_props(ysort: Node2D) -> void:
 		var hs := craft.make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
+	_spawn_stream_rocks(ysort)
+
+
+func _spawn_stream_rocks(ysort: Node2D) -> void:
+	var rocks := [
+		{"i": 0, "pos": Vector2(980, 400)},
+		{"i": 1, "pos": Vector2(1000, 520)},
+		{"i": 2, "pos": Vector2(960, 640)},
+	]
+	for r in rocks:
+		var path := RockCatalog.path(RockCatalog.FAMILY_RIVER_BANK, int(r["i"]))
+		if not ResourceLoader.exists(path):
+			continue
+		var tex := RockCatalog.load_tex(RockCatalog.FAMILY_RIVER_BANK, int(r["i"]))
+		var pos: Vector2 = r["pos"]
+		var cleared := craft.find_clear_near(pos, 1, 1, 5, true)
+		if cleared != Vector2.ZERO:
+			pos = cleared
+		var t := craft.world_to_tile(pos)
+		if craft.is_water(t.x, t.y):
+			continue
+		craft.add_contact_shadow(ysort, pos, Vector2(10, 4))
+		var spr := craft.spawn_sprite(ysort, path, pos)
+		var sc := RockCatalog.scale_for_target_h(tex, RockCatalog.TARGET_H_SHORE) if tex else 0.3
+		sc = clampf(sc, 0.22, 0.38)
+		spr.scale = Vector2(sc, sc)
 
 
 func _spawn_trees(ysort: Node2D) -> void:

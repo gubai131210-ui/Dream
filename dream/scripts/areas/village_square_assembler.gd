@@ -528,7 +528,7 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_01.png",
-			"pos": Vector2(1000, 280),
+			"pos": Vector2(960, 280),
 			"hw": 2, "hh": 1,
 			"title": "教堂",
 			"desc": "广场东北公共建筑，整栋在区内。",
@@ -537,7 +537,7 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_02.png",
-			"pos": Vector2(320, 280),
+			"pos": Vector2(280, 280),
 			"hw": 2, "hh": 1,
 			"title": "学校",
 			"desc": "广场西北学校：门脸朝南，可进入教室。",
@@ -546,7 +546,7 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_03.png",
-			"pos": Vector2(1080, 300),
+			"pos": Vector2(1160, 300),
 			"hw": 2, "hh": 1,
 			"title": "图书馆",
 			"desc": "广场东侧图书馆，门脸朝南。",
@@ -555,7 +555,7 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		},
 		{
 			"path": "res://assets/sprites/buildings/building_04.png",
-			"pos": Vector2(440, 280),
+			"pos": Vector2(520, 280),
 			"hw": 2, "hh": 1,
 			"title": "医馆",
 			"desc": "村公所西侧医馆，门脸朝南。",
@@ -597,7 +597,7 @@ func _spawn_buildings(ysort: Node2D) -> void:
 				Vector2(100, 52)
 			)
 	# Wave C C30 — cemetery pocket south of church (append-only).
-	var grave := Vector2(1000, 360)
+	var grave := Vector2(960, 360)
 	var hs_grave := _make_hotspot(ysort, "教堂墓园", "教堂南侧墓区，可下墓穴。", grave, Vector2(96, 64))
 	WorldSpawnUtil.attach_prop_sprite(
 		hs_grave.get_node("Visual") as Node2D,
@@ -608,12 +608,17 @@ func _spawn_buildings(ysort: Node2D) -> void:
 		ysort, "进入墓园", SceneRouter.C30_CEMETERY_PATH, grave + Vector2(0, 14), Vector2(100, 52)
 	)
 	# Wave F civic tour — dedicated façade sheets (not generic door bay).
+	# Museum: dry lot west of school (reject river / path via footprint search).
+	var museum_pos := _find_clear_near(Vector2(160, 320), 1, 1, 6, false)
+	if museum_pos == Vector2.ZERO:
+		museum_pos = Vector2(200, 320)
 	craft.make_portal(
-		ysort, "进入博物馆", SceneRouter.C40_MUSEUM_PATH, Vector2(220, 280), Vector2(100, 52),
+		ysort, "进入博物馆", SceneRouter.C40_MUSEUM_PATH, museum_pos, Vector2(100, 52),
 		"res://assets/sprites/props/facade_museum_00.png"
 	)
+	# Bath: south-east of library (was stacked on library façade at 1080,280).
 	craft.make_portal(
-		ysort, "进入浴场", SceneRouter.C43_BATHHOUSE_PATH, Vector2(1080, 280), Vector2(100, 52),
+		ysort, "进入浴场", SceneRouter.C43_BATHHOUSE_PATH, Vector2(1180, 360), Vector2(100, 52),
 		"res://assets/sprites/props/facade_bath_00.png"
 	)
 
@@ -636,7 +641,7 @@ func _spawn_props(ysort: Node2D) -> void:
 		{"path": "res://assets/sprites/props/crate_0.png", "pos": Vector2(780, 430), "title": "货箱", "desc": "市场货箱。", "on_path_ok": true, "hw": 1, "hh": 1},
 		{"path": "res://assets/sprites/props/bench_0.png", "pos": Vector2(560, 540), "title": "长椅", "desc": "面向水井的长椅。", "on_path_ok": true, "hw": 1, "hh": 1},
 		{"path": "res://assets/sprites/props/lamp_0.png", "pos": Vector2(720, 540), "title": "路灯", "desc": "广场路灯。", "on_path_ok": true, "hw": 1, "hh": 1},
-		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(360, 300), "title": "麻袋", "desc": "屋前草地麻袋。", "on_path_ok": false, "hw": 1, "hh": 1},
+		{"path": "res://assets/sprites/props/sack_0.png", "pos": Vector2(280, 340), "title": "麻袋", "desc": "屋前草地麻袋。", "on_path_ok": false, "hw": 1, "hh": 1},
 	]
 	for s in samples:
 		if not ResourceLoader.exists(s["path"]):
@@ -658,6 +663,33 @@ func _spawn_props(ysort: Node2D) -> void:
 		var hs := _make_hotspot(ysort, s["title"], s["desc"], pos, Vector2(48, 48))
 		spr.reparent(hs.get_node("Visual"))
 		spr.position = Vector2.ZERO
+	_spawn_west_bank_rocks(ysort)
+
+
+func _spawn_west_bank_rocks(ysort: Node2D) -> void:
+	# West river bank pebbles — cobble/river family at shore height.
+	var rocks := [
+		{"family": RockCatalog.FAMILY_RIVER_BANK, "i": 0, "pos": Vector2(200, 480)},
+		{"family": RockCatalog.FAMILY_COBBLE, "i": 1, "pos": Vector2(180, 520)},
+		{"family": RockCatalog.FAMILY_RIVER_BANK, "i": 2, "pos": Vector2(220, 560)},
+	]
+	for r in rocks:
+		var path := RockCatalog.path(str(r["family"]), int(r["i"]))
+		if not ResourceLoader.exists(path):
+			continue
+		var tex := RockCatalog.load_tex(str(r["family"]), int(r["i"]))
+		var pos: Vector2 = r["pos"]
+		var cleared := _find_clear_near(pos, 1, 1, 4, false)
+		if cleared == Vector2.ZERO:
+			continue
+		pos = cleared
+		if _is_river_tile(_world_to_tile(pos).x, _world_to_tile(pos).y):
+			continue
+		_add_contact_shadow(ysort, pos, Vector2(10, 4))
+		var spr := _spawn_sprite(ysort, path, pos)
+		var sc := RockCatalog.scale_for_target_h(tex, RockCatalog.TARGET_H_SHORE) if tex else 0.28
+		sc = clampf(sc, 0.2, 0.36)
+		spr.scale = Vector2(sc, sc)
 
 
 func _spawn_bridge_prop(ysort: Node2D) -> void:
@@ -698,16 +730,16 @@ func _spawn_trees(ysort: Node2D) -> void:
 		craft = _make_craft()
 	var zone := craft.map_play_rect(2.0)
 	var ideals := [
-		Vector2(220, 200),
+		Vector2(340, 200),
 		Vector2(380, 180),
 		Vector2(240, 400),
-		Vector2(260, 700),
+		Vector2(340, 700),
 		Vector2(1100, 200),
 		Vector2(1140, 400),
 		Vector2(1100, 700),
 		Vector2(860, 760),
-		Vector2(180, 560),
-		Vector2(200, 300),
+		Vector2(280, 560),
+		Vector2(300, 320),
 	]
 	for i in ideals.size():
 		var path := "res://assets/sprites/trees/grounded/tree_%02d.png" % (i % 6)

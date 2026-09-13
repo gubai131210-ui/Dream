@@ -47,6 +47,7 @@ func assemble(root: Node2D) -> void:
 	_spawn_props(ysort)
 	_spawn_fences(ysort)
 	_spawn_trees(ysort)
+	_spawn_pond_rocks(ysort)
 	_spawn_actors(ysort)
 	_spawn_animals(ysort)
 	craft.spawn_water_overlay(ysort)
@@ -296,6 +297,32 @@ func _spawn_trees(ysort: Node2D) -> void:
 		if not ResourceLoader.exists(path):
 			path = "res://assets/sprites/trees/tree_%02d.png" % ((i + 2) % 6)
 		craft.spawn_tree(ysort, path, yard[i], FARM_BUILD_ZONE, 1, 1, 8, false)
+
+
+func _spawn_pond_rocks(ysort: Node2D) -> void:
+	# SE pond bank cluster — forest_moss small shore height (farm pond grammar).
+	var rocks := [
+		{"i": 2, "pos": Vector2(920, 680)},
+		{"i": 3, "pos": Vector2(1000, 700)},
+		{"i": 4, "pos": Vector2(880, 720)},
+	]
+	for r in rocks:
+		var path := RockCatalog.path(RockCatalog.FAMILY_FOREST_MOSS, int(r["i"]))
+		if not ResourceLoader.exists(path):
+			continue
+		var tex := RockCatalog.load_tex(RockCatalog.FAMILY_FOREST_MOSS, int(r["i"]))
+		var pos: Vector2 = r["pos"]
+		var cleared := craft.find_clear_near(pos, 1, 1, 5, false)
+		if cleared != Vector2.ZERO:
+			pos = cleared
+		var t := craft.world_to_tile(pos)
+		if craft.is_water(t.x, t.y) or craft.is_blocked(t.x, t.y):
+			continue
+		craft.add_contact_shadow(ysort, pos, Vector2(10, 4))
+		var spr := craft.spawn_sprite(ysort, path, pos)
+		var sc := RockCatalog.scale_for_target_h(tex, RockCatalog.TARGET_H_SHORE) if tex else 0.28
+		sc = clampf(sc, 0.2, 0.35)
+		spr.scale = Vector2(sc, sc)
 
 
 func _spawn_actors(ysort: Node2D) -> void:
