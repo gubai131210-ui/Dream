@@ -8,10 +8,10 @@
 | Probe | Result |
 | --- | --- |
 | Stake PropSprite | present (`breakable_stake_00`) — `g8_c59_breakables_stake.png` |
-| Weed PropSprite | present (`breakable_weed_00`) — `g8_c59_breakables_weed.png` |
+| Weed PropSprite | present (`breakable_weed_00`) — `g8_c59_breakables_weed.png`（镜头对准杂草，无 InfoPanel） |
 | `BreakablesKit.mcp_clear("stake")` | `ok=true`, `cleared=1`, `remaining_nodes=3` |
 | After clear | InfoPanel + stake removed — `g8_c59_stake_cleared.png` |
 
-Headless: covered by `g8_worldsys_activate_smoke` (breakables=4).
+Headless: `g8_worldsys_activate_smoke` — breakables **≥4** + **`mcp_clear("weed")`** assert.
 
 User Godot QA still required (§7).

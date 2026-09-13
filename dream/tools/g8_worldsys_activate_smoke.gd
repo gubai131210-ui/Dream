@@ -50,16 +50,35 @@ func _probe(host: Node2D) -> void:
 	for k in by_id.keys():
 		var key := str(k)
 		if key.begins_with("gate:"):
-			_activate(by_id[k], key)
 			gates += 1
 		elif key.begins_with("brk:"):
-			_activate(by_id[k], key)
 			brks += 1
 	print("G8_WORLDSYS: gates=", gates, " breakables=", brks)
 	if gates < 3:
 		_fail("gates", "want >=3 got %d" % gates)
-	if brks < 2:
-		_fail("breakables", "want >=2 got %d" % brks)
+	if brks < 4:
+		_fail("breakables", "want >=4 got %d" % brks)
+	var brk_kit := host.get_node_or_null("BreakablesKit")
+	if brk_kit == null or not brk_kit.has_method("mcp_clear"):
+		_fail("mcp_clear", "BreakablesKit.mcp_clear missing")
+	else:
+		var probe: Dictionary = brk_kit.call("mcp_clear", "weed")
+		print("G8_WORLDSYS: mcp_clear weed ", probe)
+		if not bool(probe.get("ok", false)):
+			_fail("mcp_clear", "weed clear failed: %s" % str(probe))
+		elif int(probe.get("cleared", 0)) < 1:
+			_fail("mcp_clear", "cleared count < 1")
+	for k in by_id.keys():
+		var key := str(k)
+		if key.begins_with("gate:"):
+			_activate(by_id[k], key)
+		elif key.begins_with("brk:"):
+			if key == "brk:weed":
+				continue  # already cleared via mcp_clear
+			if not is_instance_valid(by_id[k]):
+				_fail(key, "breakable freed early")
+				continue
+			_activate(by_id[k], key)
 	create_timer(0.7).timeout.connect(func() -> void:
 		_finish(0 if _failures.is_empty() and _ok >= C58.size() else 1)
 	)
