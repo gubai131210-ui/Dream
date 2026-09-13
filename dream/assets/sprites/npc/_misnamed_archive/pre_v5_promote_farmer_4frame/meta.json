@@ -1,0 +1,14 @@
+{
+  "id": "farmer",
+  "title": "农夫",
+  "source": "promoted from farmer_v2 (removed opaque white plate)",
+  "height_px": 56,
+  "canvas_width_px": 48,
+  "columns": 4,
+  "dirs": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ]
+}

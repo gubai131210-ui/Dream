@@ -1,10 +1,10 @@
 {
   "id": "farmer",
   "title": "农夫",
-  "source": "promoted from farmer_v2 (removed opaque white plate)",
+  "source": "promoted from farmer_v5 (8-frame walk; edge-white keyed)",
   "height_px": 56,
   "canvas_width_px": 48,
-  "columns": 4,
+  "columns": 8,
   "dirs": [
     "down",
     "left",
