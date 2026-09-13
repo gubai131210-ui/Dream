@@ -89,6 +89,8 @@
 | C51 apiary idle | `docs/evidence/g8_c51_apiary_idle.png` | Wave D 蜂场 |
 | C52 orchard store idle | `docs/evidence/g8_c52_orchard_store_idle.png` | Wave D 果仓 |
 | C46 second floor idle | `docs/evidence/g8_c46_second_floor_idle.png` | Wave E 二楼 |
+| Portal market→C32 | `docs/evidence/g8_portal_c32_enter.png` | 市集点门进入市场后台 |
+| Portal C01→C46 | `docs/evidence/g8_portal_c46_enter.png` | 主角宅点「↑二楼」进入二楼 |
 | C47 attic idle | `docs/evidence/g8_c47_attic_idle.png` | Wave E 阁楼 |
 | C48 roof idle | `docs/evidence/g8_c48_roof_idle.png` | Wave E 屋顶 |
 | C49 backyard idle | `docs/evidence/g8_c49_backyard_idle.png` | Wave E 后院 |
