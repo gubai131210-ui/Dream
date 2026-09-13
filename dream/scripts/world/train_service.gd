@@ -27,6 +27,9 @@ var _day_key: String = ""
 var _seats_sold: Dictionary = {}
 var _pending_dest: String = ""
 var _ride_host: Node = null
+## Sticky env snapshot from last outdoor DayNightWeather (C11/C36 have no env node).
+var _cached_night := false
+var _cached_bad_weather := false
 
 
 func _ready() -> void:
@@ -72,6 +75,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	_refresh_env_cache()
 	_state_t += delta
 	match _state:
 		State.ABSENT:
@@ -274,6 +278,9 @@ func _begin_depart() -> void:
 
 func _finish_absent() -> void:
 	var cd := float(get_active_service().get("cooldown", 60.0))
+	# Missed boarding: void unused ticket so the player is not soft-locked.
+	if not _held_ticket.is_empty() and _state != State.EN_ROUTE:
+		_held_ticket = ""
 	_active_id = ""
 	_pending_dest = ""
 	_ride_host = null
@@ -306,8 +313,8 @@ func _gates_ok(s: Dictionary) -> bool:
 	var night := _is_night_now()
 	if need_night and not night:
 		return false
-	if not need_night and night and str(s.get("title", "")).begins_with("村"):
-		# Locals skip deep night.
+	if not need_night and night:
+		# Day services never run at night (村线 + 湖岸线).
 		return false
 	if need_clear and _is_bad_weather_now():
 		return false
@@ -322,22 +329,32 @@ func _gate_label(s: Dictionary) -> String:
 	return "[日班]"
 
 
+func _refresh_env_cache() -> void:
+	var scene := get_tree().current_scene if get_tree() else null
+	var env := DayNightWeather.find_on(scene) if scene else null
+	if env == null:
+		return
+	_cached_night = env.is_night()
+	_cached_bad_weather = env.weather != DayNightWeather.WeatherKind.CLEAR
+
+
 func _is_night_now() -> bool:
 	var scene := get_tree().current_scene if get_tree() else null
 	var env := DayNightWeather.find_on(scene) if scene else null
 	if env:
-		return env.is_night()
-	# Fallback: wall-clock evening.
-	var h := Time.get_time_dict_from_system().get("hour", 12)
-	return int(h) >= 19 or int(h) < 6
+		_cached_night = env.is_night()
+		return _cached_night
+	# Prefer last outdoor snapshot over wall-clock (C11/C36 have no DayNightWeather).
+	return _cached_night
 
 
 func _is_bad_weather_now() -> bool:
 	var scene := get_tree().current_scene if get_tree() else null
 	var env := DayNightWeather.find_on(scene) if scene else null
-	if env == null:
-		return false
-	return env.weather != DayNightWeather.WeatherKind.CLEAR
+	if env:
+		_cached_bad_weather = env.weather != DayNightWeather.WeatherKind.CLEAR
+		return _cached_bad_weather
+	return _cached_bad_weather
 
 
 func _roll_day_bucket() -> void:
