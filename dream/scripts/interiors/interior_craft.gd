@@ -331,27 +331,9 @@ func _infer_open_fx(path: String) -> String:
 
 func _infer_tap_fx(path: String, title: String) -> Dictionary:
 	## Map interior prop paths/titles onto shipped multi-frame sheets.
+	## Order matters: check furniture/crate tokens before board keywords so
+	## "crate" is not stolen by substring "rate".
 	var key := ("%s %s" % [path.get_file(), title]).to_lower()
-	if (
-		"notice" in key
-		or "blackboard" in key
-		or "ledger" in key
-		or "plaque" in key
-		or "board" in key
-		or "timetable" in key
-		or "schedule" in key
-		or "sign" in key
-		or "glyph" in key
-		or "stele" in key
-		or "guide" in key
-		or "rules" in key
-		or "price" in key
-		or "fare" in key
-		or "rate" in key
-		or "scripture" in key
-		or "meeting" in key
-	):
-		return {"dir": "res://assets/sprites/fx", "prefix": "board_rustle", "pos": Vector2(0, -18), "fps": 10.0}
 	if (
 		"lamp" in key
 		or "lantern" in key
@@ -375,6 +357,7 @@ func _infer_tap_fx(path: String, title: String) -> Dictionary:
 		or "rack" in key
 		or "desk" in key
 		or "table" in key
+		or "cupboard" in key
 	):
 		return {"dir": "res://assets/sprites/props", "prefix": "crate_lid", "pos": Vector2(0, -14), "fps": 8.0}
 	if (
@@ -397,6 +380,29 @@ func _infer_tap_fx(path: String, title: String) -> Dictionary:
 		or "trough" in key
 	):
 		return {"dir": "res://assets/sprites/fx", "prefix": "leaf_fall", "pos": Vector2(0, -12), "fps": 12.0}
+	if (
+		"notice" in key
+		or "blackboard" in key
+		or "ledger" in key
+		or "plaque" in key
+		or "timetable" in key
+		or "schedule" in key
+		or "sign" in key
+		or "glyph" in key
+		or "stele" in key
+		or "guide" in key
+		or "rules" in key
+		or "price" in key
+		or "fare" in key
+		or "rate_board" in key
+		or "房价" in key
+		or "scripture" in key
+		or "meeting" in key
+		or "blackboard" in key
+		or key.contains("board")
+	):
+		## Prefer path/title tokens; avoid bare "rate" (matches inside "crate").
+		return {"dir": "res://assets/sprites/fx", "prefix": "board_rustle", "pos": Vector2(0, -18), "fps": 10.0}
 	return {}
 
 
