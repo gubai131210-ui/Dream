@@ -76,12 +76,35 @@ func _probe(host: Node2D) -> void:
 				played += 1
 			var visual: Node = hs.get_node_or_null("Visual")
 			var has_anim := false
+			var held_ok := false
 			if visual:
 				for c in visual.get_children():
-					if c is AnimatedSprite2D:
+					if c is AnimatedSprite2D and str(c.name).begins_with("OpenFX_"):
 						has_anim = true
+						var anim := c as AnimatedSprite2D
+						var sf := anim.sprite_frames
+						var last := -1
+						if sf != null and sf.has_animation("open"):
+							last = sf.get_frame_count("open") - 1
+						held_ok = (not anim.is_playing()) and last >= 0 and anim.frame == last
+						print(
+							"G8_INTERIOR_FX: held ",
+							hs.name,
+							" playing=",
+							anim.is_playing(),
+							" frame=",
+							anim.frame,
+							" last=",
+							last,
+							" held_ok=",
+							held_ok,
+						)
+						if not held_ok:
+							_fail("held_frame", "%s not paused on last open frame" % hs.name)
 						break
 			print("G8_INTERIOR_FX: post ", hs.name, " played=", hs.get_meta("_open_fx_played", false), " anim=", has_anim)
+			if not has_anim:
+				_fail("held_anim", "%s missing OpenFX_* after oneshot" % hs.name)
 		if played < mini(targets.size(), 1):
 			_fail("played", "no _open_fx_played flags set")
 		_finish(0 if _failures.is_empty() and _ok > 0 else 1)

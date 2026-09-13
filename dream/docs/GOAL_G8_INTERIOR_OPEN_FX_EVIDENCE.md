@@ -10,6 +10,7 @@ G8_INTERIOR_FX: start
 G8_INTERIOR_FX: open_fx_hotspots=1
 G8_INTERIOR_FX: activated 衣柜 fx=drawer_open
 G8_INTERIOR_FX: mcp_play_open_fx {ok:true, frames:4, playing:true, ...}
+G8_INTERIOR_FX: held 衣柜 playing=false frame=3 last=3 held_ok=true
 G8_INTERIOR_FX: post 衣柜 played=true anim=true
 G8_INTERIOR_FX: PASS
 ```
