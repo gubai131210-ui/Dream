@@ -86,4 +86,5 @@
 - [x] Till→plant loop with **new** tilled patch art
 - [x] Portal grace + WalkContract collision notes
 - [x] C29 moss clear adds resin + dual urn; square/station/farmland have no EncounterPocketKit
-- [ ] User Godot: farmland crop + ruins pocket（请本地手测；MCP 烟雾另附）
+- [x] Headless runtime smoke GREEN (`godot --headless -s res://tools/g8_spine_abd_smoke.gd`)
+- [ ] User Godot: farmland crop + ruins pocket（视觉手测仍建议）
