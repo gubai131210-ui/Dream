@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://p83b6995b5381"
-path="res://.godot/imported/pillow_00.png-e5c32b41d0c562d7f755b7a1d25a2ada.ctex"
+uid="uid://mgn14l6x8ic7"
+path="res://.godot/imported/pillow_00.png-656114541afc38047afc16efd75da3aa.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/props/pillow_00.png"
-dest_files=["res://.godot/imported/pillow_00.png-e5c32b41d0c562d7f755b7a1d25a2ada.ctex"]
+dest_files=["res://.godot/imported/pillow_00.png-656114541afc38047afc16efd75da3aa.ctex"]
 
 [params]
 

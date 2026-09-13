@@ -237,6 +237,75 @@ def paint_bowl_prop() -> None:
 	print(f"props/{name}")
 
 
+def paint_pillow_prop() -> None:
+	"""C54 sleep cue — plush case with seam/stitch (Genre soft-pillow note)."""
+	im = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+	px = im.load()
+	w, h = 32, 32
+	# contact shadow
+	for y in range(22, 29):
+		for x in range(7, 26):
+			dx = (x - 16) / 9.5
+			dy = (y - 25.5) / 3.2
+			if dx * dx + dy * dy <= 1.0:
+				a = int(80 * (1.0 - (dx * dx + dy * dy)))
+				put(px, w, h, x, y, (35, 30, 25, a))
+	# pillow oval body with fabric ramp
+	for y in range(9, 27):
+		for x in range(4, 28):
+			dx = (x - 16) / 11.0
+			dy = (y - 17.5) / 7.5
+			r2 = dx * dx + dy * dy
+			if r2 > 1.0:
+				continue
+			# base cream → warm shade by height
+			t = (y - 9) / 17.0
+			edge = max(0.0, r2 - 0.72) / 0.28
+			r = int(248 - t * 38 - edge * 55)
+			g = int(236 - t * 42 - edge * 50)
+			b = int(214 - t * 48 - edge * 40)
+			# subtle weave dither
+			if (x + y * 3) % 5 == 0:
+				r = max(0, r - 8)
+				g = max(0, g - 6)
+			if (x * 2 + y) % 7 == 0:
+				r = min(255, r + 10)
+				g = min(255, g + 8)
+			# top highlight lobe
+			if dx * dx * 1.4 + ((y - 13) / 4.0) ** 2 < 0.55 and y < 18:
+				r = min(255, r + 18)
+				g = min(255, g + 14)
+				b = min(255, b + 10)
+			put(px, w, h, x, y, (r, g, b, 255))
+	# outline
+	for y in range(9, 27):
+		for x in range(4, 28):
+			dx = (x - 16) / 11.0
+			dy = (y - 17.5) / 7.5
+			r2 = dx * dx + dy * dy
+			if 0.88 <= r2 <= 1.02:
+				put(px, w, h, x, y, (92, 74, 52, 255))
+	# center seam + stitches
+	for y in range(12, 24):
+		put(px, w, h, 16, y, (150, 128, 100, 255))
+		if y % 2 == 0:
+			put(px, w, h, 15, y, (130, 110, 85, 255))
+			put(px, w, h, 17, y, (130, 110, 85, 255))
+	# case stripe
+	for x in range(8, 25):
+		put(px, w, h, x, 16, (175, 145, 110, 220))
+		put(px, w, h, x, 17, (210, 185, 150, 200))
+	# corner puffs
+	for cx, cy in ((6, 15), (26, 15)):
+		for y in range(cy - 1, cy + 2):
+			for x in range(cx - 1, cx + 2):
+				put(px, w, h, x, y, (220, 205, 180, 255))
+	name = "pillow_00.png"
+	im.save(PROP_OUT / name)
+	write_prop_import(PROP_OUT / name, name)
+	print(f"props/{name} uniq={uniq(im)}")
+
+
 def uniq(im: Image.Image) -> int:
 	return len({c[:3] for c in im.getdata() if c[3] > 200})
 
@@ -244,6 +313,7 @@ def uniq(im: Image.Image) -> int:
 def main() -> None:
 	paint_book_prop()
 	paint_bowl_prop()
+	paint_pillow_prop()
 	farmer = [Image.open(FARMER / f"walk_down_{i}.png").convert("RGBA") for i in range(4)]
 	elder = [Image.open(ELDER / f"walk_down_{i}.png").convert("RGBA") for i in range(4)]
 	for kind, cfg in WORK.items():

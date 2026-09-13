@@ -380,11 +380,16 @@ func _toggle_lamp(hs: InteractableHotspot) -> String:
 		var light := visual.get_node_or_null("LampLight") as PointLight2D
 		if light:
 			light.enabled = on
-			light.energy = 0.85 if on else 0.0
+			light.energy = 1.05 if on else 0.0
 		var spr := visual.get_node_or_null("PropSprite") as Sprite2D
 		if spr:
 			spr.modulate = Color(1.15, 1.05, 0.8) if on else Color(0.55, 0.55, 0.65)
-	return "路灯已%s。" % ("点亮" if on else "熄灭")
+	var body := "路灯已%s。" % ("点亮" if on else "熄灭")
+	if on:
+		var env := DayNightWeather.find_on(get_parent())
+		if env and not env.is_night():
+			body += "（白天请按 N 查看光晕）"
+	return body
 
 
 func _on_interact(interact_id: String, title: String, desc: String, hs: InteractableHotspot) -> void:

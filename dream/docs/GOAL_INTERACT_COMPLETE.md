@@ -105,8 +105,8 @@
 | 优先级 | 缺口 |
 | --- | ---:|
 | P0 | **用户 Godot QA Waves A2–F + §7 勾选** |
-| P1 | ~~姿态 ArtGen 深绘~~ **DONE（本轮）** — `paint_pose_deep` + `GOAL_G8_C54_POSE_DEEP_EVIDENCE`；§7 手感仍待 |
-| P2 | tomyud1 MCP 截图证据（**全户外 + 多室内**；C62/C58 FX 冒烟 PASS；仍不代替 §7） |
+| P1 | ~~姿态 ArtGen 深绘~~ **DONE** — deep-paint + pillow densify；§7 手感仍待 |
+| P2 | tomyud1 MCP 截图证据（**全户外 + 多室内**；C62/C58 FX 冒烟 PASS；白天灯提示按 N；仍不代替 §7） |
 
 ---
 
@@ -213,6 +213,7 @@
 - [`GOAL_G8_POSE_CUE_CLEANUP_EVIDENCE.md`](GOAL_G8_POSE_CUE_CLEANUP_EVIDENCE.md) — WorkPoseCue dying 清理 + eat→bowl  
 - [`GOAL_G8_USER_QA_UX_EVIDENCE.md`](GOAL_G8_USER_QA_UX_EVIDENCE.md) — §7 清单通过标准 + 跳转下一项  
 - [`GOAL_G8_USER_QA_LOAD_SMOKE_EVIDENCE.md`](GOAL_G8_USER_QA_LOAD_SMOKE_EVIDENCE.md) — §7 21 场景加载冒烟 21/21  
+- [`GOAL_G8_PILLOW_LAMP_HINT_EVIDENCE.md`](GOAL_G8_PILLOW_LAMP_HINT_EVIDENCE.md) — C54 pillow 深绘 + 白天路灯按 N 提示  
 - `tools/g8_c61_chests_smoke.gd` — C61 `mcp_open`×5  
 - [`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md) — 多团队角色签收表  
 - `tools/qa_interaction_frames.py` — **26 groups** GREEN  

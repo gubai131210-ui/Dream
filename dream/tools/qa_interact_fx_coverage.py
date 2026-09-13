@@ -120,8 +120,13 @@ def main() -> int:
         raise AssertionError("C54 eat cue should use bowl_00 (not stove)")
     if 'pillow_00.png' not in routine:
         raise AssertionError("C54 sleep cue should use pillow_00 (not hay)")
-    if not (ROOT / "assets" / "sprites" / "props" / "pillow_00.png").is_file():
+    pillow = ROOT / "assets" / "sprites" / "props" / "pillow_00.png"
+    if not pillow.is_file():
         raise AssertionError("props/pillow_00.png missing")
+    from PIL import Image
+    uniq = len({c[:3] for c in Image.open(pillow).convert("RGBA").getdata() if c[3] > 200})
+    if uniq < 40:
+        raise AssertionError(f"pillow_00 too flat uniq={uniq} (want >=40)")
     if "_clear_work_pose_cues" not in routine:
         raise AssertionError("WorkPoseCue must clear dying stubs via _clear_work_pose_cues")
     if "_clear_demo_actors" not in routine:

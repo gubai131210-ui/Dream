@@ -199,9 +199,13 @@ func _handle_interact(interact_id: String, title: String, desc: String) -> void:
 			body = "路灯已%s。" % ("点亮" if _lamp_on else "熄灭")
 			if _lamp_light:
 				_lamp_light.enabled = _lamp_on
-				_lamp_light.energy = 0.85 if _lamp_on else 0.0
+				_lamp_light.energy = 1.05 if _lamp_on else 0.0
 			if _lamp_sprite:
 				_lamp_sprite.modulate = Color(1.15, 1.05, 0.8) if _lamp_on else Color(0.55, 0.55, 0.65)
+			if _lamp_on:
+				var env := DayNightWeather.find_on(get_parent())
+				if env and not env.is_night():
+					body += "（白天请按 N 查看光晕）"
 			_pulse_visual(hs)
 			_play_fx_clip(hs, "res://assets/sprites/fx", "lamp_spark", 4, Vector2(0, -30), 10.0)
 		"shake_tree":
