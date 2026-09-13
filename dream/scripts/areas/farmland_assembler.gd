@@ -445,15 +445,27 @@ func _spawn_actors(ysort: Node2D) -> void:
 			],
 		},
 		{
-			"id": "elder_woman",
+			"id": "miller",
 			"title": "灌溉工",
-			"desc": "在桥与西圃之间走动。",
+			"desc": "在桥与西圃之间快步巡渠。",
 			"waypoints": [
 				Vector2(200, 280),
 				Vector2(400, 280),
 				Vector2(400, 600),
 				Vector2(200, 600),
 				Vector2(200, 280),
+			],
+		},
+		{
+			"id": "elder_woman",
+			"title": "歇脚老妇",
+			"desc": "在南篱土路边慢慢走动歇息。",
+			"waypoints": [
+				Vector2(480, 700),
+				Vector2(640, 720),
+				Vector2(800, 700),
+				Vector2(640, 680),
+				Vector2(480, 700),
 			],
 		},
 		{

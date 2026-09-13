@@ -1,15 +1,15 @@
 class_name PlayerActor
 extends CharacterBody2D
 
-## Playable protagonist — 8-direction walk using assets/sprites/npc/player/.
+## Playable protagonist — walk cycle from assets/sprites/npc/player/.
 
 const CHARACTER_ID := "player"
-const SPEED_PX := 32.0
 const FOOT_CONTACT_Y := 0.0
 
 var _anim: AnimatedSprite2D
 var _facing: String = "down"
 var _craft_ref: WeakRef = null
+var _speed_px: float = 48.0
 
 
 func _ready() -> void:
@@ -17,6 +17,7 @@ func _ready() -> void:
 	collision_layer = 1
 	collision_mask = 1
 	z_index = 10
+	_refresh_motion_policy()
 
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
@@ -45,6 +46,7 @@ func _ready() -> void:
 	_anim.sprite_frames = NpcWalkFrames.build(CHARACTER_ID)
 	_anim.offset = NpcWalkFrames.foot_offset(_anim.sprite_frames, FOOT_CONTACT_Y)
 	visual.add_child(_anim)
+	_apply_anim_fps()
 	_set_anim(false)
 
 
@@ -59,7 +61,25 @@ func _craft() -> AreaCraft:
 	return c as AreaCraft
 
 
-func _physics_process(_delta: float) -> void:
+func _host_scene() -> Node:
+	return get_tree().current_scene if get_tree() else null
+
+
+func _refresh_motion_policy() -> void:
+	_speed_px = NpcMotionPolicy.speed_px(NpcMotionPolicy.Role.PLAYER, _host_scene())
+	_apply_anim_fps()
+
+
+func _apply_anim_fps() -> void:
+	if _anim == null:
+		return
+	NpcMotionPolicy.apply_anim_speed(
+		_anim,
+		NpcMotionPolicy.frame_fps(NpcMotionPolicy.Role.PLAYER, _host_scene())
+	)
+
+
+func _physics_process(delta: float) -> void:
 	var dir := Vector2.ZERO
 	if Input.is_action_pressed("ui_left") or Input.is_key_pressed(KEY_A):
 		dir.x -= 1.0
@@ -75,14 +95,29 @@ func _physics_process(_delta: float) -> void:
 		_set_anim(false)
 		return
 
+	_refresh_motion_policy()
 	dir = dir.normalized()
-	var next_pos := global_position + dir * SPEED_PX * _delta
+	var next_pos := global_position + dir * _speed_px * delta
 	var craft := _craft()
 	if craft != null:
 		var nt: Vector2i = craft.world_to_tile(next_pos)
 		if not craft.is_npc_walkable(nt.x, nt.y):
+			# Axis-slide: keep the free component (common top-down feel).
+			var slide_x := global_position + Vector2(dir.x, 0) * _speed_px * delta
+			var slide_y := global_position + Vector2(0, dir.y) * _speed_px * delta
+			var tx := craft.world_to_tile(slide_x)
+			var ty := craft.world_to_tile(slide_y)
+			var moved := false
+			if craft.is_npc_walkable(tx.x, tx.y):
+				global_position = slide_x
+				_update_facing(Vector2(dir.x, 0))
+				moved = true
+			elif craft.is_npc_walkable(ty.x, ty.y):
+				global_position = slide_y
+				_update_facing(Vector2(0, dir.y))
+				moved = true
 			velocity = Vector2.ZERO
-			_set_anim(false)
+			_set_anim(moved)
 			return
 
 	global_position = next_pos
@@ -91,6 +126,8 @@ func _physics_process(_delta: float) -> void:
 
 
 func _update_facing(dir: Vector2) -> void:
+	if dir == Vector2.ZERO:
+		return
 	if absf(dir.x) >= absf(dir.y):
 		_facing = "right" if dir.x >= 0.0 else "left"
 	else:

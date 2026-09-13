@@ -212,7 +212,7 @@ func _spawn_actors(ysort: Node2D) -> void:
 			],
 		},
 		{
-			"id": "station_master",
+			"id": "miller",
 			"title": "脚夫",
 			"desc": "在货栈与东街角店之间搬货。",
 			"waypoints": [

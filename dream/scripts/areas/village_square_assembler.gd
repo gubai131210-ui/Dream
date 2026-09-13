@@ -508,13 +508,9 @@ func _make_hotspot(parent: Node2D, title: String, desc: String, pos: Vector2, si
 
 func _spawn_buildings(ysort: Node2D) -> void:
 	# Full sprite AABB must stay inside map play rect (tall cottages were clipping the top).
-	var craft := AreaCraft.new()
-	craft.setup(MAP_W, MAP_H, "plaza")
-	for y in range(MAP_H):
-		for x in range(MAP_W):
-			craft.water_mask[y][x] = _is_river_tile(x, y)
-			craft.path_mask[y][x] = _is_path_tile(x, y)
-			craft.dirt_mask[y][x] = _is_dirt_tile(x, y)
+	# Reuse retained `craft` so building footprints stay on the same blocked_mask
+	# the player/NPC walk checks (Stardew Buildings-layer impassable pattern).
+	craft = _make_craft()
 	var zone := craft.map_play_rect(1.5)
 	# Wave B: civic titles on north row (school/clinic/library remapped from old cottages).
 	var specs := [
@@ -694,7 +690,9 @@ func _make_craft() -> AreaCraft:
 
 func _spawn_trees(ysort: Node2D) -> void:
 	# Full crown AABB via spawn_tree — no north-edge clip / footprint-only feet.
-	var craft := _make_craft()
+	# Keep using retained craft so trunk blocked tiles accumulate.
+	if craft == null:
+		craft = _make_craft()
 	var zone := craft.map_play_rect(2.0)
 	var ideals := [
 		Vector2(220, 200),
@@ -720,12 +718,14 @@ func _spawn_trees(ysort: Node2D) -> void:
 
 func _spawn_actors(ysort: Node2D) -> void:
 	# PatrolActor walk frames — never tween-slide static sprites.
-	var craft := _make_craft()
+	# Plaza cast: elder near well, merchant by stalls, mayor civic loop (not farm labour).
+	if craft == null:
+		craft = _make_craft()
 	var actors := [
 		{
 			"id": "elder_woman",
-			"title": "村民",
-			"desc": "在井边与长椅之间走动。",
+			"title": "老妇人",
+			"desc": "在井边与长椅之间慢慢走动。",
 			"waypoints": [Vector2(600, 520), Vector2(560, 540), Vector2(640, 500), Vector2(600, 520)],
 		},
 		{
@@ -735,10 +735,10 @@ func _spawn_actors(ysort: Node2D) -> void:
 			"waypoints": [Vector2(720, 500), Vector2(780, 430), Vector2(720, 460), Vector2(720, 500)],
 		},
 		{
-			"id": "farmer",
-			"title": "访客",
-			"desc": "沿广场石路环行。",
-			"waypoints": [Vector2(540, 480), Vector2(700, 480), Vector2(700, 560), Vector2(540, 560), Vector2(540, 480)],
+			"id": "mayor",
+			"title": "村长",
+			"desc": "绕村公所前石路巡视。",
+			"waypoints": [Vector2(560, 360), Vector2(720, 360), Vector2(720, 420), Vector2(560, 420), Vector2(560, 360)],
 		},
 	]
 	for a in actors:

@@ -4,14 +4,9 @@ extends InteractableHotspot
 ## Directional walk-cycle patrol using sliced NPC frames under assets/sprites/npc/{id}/.
 
 const DIRS: Array[String] = ["down", "left", "right", "up"]
-## One 32px tile per second keeps an 8fps / 4-frame walk cycle at 4px per frame.
-## This avoids the fractional 4.5px stride that made the old cycle read as sliding.
-const SPEED_PX := 32.0
-const PAUSE_SEC := 0.35
-const AVOID_PAUSE_SEC := 0.45
-const FRAME_FPS := 8.0
 const SNAP_MAX_R := 8
 const FOOT_CONTACT_Y := 0.0
+const AVOID_PAUSE_SEC := 0.45
 
 var _anim: AnimatedSprite2D
 var _route: Array[Vector2] = []
@@ -20,6 +15,10 @@ var _dir: int = 1
 var _pause_left: float = 0.0
 var _facing: String = "down"
 var _moving: bool = false
+var _character_id: String = ""
+var _role: int = NpcMotionPolicy.Role.VISITOR
+var _speed_px: float = 32.0
+var _pause_sec: float = 0.35
 ## Weak ref so AreaCraft (RefCounted) can be GC'd if scene tears down craft first.
 var _craft_ref: WeakRef = null
 
@@ -34,8 +33,16 @@ func setup(
 	title = actor_title
 	description = actor_desc
 	name = actor_title.replace(" ", "")
+	_character_id = character_id
+	_role = NpcMotionPolicy.role_for_character(character_id)
+	# Title can refine role (e.g. 摊主 / 老妇人).
+	var title_role := NpcMotionPolicy.role_for_title(actor_title)
+	if title_role != NpcMotionPolicy.Role.VISITOR:
+		_role = title_role
+	add_to_group("patrol_actors")
 	_route = route.duplicate()
 	set_area_craft(craft)
+	_refresh_motion_policy()
 	if _route.is_empty():
 		push_warning("PatrolActor: empty route for %s" % character_id)
 		return
@@ -46,7 +53,8 @@ func setup(
 
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
-	rect.size = Vector2(40, 56)
+	rect.size = Vector2(28, 20)
+	shape.position = Vector2(0, -8)
 	shape.shape = rect
 	add_child(shape)
 
@@ -70,6 +78,7 @@ func setup(
 	_anim.sprite_frames = NpcWalkFrames.build(character_id)
 	visual.add_child(_anim)
 	_anim.offset = NpcWalkFrames.foot_offset(_anim.sprite_frames, FOOT_CONTACT_Y)
+	_apply_anim_fps()
 	_set_anim(false)
 
 
@@ -83,6 +92,27 @@ func _craft() -> AreaCraft:
 		return null
 	var c: Variant = _craft_ref.get_ref()
 	return c as AreaCraft
+
+
+func _host_scene() -> Node:
+	return get_tree().current_scene if get_tree() else null
+
+
+func refresh_motion_policy() -> void:
+	_refresh_motion_policy()
+
+
+func _refresh_motion_policy() -> void:
+	var host := _host_scene()
+	_speed_px = NpcMotionPolicy.speed_px(_role, host)
+	_pause_sec = NpcMotionPolicy.pause_sec(_role)
+	_apply_anim_fps()
+
+
+func _apply_anim_fps() -> void:
+	if _anim == null:
+		return
+	NpcMotionPolicy.apply_anim_speed(_anim, NpcMotionPolicy.frame_fps(_role, _host_scene()))
 
 
 ## If a waypoint sits on water/blocked, snap to nearby NPC-walkable tile center (spiral).
@@ -117,10 +147,13 @@ func _find_npc_walkable_near(craft: AreaCraft, origin: Vector2i, max_r: int) -> 
 func _physics_process(delta: float) -> void:
 	if _route.size() < 2 or _anim == null:
 		return
+	# Re-sample weather/time occasionally cheaply via pause boundaries.
 	if _pause_left > 0.0:
 		_pause_left -= delta
 		_moving = false
 		_set_anim(false)
+		if _pause_left <= 0.0:
+			_refresh_motion_policy()
 		return
 
 	var target: Vector2 = _route[_idx]
@@ -129,12 +162,12 @@ func _physics_process(delta: float) -> void:
 	if dist <= 2.0:
 		position = target
 		_advance_idx()
-		_pause_left = PAUSE_SEC
+		_pause_left = _pause_sec
 		_moving = false
 		_set_anim(false)
 		return
 
-	var step: float = SPEED_PX * delta
+	var step: float = _speed_px * delta
 	var dir: Vector2 = to / dist
 	var move_len: float = minf(step, dist)
 	var next_pos: Vector2 = position + dir * move_len
@@ -143,6 +176,16 @@ func _physics_process(delta: float) -> void:
 	if craft != null:
 		var nt: Vector2i = craft.world_to_tile(next_pos)
 		if not craft.is_npc_walkable(nt.x, nt.y):
+			# Stardew-like: try a short sidestep onto an adjacent walkable tile before reversing.
+			var side := _try_sidestep(craft, dir, move_len)
+			if side != Vector2.ZERO:
+				var move_dir := side - position
+				position = side
+				if move_dir != Vector2.ZERO:
+					_update_facing(move_dir)
+				_moving = true
+				_set_anim(true)
+				return
 			_turn_back()
 			return
 
@@ -150,6 +193,21 @@ func _physics_process(delta: float) -> void:
 	_update_facing(dir)
 	_moving = true
 	_set_anim(true)
+
+
+func _try_sidestep(craft: AreaCraft, forward: Vector2, move_len: float) -> Vector2:
+	var perp := Vector2(-forward.y, forward.x)
+	for sign_v in [1.0, -1.0]:
+		var candidate := position + perp * sign_v * move_len
+		var t: Vector2i = craft.world_to_tile(candidate)
+		if craft.is_npc_walkable(t.x, t.y):
+			return candidate
+		# Also try a full tile nudge.
+		var tile_nudge := position + perp * sign_v * float(craft.tile)
+		t = craft.world_to_tile(tile_nudge)
+		if craft.is_npc_walkable(t.x, t.y):
+			return position.move_toward(tile_nudge, move_len)
+	return Vector2.ZERO
 
 
 func _advance_idx() -> void:

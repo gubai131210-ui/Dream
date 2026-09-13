@@ -89,7 +89,15 @@ def main() -> None:
     if "NpcWalkFrames.build" not in player or '"player"' not in player:
         raise AssertionError("PlayerActor missing NpcWalkFrames player pack wiring")
 
-    print("GREEN scene-presentation QA (NPC canvases, player pack, camera follow, interior fit)")
+    motion = read("scripts/npc/npc_motion_policy.gd")
+    for needle in ("speed_px", "frame_fps", "weather_mult", "district_mult", "Role.ELDER"):
+        if needle not in motion:
+            raise AssertionError(f"NpcMotionPolicy missing {needle}")
+    patrol = read("scripts/actors/patrol_actor.gd")
+    if "NpcMotionPolicy.speed_px" not in patrol or "_try_sidestep" not in patrol:
+        raise AssertionError("PatrolActor missing motion policy / sidestep collision")
+
+    print("GREEN scene-presentation QA (NPC canvases, player, camera follow, motion policy)")
 
 
 if __name__ == "__main__":

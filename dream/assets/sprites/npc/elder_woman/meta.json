@@ -1,8 +1,9 @@
 {
   "id": "elder_woman",
-  "title": "\u8001\u5987\u4eba",
+  "title": "老妇人",
   "source": "B14_npc_01.png",
   "height_px": 56,
+  "canvas_width_px": 48,
   "dirs": [
     "down",
     "left",
@@ -35,5 +36,6 @@
       "walk_up_3.png"
     ]
   },
-  "filter": "NEAREST"
+  "filter": "NEAREST",
+  "leg_fix": "v2 shin+shoe stride plants, stronger side step"
 }

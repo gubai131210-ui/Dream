@@ -88,6 +88,7 @@ func toggle_night() -> void:
 		_lamp_forced_night = false
 	_apply_visuals()
 	state_changed.emit(time_grade, weather)
+	_broadcast_motion_refresh()
 
 
 func set_time_grade(grade: TimeGrade) -> void:
@@ -96,6 +97,7 @@ func set_time_grade(grade: TimeGrade) -> void:
 		_lamp_forced_night = false
 	_apply_visuals()
 	state_changed.emit(time_grade, weather)
+	_broadcast_motion_refresh()
 
 
 func cycle_weather() -> void:
@@ -108,12 +110,25 @@ func cycle_weather() -> void:
 			weather = WeatherKind.CLEAR
 	_apply_visuals()
 	state_changed.emit(time_grade, weather)
+	_broadcast_motion_refresh()
 
 
 func set_weather(kind: WeatherKind) -> void:
 	weather = kind
 	_apply_visuals()
 	state_changed.emit(time_grade, weather)
+	_broadcast_motion_refresh()
+
+
+func _broadcast_motion_refresh() -> void:
+	if get_tree() == null:
+		return
+	for n in get_tree().get_nodes_in_group("patrol_actors"):
+		if n != null and n.has_method("refresh_motion_policy"):
+			n.refresh_motion_policy()
+	for n in get_tree().get_nodes_in_group("player"):
+		if n != null and n.has_method("_refresh_motion_policy"):
+			n._refresh_motion_policy()
 
 
 func mcp_set_night(on: bool) -> Dictionary:

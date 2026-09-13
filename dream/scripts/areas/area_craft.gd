@@ -173,6 +173,7 @@ func mark_blocked_footprint(world_pos: Vector2, half_w: int, half_h: int) -> voi
 
 
 ## NPC walk: grass/dirt/path OK; water and building/tree blocked tiles are not.
+## Mirrors Stardew-style Buildings impassable + Back walkable (see docs/research/NPC_MOTION_COLLISION_RESEARCH.md).
 func is_npc_walkable(tx: int, ty: int) -> bool:
 	if not _in_bounds(tx, ty):
 		return false
