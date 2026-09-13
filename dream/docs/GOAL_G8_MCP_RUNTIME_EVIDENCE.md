@@ -80,6 +80,7 @@
 | C33 night market | `docs/evidence/g8_c33_night_market_board.png` | 夜市牌=`night_market_board_00` |
 | C36 train schedule | `docs/evidence/g8_c36_ferry_schedule.png` | 班次牌=`ferry_schedule_00` |
 | Farmland farmer 8-frame | `docs/evidence/g8_farmland_farmer_8frame.png` | 田农 `walk_*` frame≥6（8 帧循环） |
+| C58 well rope live | `docs/evidence/g8_c58_well_rope_live.png` | 取水 InfoPanel + `mcp_spawn_c58_fx` frames=4 |
 
 ## Runtime queries
 

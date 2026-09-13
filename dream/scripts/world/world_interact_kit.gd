@@ -192,7 +192,9 @@ func _setup_tree_marker(hs: InteractableHotspot) -> void:
 
 func _handle_interact(interact_id: String, title: String, desc: String) -> void:
 	var body := desc
-	var hs: InteractableHotspot = _hotspots.get(interact_id) as InteractableHotspot
+	var hs: Node = _hotspots.get(interact_id) as Node
+	if hs == null:
+		push_warning("WorldInteractKit: hotspot missing for %s" % interact_id)
 	match interact_id:
 		"lamp_toggle":
 			_lamp_on = not _lamp_on
@@ -232,7 +234,53 @@ func _handle_interact(interact_id: String, title: String, desc: String) -> void:
 	interacted.emit(interact_id)
 
 
-func _pulse_visual(hs: InteractableHotspot) -> void:
+func mcp_spawn_c58_fx(interact_id: String) -> Dictionary:
+	## Sync probe for MCP / headless: spawn FX and report node + frame count before free.
+	var hs: Node = _hotspots.get(interact_id) as Node
+	if hs == null:
+		return {"ok": false, "reason": "missing_hotspot", "id": interact_id}
+	match interact_id:
+		"well_water":
+			_play_fx_clip(hs, "res://assets/sprites/props", "well_rope", 4, Vector2(0, -22), 8.0)
+		"crate_search":
+			_play_fx_clip(hs, "res://assets/sprites/props", "crate_lid", 4, Vector2(0, -18), 8.0)
+		"shake_tree":
+			_spawn_leaf_burst(hs)
+		"feed_critter":
+			_spawn_grain_burst(hs)
+		_:
+			return {"ok": false, "reason": "unsupported_id", "id": interact_id}
+	var visual := hs.get_node_or_null("Visual") as Node
+	if visual == null:
+		return {"ok": false, "reason": "missing_visual", "id": interact_id}
+	var fx_name := ""
+	match interact_id:
+		"well_water":
+			fx_name = "FX_well_rope"
+		"crate_search":
+			fx_name = "FX_crate_lid"
+		"shake_tree":
+			fx_name = "FX_leaf_fall"
+		"feed_critter":
+			fx_name = "FX_bird_peck"
+	var fx := visual.get_node_or_null(fx_name) as AnimatedSprite2D
+	if fx == null:
+		return {"ok": false, "reason": "fx_not_spawned", "id": interact_id, "visual_children": visual.get_child_count()}
+	var sf := fx.sprite_frames
+	var frames := 0
+	if sf != null and sf.has_animation("oneshot"):
+		frames = sf.get_frame_count("oneshot")
+	return {
+		"ok": true,
+		"id": interact_id,
+		"fx": fx_name,
+		"frames": frames,
+		"playing": fx.is_playing(),
+		"path": str(fx.get_path()),
+	}
+
+
+func _pulse_visual(hs: Node) -> void:
 	if hs == null:
 		return
 	var visual := hs.get_node_or_null("Visual") as CanvasItem
@@ -243,7 +291,7 @@ func _pulse_visual(hs: InteractableHotspot) -> void:
 	tw.tween_property(visual, "modulate", Color.WHITE, 0.18)
 
 
-func _play_fx_clip(hs: InteractableHotspot, dir_path: String, prefix: String, frame_count: int, local_pos: Vector2, fps: float = 10.0) -> void:
+func _play_fx_clip(hs: Node, dir_path: String, prefix: String, frame_count: int, local_pos: Vector2, fps: float = 10.0) -> void:
 	if hs == null:
 		return
 	var visual := hs.get_node_or_null("Visual") as Node2D
@@ -272,6 +320,7 @@ func _play_fx_clip(hs: InteractableHotspot, dir_path: String, prefix: String, fr
 		frames.add_frame("oneshot", tex)
 		n += 1
 	if n == 0:
+		push_warning("WorldInteractKit: no FX frames for %s in %s" % [prefix, dir_path])
 		return
 	var anim := AnimatedSprite2D.new()
 	anim.name = "FX_%s" % prefix
@@ -282,13 +331,20 @@ func _play_fx_clip(hs: InteractableHotspot, dir_path: String, prefix: String, fr
 	anim.centered = true
 	visual.add_child(anim)
 	anim.play("oneshot")
+	# Hold the last frame briefly so oneshots remain readable (and MCP/screenshots
+	# can observe FX_* nodes — 4 frames @ 8–12 fps finish in <0.5s otherwise).
 	anim.animation_finished.connect(func() -> void:
-		if is_instance_valid(anim):
-			anim.queue_free()
+		if not is_instance_valid(anim):
+			return
+		var hold := get_tree().create_timer(2.0)
+		hold.timeout.connect(func() -> void:
+			if is_instance_valid(anim):
+				anim.queue_free()
+		)
 	)
 
 
-func _spawn_leaf_burst(hs: InteractableHotspot) -> void:
+func _spawn_leaf_burst(hs: Node) -> void:
 	_play_fx_clip(hs, "res://assets/sprites/fx", "leaf_fall", 4, Vector2(0, -18), 12.0)
 	# Keep a couple of drifting diamonds as secondary dust if clip missing.
 	if hs == null or _root == null:
@@ -310,7 +366,7 @@ func _spawn_leaf_burst(hs: InteractableHotspot) -> void:
 		tw.tween_callback(leaf.queue_free)
 
 
-func _spawn_grain_burst(hs: InteractableHotspot) -> void:
+func _spawn_grain_burst(hs: Node) -> void:
 	_play_fx_clip(hs, "res://assets/sprites/fx", "bird_peck", 4, Vector2(10, -8), 10.0)
 	if hs == null or _root == null:
 		return

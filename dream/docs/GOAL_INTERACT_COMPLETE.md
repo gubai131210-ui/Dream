@@ -143,7 +143,7 @@
 | ~~钓鱼浮漂下 Polygon 水环~~ | `fishing_spot.gd` / `fish_cage.gd` | **DONE** → `fx/fish_ring_00.png`（Polygon 仅 fallback） |
 | ~~室内窗光 Polygon 光柱~~ | `interior_craft.gd` | **DONE** → `fx/window_light_shaft_00.png`（Polygon 仅 fallback） |
 | ~~hover 仅 draw_line 角标~~ | `interactable_hotspot.gd` | **DONE** → `fx/focus_corners_00.png` + 修复 enter 时 `queue_redraw` |
-| ~~农夫 walk 不透明白底盘~~ | `assets/sprites/npc/farmer` | **DONE** → 提升 `farmer_v2`；`qa_npc_white_plates` GREEN |
+| ~~农夫 walk 不透明白底盘~~ | `assets/sprites/npc/farmer` | **DONE** → 提升 `farmer_v2` 后经 `farmer_v5` 8 帧；`qa_npc_white_plates` GREEN |
 | ~~室内 actor 缺 mayor/miller 包~~ | `interior_profiles` | **DONE** → `npc/mayor` + `npc/miller`（recolor 正式包） |
 | ~~C53/C54 按钮被 demo 开关隐藏~~ | square/market/farmland controllers | **DONE** → TopBar 工作/生活环常显；仅 status strip 仍 demo 门控 |
 | ~~DistrictInteract 串用 interior/props~~ | `district_interact_kit.gd` | **DONE** → 拷贝至 `sprites/props/`；QA 禁 interior 路径 |
