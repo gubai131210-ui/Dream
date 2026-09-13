@@ -9,10 +9,9 @@
 | Role | Focus | Evidence / verdict |
 | --- | --- | --- |
 | Draw / Crop / Cutout / Import | Farmer white-plate → v2; mayor/miller packs; outdoor prop copies; landmark/civic/breakable/fence/bridge/furrow/awning repaints | `paint_landmark_props.py` + props/market PNG+import |
-| StyleQA | Work pose sheets 32×48 ×4; landmark/utility painted uniq floors | `qa_work_pose_style` + `qa_landmark_style` **GREEN**（2026-09-13 re-run） |
-| Continuity / science (Canon) | sticky night / pillow / §7 brief / sprite-only hard-gates | Genre+Canon **PASS_WITH_NOTES**（2026-09-13 tip eff947c：[Review](03b1feb8-b937-40f2-8a6a-e8729d54f961)） |
-| Genre reference | Portals；Env-H×14；lamp sticky night intentional | Genre **PASS_WITH_NOTES**；StyleQA **PASS** |
-| StyleQA | Work/life pose + landmark painted floors | **PASS**（同 refresh） |
+| StyleQA | Work/life pose + landmark painted floors | `qa_work_pose_style` + `qa_landmark_style` **PASS/GREEN**（2026-09-13 refresh） |
+| Continuity / science (Canon) | sticky night / pillow / §7 brief / sprite-only hard-gates | Genre+Canon **PASS_WITH_NOTES**（tip eff947c：[Review](03b1feb8-b937-40f2-8a6a-e8729d54f961)） |
+| Genre reference | Portals；Env-H×14；lamp sticky night intentional | Genre **PASS_WITH_NOTES** |
 | Imported-style consistency | NPC edge-white gate; farmer promote | `qa_npc_white_plates.py` **GREEN** (7 packs) |
 | AnimQA / scene presentation | Farmer 8-frame walk promote | `promote_farmer_v5.py` → `qa_scene_presentation` **GREEN** |
 | Animation-frame QA | leaf/rope/lid/bird/waterfall/drawer; WorkPose+leaf smoke; **瀑布 WaterfallAnim** | `qa_interaction_frames.py` **GREEN**; `g8_anim_fx_smoke` **PASS**; MCP `g8_waterfall_anim.png` |
