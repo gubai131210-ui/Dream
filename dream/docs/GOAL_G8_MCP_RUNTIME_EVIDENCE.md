@@ -42,7 +42,7 @@
 | Square C53 buttons | `docs/evidence/g8_square_c53_buttons.png` | TopBar「工作:播种环」「生活:用餐」**visible=true** |
 | Square outdoor UI | `docs/evidence/g8_square_outdoor_work_season.png` | 工作/生活环 + 春花季节 TopBar；室外 Genre 路径后的广场 idle |
 | Square WorkPoseCue | `docs/evidence/g8_square_work_pose_cue.png` | C53 `WorkPoseCue` + `WorkPoseAnim` + outdoor `PropSprite`（6s hold） |
-| Square zoom1 + poses v2 | `docs/evidence/g8_square_zoom1_work_pose_v2.png` | `zoom=(1,1)` + farmer-based occupational poses |
+| Square zoom1 + poses v3 | `docs/evidence/g8_square_zoom1_work_pose_v3.png` | `zoom=(1,1)` + C53「工作:打铁环」环可见（用户 §7 手感仍待） |
 | Forest deep landmarks | `docs/evidence/g8_forest_deep_landmarks.png` | C28 巨树 / C29 遗迹 `Visual/PropSprite` |
 | River reed landmark | `docs/evidence/g8_river_reed_landmark.png` | C25 芦苇岔口 `Visual/PropSprite` |
 | Station track band | `docs/evidence/g8_station_track_band.png` | 站台轨道 `PropSprite` + SleeperCue |

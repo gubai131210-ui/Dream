@@ -24,6 +24,7 @@
 | C59 Breakables | stake/weed sprites + `mcp_clear` + **clear FX** | `GOAL_G8_C59_BREAKABLES_EVIDENCE.md`；`GOAL_G8_C59_C61_FX_EVIDENCE.md` |
 | C61 Hidden chests | coin_chest + lid + `mcp_open` **5/5 sites** | `GOAL_G8_C60_C61_FULL_EVIDENCE.md`；well + tree/waterfall/cave/island MCP |
 | C05 stall cycle FX | state tap → crate_lid / board_rustle / leaf_fall | `GOAL_G8_C05_STALL_FX_EVIDENCE.md`；`mcp_cycle` |
+| Integer zoom (agent) | plaza zoom=(1,1) + C53 work ring visible | `g8_square_zoom1_work_pose_v3.png`（用户 §7 仍待手感） |
 
 ## Automated gates (must stay GREEN)
 

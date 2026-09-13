@@ -67,7 +67,7 @@
 [x] StyleQA + CohereQA 签字 — `qa_landmark_style` + `qa_work_pose_style` + TEAM_SIGNOFF
 [x] CanonQA：状态变化可解释 — C58/C59/C60/C22 smokes + Genre/Canon agent PASS
 [x] GenreQA：不破坏邻接/站位规则 — outdoor props 路径禁 interior；orphan Visual GREEN
-[ ] 引擎内整数缩放目视 — **用户 §7**（Agent MCP：plaza `CameraController.zoom=(1,1)` + `g8_square_zoom1_work_pose_v2.png`）
+[ ] 引擎内整数缩放目视 — **用户 §7**（Agent MCP：plaza `CameraController.zoom=(1,1)` + `g8_square_zoom1_work_pose_v3.png`；C53「工作:打铁环」可见）
 [x] 交互：hover → action → result 三层反馈 — focus_corners + activate/open FX smokes + MCP
 ```
 
@@ -259,11 +259,11 @@
 
 | # | 要求 | 证据 | 状态 |
 | --- | --- | --- | --- |
-| 1 | 已列交互正式像素 + 反馈 + 多帧 | C58 activate 8/8；sprite inventory GREEN；focus/叶/绳/盖/鸟帧；qa_interaction_frames GREEN；MCP InfoPanel/OpenFX；语义 prop QA | **PROVEN（代码+MCP）**；§7 手感确认仍待 |
+| 1 | 已列交互正式像素 + 反馈 + 多帧 | C58×8 + bench_dust/board_rustle；DIK 全区多帧；C05 stall cycle；C59 clear FX；C60 unlock FX；C61 lid×5；OpenFX；qa_interaction_frames GREEN | **PROVEN（代码+MCP）**；§7 手感确认仍待 |
 | 2 | 全户外+室内门面/道具/可进出 | load smoke 72/72；portal cue 12；MCP 进门+多室内 idle；C62 全链 | **PROVEN（加载+MCP 进门）**；§7 全表进出仍待 |
 | 3 | 统称权威 | 本文件 + `ASSET_TAXONOMY` 回链 | **PROVEN** |
-| 4 | 多团队流水线门禁 | §2 角色表；[`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md)；Style/Anim/Cohere + Genre/Canon；qa_* GREEN；语义+目标同步 | **PROVEN（本轮批次）** |
-| 5 | MCP/运行时交互动画证据 | [`GOAL_G8_MCP_RUNTIME_EVIDENCE.md`](GOAL_G8_MCP_RUNTIME_EVIDENCE.md) + activate/open FX/anim/target smokes + [`GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md`](GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md) | **PROVEN** |
+| 4 | 多团队流水线门禁 | §2 角色表；[`GOAL_TEAM_SIGNOFF.md`](GOAL_TEAM_SIGNOFF.md)；Style/Anim/Cohere + Genre/Canon；qa_* 全套 GREEN（2026-09-13 再跑） | **PROVEN（本轮批次）** |
+| 5 | MCP/运行时交互动画证据 | MCP 证据链 + [`GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md`](GOAL_G8_USER_QA_AGENT_WALKTHROUGH.md) + zoom1 `g8_square_zoom1_work_pose_v3.png` | **PROVEN** |
 
 **结论：** Agent 侧五条要求已有可复核证据；在 §7 用户本机勾选确认前，**不得**将 Goal 标 complete（项目验收门）。
 
