@@ -39,7 +39,9 @@ func _ready() -> void:
 	var _dik = load("res://scripts/world/district_interact_kit.gd")
 	_dik.attach_to(self, "farmland", top_bar)
 	# Spine B — turnip crop vertical slice (new stage art → InventoryService).
-	FarmCropKit.attach_to(self, ysort_root, info)
+	var _farm_crop = load("res://scripts/farm/farm_crop_kit.gd")
+	if _farm_crop:
+		_farm_crop.attach_to(self, ysort_root, info)
 	if not bool(ProjectSettings.get_setting("debug/show_demo_overlays", false)):
 		var routine_status := get_node_or_null("NpcRingDemoStatus") as CanvasLayer
 		if routine_status:

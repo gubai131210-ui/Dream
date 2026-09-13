@@ -30,14 +30,16 @@ def main() -> int:
 	must_contain(
 		ROOT / "scripts/core/scene_router.gd",
 		"spawn_id: String = \"\"",
-		"SpawnRegistry.set_pending",
+		'call("set_pending"',
 	)
 	must_contain(
 		ROOT / "scripts/core/player_bootstrap.gd",
-		"SpawnRegistry.has_pending",
+		'call("has_pending")',
+		'call("take_pending")',
 		"Spawn_",
-		"default_local_pos",
+		'call("default_local_pos"',
 		"Vector2(0, 48.0)",
+		"arm_portal_grace",
 	)
 	must_contain(
 		ROOT / "scripts/world/inventory_service.gd",
@@ -59,14 +61,38 @@ def main() -> int:
 		ROOT / "scripts/farm/farm_crop_kit.gd",
 		"FarmCropKit",
 		"crop_turnip_stage_00",
+		"crop_tilled_patch_00",
+		"crop_till_dust_00",
 		"crop_water_splash_00",
 		"crop_harvest_spark_00",
+		'"tilled"',
 		"_morning_tick",
-		"InventoryService.try_add(CROP_ID",
+		'call("try_add"',
+		'call("try_remove"',
+	)
+	must_contain(
+		ROOT / "scripts/world/spawn_registry.gd",
+		"arm_portal_grace",
+		"portal_grace_active",
+	)
+	must_contain(
+		ROOT / "scripts/world/walk_contract.gd",
+		"WalkContract",
+		"FOOT_CONTACT_Y",
+		"Area2D",
+	)
+	must_contain(
+		ROOT / "scripts/core/player_bootstrap.gd",
+		"arm_portal_grace",
+	)
+	must_contain(
+		ROOT / "scripts/actors/player_actor.gd",
+		"FOOT_CONTACT_Y := 0.0",
+		"is_npc_walkable",
 	)
 	must_contain(
 		ROOT / "scripts/areas/farmland_controller.gd",
-		"FarmCropKit.attach_to",
+		"scripts/farm/farm_crop_kit.gd",
 		"WorldSpawnUtil.wire_portal_click",
 	)
 	must_contain(
@@ -87,7 +113,7 @@ def main() -> int:
 	must_contain(
 		ROOT / "scripts/interiors/interior_room_controller.gd",
 		'profile_id == "c29_ruins"',
-		"EncounterPocketKit.attach_to",
+		"scripts/world/encounter_pocket_kit.gd",
 	)
 	must_contain(
 		ROOT / "scripts/areas/forest_deep_assembler.gd",
@@ -122,6 +148,8 @@ def main() -> int:
 		"assets/sprites/props/crop_turnip_stage_01.png",
 		"assets/sprites/props/crop_turnip_stage_02.png",
 		"assets/sprites/props/crop_turnip_stage_03.png",
+		"assets/sprites/props/crop_tilled_patch_00.png",
+		"assets/sprites/fx/crop_till_dust_00.png",
 		"assets/sprites/fx/crop_water_splash_00.png",
 		"assets/sprites/fx/crop_harvest_spark_00.png",
 		"assets/sprites/props/moss_blob_00.png",

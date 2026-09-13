@@ -157,7 +157,9 @@ func go_c01_home() -> void:
 static func change_to(tree: SceneTree, path: String, spawn_id: String = "") -> void:
 	if path.is_empty():
 		return
-	if not spawn_id.is_empty():
-		SpawnRegistry.set_pending(spawn_id)
+	if not spawn_id.is_empty() and tree != null:
+		var sr := tree.root.get_node_or_null("SpawnRegistry")
+		if sr:
+			sr.call("set_pending", spawn_id)
 	tree.change_scene_to_file(path)
 

@@ -275,6 +275,9 @@ static func wire_portal_click(area: Area2D, tree: SceneTree) -> void:
 	area.set_meta("_worldsys_portal_wired", true)
 	area.input_event.connect(func(_vp: Node, event: InputEvent, _si: int) -> void:
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			var sr := tree.root.get_node_or_null("SpawnRegistry")
+			if sr and bool(sr.call("portal_grace_active")):
+				return
 			var path := str(area.get_meta("scene_path", ""))
 			if path.is_empty():
 				return

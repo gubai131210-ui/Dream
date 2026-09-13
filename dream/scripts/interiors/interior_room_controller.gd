@@ -62,7 +62,9 @@ func _frame_room(room_rect: Rect2) -> void:
 					TrainService.request_early_depart()
 			)
 	if profile_id == "c29_ruins":
-		EncounterPocketKit.attach_to(self, world, info)
+		var _enc = load("res://scripts/world/encounter_pocket_kit.gd")
+		if _enc:
+			_enc.attach_to(self, world, info)
 
 
 func _process(_delta: float) -> void:
@@ -86,6 +88,9 @@ func _wire_portals(node: Node) -> void:
 					info.show_info("车厢门", TrainService.board_hint())
 					return
 				var sid := str(area.get_meta("spawn_id", ""))
+				var sr := get_tree().root.get_node_or_null("SpawnRegistry")
+				if sr and bool(sr.call("portal_grace_active")):
+					return
 				SceneRouter.change_to(get_tree(), path, sid)
 		)
 	for child in node.get_children():

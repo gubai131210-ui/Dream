@@ -1,10 +1,11 @@
 class_name FarmCropKit
 extends Node
 
-## Phase0 turnip plots on farmland — plant / water / morning grow / harvest → Inventory.
+## Phase0 turnip plots — till / plant / water / morning grow / harvest → Inventory.
 
 const NODE_NAME := "FarmCropKit"
-const STAGE_PATHS := [
+const TILLED_PATH := "res://assets/sprites/props/crop_tilled_patch_00.png"
+const STAGE_PATHS: Array[String] = [
 	"res://assets/sprites/props/crop_turnip_stage_00.png",
 	"res://assets/sprites/props/crop_turnip_stage_01.png",
 	"res://assets/sprites/props/crop_turnip_stage_02.png",
@@ -14,6 +15,7 @@ const SEED_ID := "seed_turnip"
 const CROP_ID := "crop_turnip"
 const WATER_SPLASH := "res://assets/sprites/fx/crop_water_splash_00.png"
 const HARVEST_FX := "res://assets/sprites/fx/crop_harvest_spark_00.png"
+const TILL_FX := "res://assets/sprites/fx/crop_till_dust_00.png"
 
 ## Local plot positions on farmland (dirt bed NW corner cluster).
 const PLOT_LOCALS := [
@@ -43,10 +45,14 @@ var _plots: Array = []  # Dictionary each
 var _prev_time: int = -1
 
 
+func _inv() -> Node:
+	return get_tree().root.get_node("InventoryService")
+
+
 func _boot(ysort: Node2D, info: Node) -> void:
 	_ysort = ysort
 	_info = info
-	InventoryService.grant_starter_seeds_if_empty()
+	_inv().call("grant_starter_seeds_if_empty")
 	for i in PLOT_LOCALS.size():
 		_spawn_plot(i, PLOT_LOCALS[i])
 	var dnw := _find_day_night()
@@ -65,8 +71,8 @@ func _find_day_night() -> Node:
 func _spawn_plot(idx: int, local: Vector2) -> void:
 	var hs := InteractableHotspot.new()
 	hs.name = "CropPlot_%d" % idx
-	hs.title = "试验畦"
-	hs.description = "空畦：可播种芜菁。"
+	hs.title = "荒畦"
+	hs.description = "未翻的土。点一下锄地。"
 	hs.position = local
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
@@ -76,6 +82,13 @@ func _spawn_plot(idx: int, local: Vector2) -> void:
 	var vis := Node2D.new()
 	vis.name = "Visual"
 	hs.add_child(vis)
+	var bed := Sprite2D.new()
+	bed.name = "TilledBed"
+	bed.centered = true
+	bed.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	bed.position = Vector2(0, 2)
+	bed.z_index = -1
+	vis.add_child(bed)
 	var spr := Sprite2D.new()
 	spr.name = "CropSprite"
 	spr.centered = true
@@ -86,8 +99,10 @@ func _spawn_plot(idx: int, local: Vector2) -> void:
 	_ysort.add_child(hs)
 	_plots.append({
 		"hs": hs,
+		"bed": bed,
 		"spr": spr,
-		"stage": -1,  # -1 empty, 0..3 growing/ripe
+		"tilled": false,
+		"stage": -1,
 		"watered": false,
 		"days_in_stage": 0,
 	})
@@ -99,11 +114,18 @@ func _on_plot_activated(_hotspot: InteractableHotspot, idx: int) -> void:
 		return
 	var p: Dictionary = _plots[idx]
 	var stage: int = int(p["stage"])
+	if not bool(p["tilled"]):
+		p["tilled"] = true
+		_plots[idx] = p
+		_refresh_plot(idx)
+		_play_fx(p["hs"] as Node2D, TILL_FX, Vector2(0, -6), 0.4)
+		_toast("锄地", "翻好了试验畦。再点一下播种芜菁。")
+		return
 	if stage < 0:
-		var buy: Dictionary = InventoryService.try_remove(SEED_ID, 1)
+		var buy: Dictionary = _inv().call("try_remove", SEED_ID, 1)
 		if not bool(buy.get("ok", false)):
 			_toast("播种", "需要芜菁种子（已自动发放可再进田试试）。")
-			InventoryService.grant_starter_seeds_if_empty()
+			_inv().call("grant_starter_seeds_if_empty")
 			return
 		p["stage"] = 0
 		p["watered"] = false
@@ -113,7 +135,7 @@ func _on_plot_activated(_hotspot: InteractableHotspot, idx: int) -> void:
 		_toast("播种", "种下了芜菁苗。记得浇水，等天亮生长。")
 		return
 	if stage >= 3:
-		var add: Dictionary = InventoryService.try_add(CROP_ID, 1)
+		var add: Dictionary = _inv().call("try_add", CROP_ID, 1)
 		_toast("收获", str(add.get("msg", "")))
 		if bool(add.get("ok", false)):
 			p["stage"] = -1
@@ -123,7 +145,6 @@ func _on_plot_activated(_hotspot: InteractableHotspot, idx: int) -> void:
 			_refresh_plot(idx)
 			_play_harvest_fx(p["hs"] as Node2D)
 		return
-	# Water
 	if bool(p["watered"]):
 		_toast("浇水", "这畦今天已经浇过了，等天亮再看。")
 		return
@@ -135,7 +156,6 @@ func _on_plot_activated(_hotspot: InteractableHotspot, idx: int) -> void:
 
 
 func _on_env(time_grade: int, weather: int) -> void:
-	# Morning tick: Night → Day
 	const NIGHT := 1
 	const DAY := 0
 	if _prev_time == NIGHT and time_grade == DAY:
@@ -144,7 +164,7 @@ func _on_env(time_grade: int, weather: int) -> void:
 
 
 func _morning_tick(weather: int) -> void:
-	const RAIN := 1  # match DayNightWeather.WeatherKind if differs — soft
+	const RAIN := 1
 	for i in _plots.size():
 		var p: Dictionary = _plots[i]
 		var stage: int = int(p["stage"])
@@ -164,14 +184,27 @@ func _morning_tick(weather: int) -> void:
 func _refresh_plot(idx: int) -> void:
 	var p: Dictionary = _plots[idx]
 	var hs: InteractableHotspot = p["hs"]
+	var bed: Sprite2D = p["bed"]
 	var spr: Sprite2D = p["spr"]
 	var stage: int = int(p["stage"])
+	var tilled := bool(p["tilled"])
+	if tilled and ResourceLoader.exists(TILLED_PATH):
+		bed.texture = load(TILLED_PATH) as Texture2D
+		bed.visible = true
+	else:
+		bed.texture = null
+		bed.visible = false
+	if not tilled:
+		spr.texture = null
+		hs.title = "荒畦"
+		hs.description = "未翻的土。点一下锄地（新耕地贴图）。"
+		return
 	if stage < 0:
 		spr.texture = null
 		hs.title = "试验畦"
-		hs.description = "空畦。点一下播种（消耗芜菁种子）。种子不足时会自动补发试用种子。"
+		hs.description = "已翻土。点一下播种（消耗芜菁种子）。"
 		return
-	var path := STAGE_PATHS[clampi(stage, 0, STAGE_PATHS.size() - 1)]
+	var path: String = String(STAGE_PATHS[clampi(stage, 0, STAGE_PATHS.size() - 1)])
 	if ResourceLoader.exists(path):
 		spr.texture = load(path) as Texture2D
 	spr.modulate = Color(0.75, 0.85, 1.0, 1.0) if bool(p["watered"]) else Color.WHITE
@@ -184,18 +217,7 @@ func _refresh_plot(idx: int) -> void:
 
 
 func _play_water_fx(at: Node2D) -> void:
-	if at == null or not ResourceLoader.exists(WATER_SPLASH):
-		return
-	var fx := Sprite2D.new()
-	fx.texture = load(WATER_SPLASH) as Texture2D
-	fx.centered = true
-	fx.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	fx.global_position = at.global_position + Vector2(0, -12)
-	fx.z_index = 20
-	_ysort.add_child(fx)
-	var tw := fx.create_tween()
-	tw.tween_property(fx, "modulate:a", 0.0, 0.45)
-	tw.tween_callback(fx.queue_free)
+	_play_fx(at, WATER_SPLASH, Vector2(0, -12), 0.45)
 
 
 func _play_harvest_fx(at: Node2D) -> void:
@@ -211,6 +233,21 @@ func _play_harvest_fx(at: Node2D) -> void:
 	var tw := fx.create_tween()
 	tw.tween_property(fx, "position:y", fx.position.y - 12.0, 0.5)
 	tw.parallel().tween_property(fx, "modulate:a", 0.0, 0.5)
+	tw.tween_callback(fx.queue_free)
+
+
+func _play_fx(at: Node2D, path: String, offset: Vector2, fade: float) -> void:
+	if at == null or not ResourceLoader.exists(path):
+		return
+	var fx := Sprite2D.new()
+	fx.texture = load(path) as Texture2D
+	fx.centered = true
+	fx.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	fx.global_position = at.global_position + offset
+	fx.z_index = 20
+	_ysort.add_child(fx)
+	var tw := fx.create_tween()
+	tw.tween_property(fx, "modulate:a", 0.0, fade)
 	tw.tween_callback(fx.queue_free)
 
 

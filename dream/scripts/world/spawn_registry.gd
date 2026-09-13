@@ -6,6 +6,8 @@ signal pending_consumed(spawn_id: String)
 
 var _pending_id: String = ""
 var _pending_pos: Vector2 = Vector2.INF
+## Ignore portal clicks briefly after arrival (apron ping-pong guard).
+var _portal_grace_until_msec: int = 0
 
 
 func set_pending(spawn_id: String, world_pos: Vector2 = Vector2.INF) -> void:
@@ -27,6 +29,15 @@ func take_pending() -> Dictionary:
 	_pending_pos = Vector2.INF
 	pending_consumed.emit(str(out.get("id", "")))
 	return out
+
+
+func arm_portal_grace(seconds: float = 0.65) -> void:
+	var ms := int(round(maxf(0.0, seconds) * 1000.0))
+	_portal_grace_until_msec = Time.get_ticks_msec() + ms
+
+
+func portal_grace_active() -> bool:
+	return Time.get_ticks_msec() < _portal_grace_until_msec
 
 
 ## Named defaults when a scene has no Spawn_<id> marker node.

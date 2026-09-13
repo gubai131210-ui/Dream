@@ -43,6 +43,10 @@ func _bootstrap_current() -> void:
 	player.name = "Player"
 	player.position = _resolve_spawn(host, ysort)
 	ysort.add_child(player)
+	## Collision/spawn contract: brief portal ignore so door apron does not ping-pong.
+	var sr := get_node_or_null("/root/SpawnRegistry")
+	if sr:
+		sr.call("arm_portal_grace", 0.65)
 
 	# AreaCraft is RefCounted (not a Node). Assemblers expose it as `.craft`.
 	var assembler := scene.get_node_or_null("Assembler")
@@ -60,8 +64,9 @@ func _bootstrap_current() -> void:
 
 func _resolve_spawn(host: Node2D, ysort: Node2D) -> Vector2:
 	## Prefer SpawnRegistry pending (from SceneRouter.change_to spawn_id / portal meta).
-	if SpawnRegistry.has_pending():
-		var pending: Dictionary = SpawnRegistry.take_pending()
+	var sr := get_node_or_null("/root/SpawnRegistry")
+	if sr and bool(sr.call("has_pending")):
+		var pending: Dictionary = sr.call("take_pending")
 		var pos_v: Variant = pending.get("pos", Vector2.INF)
 		if typeof(pos_v) == TYPE_VECTOR2 and pos_v != Vector2.INF:
 			return ysort.to_local(pos_v)
@@ -70,7 +75,7 @@ func _resolve_spawn(host: Node2D, ysort: Node2D) -> Vector2:
 			var marker := host.find_child("Spawn_%s" % sid, true, false) as Node2D
 			if marker != null:
 				return ysort.to_local(marker.global_position)
-			var catalog := SpawnRegistry.default_local_pos(host.scene_file_path, sid)
+			var catalog: Vector2 = sr.call("default_local_pos", host.scene_file_path, sid)
 			if catalog != Vector2.INF:
 				return catalog
 	# Legacy: south apron of Portal_Return (avoid instant re-trigger).

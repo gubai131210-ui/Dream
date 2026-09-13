@@ -102,6 +102,10 @@ func _spawn_urn() -> void:
 	_world.add_child(_urn_hs)
 
 
+func _inv() -> Node:
+	return get_tree().root.get_node("InventoryService")
+
+
 func _on_hit(_h: InteractableHotspot = null) -> void:
 	if _cleared:
 		return
@@ -116,10 +120,10 @@ func _on_hit(_h: InteractableHotspot = null) -> void:
 		return
 	_cleared = true
 	_spawn_clear_fx(POCKET_LOCAL)
-	var resin: Dictionary = InventoryService.try_add(LOOT_RESIN, 1)
+	var resin: Dictionary = _inv().call("try_add", LOOT_RESIN, 1)
 	var extra := ""
 	if randf() < 0.35:
-		var sh: Dictionary = InventoryService.try_add(LOOT_SHARD, 1)
+		var sh: Dictionary = _inv().call("try_add", LOOT_SHARD, 1)
 		extra = "\n" + str(sh.get("msg", ""))
 	_toast(
 		"苔团驱散",
@@ -138,7 +142,7 @@ func _on_urn(_h: InteractableHotspot = null) -> void:
 	_spawn_clear_fx(URN_LOCAL)
 	var msg := "陶瓮裂开了，里面只有干泥。"
 	if randf() < 0.4:
-		var resin: Dictionary = InventoryService.try_add(LOOT_RESIN, 1)
+		var resin: Dictionary = _inv().call("try_add", LOOT_RESIN, 1)
 		msg = str(resin.get("msg", "")) + "\n（与苔团同源材料 · soft sink）"
 	else:
 		msg += "\n（下次可再找苔团；材料 sink 仍软提示。）"

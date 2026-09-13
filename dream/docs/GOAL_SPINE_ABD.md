@@ -1,6 +1,6 @@
 # GOAL package — Player Spine A + Farm Crop B + Encounter Pocket D
 
-**Status:** IN PROGRESS 2026-09-13  
+**Status:** NEAR COMPLETE 2026-09-13 — code/QA/MCP smoke (0 errors farmland+c29); user hand-test still open  
 **Goal:** Research-backed design + multi-agent delivery of A/B/D with **new art only**.  
 **Locks:** [`research/PLAYER_SPINE_A_RESEARCH.md`](./research/PLAYER_SPINE_A_RESEARCH.md), [`research/FARM_CROP_B_RESEARCH.md`](./research/FARM_CROP_B_RESEARCH.md), [`research/ENEMY_LOOT_GAMEPLAY_RESEARCH.md`](./research/ENEMY_LOOT_GAMEPLAY_RESEARCH.md), [`INTERACTION_DESIGN.md`](./INTERACTION_DESIGN.md), [`ENV_H.md`](./ENV_H.md), [`RUINS_C29.md`](./RUINS_C29.md)  
 **Skills:** `painting-asset-craft`, `interior-territory-craft`, `interior-visual-qa`, BreakablesKit pattern
@@ -33,9 +33,10 @@
 - Catalog: `crop_turnip`, `seed_turnip`, `loot_moss_resin`, `loot_ruin_shard` (+ capacity soft cap)
 
 ### Collision contract (doc + soft enforce)
-- Keep tile-mask walkability (`AreaCraft.is_npc_walkable`) as Phase0 truth
+- Keep tile-mask walkability (`AreaCraft.is_npc_walkable`) as Phase0 truth — see `WalkContract`
 - Hotspots/portals = Area2D only; never claim Area2D is solid wall
-- Player feet origin unchanged (`FOOT_CONTACT_Y`)
+- Player feet origin unchanged (`FOOT_CONTACT_Y := 0.0`)
+- `SpawnRegistry.arm_portal_grace(0.65)` after spawn; portals ignore clicks during grace
 
 ---
 
@@ -47,6 +48,7 @@
 | Stages | 4 PNGs `crop_turnip_stage_00..03` **NEW** |
 | Plots | 4 dirt tiles on farmland |
 | Tick | Night→Day morning via `DayNightWeather.state_changed` |
+| Till | First click on plot → `crop_tilled_patch_00` **NEW** + dust FX |
 | Water | Hotspot verb; rain counts as watered |
 | Harvest | Ripe → `InventoryService.try_add("crop_turnip", 1)` + FX |
 
@@ -81,5 +83,7 @@
 - [x] Autoloads registered; QA GREEN (`python tools/qa_spine_abd.py`)
 - [x] Portal with spawn_id lands on marker/apron (forest→C29 `entrance`; C29 return `from_ruins`; south apron +48y)
 - [x] Plant→water→morning×3→harvest adds turnip (code path + InventoryService)
+- [x] Till→plant loop with **new** tilled patch art
+- [x] Portal grace + WalkContract collision notes
 - [x] C29 moss clear adds resin + dual urn; square/station/farmland have no EncounterPocketKit
-- [ ] User Godot: farmland crop + ruins pocket（请本地手测）
+- [ ] User Godot: farmland crop + ruins pocket（请本地手测；MCP 烟雾另附）
