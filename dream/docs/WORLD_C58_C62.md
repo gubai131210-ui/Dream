@@ -13,8 +13,8 @@
 | --- | --- | --- | --- |
 | C58 | ≥8 interact types | **8** | plaza hotspots + **prop sprites** + pulse/FX |
 | C59 | ≥4 clearable | **4** | plaza click-remove + prop sprites + **clear debris FX** |
-| C60 | ≥3 progress gates | **3** | plaza unlock stub + prop sprites |
-| C61 | ≥5 hidden chests | **5** | square / forest / waterfall / hill / lake + **chest_lid** + `mcp_open` |
+| C60 | ≥3 progress gates | **3** | plaza unlock + prop sprites + **unlock FX** |
+| C61 | ≥5 hidden chests | **5** | square / forest / waterfall / hill / lake + **chest_lid** + `mcp_open` **5/5** |
 | C62 | ≥1 chain ≥2 outdoor | **1** (3 hops) | forest → cave → waterfall → lake |
 
 ## C58 interact types (plaza)

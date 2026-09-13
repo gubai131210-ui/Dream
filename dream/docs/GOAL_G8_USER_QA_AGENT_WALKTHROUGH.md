@@ -23,6 +23,8 @@
 | district FX | market `mcp_spawn_fx(mkt_crate_stack)` + forest `fent_sign` | crate_lid / board_rustle frames=4; `g8_district_market_crate_fx.png` |
 | C59 clear FX | `mcp_clear(rock/crate)` | leaf_fall / crate_lid then free; `g8_c59_crate_clear_fx.png` |
 | C61 well chest | `HiddenChests_well.mcp_open` | ChestLidFX frames=4; `g8_c61_well_chest_open.png` |
+| C60 unlock FX | `mcp_unlock` door/log/boulder | board_rustle / leaf_fall / bench_dust; `g8_c60_unlock_fx_door.png` |
+| C61 all sites | tree/waterfall/cave/island `mcp_open` | all frames=4 playing (5/5 with well) |
 | lighthouse / hill_farm / lake_house | runtime idle + DistrictInteractKit | shots `g8_walkthrough_lighthouse_idle` / `hill_farm_idle` / `lake_house_idle` |
 | §7 checklist UI | `user_qa_checklist.tscn` | **21** rows（户外全表+室内抽样）；复制「§7 已勾」；`g8_user_qa_checklist_v2.png` |
 | portals D/E | prior `g8_wave_de_portal_smoke` + live enter | PASS (separate evidence) |

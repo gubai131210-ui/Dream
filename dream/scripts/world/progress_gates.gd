@@ -116,9 +116,81 @@ func unlock(gate_id: String) -> void:
 			var spr := hs.get_node_or_null("Visual/PropSprite") as Sprite2D
 			if spr:
 				spr.modulate = Color(0.7, 0.9, 0.7, 0.45)
+			_play_unlock_fx(hs, gate_id)
 			if _info:
 				_info.show_info(hs.title + "·通", unlocked_blurb)
 			break
+
+
+func _play_unlock_fx(hs: InteractableHotspot, gate_id: String) -> void:
+	if hs == null:
+		return
+	var dir := "res://assets/sprites/fx"
+	var prefix := "bench_dust"
+	var local := Vector2(0, -8)
+	var fps := 12.0
+	match gate_id:
+		"locked_door":
+			prefix = "board_rustle"
+			local = Vector2(0, -20)
+			fps = 10.0
+		"fallen_log":
+			prefix = "leaf_fall"
+			local = Vector2(0, -10)
+		"boulder":
+			prefix = "bench_dust"
+			local = Vector2(0, 2)
+		_:
+			pass
+	var visual := hs.get_node_or_null("Visual") as Node2D
+	if visual == null:
+		return
+	var prior := visual.get_node_or_null("FX_%s" % prefix)
+	if prior != null:
+		prior.free()
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("oneshot")
+	frames.set_animation_loop("oneshot", false)
+	frames.set_animation_speed("oneshot", fps)
+	var n := 0
+	for i in range(4):
+		var path := "%s/%s_%02d.png" % [dir, prefix, i]
+		var tex: Texture2D = null
+		if ResourceLoader.exists(path):
+			tex = load(path) as Texture2D
+		if tex == null:
+			var abs_path := ProjectSettings.globalize_path(path)
+			if FileAccess.file_exists(abs_path):
+				var img := Image.load_from_file(abs_path)
+				if img != null:
+					tex = ImageTexture.create_from_image(img)
+		if tex == null:
+			continue
+		frames.add_frame("oneshot", tex)
+		n += 1
+	if n == 0:
+		return
+	var anim := AnimatedSprite2D.new()
+	anim.name = "FX_%s" % prefix
+	anim.sprite_frames = frames
+	anim.position = local
+	anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	anim.z_index = 8
+	anim.centered = true
+	visual.add_child(anim)
+	anim.play("oneshot")
+	anim.animation_finished.connect(func() -> void:
+		if not is_instance_valid(anim):
+			return
+		anim.pause()
+		var sf2 := anim.sprite_frames
+		if sf2 != null and sf2.has_animation("oneshot"):
+			var last := sf2.get_frame_count("oneshot") - 1
+			if last >= 0:
+				anim.frame = last
+	)
 
 
 func mcp_unlock(gate_id: String) -> Dictionary:
@@ -129,6 +201,9 @@ func mcp_unlock(gate_id: String) -> Dictionary:
 		return {"ok": false, "reason": "already_unlocked", "id": gate_id}
 	var found := false
 	var modulate_a := -1.0
+	var fx_name := ""
+	var fx_playing := false
+	var fx_frames := 0
 	for child in _root.get_children():
 		if child is InteractableHotspot and str(child.get_meta("gate_id", "")) == gate_id:
 			found = true
@@ -136,6 +211,17 @@ func mcp_unlock(gate_id: String) -> Dictionary:
 			var spr := child.get_node_or_null("Visual/PropSprite") as Sprite2D
 			if spr:
 				modulate_a = spr.modulate.a
+			var visual := child.get_node_or_null("Visual") as Node
+			if visual:
+				for c in visual.get_children():
+					if c is AnimatedSprite2D and str(c.name).begins_with("FX_"):
+						var anim := c as AnimatedSprite2D
+						fx_name = str(anim.name)
+						fx_playing = anim.is_playing()
+						var sf := anim.sprite_frames
+						if sf != null and sf.has_animation("oneshot"):
+							fx_frames = sf.get_frame_count("oneshot")
+						break
 			break
 	if not found:
 		return {"ok": false, "reason": "missing_hotspot", "id": gate_id}
@@ -144,6 +230,9 @@ func mcp_unlock(gate_id: String) -> Dictionary:
 		"id": gate_id,
 		"unlocked_count": unlocked_count(),
 		"sprite_alpha": modulate_a,
+		"fx": fx_name,
+		"fx_playing": fx_playing,
+		"fx_frames": fx_frames,
 	}
 
 
