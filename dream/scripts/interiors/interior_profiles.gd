@@ -35,6 +35,10 @@ const P_NOTICE := DIR_INTERIOR_PROP + "/notice_00.png"
 const P_CIVIC_BOARD := DIR_INTERIOR_PROP + "/civic_board_00.png"
 const P_TIMETABLE := DIR_INTERIOR_PROP + "/timetable_00.png"
 const P_FARE_BOARD := DIR_INTERIOR_PROP + "/fare_board_00.png"
+const P_CLINIC_FEE_BOARD := DIR_INTERIOR_PROP + "/clinic_fee_board_00.png"
+const P_EXHIBIT_GUIDE := DIR_INTERIOR_PROP + "/exhibit_guide_00.png"
+const P_BATH_RULES := DIR_INTERIOR_PROP + "/bath_rules_00.png"
+const P_INN_RATE_BOARD := DIR_INTERIOR_PROP + "/inn_rate_board_00.png"
 const P_RUIN_STELE := DIR_INTERIOR_PROP + "/ruin_stele_00.png"
 const P_BARK_GLYPH := DIR_INTERIOR_PROP + "/bark_glyph_00.png"
 const P_MUG_SHELF := DIR_INTERIOR_PROP + "/mug_shelf_00.png"
@@ -1183,7 +1187,7 @@ static func _all() -> Dictionary:
 				_cluster("front", 7, 7, [
 					_m(P_COUNTER, 0, 1, "前台", "挂号柜台（患者在南、医师在北）。", 1.0),
 					_m(P_LEDGER, -1, 0, "挂号簿", "柜北侧挂号名册。", 0.7),
-					_m(P_NOTICE, -2, -1, "诊费告示", "西壁挂号须知。", 0.75),
+					_m(P_CLINIC_FEE_BOARD, -2, -1, "诊费告示", "西壁挂号须知（非 notice 代理）。", 0.75),
 					_m(P_LAMP_SHOP, 1, -2, "医馆店灯", "前台吊罩店灯（非锻工/酒馆灯）。", PROP),
 					_m(P_STOOL, -2, 3, "候诊凳", "西候诊矮凳（同 sheet）。", 0.55),
 					_m(P_STOOL, 1, 3, "候诊凳", "东候诊矮凳（同 sheet；中轴留站位）。", 0.55),
@@ -2609,7 +2613,7 @@ static func _all() -> Dictionary:
 					_m(P_EXHIBIT_CASE, 0, 2, "矿石展柜", "第二展柜叠体量。", 0.9),
 					_m(P_CRATE0, 2, 1, "标本箱", "待编目标本箱。", 0.7),
 					_m(P_CRATE1, 3, -1, "古物箱", "侧墙古物木箱。", 0.65),
-					_m(P_NOTICE, -2, -2, "展厅导览", "展厅分区导览牌。", 0.7),
+					_m(P_EXHIBIT_GUIDE, -2, -2, "展厅导览", "展厅分区导览牌（非 notice 代理）。", 0.7),
 					_m(P_STOOL, 2, 2, "观展凳", "展柜南观展凳（可站）。", 0.7),
 					_m(P_LAMP_SHOP, 1, -2, "展厅灯", "展厅吊罩灯（非家用台灯）。", PROP),
 				]),
@@ -2710,7 +2714,7 @@ static func _all() -> Dictionary:
 					_m(P_BASKET, 2, 1, "衣筐", "更衣衣筐。", 0.6),
 					_m(P_STOOL, 1, 2, "换衣凳", "更衣南站位凳。", 0.7),
 					_m(P_LAMP_INDOOR, 1, -2, "更衣灯", "暖黄更衣壁灯。", PROP),
-					_m(P_NOTICE, -1, -2, "浴规牌", "更衣/入池须知。", 0.6),
+					_m(P_BATH_RULES, -1, -2, "浴规牌", "更衣/入池须知（非 notice 代理）。", 0.6),
 				]),
 			],
 			"fx": [],
@@ -2746,7 +2750,7 @@ static func _all() -> Dictionary:
 					_m(P_STOOL, 1, 2, "池凳", "池东南站位凳（不占门轴）。", 0.7),
 					_m(P_BARREL, 3, 1, "冲洗桶", "入池前冲洗桶。", 0.75),
 					_m(P_BASKET, 2, 2, "毛巾筐", "池边毛巾筐。", 0.55),
-					_m(P_NOTICE, 1, -2, "浴场须知", "公共浴场开放须知。", 0.6),
+					_m(P_BATH_RULES, 1, -2, "浴场须知", "公共浴场开放须知（非 notice 代理）。", 0.6),
 				]),
 				_cluster("locker", 5, 7, [
 					_m(P_DRESSER, 0, 0, "更衣柜", "公共更衣柜。", 0.85),
@@ -2790,7 +2794,7 @@ static func _all() -> Dictionary:
 					_m(P_STOOL_BAR, -1, 1, "店主凳", "前台后店主位。", 0.75),
 					_m(P_STOOL, 2, 2, "访客凳", "台前南站位访客凳。", 0.7),
 					_m(P_COIN, 2, 0, "账匣", "房费账匣。", 0.65),
-					_m(P_NOTICE, -2, -2, "房价牌", "房价与空房告示。", 0.65),
+					_m(P_INN_RATE_BOARD, -2, -2, "房价牌", "房价与空房告示（非 notice 代理）。", 0.65),
 					_m(P_LAMP_INDOOR, 2, -2, "大厅灯", "大厅暖壁灯。", PROP),
 				]),
 				_cluster("guest", 19, 7, [

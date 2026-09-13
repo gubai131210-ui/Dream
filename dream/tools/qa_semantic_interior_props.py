@@ -22,6 +22,12 @@ FORBIDDEN = {
 	"nave": ["notice_00"],
 	"reed": ["hay_00"],
 	"pipe_run": ["barrel_"],
+	# Civic notice specializations (unique cluster names in profiles).
+	"front": ["notice_00"],  # C08 clinic fee
+	"exhibit": ["notice_00"],  # C40 exhibit guide
+	"change": ["notice_00"],  # soak bath rules
+	"bath": ["notice_00"],  # C43 bath rules
+	"lobby": ["notice_00"],  # C44 inn rates
 }
 
 REQUIRED_ASSETS = [
@@ -40,6 +46,10 @@ REQUIRED_ASSETS = [
 	"assets/sprites/interior/props/ruin_stele_00.png",
 	"assets/sprites/interior/props/bark_glyph_00.png",
 	"assets/sprites/interior/props/scripture_plaque_00.png",
+	"assets/sprites/interior/props/clinic_fee_board_00.png",
+	"assets/sprites/interior/props/exhibit_guide_00.png",
+	"assets/sprites/interior/props/bath_rules_00.png",
+	"assets/sprites/interior/props/inn_rate_board_00.png",
 	"assets/sprites/interior/props/sewer_pipe_00.png",
 	"assets/sprites/interior/props/reed_clump_00.png",
 ]
@@ -53,6 +63,11 @@ TITLE_CONST = {
 	"碑刻": "P_RUIN_STELE",
 	"树皮符": "P_BARK_GLYPH",
 	"经文牌": "P_SCRIPTURE_PLAQUE",
+	"诊费告示": "P_CLINIC_FEE_BOARD",
+	"展厅导览": "P_EXHIBIT_GUIDE",
+	"浴规牌": "P_BATH_RULES",
+	"浴场须知": "P_BATH_RULES",
+	"房价牌": "P_INN_RATE_BOARD",
 	"根桌": "P_ROOT_TABLE",
 	"木钉梯": "P_PEG_LADDER",
 	"根须垛": "P_ROOT_MASS",
@@ -88,6 +103,10 @@ def main() -> int:
 		"P_RUIN_STELE",
 		"P_BARK_GLYPH",
 		"P_SCRIPTURE_PLAQUE",
+		"P_CLINIC_FEE_BOARD",
+		"P_EXHIBIT_GUIDE",
+		"P_BATH_RULES",
+		"P_INN_RATE_BOARD",
 		"P_ROOT_TABLE",
 		"P_PEG_LADDER",
 		"P_ROOT_MASS",
@@ -105,7 +124,7 @@ def main() -> int:
 		for f in fails:
 			print(" -", f)
 		return 1
-	print("GREEN semantic-interior proxy QA (stele/fare/bark + civic+C28 + signature)")
+	print("GREEN semantic-interior proxy QA (civic notices + stele/fare/bark + signature)")
 	return 0
 
 
