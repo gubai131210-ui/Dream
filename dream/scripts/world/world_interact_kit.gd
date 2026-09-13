@@ -297,6 +297,9 @@ func _play_fx_clip(hs: Node, dir_path: String, prefix: String, frame_count: int,
 	var visual := hs.get_node_or_null("Visual") as Node2D
 	if visual == null:
 		return
+	var prior := visual.get_node_or_null("FX_%s" % prefix)
+	if prior != null:
+		prior.free()
 	var frames := SpriteFrames.new()
 	if frames.has_animation("default"):
 		frames.remove_animation("default")
@@ -331,16 +334,17 @@ func _play_fx_clip(hs: Node, dir_path: String, prefix: String, frame_count: int,
 	anim.centered = true
 	visual.add_child(anim)
 	anim.play("oneshot")
-	# Hold the last frame briefly so oneshots remain readable (and MCP/screenshots
-	# can observe FX_* nodes — 4 frames @ 8–12 fps finish in <0.5s otherwise).
+	# Pause on last frame so MCP / screenshots can observe FX_* after the oneshot.
+	# Re-trigger paths free prior FX_%s before spawning a new clip.
 	anim.animation_finished.connect(func() -> void:
 		if not is_instance_valid(anim):
 			return
-		var hold := get_tree().create_timer(2.0)
-		hold.timeout.connect(func() -> void:
-			if is_instance_valid(anim):
-				anim.queue_free()
-		)
+		anim.pause()
+		var sf2 := anim.sprite_frames
+		if sf2 != null and sf2.has_animation("oneshot"):
+			var last := sf2.get_frame_count("oneshot") - 1
+			if last >= 0:
+				anim.frame = last
 	)
 
 
@@ -368,6 +372,13 @@ func _spawn_leaf_burst(hs: Node) -> void:
 
 func _spawn_grain_burst(hs: Node) -> void:
 	_play_fx_clip(hs, "res://assets/sprites/fx", "bird_peck", 4, Vector2(10, -8), 10.0)
+	# Bird frames are 32×32 — bump display scale so peck reads at plaza zoom.
+	if hs != null:
+		var visual := hs.get_node_or_null("Visual") as Node
+		if visual:
+			var fx := visual.get_node_or_null("FX_bird_peck") as AnimatedSprite2D
+			if fx:
+				fx.scale = Vector2(1.75, 1.75)
 	if hs == null or _root == null:
 		return
 	if ResourceLoader.exists("res://assets/sprites/fx/bird_peck_00.png"):

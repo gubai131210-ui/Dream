@@ -22,6 +22,7 @@ G8_C58_FX: PASS
   - `docs/evidence/g8_c58_crate_lid_live.png`
   - `docs/evidence/g8_c58_leaf_fall_live.png`
   - `docs/evidence/g8_c58_bird_peck_live.png`
-- Oneshot holds last frame ~2s for readability
+- Oneshot **pauses on last frame** (MCP-readable); re-trigger frees prior `FX_*`
+- Bird peck display scale **1.75** (32×32 source)
 
 User Godot QA still required for visual fidelity.
