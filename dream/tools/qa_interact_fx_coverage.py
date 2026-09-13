@@ -124,7 +124,9 @@ def main() -> int:
     if not pillow.is_file():
         raise AssertionError("props/pillow_00.png missing")
     from PIL import Image
-    uniq = len({c[:3] for c in Image.open(pillow).convert("RGBA").getdata() if c[3] > 200})
+    img = Image.open(pillow).convert("RGBA")
+    px = list(getattr(img, "get_flattened_data", img.getdata)())
+    uniq = len({c[:3] for c in px if c[3] > 200})
     if uniq < 40:
         raise AssertionError(f"pillow_00 too flat uniq={uniq} (want >=40)")
     if "_clear_work_pose_cues" not in routine:
